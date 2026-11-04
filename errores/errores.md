@@ -220,3 +220,105 @@ SELECT act_reg, COUNT(*) AS registros
 FROM "niif-prd-gold-catalog-db"."scd_primas_arl"
 GROUP BY 1;   -- esperado hoy: act_reg=1 → 209 ; act_reg=0 → 1.207.243
 ```
+
+---
+
+## 7. Pasos en la consola web de AWS para seguir el proceso
+
+Todos son de **solo lectura**. Cuenta de prod (`992382496548`), región **us-east-1** (Norte de Virginia). No hacer clic en "Certificar" ni "No certificar" del correo, y no borrar nada de S3.
+
+### Paso 1. Confirmar el estado actual de Gold (Athena)
+1. Consola → buscar **Athena** → **Query editor**.
+2. Arriba a la izquierda: *Data source* `AwsDataCatalog`, *Database* `niif-prd-gold-catalog-db`.
+3. Pegar y ejecutar:
+   ```sql
+   SELECT act_reg, COUNT(*) AS registros
+   FROM "scd_primas_arl"
+   GROUP BY 1;
+   ```
+4. **Qué mirar:** `act_reg = 1` → 209 y `act_reg = 0` → 1.207.243 (si nadie corrigió Gold desde el 2 de noviembre). Si los números cambiaron, alguien ya intervino.
+
+### Paso 2. Ver si hay respaldo o versiones de Gold (S3)
+1. Consola → **S3** → *Buckets* → `alfa-datalake-prd-gold`.
+2. Pestaña **Properties** (Propiedades) → sección **Bucket Versioning**: ¿dice *Enabled* (Habilitado) o *Suspended/Disabled*?
+3. Pestaña **Objects** → abrir `niif/` → `scd_primas_arl/`.
+4. Activar el interruptor **List versions** (Mostrar versiones). Buscar archivos `.parquet` con *Last modified* **anterior al 2 de noviembre de 2026 (03:17 UTC)**.
+5. **Qué concluir:** si hay versiones anteriores, se puede **restaurar Gold sin recargar** (es la mejor opción). Si el versionado está deshabilitado, no hay forma de recuperarlo desde S3 y habría que recargar.
+
+### Paso 3. Ver los segmentos del periodo 202606 (S3)
+1. **S3** → bucket `niif-prd-assets` → carpeta `segmentos/`.
+2. Debes ver 5 carpetas `niif17_202606_alfaprd_...`: `arpprod_par_endosos`, `arpprod_par_polizas`, `arpprod_par_afiliaciones`, `general_acu_personas_juridicas`, `general_acu_personas_naturales`.
+3. Abrir `niif17_202606_alfaprd_arpprod_par_endosos/` → `llaves/`.
+4. **Qué mirar:** carpetas `lote_cargue_id=<número>`. Debe haber una de la corrida del **5 de octubre** (llaves de ~1,2 millones de endosos) y una de la del **2 de noviembre**: `lote_cargue_id=1793588486` (209 llaves). Fíjate en la fecha de *Last modified* de cada una.
+5. **Esto es lo que "limpiar los segmentos" borraría.** No lo borres: si hay que hacerlo, antes se copia a otra ruta.
+
+### Paso 4. Confirmar las cifras en el log del job SCD (Glue + CloudWatch)
+1. Consola → **AWS Glue** → *ETL jobs* → `niif-prd-scd` → pestaña **Runs**.
+2. Abrir la corrida del **2 de noviembre ~03:17 UTC** (id empieza por `jr_f93edfd1...`).
+3. En el detalle de la corrida: **Output logs** (abre CloudWatch).
+4. Buscar (Ctrl + F) estas líneas:
+   - `Registros nuevos insertados      : 209`
+   - `Registros apagados por ausencia  : 1203789`
+   - `Gold activos actuales` (debe ser ~1.203.789)
+5. **Qué concluir:** si coinciden, queda confirmado en el log de prod el apagado masivo.
+
+### Paso 5. Confirmar la exclusión en el log de extracción (Glue + CloudWatch)
+1. **AWS Glue** → *ETL jobs* → `niif-prd-extraccion-estandar-optimized` → **Runs**.
+2. Abrir la corrida del **2 de noviembre ~03:00 UTC** (id `jr_b6f2322a...`).
+3. **Output logs** → buscar `exclusión respaldada por clave y lote. Filas excluidas=`.
+4. **Qué mirar:** para `arpprod/par_endosos` debe decir `Filas excluidas=1203789`.
+
+### Paso 6. Ver por qué entraron endosos de octubre (Athena, punto sin verificar)
+1. **Athena** → *Database* `niif-prd-silver-catalog-db`.
+2. Ejecutar:
+   ```sql
+   SELECT periodo,
+          date_format(fec_proceso_point, '%Y%m') AS per_proceso,
+          COUNT(*) AS registros
+   FROM "alfaprd_arpprod_par_endosos"
+   WHERE lote_cargue_id = 1793588486
+   GROUP BY 1, 2
+   ORDER BY 1, 2;
+   ```
+3. **Qué mirar:** si `periodo` es ≤ 202606 pero `per_proceso` es 202610, queda **confirmada la hipótesis** (el filtro de extracción usa `PERIODO` y la certificación usa el periodo de `FEC_PROCESO_POINT`). Si `periodo` ya es 202610, el `WHERE` no se aplicó como se esperaba.
+
+### Paso 7. Revisar la configuración del caso (S3)
+1. **S3** → `niif-prd-assets` → `primas-arl/` → `primasArl.json` → **Open** o **Download**.
+2. Buscar `"summary"`. **Qué mirar:** `"summary": []` (vacío) significa que no hay resumen configurado.
+3. Comparar con el mismo archivo en la cuenta de **QA**: ahí `summary` sí debe traer una consulta.
+4. Ver también `"destinations"` (quién recibe el correo).
+
+### Paso 8. Ver quién recibió el correo (SNS y DynamoDB)
+1. Consola → **SNS** → *Topics* → `niif-prd-certification-email` → pestaña **Subscriptions**.
+2. **Qué mirar:** cada suscripción de correo con *Status* `Confirmed` o `Pending confirmation`, y en el detalle el **Subscription filter policy** (`{"recipient": ["correo"]}`).
+3. Consola → **DynamoDB** → *Tables* → `niif-prd-notification-certification` → **Explore table items**.
+4. Elegir **Query**, índice `certCode-index`, `certCode` = `202606-20261101-2223`.
+5. **Qué mirar:** `status` (`SENT`), `sentDate`, `emailDestination` (lista real de destinatarios) y `sinDatosPeriodo` (esperado `false`, aunque no haya datos, por el encabezado del CSV).
+
+### Paso 9. Ver lo que imprimió el job de notificación (CloudWatch)
+1. Consola → **CloudWatch** → *Logs* → *Log groups* → `/aws-glue/jobs/output`.
+2. En el buscador de *Log streams*, pegar el id de la corrida de notificación: `jr_314ef2e44d8e530794f849fec841eeecf5e6c49ce7985d679cbc50e1c1c88be8`.
+3. Abrir el stream y buscar:
+   - `[TABLES] tipo=summary, queries=0` (confirma que no hay resumen).
+   - `[TABLES] tipo=total, queries=1`.
+   - `[ATHENA] Query SUCCEEDED` o `FAILED`.
+4. **Qué concluir:** si la consulta `total` terminó en `SUCCEEDED` y devolvió 0 filas, queda cerrado el punto de los totales.
+
+### Paso 10. Recorrido visual de la ejecución (Step Functions)
+1. Consola → **Step Functions** → *State machines* → `niif-prd-primas-arl` → **Executions**.
+2. Abrir `arl-202606-auto-20261102T030032Z-976ae7fc` (estado *Succeeded*).
+3. Pestaña **Table view** (Vista de tabla): ver la hora de inicio de cada paso. Referencias de la evidencia (UTC, 2 de noviembre): extracción 03:00:32, validación técnica 03:09:15, remediación 03:12:16, Silver 03:14:17, SCD 03:17:23, certificación 03:22:58 y notificación 03:23:43 (la ejecución terminó a las 03:24:02).
+4. Clic en `ResolverNotificacion` → **Output**: `notificationMode = SIMPLE`, `configKey = primas-arl/primasArl.json`.
+5. Clic en `GoldSCD` → **Input/Output** para ver los argumentos del job.
+
+### Qué decide cada paso
+
+| Paso | Si resulta… | Entonces… |
+|---|---|---|
+| 1 | Sigue 209 activos | Gold no se ha corregido |
+| 2 | Hay versiones de Gold anteriores al 2 nov | Restaurar desde la versión (mejor opción) |
+| 2 | Sin versionado | Recarga: respaldar segmentos y re-ejecutar (con las consecuencias de la sección 9 del análisis) |
+| 4 y 5 | Coinciden las cifras | Confirmado el mecanismo con el log de prod |
+| 6 | `periodo` ≤ 202606 y `per_proceso` = 202610 | Hipótesis confirmada: filtro por `PERIODO` ≠ periodo de certificación |
+| 7 | `summary` vacío | Corregir configuración (copiar de QA) |
+| 8 | Suscripción pendiente o sin filtro | Corregir destinatarios antes de reenviar |
