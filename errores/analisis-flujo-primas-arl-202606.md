@@ -155,4 +155,52 @@ Resultado esperado si el análisis es correcto: `act_reg = 1` con 209 registros 
 | `errores.md` | Paso a paso inicial para validar el incidente |
 | `recolectar-evidencia-prd.sh` | Script de CloudShell que recolecta la evidencia (solo lectura) |
 | `validar-analisis.py` | Verificaciones con código de este análisis (`python -I validar-analisis.py <carpeta-evidencia>`) |
-| `Evidencia/` | Evidencia recolectada de prod (no se versiona) |
+| `replicar-fallo-en-dev.md` y `replicar-fallo-dev.sh` | Cómo replicar el fallo en DEV, validar destinatarios y agregar un correo |
+| `simular-limpieza-segmentos.py` | Simulación de la propuesta "limpiar los segmentos" (sección 9) |
+| `Evidencia/` | Evidencia recolectada de prod (no se versiona; datos sensibles) |
+
+## 9. Propuesta de prod: "limpiar los segmentos de Primas ARL"
+
+Quien ejecutó los jobs en prod propone limpiar los segmentos. Esta sección explica qué es y qué efecto tiene.
+
+### 9.1 Qué es un segmento
+La extracción guarda, por cada tabla segmentada y por periodo, **la lista de llaves que ya extrajo** (por ejemplo los `NID_ENDOSO`). Está en S3:
+
+```
+s3://niif-prd-assets/segmentos/niif17_<periodo>_alfaprd_<esquema>_<tabla>/llaves/lote_cargue_id=<lote>/   (Parquet)
+```
+
+- Cada corrida agrega una carpeta `lote_cargue_id=<lote>` con las llaves que **extrajo en esa corrida** (`guardar_llaves_segmentacion_s3`, líneas 778-856 de `extraccion_estandar_optimized.py`).
+- En la siguiente corrida del mismo periodo, con `modo = EXCLUIR_EXTRAIDOS`, la extracción lee **todas** esas llaves y **excluye de Oracle** las que ya estén (si además existen en Bronce o Silver de su lote) (`aplicar_exclusion_llaves_segmento`, líneas 617-775).
+- Si la carpeta `.../<segmento_id>/llaves/` **no existe**, no excluye nada y extrae todo (líneas 662-663).
+
+Para Primas ARL 202606 hay **5 segmentos** (de la evidencia): `par_endosos`, `par_polizas`, `par_afiliaciones`, `acu_personas_juridicas` y `acu_personas_naturales`.
+
+### 9.2 Qué significa "limpiar"
+Borrar o vaciar esas carpetas de llaves para que la próxima corrida **no excluya nada** y extraiga todo (`PERIODO <= '202606'`). No borra datos de Bronce, Silver ni Gold: solo "olvida" qué se extrajo.
+
+### 9.3 Qué efecto tiene (simulado con la lógica del SCD)
+`simular-limpieza-segmentos.py` aplica la lógica de `scd.py` (líneas 335-437) con los números reales de prod. Primero reproduce el fallo (209 insertados, 1.203.789 apagados, 209 activos: coincide con prod) y luego prueba la propuesta:
+
+| Escenario | Activos en Gold | Observación |
+|---|---|---|
+| Después del 2 nov (el fallo) | 209 | Estado actual |
+| Limpiar segmentos + re-ejecutar (extracción completa) | **1.203.998** | Recupera los activos |
+| Qué deja atrás | Total 2.411.241 filas | **1.203.789 llaves con dos filas** (una cerrada el 2 nov y otra activa reiniciada en versión 1): historial duplicado |
+| Siguiente re-ejecución incremental del periodo (ej. 150 nuevos) | 150 | **El fallo se repite** |
+
+**Conclusión:** limpiar segmentos es un **parche** que recupera Gold, pero no corrige la causa (el SCD apaga por ausencia con entrada incremental) y deja el historial SCD duplicado.
+
+### 9.4 Cuidados si se hace
+- Limpiar los **5 segmentos** del periodo, no solo el de endosos (si no, los cruces de Silver quedan incompletos). *Deducido del código, no probado.*
+- **Respaldar antes de tocar** (`aws s3 sync` del prefijo `segmentos/niif17_202606_*` a otra ruta); mover, no borrar.
+- Mejor orden: restaurar Gold desde respaldo o versión de S3 anterior al 2 de noviembre (si existe); el parche solo si no hay respaldo; y después corregir el SCD.
+
+### 9.5 Cómo ejecutar la simulación
+```
+python -I simular-limpieza-segmentos.py
+```
+- No necesita AWS ni librerías: solo Python 3. Tarda unos segundos.
+- `-I` ejecuta Python en modo aislado (ignora variables de entorno y la carpeta actual al importar).
+- Construye Gold en memoria como una lista de filas (1.207.243 en total), aplica la función `scd()` y verifica cada resultado con `assert`. Si el modelo no reprodujera el fallo de prod, el script se detiene con error.
+- Código de salida `0` = todas las verificaciones pasaron. Es una simulación de la **lógica**, no una ejecución sobre datos reales.
