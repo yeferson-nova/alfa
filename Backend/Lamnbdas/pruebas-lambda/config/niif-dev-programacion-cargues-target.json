@@ -1,0 +1,49 @@
+{
+    "Configuration": {
+        "FunctionName": "niif-dev-programacion-cargues-target",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-programacion-cargues-target",
+        "Runtime": "python3.12",
+        "Role": "arn:aws:iam::533267035849:role/niif-dev-programacion-cargues-target-role",
+        "Handler": "lambda_function.lambda_handler",
+        "CodeSize": 484,
+        "Description": "",
+        "Timeout": 30,
+        "MemorySize": 128,
+        "LastModified": "2026-09-15T13:00:58.800+0000",
+        "CodeSha256": "qW7jX+/FeXscVMybbeziCscsTuRXU35D3/LnnGUu5po=",
+        "Version": "$LATEST",
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "7d9caa9e-ca03-441a-8fba-5edb81929e50",
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:a8b19198a828662ade07d066a1dce047429a5869166346747ab7d57435583a29"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/niif-dev-programacion-cargues-target"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/niif-dev-programacion-cargues-target-38a4991e-5eae-4105-836c-10e53fc67a33?versionId=sP2NSvE244l0rvuTbljWWfp4IDqujYQO&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEM3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCICB3vX4dlQNMiAjmWYr1xsZ335g0x3pIqsC1w%2B5tNg47AiEAk0ldJP5XpuX1duFlhWwheySE5uN51n3OAmA6DE2UxLkqlAIIlf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgw0NzkyMzMwMjUzNzkiDA6VxLpdZ9t8U1W12SroAQd0bgw%2Bt%2F07ZqdFuZQVqGov7HmchRYJEoF%2FtBrAicVJYECSBJT7X8LCaFn6pfkysN5Ivh1bLZ4QpYkwZyCjKkniotV16Ssm0tac%2FWgQPtOxUuH4BEqTBIHsybzw2q3POqGQo1X%2FCzpFBCMMcSzdIRTq3LxNATq6z2nxSNt3x7a5754BZDquqDUhU%2FfpvOFAfmh76ATBqxFFb71P%2B1siP3YAWXTyMGyVsRMkcDu4Fw8RCfRoojwPZ%2BrfkCjWFVdVAaS68Cyc2yDqLM5qvHXbkR4wMmWepjmAcScEM%2BOYh7xoDEU86Q3xN8Ywo7an1wY6jQFtJkqbdc%2BKInoFmkZ7uw8LupgZSoqcefEu2bjw9KOdL8ni3dMMdRwQyQQyoCfX87rdgfrBWg5IGXzq3rCPwcCTv8PqxhDdWS1bnEg3MxLMMUkxSypRHdQ08B3WTslGX90DebmzEwFb%2BHkee4DzbBjERKEoVHOvTn29kH2SaEJmTPRTpCULKvxdedOKw8g%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164500Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVR265O6RKX%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=ce1cfbe0b4282308a0e298a697d9a3063f3e18879b06adecd1b97fb35a322d43"
+    },
+    "Tags": {
+        "Proyecto": "NIIF17",
+        "Ambiente": "DEV",
+        "Componente": "ProgramadorCarguesTarget"
+    }
+}

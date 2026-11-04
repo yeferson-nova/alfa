@@ -1,0 +1,140 @@
+{
+    "TableList": [
+        {
+            "Name": "seg_segmentos",
+            "DatabaseName": "niif_segmentos",
+            "Description": "",
+            "Owner": "owner",
+            "CreateTime": "2026-06-16T22:59:23+00:00",
+            "UpdateTime": "2026-06-16T23:08:28+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "segmento_id",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nombre_caso",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sistema_origen",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "tabla_relativa",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "periodo_negocio",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "lote_cargue_id",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fecha_extraccion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nid_afiliacion",
+                        "Type": "decimal(10,0)"
+                    },
+                    {
+                        "Name": "nid_endoso",
+                        "Type": "decimal(10,0)"
+                    },
+                    {
+                        "Name": "nid_poliza",
+                        "Type": "decimal(10,0)"
+                    },
+                    {
+                        "Name": "cod_sucursal_alfa",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "modulo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tipo_identificacion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nid_numero_identificacion",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "nid_consecutivo",
+                        "Type": "decimal(10,0)"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-configuracion-niif17/segmentos/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "13469344",
+                    "objectCount": "27",
+                    "UPDATED_BY_CRAWLER": "crawler-niif17-segmentos-global",
+                    "CRAWL_RUN_ID": "e72a6e5e-14a5-4f7b-b451-383c94f950a5",
+                    "recordCount": "2442493",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "7",
+                    "partition_filtering.enabled": "true",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [
+                {
+                    "Name": "partition_0",
+                    "Type": "string"
+                },
+                {
+                    "Name": "partition_1",
+                    "Type": "string"
+                },
+                {
+                    "Name": "lote_cargue_id_part",
+                    "Type": "string"
+                }
+            ],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "13469344",
+                "objectCount": "27",
+                "UPDATED_BY_CRAWLER": "crawler-niif17-segmentos-global",
+                "CRAWL_RUN_ID": "e72a6e5e-14a5-4f7b-b451-383c94f950a5",
+                "recordCount": "2442493",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "7",
+                "partition_filtering.enabled": "true",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "2",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        }
+    ]
+}

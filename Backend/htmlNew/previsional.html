@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="es">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+  <meta name="color-scheme" content="light" />
+  <meta name="supported-color-schemes" content="light" />
+  <title>Certificación de cifras - Datalake</title>
+  <!--[if mso]>
+  <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+  </xml>
+  <style type="text/css">
+    body, table, td, th, p, a, h3 { font-family: Arial, Helvetica, sans-serif !important; }
+  </style>
+  <![endif]-->
+  <style type="text/css">
+    /* Reinicio para clientes de correo */
+    body { margin: 0; padding: 0; width: 100% !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; }
+    #MessageViewBody a { color: inherit; text-decoration: none; }
+
+    /* Tablas inyectadas por el backend (total, resumen y detalle).
+       Mejora progresiva: los clientes que eliminan <style> conservan el atributo border de la tabla. */
+    table.dataframe, .tbl-wrap table { border-collapse: collapse; margin: 10px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #333333; }
+    table.dataframe th, table.dataframe td,
+    .tbl-wrap th, .tbl-wrap td { border: 1px solid #999999; padding: 8px; text-align: left; white-space: nowrap; font-family: Arial, Helvetica, sans-serif; font-size: 14px; }
+    table.dataframe th, .tbl-wrap th { background-color: #eeeeee; font-weight: bold; }
+    table.dataframe tbody tr:nth-child(even), .tbl-wrap tbody tr:nth-child(even) { background-color: #f9f9f9; }
+
+    .link { color: #0000EE; }
+
+    /* Móvil */
+    @media screen and (max-width: 600px) {
+      .container { width: 100% !important; }
+      .content { padding: 16px 12px !important; }
+      .btn-col { display: block !important; width: 100% !important; padding-bottom: 12px !important; }
+      .btn-gap { display: none !important; width: 0 !important; }
+      .btn { display: block !important; }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#ffffff; word-spacing:normal;">
+  <div role="article" aria-roledescription="email" lang="es" style="background-color:#ffffff;">
+    <!-- Texto de vista previa (oculto) -->
+    <div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden; mso-hide:all;">
+      Certificación de cifras del caso de uso $useCaseName.
+    </div>
+
+    <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse; background-color:#ffffff;">
+      <tr>
+        <td align="left" class="content" style="padding:16px;">
+          <!--[if mso]><table role="presentation" width="760" align="left" border="0" cellpadding="0" cellspacing="0"><tr><td><![endif]-->
+          <div class="container" style="max-width:760px; margin:0;">
+
+          <p style="margin:0 0 14px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#333333;">Cordial saludo,</p>
+
+          <p style="margin:0 0 14px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#333333;">La herramienta datalake ha generado los datos para certificar las cifras del caso de uso de <strong>$useCaseName</strong> correspondientes al periodo <strong>$periodRange</strong>. A continuación, un resumen de la información:</p>
+
+          <div class="tbl-wrap" style="width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 0 14px 0;">
+            $tableTotal
+          </div>
+
+          <!-- <p><strong>Primas ARL:</strong></p>
+          $tableSummary -->
+
+          <p style="margin:0 0 14px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#333333;"><strong>El total de registros cargados es:</strong></p>
+
+          <div class="tbl-wrap" style="width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 0 14px 0;">
+            $tableSummary
+          </div>
+
+          <p style="margin:0 0 14px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#333333;">Para mayor detalle puede realizar la descarga en un archivo excel dando clic en el siguiente enlace.</p>
+
+          <div class="tbl-wrap" style="width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 0 14px 0;">
+            $tableDetail
+          </div>
+
+          <!-- <p>
+            Para mayor detalle puede realizar la consulta de los registros en el siguiente enlace:
+          </p>
+          <p>
+            <a class="link" href="$redshiftLink">Redshift.</a>
+          </p> -->
+
+          <p style="margin:0 0 14px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#333333;">De acuerdo con lo anterior, seleccione la opción correspondiente teniendo en cuenta su validación:</p>
+
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin:20px 0 14px 0; border-collapse:collapse; border:none;">
+            <tr>
+              <td class="btn-col" align="center" valign="middle" style="padding:0; border:none;">
+                <!--[if mso]>
+                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="$certificarLink" style="height:46px; v-text-anchor:middle; width:170px;" arcsize="13%" strokecolor="#006400" strokeweight="2px" fillcolor="#dff0d8">
+                  <w:anchorlock/>
+                  <center style="color:#006400; font-family:Arial, Helvetica, sans-serif; font-size:14px; font-weight:bold;">&#9989; Certificar</center>
+                </v:roundrect>
+                <![endif]-->
+                <!--[if !mso]><!-->
+                <a href="$certificarLink" target="_blank" class="btn" style="display:inline-block; padding:12px 24px; border:2px solid #006400; border-radius:6px; background-color:#dff0d8; color:#006400; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:18px; font-weight:bold; text-decoration:none; text-align:center;">&#9989; Certificar</a>
+                <!--<![endif]-->
+              </td>
+              <td class="btn-gap" width="20" style="width:20px; padding:0; border:none; font-size:0; line-height:0;">&nbsp;</td>
+              <td class="btn-col" align="center" valign="middle" style="padding:0; border:none;">
+                <!--[if mso]>
+                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="$nocertificarLink" style="height:46px; v-text-anchor:middle; width:200px;" arcsize="13%" strokecolor="#a94442" strokeweight="2px" fillcolor="#f2dede">
+                  <w:anchorlock/>
+                  <center style="color:#a94442; font-family:Arial, Helvetica, sans-serif; font-size:14px; font-weight:bold;">&#10060; No certificar</center>
+                </v:roundrect>
+                <![endif]-->
+                <!--[if !mso]><!-->
+                <a href="$nocertificarLink" target="_blank" class="btn" style="display:inline-block; padding:12px 24px; border:2px solid #a94442; border-radius:6px; background-color:#f2dede; color:#a94442; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:18px; font-weight:bold; text-decoration:none; text-align:center;">&#10060; No certificar</a>
+                <!--<![endif]-->
+              </td>
+            </tr>
+          </table>
+
+          <p style="margin:0 0 14px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#333333;">En caso de no certificar las cifras del caso de uso favor reportar las incidencias por medio de la herramienta de mesa de ayuda.</p>
+
+          <p style="margin:0 0 14px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#333333;">Atentamente,</p>
+
+          <p style="margin:0 0 14px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#333333;"><strong>Administrador Datalake</strong><br />
+            <strong>Vicepresidencia de Tecnología e Información</strong></p>
+
+          <p style="margin:0 0 14px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#333333; font-style:italic;">&ldquo;Este correo electrónico es informativo para el proceso. Favor no responder, si deseas contactar al área de Tecnología, comunícate a través de nuestros canales de atención disponibles en la Compañía.&rdquo;</p>
+
+          </div>
+          <!--[if mso]></td></tr></table><![endif]-->
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>

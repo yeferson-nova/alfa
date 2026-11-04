@@ -1,0 +1,2758 @@
+{
+    "Functions": [
+        {
+            "FunctionName": "niif-dev-finalizador-ejecucion",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-finalizador-ejecucion",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-finalizador-ejecucion-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 2181,
+            "Description": "",
+            "Timeout": 30,
+            "MemorySize": 128,
+            "LastModified": "2026-09-16T15:48:38.772+0000",
+            "CodeSha256": "yimRV2S7sGYh59SG2qkugvTwKGQXYhc2vFhOmyQSGtA=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "TABLE_NAME": "niif-dev-gestor-configuracion",
+                    "STEP_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-arl",
+                    "CONFIG_VERSION": "1"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "e9741f9f-3eee-45e5-8b36-022a05b481a5",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-finalizador-ejecucion"
+            }
+        },
+        {
+            "FunctionName": "niif-post-login",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-post-login",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/service-role/postLogin-role-w3vv4rhr",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 1308,
+            "Description": "Callback HTML post login NIIF DEV",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2026-10-09T20:37:25.713+0000",
+            "CodeSha256": "XcN4SxNDdUIhSRyoc5KlXeMSDtfc+jhM9vmkzGZNfvM=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "858081e6-f2b1-4a2d-8890-42ea5473cfb6",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-post-login"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configurador-auxilios-funerarios",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configurador-auxilios-funerarios",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-configuradores-niif-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 5286,
+            "Description": "",
+            "Timeout": 60,
+            "MemorySize": 256,
+            "LastModified": "2026-10-13T20:01:23.000+0000",
+            "CodeSha256": "oblMrHNXBwugZr/+x+DBpKucoh/2D+ooVNO/9Lp00Vk=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#AUXILIOS_FUNERARIOS",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-auxilios-funerarios",
+                    "CNF_TABLE": "niif-dev-cnf-mallas"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "6e4661d9-a3bc-44aa-944e-26ad120559a9",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configurador-auxilios-funerarios"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configuration-auxilios-funerarios",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configuration-auxilios-funerarios",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-conf-auxilios-role",
+            "Handler": "conf_auxilios.lambda_handler",
+            "CodeSize": 45582975,
+            "Description": "Configuradora de la malla AUXILIOS_FUNERARIOS: lee configuracion, registra ejecucion e inicia la Step Function",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-20T14:09:12.000+0000",
+            "CodeSha256": "PqT4Qv8Fdw/i52FgwrIJc4EByr2JGM9OT1vCS4tgJCk=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#AUXILIOS_FUNERARIOS",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-auxilios-funerarios",
+                    "CNF_TABLE": "niif-dev-cnf-mallas",
+                    "PRG_SK": "METADATA",
+                    "PRG_TABLE": "niif-dev-prg-programaciones",
+                    "PRG_PK": "PROGRAMACION#AUXILIOS_FUNERARIOS"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "a3bda304-d622-4aaf-95b3-7a56614a596d",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configuration-auxilios-funerarios"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configurador-reserva-matematica-rvi",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configurador-reserva-matematica-rvi",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-configuradores-niif-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 5292,
+            "Description": "",
+            "Timeout": 60,
+            "MemorySize": 256,
+            "LastModified": "2026-10-13T20:01:30.000+0000",
+            "CodeSha256": "lnmbbrOwJ9CsAwR7UTKLVN9wfWbUlMsKS1dZ3kMZfts=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#RESERVA_MATEMATICA_RVI",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-reserva-matematica-rvi",
+                    "CNF_TABLE": "niif-dev-cnf-mallas"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "1cb8ad57-de30-4edf-8b41-f30b6e39d17e",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configurador-reserva-matematica-rvi"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configurador-reserva-matematica-arp",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configurador-reserva-matematica-arp",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-configuradores-niif-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 5383,
+            "Description": "Configurador Gestor NIIF Reserva Matematica ARP",
+            "Timeout": 60,
+            "MemorySize": 256,
+            "LastModified": "2026-10-21T20:04:51.000+0000",
+            "CodeSha256": "nIVU5U9riCvHDI1VzHfY1q+YOROJ00CR/Vw3UYy56MM=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#RESERVA_MATEMATICA_ARP",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-reserva-matematica-arp",
+                    "CNF_TABLE": "niif-dev-cnf-mallas",
+                    "IAM_REFRESH": "20260923T172050Z"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "df243fab-99ae-459f-8465-f44647bd6638",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configurador-reserva-matematica-arp"
+            }
+        },
+        {
+            "FunctionName": "lmb-read-params",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:lmb-read-params",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/service-role/lmb-read-params-role-p4vjbv0q",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 3323,
+            "Description": "",
+            "Timeout": 180,
+            "MemorySize": 128,
+            "LastModified": "2025-12-23T17:37:34.000+0000",
+            "CodeSha256": "moeAFzmU1u2bEnWJcQlTl/dWazpMifZLto9oABiurbw=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "432bd35f-719e-43fa-9da5-f1304cb4e5ef",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python312:20",
+                    "CodeSize": 45643953
+                }
+            ],
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/lmb-read-params"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configurador-primas-endosos",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configurador-primas-endosos",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-configuradores-niif-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 4980,
+            "Description": "Configurador NIIF DEV Primas Endosos",
+            "Timeout": 60,
+            "MemorySize": 256,
+            "LastModified": "2026-10-13T20:01:26.000+0000",
+            "CodeSha256": "EP174SYwZLcODzPYmUSoMfauyhWqAMwtg3q/eeY8oR0=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#PRIMAS_ENDOSOS",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-endosos",
+                    "CNF_TABLE": "niif-dev-cnf-mallas"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "cb79cbff-8433-4b80-bfd6-b5a3765bf735",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configurador-primas-endosos"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-short-link-redirect",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-short-link-redirect",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-short-link-redirect-role",
+            "Handler": "short_link_redirect.lambda_handler",
+            "CodeSize": 15534017,
+            "Description": "Lambda para redirección de short links de certificación",
+            "Timeout": 10,
+            "MemorySize": 128,
+            "LastModified": "2026-08-27T05:37:24.000+0000",
+            "CodeSha256": "U5JHFyV8bb4M93BUJc7su2OpeMH9GvFQdIqRx13YeHQ=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "ENVIRONMENT": "dev",
+                    "SHORT_LINKS_TABLE": "niif-dev-short-links"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "5367a8d6-92ca-4660-b875-1cd892764afe",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-short-link-redirect"
+            }
+        },
+        {
+            "FunctionName": "aws-controltower-NotificationForwarder",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:aws-controltower-NotificationForwarder",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/aws-controltower-ForwardSnsNotificationRole",
+            "Handler": "index.lambda_handler",
+            "CodeSize": 473,
+            "Description": "SNS message forwarding function for aggregating account notifications.",
+            "Timeout": 60,
+            "MemorySize": 128,
+            "LastModified": "2026-02-10T08:01:17.000+0000",
+            "CodeSha256": "aWiXwOoPPieFPuLHUhDsfRBaET3ngyHSLcBUZfgUSoE=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "sns_arn": "arn:aws:sns:us-east-1:016311966525:aws-controltower-AggregateSecurityNotifications"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "5f265357-58a4-4fd7-9e5d-382dc0251fdd",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/aws-controltower-NotificationForwarder"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-smb-lambda",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-smb-lambda",
+            "Role": "arn:aws:iam::533267035849:role/datalake-dev-smb-lambda-role",
+            "CodeSize": 0,
+            "Description": "Lambda funtion to event async get",
+            "Timeout": 330,
+            "MemorySize": 1024,
+            "LastModified": "2026-06-17T19:44:29.000+0000",
+            "CodeSha256": "579d26288a2d40212f0f53650d9ca96b6e8fc4ed55205c20d0d7a71e6b6b1bf7",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [
+                    "subnet-08bc5c88ea3cd3409",
+                    "subnet-0ec6603c9b0f57496"
+                ],
+                "SecurityGroupIds": [
+                    "sg-0e1f9e44776aa3b85"
+                ],
+                "VpcId": "vpc-09d6c75629d78076a",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "BUCKET_PATH": "FS_files/",
+                    "SECRET_NAME": "/datalake/dev/filesystem",
+                    "BUCKET_NAME": "alfa-datalake-dev-assets"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "8dd7fa27-1c5a-4e29-a6a3-a893ae0ab664",
+            "PackageType": "Image",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-smb-lambda"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-programacion-cargues-target",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-programacion-cargues-target",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-programacion-cargues-target-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 484,
+            "Description": "",
+            "Timeout": 30,
+            "MemorySize": 128,
+            "LastModified": "2026-09-15T13:00:58.800+0000",
+            "CodeSha256": "qW7jX+/FeXscVMybbeziCscsTuRXU35D3/LnnGUu5po=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "7d9caa9e-ca03-441a-8fba-5edb81929e50",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-programacion-cargues-target"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-certification",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-certification",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-certification-role",
+            "Handler": "certification.lambda_handler",
+            "CodeSize": 45556439,
+            "Description": "Main certification lambda - triggered by API Gateway",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-09-04T14:14:48.000+0000",
+            "CodeSha256": "Cwr5fY23q4jA9+7VplrE4YM+tBP3yPnqC9CmwF+GtOA=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "APPROVERS_LOG_TABLE": "niif-dev-approval-audit-log",
+                    "APPROVERS_TABLE": "datalake-dev-use-case-approvers",
+                    "ENVIRONMENT": "dev",
+                    "NOTIFICATIONS_TABLE": "niif-dev-notification-certification"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "aed3ba41-f809-48de-b9bb-28928d686258",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-certification"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configurador-primas-rentas",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configurador-primas-rentas",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-configuradores-niif-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 4987,
+            "Description": "Configurador NIIF DEV Primas Rentas",
+            "Timeout": 60,
+            "MemorySize": 256,
+            "LastModified": "2026-10-13T20:01:28.000+0000",
+            "CodeSha256": "TM3brBeaqATn0ftReoo/DpTD1w6DYAv7yqHNcLGTTSE=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#PRIMAS_RENTAS",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-rentas",
+                    "CNF_TABLE": "niif-dev-cnf-mallas"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "6021f238-29f8-4245-8063-57a57cbae2f8",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configurador-primas-rentas"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-iniciador-ejecucion",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-iniciador-ejecucion",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-iniciador-ejecucion-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 3440,
+            "Description": "",
+            "Timeout": 30,
+            "MemorySize": 128,
+            "LastModified": "2026-09-18T05:05:05.000+0000",
+            "CodeSha256": "6cZQDZpdzZucKcFacHpDkS1Q7lu2Ve4U7s9hPrihxpc=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "TABLE_NAME": "niif-dev-gestor-configuracion",
+                    "CONFIG_VERSION": "5"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "9fffe0ee-192a-4601-885d-013066eb4b95",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-iniciador-ejecucion"
+            }
+        },
+        {
+            "FunctionName": "EnvioSftpFis",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:EnvioSftpFis",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/service-role/EnvioSftpFis-role-qj2zfw0h",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 2727,
+            "Description": "",
+            "Timeout": 180,
+            "MemorySize": 512,
+            "LastModified": "2025-09-30T14:38:17.000+0000",
+            "CodeSha256": "iaW0/HfplZoG6t6yF4uMPwdkBdYkq+0d2P39Rno+Gjg=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [
+                    "subnet-08bc5c88ea3cd3409",
+                    "subnet-0ec6603c9b0f57496"
+                ],
+                "SecurityGroupIds": [
+                    "sg-0578b01d8f573d2d0"
+                ],
+                "VpcId": "vpc-09d6c75629d78076a",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "SFTP_PORT": "2222",
+                    "SFTP_BASE_DIR": "/In",
+                    "CREDS_SECRET_ID": "transfer/connector/seguroalfa",
+                    "SFTP_HOST": "seguroalfa-sftp.ctxuse.fiscloudservices.com",
+                    "PREFIX_FILTER": "landing/"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "76c52822-962d-4967-a40e-d4445881f05a",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:533267035849:layer:paramiko-py313:3",
+                    "CodeSize": 6820488
+                }
+            ],
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/EnvioSftpFis"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configuration-reserva-matematica-arp",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configuration-reserva-matematica-arp",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-conf-res-mat-arp-role",
+            "Handler": "conf_res_mat_arp.lambda_handler",
+            "CodeSize": 45474261,
+            "Description": "Configuradora de la malla RESERVA_MATEMATICA_ARP: lee configuracion, registra ejecucion e inicia la Step Function",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-22T18:13:08.000+0000",
+            "CodeSha256": "F8ZXqQTEX1QHLeAWoXHmr+pTecVrZAmxO6HBv/nBWAE=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#RESERVA_MATEMATICA_ARP",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-reserva-matematica-arp",
+                    "CNF_TABLE": "niif-dev-cnf-mallas",
+                    "PRG_SK": "METADATA",
+                    "PRG_TABLE": "niif-dev-prg-programaciones",
+                    "PRG_PK": "PROGRAMACION#RESERVA_MATEMATICA_ARP"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "38d1e7c7-a6a8-48ea-b06b-ea90a16f0c62",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configuration-reserva-matematica-arp"
+            }
+        },
+        {
+            "FunctionName": "Prueba_MC_1",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:Prueba_MC_1",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::533267035849:role/service-role/lmb-read-params-role-p4vjbv0q",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 299,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2026-02-12T18:06:12.000+0000",
+            "CodeSha256": "R6fL2f5y9xHPTo4NojRtY2hz04DlAxWgwXm4xSMnwRQ=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "43d9aa23-f219-4ce7-b03f-1aff779b61ee",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/Prueba_MC_1"
+            }
+        },
+        {
+            "FunctionName": "certification",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:certification",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/service-role/certification-role-qmc8mhyv",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 1598,
+            "Description": "",
+            "Timeout": 30,
+            "MemorySize": 128,
+            "LastModified": "2025-05-13T20:16:22.000+0000",
+            "CodeSha256": "vivMYuZzJRNgTR2HOQZuMY3QZEWlUOJmClZH8kELzxM=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "APPROVERS_DYNAMODB_TABLE": "datalake-dev-use-case-approvers",
+                    "CERTIFICATION_DYNAMODB_TABLE": "datalake-dev-use-case-certification"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "18ab5348-6a09-4944-9fcf-0a83e0627b4b",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/certification"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-manager-configuration",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-manager-configuration",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-programador-config-role",
+            "Handler": "scheduler_configurators.lambda_handler",
+            "CodeSize": 45564530,
+            "Description": "Lambda triggered by DynamoDB Stream of prg-programaciones to manage EventBridge schedules for configurators",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-09T15:59:38.000+0000",
+            "CodeSha256": "nsy2g1Dp3iMf4dljmUKR7TyX1YITR0O8QkFtjLBe1gw=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "SCHEDULER_ROLE_ARN": "arn:aws:iam::533267035849:role/niif-dev-scheduler-configuradores-role",
+                    "ACCOUNT_ID": "533267035849",
+                    "CONFIGURADORES_JSON": "{\"AUXILIOS_FUNERARIOS\":\"niif-dev-configuration-auxilios-funerarios\",\"PRIMAS_ARL\":\"niif-dev-configuration-primas-arl\",\"PRIMAS_ENDOSOS\":\"niif-dev-configuration-primas-endosos\",\"PRIMAS_RENTAS\":\"niif-dev-configuration-primas-rentas\",\"RESERVA_MATEMATICA_ARP\":\"niif-dev-configuration-reserva-matematica-arp\",\"RESERVA_MATEMATICA_RVI\":\"niif-dev-configuration-reserva-matematica-rvi\"}",
+                    "PRG_TABLE": "niif-dev-prg-programaciones",
+                    "SCHEDULE_GROUP": "niif-dev-programacion-configuradores"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "22d38547-dc18-44fe-86ef-3ea3870de66c",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-manager-configuration"
+            }
+        },
+        {
+            "FunctionName": "CloudGuardDotnetCodeAnalysisV33",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CloudGuardDotnetCodeAnalysisV33",
+            "Runtime": "dotnet10",
+            "Role": "arn:aws:iam::533267035849:role/CloudGuardServerlessCodeAnalysisCSharpLambdaExecutionRole",
+            "Handler": "function_api_usage_c_sharp::function_api_usage_c_sharp.Handler::HandleRequest",
+            "CodeSize": 1061968,
+            "Description": "Statically analyze C# code",
+            "Timeout": 860,
+            "MemorySize": 1024,
+            "LastModified": "2026-09-15T22:38:29.000+0000",
+            "CodeSha256": "Nr4DsvcOXrgh44zn5jPiO20HtJphM8P8bEqlD8/p2S4=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "5bb841fa-bacc-401b-8460-9c46d8ae3391",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/CloudGuardDotnetCodeAnalysisV33"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-programador-configuraciones",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-programador-configuraciones",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-programador-configuraciones-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 2813,
+            "Description": "Programador compartido Gestor Configuracion NIIF DEV",
+            "Timeout": 30,
+            "MemorySize": 128,
+            "LastModified": "2026-09-25T20:04:23.000+0000",
+            "CodeSha256": "GYqAmtf574NZG3uBTfqYgBDuYNoII4rOlvd74fczdNI=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "SCHEDULER_ROLE_ARN": "arn:aws:iam::533267035849:role/niif-dev-scheduler-configuradores-role",
+                    "ACCOUNT_ID": "533267035849",
+                    "CONFIGURADORES_JSON": "{\"AUXILIOS_FUNERARIOS\":\"niif-dev-configurador-auxilios-funerarios\",\"PRIMAS_ARL\":\"niif-dev-configurador-primas-arl\",\"PRIMAS_ENDOSOS\":\"niif-dev-configurador-primas-endosos\",\"PRIMAS_RENTAS\":\"niif-dev-configurador-primas-rentas\",\"RESERVA_MATEMATICA_RVI\":\"niif-dev-configurador-reserva-matematica-rvi\",\"RESERVA_MATEMATICA_ARP\":\"niif-dev-configurador-reserva-matematica-arp\"}",
+                    "PRG_TABLE": "niif-dev-prg-programaciones",
+                    "SCHEDULE_GROUP": "niif-dev-programacion-configuradores"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "f43cf268-fda1-44b3-9577-9277f999490f",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-programador-configuraciones"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-niif-notification-certification",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-notification-certification",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::533267035849:role/service-role/datalake-dev-niif-notification-certification-role-xbzb8xdn",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 912,
+            "Description": "",
+            "Timeout": 60,
+            "MemorySize": 512,
+            "LastModified": "2026-05-22T20:36:11.000+0000",
+            "CodeSha256": "SnIbdIG55nH5NhhTHCmJ8Lj8mSKadqj2/AFaeK5ubTE=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "REPORT_BUCKET": "alfa-datalake-dev-niif-certification",
+                    "QUERY_DYNAMODB_TABLE": "datalake-dev-use-case-queries",
+                    "ASSETS_BUCKET": "alfa-datalake-dev-assets",
+                    "ENVIRONMENT": "dev",
+                    "NOTIFICATIONS_TABLE": "datalake-dev-notification-certification",
+                    "EMAIL_DYNAMODB_TABLE": "datalake-dev-use-case-emails"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "746522e6-e78b-4d5e-acfa-2ffb30152a67",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-niif-notification-certification"
+            }
+        },
+        {
+            "FunctionName": "CloudGuardFSPInjectorV33",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CloudGuardFSPInjectorV33",
+            "Runtime": "python3.11",
+            "Role": "arn:aws:iam::533267035849:role/CloudGuardServerlessFSPInjectorLambdaExecutionRole",
+            "Handler": "fsp_injector.lambda_handler",
+            "CodeSize": 29259,
+            "Description": "FSP injector, add FSP runtime protection to functions",
+            "Timeout": 860,
+            "MemorySize": 3008,
+            "LastModified": "2026-07-20T13:36:21.000+0000",
+            "CodeSha256": "14xVXdMb6a6tNd9mT2VtX7e36wmT3ZdqejXH1sjjDHo=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "ed352c70-9e7a-4292-82f2-242c2dc3a820",
+            "Layers": [],
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/CloudGuardFSPInjectorV33"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-clientes-smb",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-clientes-smb",
+            "Role": "arn:aws:iam::533267035849:role/datalake-dev-clientes-smb-lambda-role",
+            "CodeSize": 0,
+            "Description": "Lambda funtion to SMB connection",
+            "Timeout": 600,
+            "MemorySize": 1024,
+            "LastModified": "2026-07-08T15:45:15.000+0000",
+            "CodeSha256": "86f01752064ddcee1c06d2ba5b97c7c5dbb6b7809a24c1bf75075b03493ae017",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [
+                    "subnet-08bc5c88ea3cd3409",
+                    "subnet-0ec6603c9b0f57496"
+                ],
+                "SecurityGroupIds": [
+                    "sg-0e1f9e44776aa3b85"
+                ],
+                "VpcId": "vpc-09d6c75629d78076a",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "BUCKET_PATH": "phase_bronze/",
+                    "SECRET_NAME": "/datalake/dev/filesystem",
+                    "BUCKET_NAME": "alfa-datalake-dev-clientes-assets"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "82cedf61-a32a-489c-86a2-272bc69022d2",
+            "PackageType": "Image",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-clientes-smb"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-move-s3-certification",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-move-s3-certification",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-move-s3-role",
+            "Handler": "move_s3.lambda_handler",
+            "CodeSize": 45578296,
+            "Description": "Lambda triggered by DynamoDB for NO_CERTIFICATE status",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-16T16:07:13.000+0000",
+            "CodeSha256": "VKbyEyrqwKcCJkqgi7hBHOE1NKOihnNgyXFrZNzxvH8=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "REPORT_BUCKET": "niif-dev-certification",
+                    "ENVIRONMENT": "dev",
+                    "NOTIFICATIONS_TABLE": "niif-dev-notification-certification"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "64fec696-2c5d-4ba0-a7fe-b19adcd36a8a",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-move-s3-certification"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configuration-reserva-matematica-rvi",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configuration-reserva-matematica-rvi",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-conf-res-mat-rvi-role",
+            "Handler": "conf_res_mat_rvi.lambda_handler",
+            "CodeSize": 45582620,
+            "Description": "Configuradora de la malla RESERVA_MATEMATICA_RVI: lee configuracion, registra ejecucion e inicia la Step Function",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-20T13:38:50.000+0000",
+            "CodeSha256": "6NiauPr8VmeMMlrrDOL3GXerTbroimgmGsfk+ScJtIE=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#RESERVA_MATEMATICA_RVI",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-reserva-matematica-rvi",
+                    "CNF_TABLE": "niif-dev-cnf-mallas",
+                    "PRG_SK": "METADATA",
+                    "PRG_TABLE": "niif-dev-prg-programaciones",
+                    "PRG_PK": "PROGRAMACION#RESERVA_MATEMATICA_RVI"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "afe2bf9d-8780-4ee4-b0af-51956ef44429",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configuration-reserva-matematica-rvi"
+            }
+        },
+        {
+            "FunctionName": "testNotifications",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:testNotifications",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/service-role/testNotifications-role-mizum4h8",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 4874,
+            "Description": "",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2025-06-11T21:51:12.000+0000",
+            "CodeSha256": "hXTMCd7hhqfMpJtotdanB21v0AR1fFtjWVQNorSPqso=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "REPORT_BUCKET": "alfa-datalake-dev-niif-con",
+                    "QUERY_DYNAMODB_TABLE": "datalake-dev-use-case-queries",
+                    "ASSETS_BUCKET": "alfa-datalake-dev-assets",
+                    "ENVIRONMENT": "dev",
+                    "CERTIFICATION_DYNAMODB_TABLE": "datalake-dev-use-case-certification",
+                    "EMAIL_DYNAMODB_TABLE": "datalake-dev-use-case-emails",
+                    "LOG_LEVEL": "INFO"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "72b1c355-90e6-4d3b-a4f6-2144c582ed83",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python313:1",
+                    "CodeSize": 46673683
+                }
+            ],
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/testNotifications"
+            }
+        },
+        {
+            "FunctionName": "files-struct-quality",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:files-struct-quality",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::533267035849:role/service-role/files-struct-quality-role-6jf7jcj6",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 2165,
+            "Description": "",
+            "Timeout": 180,
+            "MemorySize": 1024,
+            "LastModified": "2026-07-27T19:52:22.000+0000",
+            "CodeSha256": "2wtnLpBSrXSK0ZmDvYQoY3TeaxfR9miWT999APsylPk=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "BUCKET_NAME": "alfa-dev-cl-bronz-jl",
+                    "FILES_PATH": "calidad/Files/"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "9fd12ddc-73fc-4059-a542-24218b949e33",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python314:9",
+                    "CodeSize": 52038078
+                }
+            ],
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/files-struct-quality"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-copy-s3-cert",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-copy-s3-cert",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-copy-s3-role",
+            "Handler": "copy_s3.lambda_handler",
+            "CodeSize": 45562757,
+            "Description": "Lambda triggered by DynamoDB for CERTIFICATE status",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-08T22:10:29.000+0000",
+            "CodeSha256": "18PTwvkYb+Dm7ESTd7ixuZ0BZBp4coe9scEqZ57AY3I=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "REPORT_BUCKET": "niif-dev-certification",
+                    "TRANSPORT_BUCKET": "niif-dev-transport",
+                    "ENVIRONMENT": "dev",
+                    "NOTIFICATIONS_TABLE": "niif-dev-notification-certification"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "340e94ee-ebeb-4909-a734-692861c1a530",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-copy-s3-cert"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configuration-primas-arl",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configuration-primas-arl",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-conf-arl-role",
+            "Handler": "conf_arl.lambda_handler",
+            "CodeSize": 45583956,
+            "Description": "Configuradora de la malla PRIMAS_ARL: lee configuracion, registra ejecucion e inicia la Step Function",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-20T14:00:37.000+0000",
+            "CodeSha256": "ngAyVZP2dstpyXK30mqWw5x5/dlcH9dMmIe+I0JGhtY=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#PRIMAS_ARL",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-arl",
+                    "CNF_TABLE": "niif-dev-cnf-mallas",
+                    "PRG_SK": "METADATA",
+                    "PRG_TABLE": "niif-dev-prg-programaciones",
+                    "PRG_PK": "PROGRAMACION#PRIMAS_ARL"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "acff4b92-a077-4942-a3c1-56494b8324fd",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configuration-primas-arl"
+            }
+        },
+        {
+            "FunctionName": "deleteModel",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:deleteModel",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/service-role/deleteModel-role-14gup6hs",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 491,
+            "Description": "",
+            "Timeout": 183,
+            "MemorySize": 128,
+            "LastModified": "2025-06-10T14:22:40.000+0000",
+            "CodeSha256": "6DUT7HPHM7vbCK0EUZ1xhpC9PLweP4nCCGwCKuSo+S4=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "a5c48a8c-8406-4934-affb-18a285dab492",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/deleteModel"
+            }
+        },
+        {
+            "FunctionName": "rollback-bronce",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:rollback-bronce",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/service-role/rollback-bronce-role-mmzz9u34",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 708,
+            "Description": "",
+            "Timeout": 300,
+            "MemorySize": 128,
+            "LastModified": "2025-08-01T19:53:01.000+0000",
+            "CodeSha256": "vdLm9lFM0kAKXQ78HJ6aE9xyplFinxnE9E8nIQWgZMw=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "FOLDERS": "ACSELE/ACSELE_ALFA,GENERAL/FILES,GEN/FILES,POINT/FILES,SIPREN/PLUS,SIPREN/TIERRA",
+                    "BUCKET": "alfa-datalake-dev-bronce"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "65fa75f0-2211-4319-92a6-ad4b194ada60",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/rollback-bronce"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-niif-move-s3",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-move-s3",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::533267035849:role/service-role/datalake-dev-niif-move-s3-role-makehhbp",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 1890,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2026-05-25T20:50:55.000+0000",
+            "CodeSha256": "jIhnyZHHxyxhSP6cOhifPGK1urm3mUxVz9HrnbYcJ2A=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "REPORT_BUCKET": "alfa-datalake-dev-niif-certification",
+                    "NOTIFICATIONS_TABLE": "datalake-dev-notification-certification"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "29305fa0-34c2-4ab5-abcd-203ff42ce0b8",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-niif-move-s3"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-niif-certification",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-certification",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::533267035849:role/service-role/datalake-dev-niif-certification-role-f5xtlwsp",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 2810,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2026-05-25T17:08:55.000+0000",
+            "CodeSha256": "UAdLXDF7GeqDimwByb3jP61eVeEthaGEA0LsEtPlL2k=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "APPROVERS_LOG_TABLE": "datalake-dev-approval-audit-log",
+                    "CONFIG_BUCKET": "alfa-datalake-dev-assets",
+                    "GLOBAL_CONFIG_KEY": "niif/configs/certification/json_global/json_global_notif_cert.json",
+                    "NOTIFICATIONS_TABLE": "datalake-dev-notification-certification"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "e7406ec1-7ee8-4011-949f-749e68605638",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-niif-certification"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-composite-notification-evaluator",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-composite-notification-evaluator",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-composite-notification-evaluator-role",
+            "Handler": "composite_notification_evaluator.lambda_handler",
+            "CodeSize": 45583228,
+            "Description": "Lambda triggered by DynamoDB Stream of composite-notification-status table",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-14T15:11:48.000+0000",
+            "CodeSha256": "vrY+J/fWr28FRXbKUsw8jpEzx6eHQbnbQoh695DinPM=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "GLUE_JOB_NAME": "niif-dev-certification",
+                    "SNS_TOPIC_ARN": "",
+                    "TABLE_NAME": "niif-dev-composite-notification-status",
+                    "CONFIG_BUCKET": "niif-dev-assets",
+                    "GLOBAL_CONFIG_KEY": "configs/certification/json_global_notif_cert.json",
+                    "REDIRECT_BASE_URL": "https://hfoy06vw40.execute-api.us-east-1.amazonaws.com/dev/r",
+                    "SHORT_LINKS_TABLE": "niif-dev-short-links",
+                    "COMPOSITE_GROUPS_KEY": "configs/certification/composite_groups.json"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "889f2430-e67e-499b-b1c8-ee9d0c35f305",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-composite-notification-evaluator"
+            }
+        },
+        {
+            "FunctionName": "test-lambda",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:test-lambda",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/service-role/test-lambda-role-xfyafghu",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 299,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2025-12-23T18:22:01.032+0000",
+            "CodeSha256": "HAPq9EReJVEC5gLavtc/gyd5vZtd9eiUGF932t0jBxY=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "f1046b59-602c-4107-8dbd-da30f16e2b31",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/test-lambda"
+            }
+        },
+        {
+            "FunctionName": "CloudGuardPythonCodeAnalysisV33",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CloudGuardPythonCodeAnalysisV33",
+            "Runtime": "python3.11",
+            "Role": "arn:aws:iam::533267035849:role/CloudGuardServerlessCodeAnalysisPython3LambdaExecutionRole",
+            "Handler": "function_code_analysis_python.lambda_handler",
+            "CodeSize": 24088311,
+            "Description": "Statically analyze Python code",
+            "Timeout": 860,
+            "MemorySize": 3008,
+            "LastModified": "2026-07-20T09:05:57.000+0000",
+            "CodeSha256": "X3nzpjqVxosmq2KWjDwB8kk1ggHeEqf7MCfD1sfwc7k=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "7f11d716-b240-4ff3-84cc-89df037b264a",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/CloudGuardPythonCodeAnalysisV33"
+            }
+        },
+        {
+            "FunctionName": "ReProcessLambda",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:ReProcessLambda",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/service-role/ReProcessLambda-role-98or2yop",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 738,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2024-10-02T21:32:19.000+0000",
+            "CodeSha256": "ISmbfi7ueYkLKjBpBSNp1WfV8jJOJM1q+BGTW6/rXtg=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "01827ff6-844f-41c2-81e7-721d8e7ad26d",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/ReProcessLambda"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-notification-certification-trigger",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-notification-certification-trigger",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-notification-cert-role",
+            "Handler": "notification_certification.lambda_handler",
+            "CodeSize": 45579814,
+            "Description": "Lambda triggered by DynamoDB for PENDING status",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-14T15:19:34.000+0000",
+            "CodeSha256": "h4ouNBJAE8r7zuzqQtIovpRYU9i9IKdsW2MKMh98IBQ=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "GLUE_JOB_NAME": "niif-dev-notification-certification",
+                    "SNS_TOPIC_ARN": "arn:aws:sns:us-east-1:533267035849:niif-dev-certification-email",
+                    "REPORT_BUCKET": "niif-dev-certification",
+                    "ACCOUNT_ID": "533267035849",
+                    "REDIRECT_BASE_URL": "https://hfoy06vw40.execute-api.us-east-1.amazonaws.com/dev/r",
+                    "QUERY_DYNAMODB_TABLE": "datalake-dev-use-case-queries",
+                    "ASSETS_BUCKET": "niif-dev-assets",
+                    "ENVIRONMENT": "dev",
+                    "SHORT_LINKS_TABLE": "niif-dev-short-links",
+                    "NOTIFICATIONS_TABLE": "niif-dev-notification-certification",
+                    "EMAIL_DYNAMODB_TABLE": "datalake-dev-use-case-emails"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "654d1f5a-6f5c-43c0-aea1-f00535480c90",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-notification-certification-trigger"
+            }
+        },
+        {
+            "FunctionName": "ALFA-DEV-DATALAKE-PipelineObserver",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:ALFA-DEV-DATALAKE-PipelineObserver",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/stack-cf-observability-ObserverRole-Ut7IM2wZtBh9",
+            "Handler": "index.handler",
+            "CodeSize": 2111,
+            "Description": "Enriquece eventos de Glue, Crawlers y Step Functions para observabilidad",
+            "Timeout": 120,
+            "MemorySize": 256,
+            "LastModified": "2026-10-20T20:56:28.313+0000",
+            "CodeSha256": "qHyBLCDw7OlU9w81tPbAkSJmQti9W8tZG4UutmBmvkM=",
+            "Version": "$LATEST",
+            "DeadLetterConfig": {
+                "TargetArn": "arn:aws:sqs:us-east-1:533267035849:ALFA-DEV-DATALAKE-Observer-DLQ"
+            },
+            "Environment": {
+                "Variables": {
+                    "CRIT": "arn:aws:sns:us-east-1:533267035849:ALFA-DEV-DATALAKE-Critical",
+                    "NS": "ALFA/DATALAKE",
+                    "ENV": "DEV",
+                    "WARN": "arn:aws:sns:us-east-1:533267035849:ALFA-DEV-DATALAKE-Warning"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "641117a2-39ae-4763-81e5-21f98bd7974a",
+            "PackageType": "Zip",
+            "Architectures": [
+                "arm64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/ALFA-DEV-DATALAKE-PipelineObserver"
+            }
+        },
+        {
+            "FunctionName": "testMapFunction",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:testMapFunction",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/service-role/testMapFunction-role-ge6xb8gp",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 327,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2025-01-10T13:47:58.000+0000",
+            "CodeSha256": "g3bH8ivWfR56NTxerdn9OjyXKCWtuaPWk4f6MSHy1uw=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "1f1090c3-e876-4f36-8790-79cceaef5623",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/testMapFunction"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-niif-send-via-sftp",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-send-via-sftp",
+            "Role": "arn:aws:iam::533267035849:role/datalake-dev-niif-send-via-sftp",
+            "CodeSize": 0,
+            "Description": "Lambda funtion to send file via sftp connection",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-09T22:58:16.000+0000",
+            "CodeSha256": "60782759ddec155c83235b87f86eaf0f9e24f027b1270405135c49f1cd2670b3",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [
+                    "subnet-08bc5c88ea3cd3409",
+                    "subnet-0ec6603c9b0f57496"
+                ],
+                "SecurityGroupIds": [
+                    "sg-0e1f9e44776aa3b85"
+                ],
+                "VpcId": "vpc-09d6c75629d78076a",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "SFTP_PORT": "2222",
+                    "SFTP_BASE_DIR": "In",
+                    "CREDS_SECRET_ID": "/datalake/dev/niif/credentials/sftp/prophets",
+                    "S3_ROOT_PREFIX": "export",
+                    "SFTP_HOST": "seguroalfa-sftp.ctxuse.fiscloudservices.com"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "39806f42-221a-4b03-a6e6-def4a82d7d5c",
+            "PackageType": "Image",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-niif-send-via-sftp"
+            }
+        },
+        {
+            "FunctionName": "PRUEBA_JQ",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:PRUEBA_JQ",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::533267035849:role/service-role/PRUEBA_JQ-role-h9a46cg5",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 299,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2026-02-12T19:36:43.006+0000",
+            "CodeSha256": "R6fL2f5y9xHPTo4NojRtY2hz04DlAxWgwXm4xSMnwRQ=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "3e2b6bdd-6a1e-4cfd-95fd-f8e81d45289e",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/PRUEBA_JQ"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-smb-clientes",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-smb-clientes",
+            "Role": "arn:aws:iam::533267035849:role/datalake-dev-smb-lambda-role",
+            "CodeSize": 0,
+            "Description": "Lambda to make mirror from FileServer to S3",
+            "Timeout": 600,
+            "MemorySize": 1024,
+            "LastModified": "2025-12-23T17:54:10.000+0000",
+            "CodeSha256": "86f01752064ddcee1c06d2ba5b97c7c5dbb6b7809a24c1bf75075b03493ae017",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [
+                    "subnet-08bc5c88ea3cd3409",
+                    "subnet-0ec6603c9b0f57496"
+                ],
+                "SecurityGroupIds": [
+                    "sg-0e1f9e44776aa3b85"
+                ],
+                "VpcId": "vpc-09d6c75629d78076a",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "BUCKET_PATH": "phase_bronze/",
+                    "SECRET_NAME": "/datalake/dev/filesystem",
+                    "BUCKET_NAME": "alfa-datalake-dev-clientes-assets"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "506981db-8a51-4161-bde1-7fa979d2563c",
+            "PackageType": "Image",
+            "ImageConfigResponse": {},
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-smb-clientes"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-rollback-bronce",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-rollback-bronce",
+            "Role": "arn:aws:iam::533267035849:role/datalake-dev-rollback-bronce-lambda-role",
+            "CodeSize": 0,
+            "Description": "Lambda funtion to rollback bronce",
+            "Timeout": 300,
+            "MemorySize": 128,
+            "LastModified": "2025-08-29T16:38:37.000+0000",
+            "CodeSha256": "877304027da875c6b73ffe3dc6c5645c47e5213ebda5c0fa3cd18a2c59607cea",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "FOLDERS": "ACSELE/ACSELE_ALFA,GENERAL/FILES,GEN/FILES,POINT/FILES,SIPREN/PLUS,SIPREN/TIERRA",
+                    "BUCKET": "alfa-datalake-dev-bronce",
+                    "LOG_LEVEL": "INFO"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "bea09d65-16c0-4c5b-96d6-4ab2a5a7690f",
+            "PackageType": "Image",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-rollback-bronce"
+            }
+        },
+        {
+            "FunctionName": "aws-quicksetup-lifecycle-LA-xmkb1",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:aws-quicksetup-lifecycle-LA-xmkb1",
+            "Runtime": "python3.11",
+            "Role": "arn:aws:iam::533267035849:role/AWS-QuickSetup-SSM-LifecycleManagement-LA-us-east-1",
+            "Handler": "index.reconcile",
+            "CodeSize": 1703,
+            "Description": "",
+            "Timeout": 900,
+            "MemorySize": 128,
+            "LastModified": "2025-08-21T17:08:11.772+0000",
+            "CodeSha256": "GY2Ab1gTBXm4yWApeMfBf+Bg04Dvzcwc6u+DVSRRz3Q=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "REGION": "us-east-1"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "f0221eb4-1a88-4c08-9050-51f0ecf0c740",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/aws-quicksetup-lifecycle-LA-xmkb1"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-programador-cargues",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-programador-cargues",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-programador-cargues-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 2664,
+            "Description": "",
+            "Timeout": 30,
+            "MemorySize": 128,
+            "LastModified": "2026-09-15T15:55:15.000+0000",
+            "CodeSha256": "l9dfZ5Pqh+HsgS4QVMUc374gQCLa7qpcP1Q/eX4HLmQ=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "SCHEDULER_ROLE_ARN": "arn:aws:iam::533267035849:role/niif-dev-programacion-cargues-scheduler-role",
+                    "TARGET_FUNCTION_ARN": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configurador-extraccion",
+                    "TABLE_NAME": "niif-dev-programacion-cargues",
+                    "CONFIG_VERSION": "6",
+                    "SCHEDULE_GROUP": "niif-dev-programacion-cargues"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "e822ef5d-579c-415d-b60d-176fe264c2f5",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-programador-cargues"
+            }
+        },
+        {
+            "FunctionName": "CloudGuardJavaCodeAnalysisV33",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CloudGuardJavaCodeAnalysisV33",
+            "Runtime": "java25",
+            "Role": "arn:aws:iam::533267035849:role/CloudGuardServerlessCodeAnalysisJavaLambdaExecutionRole",
+            "Handler": "io.protego.lambda.Handler",
+            "CodeSize": 6847834,
+            "Description": "Statically analyze Java code",
+            "Timeout": 860,
+            "MemorySize": 3008,
+            "LastModified": "2026-10-22T15:01:57.000+0000",
+            "CodeSha256": "OmtcYllIW+i8MRVnaO/LRSksmoP5ZQEMRXywVnbAarY=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "3e12d28f-9210-4210-a4d0-0580c5d3f308",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/CloudGuardJavaCodeAnalysisV33"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configurador-primas-arl",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configurador-primas-arl",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-configuradores-niif-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 5155,
+            "Description": "Configurador NIIF DEV para Primas ARL",
+            "Timeout": 60,
+            "MemorySize": 256,
+            "LastModified": "2026-10-13T20:01:25.000+0000",
+            "CodeSha256": "GTnSsqcG4ScbKwmUBY1DXMMOCjlAJwPtIo3+KZ1cTM4=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#PRIMAS_ARL",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-arl",
+                    "CNF_TABLE": "niif-dev-cnf-mallas"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "ccf1e33d-d23c-4bcc-9382-eb830a3dddde",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configurador-primas-arl"
+            }
+        },
+        {
+            "FunctionName": "CloudGuardOnboardingOrchestrator-Helper",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CloudGuardOnboardingOrchestrator-Helper",
+            "Runtime": "nodejs22.x",
+            "Role": "arn:aws:iam::533267035849:role/CloudGuard-Onboarding-Orchestrator-helper-role",
+            "Handler": "index.handler",
+            "CodeSize": 699549,
+            "Description": "",
+            "Timeout": 300,
+            "MemorySize": 128,
+            "LastModified": "2025-10-02T21:44:23.000+0000",
+            "CodeSha256": "g/91Z6B74GR0NWkjzfnbjvmnM6m17gkBrsiRAm7O0jg=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "3ead84cc-7fef-46ab-a40b-452a22238dbe",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/CloudGuardOnboardingOrchestrator-Helper"
+            }
+        },
+        {
+            "FunctionName": "CheckValidation",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CheckValidation",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/service-role/CheckValidation-role-btagjola",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 2081,
+            "Description": "",
+            "Timeout": 60,
+            "MemorySize": 128,
+            "LastModified": "2025-08-20T15:49:37.000+0000",
+            "CodeSha256": "VSLDlrYPILbdynrHpFpd3MAfSFAEnNgOeMFqpKNQJtg=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "S3_BUCKET": "alfa-datalake-dev-landing-prophet",
+                    "QUERY_TABLE": "datalake-dev-use-case-queries",
+                    "S3_PREFIX": "landing/prophets",
+                    "DYNAMODB_CERT_TABLE": "datalake-dev-use-case-certification",
+                    "CERTIFICATION_TABLE": "datalake-dev-use-case-certification",
+                    "DYNAMODB_QUERY_TABLE": "datalake-dev-use-case-queries",
+                    "ENVIRONMENT": "dev",
+                    "TABLE_USE_CASE": "datalake-dev-use-case-queries",
+                    "DYNAMODB_TABLE_NAME": "datalake-dev-use-case-certification",
+                    "QUERY_TABLE_NAME": "datalake-dev-use-case-queries",
+                    "LOG_LEVEL": "INFO",
+                    "BUCKET_NAME": "alfa-datalake-dev-landing-prophet"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "951149f4-63f7-4ca2-8e13-e6250c8c098d",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/CheckValidation"
+            }
+        },
+        {
+            "FunctionName": "Prueba_MC",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:Prueba_MC",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::533267035849:role/service-role/lmb-read-params-role-p4vjbv0q",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 299,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2026-02-12T18:06:42.000+0000",
+            "CodeSha256": "R6fL2f5y9xHPTo4NojRtY2hz04DlAxWgwXm4xSMnwRQ=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "832e5fd2-bcb8-4551-a202-303a70d4ee48",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/Prueba_MC"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-contingency-lambda",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-contingency-lambda",
+            "Role": "arn:aws:iam::533267035849:role/datalake-dev-cont-lambda-role",
+            "CodeSize": 0,
+            "Description": "Lambda funtion select data source",
+            "Timeout": 300,
+            "MemorySize": 1024,
+            "LastModified": "2026-06-17T19:44:35.000+0000",
+            "CodeSha256": "49de6baf9a691fefe94a0d1c6e8dded9de0b7f63b143ee4f41810c38bb0f0812",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [
+                    "subnet-08bc5c88ea3cd3409",
+                    "subnet-0ec6603c9b0f57496"
+                ],
+                "SecurityGroupIds": [
+                    "sg-0e1f9e44776aa3b85"
+                ],
+                "VpcId": "vpc-09d6c75629d78076a",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "LOG_LEVEL": "INFO"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "0f3f65c6-b357-4107-af3f-681187b43184",
+            "PackageType": "Image",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-contingency-lambda"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-niif-short-link-redirect",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-short-link-redirect",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::533267035849:role/service-role/datalake-dev-niif-short-link-redirect-role-lnog6k72",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 557,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2026-05-27T13:12:17.000+0000",
+            "CodeSha256": "ZYooimRXGdSIJhvRZ1kqi89WnAtni1TzoTDehDhS6To=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "067f5555-aa39-4c8f-9572-a46df8312b8d",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-niif-short-link-redirect"
+            }
+        },
+        {
+            "FunctionName": "test",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:test",
+            "Runtime": "python3.13",
+            "Role": "arn:aws:iam::533267035849:role/service-role/test-role-io514dch",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 299,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2025-10-12T01:25:36.872+0000",
+            "CodeSha256": "HAPq9EReJVEC5gLavtc/gyd5vZtd9eiUGF932t0jBxY=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "d72703bb-7baa-4ed8-9584-296d3371d1a9",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/test"
+            }
+        },
+        {
+            "FunctionName": "postLogin",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:postLogin",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/service-role/postLogin-role-w3vv4rhr",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 1311,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2025-04-21T14:43:03.000+0000",
+            "CodeSha256": "rhes6Ohcqa6uMzZ0dbh+ztfcKXdtGoEfXzDyPN83Nr0=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "5420c0f6-b2c9-4af5-87be-cb74892a84c7",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/postLogin"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configuration-primas-rentas",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configuration-primas-rentas",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-conf-rentas-role",
+            "Handler": "conf_rentas.lambda_handler",
+            "CodeSize": 45583294,
+            "Description": "Configuradora de la malla PRIMAS_RENTAS: lee configuracion, registra ejecucion e inicia la Step Function",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-20T14:26:05.000+0000",
+            "CodeSha256": "DTW4d4jVQyhZSPiSwrxphqajhblTNpkF3zt28U+332I=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#PRIMAS_RENTAS",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-rentas",
+                    "CNF_TABLE": "niif-dev-cnf-mallas",
+                    "PRG_SK": "METADATA",
+                    "PRG_TABLE": "niif-dev-prg-programaciones",
+                    "PRG_PK": "PROGRAMACION#PRIMAS_RENTAS"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "fa5e0af8-d912-444d-a0b8-4cfcb7e03e72",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configuration-primas-rentas"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configuration-primas-endosos",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configuration-primas-endosos",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-conf-endosos-role",
+            "Handler": "conf_endosos.lambda_handler",
+            "CodeSize": 45583773,
+            "Description": "Configuradora de la malla PRIMAS_ENDOSOS: lee configuracion, registra ejecucion e inicia la Step Function",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-20T14:16:40.000+0000",
+            "CodeSha256": "Lc7yGvdYqHbBLvScEQR4/1E5snfIZlsQ1PTr9fKDHq0=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": "",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "MALLA_PK": "MALLA#PRIMAS_ENDOSOS",
+                    "PRS_TABLE": "niif-dev-prs-estructuras",
+                    "EJC_TABLE": "niif-dev-ejc-ejecuciones",
+                    "STATE_MACHINE_ARN": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-endosos",
+                    "CNF_TABLE": "niif-dev-cnf-mallas",
+                    "PRG_SK": "METADATA",
+                    "PRG_TABLE": "niif-dev-prg-programaciones",
+                    "PRG_PK": "PROGRAMACION#PRIMAS_ENDOSOS"
+                }
+            },
+            "KMSKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "d84b7477-168a-4ed2-bd53-471e7c92bf14",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configuration-primas-endosos"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-niif-copy-s3",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-copy-s3",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::533267035849:role/service-role/datalake-dev-niif-copy-s3-role-zdtj2eme",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 1307,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2026-04-08T15:08:40.000+0000",
+            "CodeSha256": "xO6zsQMWSylbpRuPyj6i1jizt4GfH/t9dNV9bqiVCk0=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "REPORT_BUCKET": "alfa-datalake-dev-niif-certification",
+                    "TRANSPORT_BUCKET": "alfa-datalake-dev-niif-transport",
+                    "NOTIFICATIONS_TABLE": "datalake-dev-notification-certification"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "608f9f3b-0630-4456-bebe-e6f2cde06364",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-niif-copy-s3"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-configurador-extraccion",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configurador-extraccion",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-configurador-extraccion-role",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 4463,
+            "Description": "",
+            "Timeout": 30,
+            "MemorySize": 128,
+            "LastModified": "2026-09-18T04:33:39.000+0000",
+            "CodeSha256": "bX/MyY2BSJu8g5LpehI5Af1uWjl5zNuL9jNyxQw5c0w=",
+            "Version": "$LATEST",
+            "Environment": {
+                "Variables": {
+                    "TABLE_NAME": "niif-dev-gestor-configuracion",
+                    "FUNCTION_NAME": "niif-dev-configurador-extraccion",
+                    "INICIADOR_FUNCTION_NAME": "niif-dev-iniciador-ejecucion",
+                    "CONFIG_VERSION": "8"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "73116375-6b50-45ab-b43a-6e58be2a3e64",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-configurador-extraccion"
+            }
+        },
+        {
+            "FunctionName": "niif-dev-accountingtool",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-accountingtool",
+            "Role": "arn:aws:iam::533267035849:role/niif-dev-accountingtool",
+            "CodeSize": 0,
+            "Description": "Lambda function to get files from sftp connection (SFTP -> S3)",
+            "Timeout": 300,
+            "MemorySize": 512,
+            "LastModified": "2026-10-16T15:33:19.374+0000",
+            "CodeSha256": "919e13c095dfc6905c93abcce379a6edce30e261ca0e96935e1d7f54ca0a3747",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [
+                    "subnet-08bc5c88ea3cd3409",
+                    "subnet-0ec6603c9b0f57496"
+                ],
+                "SecurityGroupIds": [
+                    "sg-0e1f9e44776aa3b85"
+                ],
+                "VpcId": "vpc-09d6c75629d78076a",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "DELETE_AFTER_DOWNLOAD": "false",
+                    "SFTP_PORT": "2222",
+                    "SFTP_BASE_DIR": "Out",
+                    "CREDS_SECRET_ID": "/datalake/dev/niif/credentials/sftp/prophets",
+                    "S3_DEST_PREFIX": "",
+                    "SKIP_IF_EXISTS": "true",
+                    "SFTP_HOST": "seguroalfa-sftp.ctxuse.fiscloudservices.com",
+                    "DEST_BUCKET": "niif-dev-accountingtool"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "d5c1793b-e5d5-4eef-bd72-2b4bbb5a0377",
+            "PackageType": "Image",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/niif-dev-accountingtool"
+            }
+        },
+        {
+            "FunctionName": "datalake-dev-clientes-smb-params-handler",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-clientes-smb-params-handler",
+            "Role": "arn:aws:iam::533267035849:role/datalake-dev-clientes-smb-params-handler-lambda-role",
+            "CodeSize": 0,
+            "Description": "Lambda funtion to smb params handler connection",
+            "Timeout": 60,
+            "MemorySize": 512,
+            "LastModified": "2026-07-08T15:44:55.000+0000",
+            "CodeSha256": "a085a9003bcc320111bc78654e2cd28cef52155a0f9c3257897e378e27c9607f",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "d7bbd685-5acc-41ed-812a-cc4d859f2303",
+            "PackageType": "Image",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/datalake-dev-clientes-smb-params-handler"
+            }
+        },
+        {
+            "FunctionName": "CloudGuardNodeCodeAnalysisV33",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CloudGuardNodeCodeAnalysisV33",
+            "Runtime": "nodejs24.x",
+            "Role": "arn:aws:iam::533267035849:role/CloudGuardServerlessCodeAnalysisNode14LambdaExecutionRole",
+            "Handler": "index.handler",
+            "CodeSize": 30396209,
+            "Description": "Statically analyze NodeJs code",
+            "Timeout": 860,
+            "MemorySize": 4096,
+            "LastModified": "2026-09-15T22:38:32.000+0000",
+            "CodeSha256": "ilefq6NO2d3aHO2StByHdzD+NMU6BRTJX4mgTEK/axg=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "41a11002-8c02-4de3-ad32-7f2679e594de",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:317307795746:layer:aws-lambda-layer-java:1",
+                    "CodeSize": 42877079
+                }
+            ],
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/CloudGuardNodeCodeAnalysisV33"
+            }
+        },
+        {
+            "FunctionName": "alfaproject-dev-smbclient",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:alfaproject-dev-smbclient",
+            "Runtime": "python3.12",
+            "Role": "arn:aws:iam::533267035849:role/service-role/smb_test-role-y44va765",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 10363,
+            "Description": "",
+            "Timeout": 300,
+            "MemorySize": 1024,
+            "LastModified": "2025-10-12T01:26:16.000+0000",
+            "CodeSha256": "c66OcbFINlAMmmy9gTy5vO6OlexlX+sumYmGQ04zQ7o=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [
+                    "subnet-08bc5c88ea3cd3409",
+                    "subnet-0ec6603c9b0f57496"
+                ],
+                "SecurityGroupIds": [
+                    "sg-0e1f9e44776aa3b85"
+                ],
+                "VpcId": "vpc-09d6c75629d78076a",
+                "Ipv6AllowedForDualStack": false
+            },
+            "Environment": {
+                "Variables": {
+                    "BUCKET_PATH": "test/FS_files/lmbd/",
+                    "SECRET_NAME": "/datalake/dev/filesystem",
+                    "BUCKET_NAME": "alfa-datalake-dev-assets"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "b2dd13d5-e6da-4aaf-ae06-06f40fc0655f",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:533267035849:layer:SmbLayer:5",
+                    "CodeSize": 7872444
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python312:15",
+                    "CodeSize": 54118125
+                }
+            ],
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/alfaproject-dev-smbclient"
+            }
+        }
+    ]
+}

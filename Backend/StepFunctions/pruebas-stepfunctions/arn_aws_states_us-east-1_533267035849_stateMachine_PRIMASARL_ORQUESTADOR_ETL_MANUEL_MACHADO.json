@@ -1,0 +1,20 @@
+{
+    "stateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:PRIMASARL_ORQUESTADOR_ETL_MANUEL_MACHADO",
+    "name": "PRIMASARL_ORQUESTADOR_ETL_MANUEL_MACHADO",
+    "status": "ACTIVE",
+    "definition": "{\"Comment\":\"Orquestador ETL Primas ARL - Manuel Machado\",\"StartAt\":\"Bronze\",\"States\":{\"Bronze\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::glue:startJobRun.sync\",\"Parameters\":{\"JobName\":\"PRIMASARL_BRZ_DEV_EXTRACCION_MANUEL_MACHADO\"},\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"IntervalSeconds\":30,\"MaxAttempts\":2,\"BackoffRate\":2}],\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"Next\":\"FalloPipeline\"}],\"Next\":\"Silver\"},\"Silver\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::glue:startJobRun.sync\",\"Parameters\":{\"JobName\":\"PRIMASARL_SILVER_DEV_TRANSFORMACION_MANUEL_MACHADO\"},\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"IntervalSeconds\":30,\"MaxAttempts\":2,\"BackoffRate\":2}],\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"Next\":\"FalloPipeline\"}],\"Next\":\"ValidacionTecnica\"},\"ValidacionTecnica\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::glue:startJobRun.sync\",\"Parameters\":{\"JobName\":\"VALIDACION_TECNICA_PRIMAS_ARL_MANUEL_MACHADO\"},\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"IntervalSeconds\":30,\"MaxAttempts\":2,\"BackoffRate\":2}],\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"Next\":\"FalloPipeline\"}],\"Next\":\"Gold\"},\"Gold\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::glue:startJobRun.sync\",\"Parameters\":{\"JobName\":\"PRIMASARL_GOLD_DEV_TRANSFORMACION_MANUEL_MACHADO\"},\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"IntervalSeconds\":30,\"MaxAttempts\":2,\"BackoffRate\":2}],\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"Next\":\"FalloPipeline\"}],\"End\":true},\"FalloPipeline\":{\"Type\":\"Fail\",\"Cause\":\"Fallo en uno de los Glue jobs del pipeline Primas ARL\"}}}",
+    "roleArn": "arn:aws:iam::533267035849:role/service-role/StepFunctions-PRIMASARL_ORQUESTADOR_ETL_MANUEL_MA-role-nnxcsdcsl",
+    "type": "STANDARD",
+    "creationDate": "2026-04-06T16:54:21.099000+00:00",
+    "loggingConfiguration": {
+        "level": "OFF",
+        "includeExecutionData": false
+    },
+    "tracingConfiguration": {
+        "enabled": false
+    },
+    "revisionId": "dc5afc38-adf8-4075-80d2-6d787b000782",
+    "encryptionConfiguration": {
+        "type": "AWS_OWNED_KEY"
+    }
+}

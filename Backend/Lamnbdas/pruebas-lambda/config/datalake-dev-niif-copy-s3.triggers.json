@@ -1,0 +1,36 @@
+{
+    "EventSourceMappings": [
+        {
+            "UUID": "d1a0baef-8598-416e-9e47-48c3a1345dbc",
+            "StartingPosition": "LATEST",
+            "BatchSize": 100,
+            "MaximumBatchingWindowInSeconds": 0,
+            "ParallelizationFactor": 1,
+            "EventSourceArn": "arn:aws:dynamodb:us-east-1:533267035849:table/datalake-dev-notification-certification/stream/2026-03-20T02:10:29.384",
+            "FilterCriteria": {
+                "Filters": [
+                    {
+                        "Pattern": "{  \"eventName\": [\"MODIFY\"],  \"dynamodb\": {    \"NewImage\": {      \"status\": {        \"S\": [\"CERTIFICATE\"]      }    }  }}"
+                    }
+                ]
+            },
+            "MetricsConfig": {
+                "Metrics": []
+            },
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-copy-s3",
+            "LastModified": "2026-07-01T01:08:00+00:00",
+            "LastProcessingResult": "PROBLEM: Stream is closed",
+            "State": "Disabled",
+            "StateTransitionReason": "Unrecoverable error",
+            "DestinationConfig": {
+                "OnFailure": {}
+            },
+            "MaximumRecordAgeInSeconds": -1,
+            "BisectBatchOnFunctionError": false,
+            "MaximumRetryAttempts": -1,
+            "TumblingWindowInSeconds": 0,
+            "FunctionResponseTypes": [],
+            "EventSourceMappingArn": "arn:aws:lambda:us-east-1:533267035849:event-source-mapping:d1a0baef-8598-416e-9e47-48c3a1345dbc"
+        }
+    ]
+}

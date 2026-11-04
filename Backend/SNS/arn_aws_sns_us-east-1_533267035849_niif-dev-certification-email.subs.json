@@ -1,0 +1,18 @@
+{
+    "Subscriptions": [
+        {
+            "SubscriptionArn": "arn:aws:sns:us-east-1:533267035849:niif-dev-certification-email:add68cb5-a041-4116-98d1-028974a299f8",
+            "Owner": "533267035849",
+            "Protocol": "email",
+            "Endpoint": "julio.mesias@segurosalfa.com.co",
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:niif-dev-certification-email"
+        },
+        {
+            "SubscriptionArn": "arn:aws:sns:us-east-1:533267035849:niif-dev-certification-email:369397bb-d29b-4af5-b79a-6573ce6d7d38",
+            "Owner": "533267035849",
+            "Protocol": "email",
+            "Endpoint": "manuel.machado@segurosalfa.com.co",
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:niif-dev-certification-email"
+        }
+    ]
+}

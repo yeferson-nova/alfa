@@ -1,0 +1,10 @@
+{
+    "Targets": [
+        {
+            "Id": "terraform-yVnSudgrtfvmV9z2FrOu9TraTN",
+            "Arn": "arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-clientes-silver-mvp2",
+            "RoleArn": "arn:aws:iam::533267035849:role/default",
+            "Input": "{\"description\":\"Ejecución mensual automatica (mes vencido)\",\"environment\":\"Producción\",\"executed_acsele\":true,\"executed_alfaprd\":true,\"executed_by\":\"{usuario}@segurosalfa.com.co\",\"historic_param\":\"0\",\"job_prefix\":\"normal-load\",\"periods\":[{\"anio\":\"\",\"mes\":\"\",\"period\":\"\"}],\"test_id\":\"Ejecucion_normal_mes_vencido\"}"
+        }
+    ]
+}

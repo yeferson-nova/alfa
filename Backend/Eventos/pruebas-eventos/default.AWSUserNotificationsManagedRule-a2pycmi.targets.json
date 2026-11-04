@@ -1,0 +1,14 @@
+{
+    "Targets": [
+        {
+            "Id": "AWSNotifications-Rule-as3a46f",
+            "Arn": "arn:aws:notifications:us-east-1:::",
+            "InputTransformer": {
+                "InputPathsMap": {
+                    "event": "$"
+                },
+                "InputTemplate": "{\n  \"managedRuleArn\": \"arn:aws:events:us-east-1:533267035849:rule/AWSUserNotificationsManagedRule-a2pycmi\",\n  \"event\": <event>\n}"
+            }
+        }
+    ]
+}

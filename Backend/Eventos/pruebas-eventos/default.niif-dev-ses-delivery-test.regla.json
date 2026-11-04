@@ -1,0 +1,9 @@
+{
+    "Name": "niif-dev-ses-delivery-test",
+    "Arn": "arn:aws:events:us-east-1:533267035849:rule/niif-dev-ses-delivery-test",
+    "EventPattern": "{\n  \"source\": [\n    \"aws.ses\"\n  ],\n  \"detail-type\": [\n    \"Email Sent\",\n    \"Email Delivered\",\n    \"Email Bounced\",\n    \"Email Complaint Received\",\n    \"Email Rejected\",\n    \"Email Rendering Failed\",\n    \"Email Delivery Delayed\"\n  ]\n}\n",
+    "State": "ENABLED",
+    "Description": "Temporal: seguimiento de entrega SES NIIF DEV",
+    "EventBusName": "default",
+    "CreatedBy": "533267035849"
+}

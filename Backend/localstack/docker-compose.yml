@@ -1,0 +1,12 @@
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack-niif17
+    ports:
+      - "127.0.0.1:4566:4566"
+    environment:
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN:?defina LOCALSTACK_AUTH_TOKEN en .env}
+      - SERVICES=s3,lambda,ses,sns,sqs,events,stepfunctions,dynamodb,apigateway,logs,iam,kms,secretsmanager,ssm
+      - DEBUG=0
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"

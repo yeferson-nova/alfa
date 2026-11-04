@@ -1,0 +1,435 @@
+{
+    "TableList": [
+        {
+            "Name": "anp_detalle_solicitudes_giro",
+            "DatabaseName": "niif17_bronze",
+            "Owner": "hadoop",
+            "CreateTime": "2026-04-14T20:38:23+00:00",
+            "UpdateTime": "2026-04-14T20:38:23+00:00",
+            "LastAccessTime": "1970-01-01T00:00:00+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "nid_detalle_solicitud_giro",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nid_periodo_solicitud_giro",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "cod_tipo_identificacion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nid_numero_identificacion",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "lote_cargue_id",
+                        "Type": "bigint"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-bronce/scripts_caso_auxilios_funerarios_niif_manuelmachado/anp_detalle_solicitudes_giro",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {},
+                "SkewedInfo": {
+                    "SkewedColumnNames": [],
+                    "SkewedColumnValues": [],
+                    "SkewedColumnValueLocationMaps": {}
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "EXTERNAL": "TRUE",
+                "transient_lastDdlTime": "1776199103"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/AWSReservedSSO_ALFA-DEV-DATALAKE-ADM_d41d4bf9003a32d8/mmachado@segurosalfa.com.co",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "anp_distribucion_vig_pension",
+            "DatabaseName": "niif17_bronze",
+            "Owner": "hadoop",
+            "CreateTime": "2026-04-14T20:38:53+00:00",
+            "UpdateTime": "2026-04-14T20:38:53+00:00",
+            "LastAccessTime": "1970-01-01T00:00:00+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "nid_distribucion_vigencia",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nid_pension",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "lote_cargue_id",
+                        "Type": "bigint"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-bronce/scripts_caso_auxilios_funerarios_niif_manuelmachado/anp_distribucion_vig_pension",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {},
+                "SkewedInfo": {
+                    "SkewedColumnNames": [],
+                    "SkewedColumnValues": [],
+                    "SkewedColumnValueLocationMaps": {}
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "EXTERNAL": "TRUE",
+                "transient_lastDdlTime": "1776199133"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/AWSReservedSSO_ALFA-DEV-DATALAKE-ADM_d41d4bf9003a32d8/mmachado@segurosalfa.com.co",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "anp_pensionado_novedad",
+            "DatabaseName": "niif17_bronze",
+            "Owner": "hadoop",
+            "CreateTime": "2026-04-14T20:38:44+00:00",
+            "UpdateTime": "2026-04-14T20:38:44+00:00",
+            "LastAccessTime": "1970-01-01T00:00:00+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "nid_distribucion_vigencia",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "cod_tipo_identificacion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nid_numero_identificacion",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "cod_concepto",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "vlr_total",
+                        "Type": "decimal(14,2)"
+                    },
+                    {
+                        "Name": "lote_cargue_id",
+                        "Type": "bigint"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-bronce/scripts_caso_auxilios_funerarios_niif_manuelmachado/anp_pensionado_novedad",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {},
+                "SkewedInfo": {
+                    "SkewedColumnNames": [],
+                    "SkewedColumnValues": [],
+                    "SkewedColumnValueLocationMaps": {}
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "EXTERNAL": "TRUE",
+                "transient_lastDdlTime": "1776199124"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/AWSReservedSSO_ALFA-DEV-DATALAKE-ADM_d41d4bf9003a32d8/mmachado@segurosalfa.com.co",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "anp_pensiones",
+            "DatabaseName": "niif17_bronze",
+            "Owner": "hadoop",
+            "CreateTime": "2026-04-14T20:39:03+00:00",
+            "UpdateTime": "2026-04-14T20:39:03+00:00",
+            "LastAccessTime": "1970-01-01T00:00:00+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "nid_pension",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nid_procedencia",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fec_expedicion",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "cod_origen",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "lote_cargue_id",
+                        "Type": "bigint"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-bronce/scripts_caso_auxilios_funerarios_niif_manuelmachado/anp_pensiones",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {},
+                "SkewedInfo": {
+                    "SkewedColumnNames": [],
+                    "SkewedColumnValues": [],
+                    "SkewedColumnValueLocationMaps": {}
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "EXTERNAL": "TRUE",
+                "transient_lastDdlTime": "1776199143"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/AWSReservedSSO_ALFA-DEV-DATALAKE-ADM_d41d4bf9003a32d8/mmachado@segurosalfa.com.co",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "anp_periodo_solicitudes_giro",
+            "DatabaseName": "niif17_bronze",
+            "Owner": "hadoop",
+            "CreateTime": "2026-04-14T20:38:11+00:00",
+            "UpdateTime": "2026-04-14T20:38:11+00:00",
+            "LastAccessTime": "1970-01-01T00:00:00+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "nid_periodo_solicitud_giro",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fec_envio_tes",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "cod_concepto_anp",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "bln_anulado_point",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "num_solicitud_tes",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "lote_cargue_id",
+                        "Type": "bigint"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-bronce/scripts_caso_auxilios_funerarios_niif_manuelmachado/anp_periodo_solicitudes_giro",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {},
+                "SkewedInfo": {
+                    "SkewedColumnNames": [],
+                    "SkewedColumnValues": [],
+                    "SkewedColumnValueLocationMaps": {}
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "EXTERNAL": "TRUE",
+                "transient_lastDdlTime": "1776199090"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/AWSReservedSSO_ALFA-DEV-DATALAKE-ADM_d41d4bf9003a32d8/mmachado@segurosalfa.com.co",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "cgr_conceptos",
+            "DatabaseName": "niif17_bronze",
+            "Owner": "hadoop",
+            "CreateTime": "2026-04-14T20:39:12+00:00",
+            "UpdateTime": "2026-04-14T20:39:12+00:00",
+            "LastAccessTime": "1970-01-01T00:00:00+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "cod_concepto",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nombre_concepto",
+                        "Type": "string"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-bronce/scripts_caso_auxilios_funerarios_niif_manuelmachado/cgr_conceptos",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {},
+                "SkewedInfo": {
+                    "SkewedColumnNames": [],
+                    "SkewedColumnValues": [],
+                    "SkewedColumnValueLocationMaps": {}
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "EXTERNAL": "TRUE",
+                "transient_lastDdlTime": "1776199152"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/AWSReservedSSO_ALFA-DEV-DATALAKE-ADM_d41d4bf9003a32d8/mmachado@segurosalfa.com.co",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "cgr_origenes",
+            "DatabaseName": "niif17_bronze",
+            "Owner": "hadoop",
+            "CreateTime": "2026-04-14T20:39:21+00:00",
+            "UpdateTime": "2026-04-14T20:39:21+00:00",
+            "LastAccessTime": "1970-01-01T00:00:00+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "cod_origen",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nombre",
+                        "Type": "string"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-bronce/scripts_caso_auxilios_funerarios_niif_manuelmachado/cgr_origenes",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {},
+                "SkewedInfo": {
+                    "SkewedColumnNames": [],
+                    "SkewedColumnValues": [],
+                    "SkewedColumnValueLocationMaps": {}
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "EXTERNAL": "TRUE",
+                "transient_lastDdlTime": "1776199161"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/AWSReservedSSO_ALFA-DEV-DATALAKE-ADM_d41d4bf9003a32d8/mmachado@segurosalfa.com.co",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        }
+    ]
+}

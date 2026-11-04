@@ -1,0 +1,19 @@
+{
+    "stateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:PASO1_PRUEBAS_PRIMASARL",
+    "name": "PASO1_PRUEBAS_PRIMASARL",
+    "status": "ACTIVE",
+    "definition": "{\"Comment\":\"Step Function para ejecutar jobs Glue de pruebas SCD en secuencia\",\"StartAt\":\"EjecutarJobCopiarGold\",\"States\":{\"EjecutarJobCopiarGold\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::glue:startJobRun.sync\",\"Parameters\":{\"JobName\":\"COPIAR_GOLD_ORIGINAL_A_GOLD_PRUEBA_SCD_MANUEL_MACHADO\"},\"Next\":\"EjecutarJobCopiarSilver\"},\"EjecutarJobCopiarSilver\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::glue:startJobRun.sync\",\"Parameters\":{\"JobName\":\"COPIAR_SILVER_Y_MOSTRAR_4_REGISTROS_LOG_SCD_PRIMAS_ARL_MANUEL_MACHADO\"},\"End\":true}}}",
+    "roleArn": "arn:aws:iam::533267035849:role/service-role/StepFunctions-PASO1_PRUEBAS_PRIMASARL-role-55rv9k5dk",
+    "type": "STANDARD",
+    "creationDate": "2026-04-14T13:56:29.876000+00:00",
+    "loggingConfiguration": {
+        "level": "OFF",
+        "includeExecutionData": false
+    },
+    "tracingConfiguration": {
+        "enabled": false
+    },
+    "encryptionConfiguration": {
+        "type": "AWS_OWNED_KEY"
+    }
+}

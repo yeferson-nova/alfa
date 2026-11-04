@@ -1,0 +1,916 @@
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name ALFA-DEV-DATALAKE-PipelineObserver --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name alfaproject-dev-smbclient --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name alfaproject-dev-smbclient --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name aws-controltower-NotificationForwarder --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name aws-quicksetup-lifecycle-LA-xmkb1 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name aws-quicksetup-lifecycle-LA-xmkb1 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name certification --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name CheckValidation --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name CheckValidation --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name CloudGuardDotnetCodeAnalysisV33 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name CloudGuardDotnetCodeAnalysisV33 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name CloudGuardFSPInjectorV33 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name CloudGuardFSPInjectorV33 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name CloudGuardJavaCodeAnalysisV33 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name CloudGuardJavaCodeAnalysisV33 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name CloudGuardNodeCodeAnalysisV33 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name CloudGuardNodeCodeAnalysisV33 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name CloudGuardOnboardingOrchestrator-Helper --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name CloudGuardPythonCodeAnalysisV33 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name CloudGuardPythonCodeAnalysisV33 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name datalake-dev-clientes-smb --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-clientes-smb --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name datalake-dev-clientes-smb-params-handler --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-clientes-smb-params-handler --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name datalake-dev-contingency-lambda --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-contingency-lambda --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-niif-certification --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name datalake-dev-niif-copy-s3 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-niif-copy-s3 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name datalake-dev-niif-move-s3 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-niif-move-s3 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name datalake-dev-niif-notification-certification --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-niif-notification-certification --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-niif-send-via-sftp --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-niif-short-link-redirect --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name datalake-dev-rollback-bronce --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-rollback-bronce --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name datalake-dev-smb-clientes --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-smb-clientes --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name datalake-dev-smb-lambda --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name datalake-dev-smb-lambda --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name deleteModel --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name deleteModel --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name EnvioSftpFis --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name files-struct-quality --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name files-struct-quality --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name lmb-read-params --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name lmb-read-params --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-accountingtool --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-accountingtool --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-certification --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-composite-notification-evaluator --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-composite-notification-evaluator --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-configurador-auxilios-funerarios --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-configurador-auxilios-funerarios --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-configurador-extraccion --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-configurador-extraccion --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-configurador-primas-arl --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-configurador-primas-arl --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-configurador-primas-endosos --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-configurador-primas-endosos --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-configurador-primas-rentas --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-configurador-primas-rentas --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-configurador-reserva-matematica-arp --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-configurador-reserva-matematica-arp --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-configurador-reserva-matematica-rvi --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-configurador-reserva-matematica-rvi --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-configuration-auxilios-funerarios --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-configuration-auxilios-funerarios --region us-east-1
+lambdas/codigo/niif-dev-configuration-primas-arl/pandas/_libs/tslibs/offsets.cpython-312-x86_64-linux-gnu.so:  write error (disk full?).  Continue? (y/n/^C) 
+warning:  lambdas/codigo/niif-dev-configuration-primas-arl/pandas/_libs/tslibs/offsets.cpython-312-x86_64-linux-gnu.so is probably truncated
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-configuration-primas-arl --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-configuration-primas-arl --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunction operation: Function not found: arn:aws:lambda:us-east-1:533267035849:function:configuration-primas-endosos
+
+Additional error details:
+Type: User
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name configuration-primas-endosos --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the ListAliases operation: Function not found: arn:aws:lambda:us-east-1:533267035849:function:configuration-primas-endosos
+
+Additional error details:
+Type: User
+FALLO: aws lambda list-aliases --function-name configuration-primas-endosos --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name configuration-primas-endosos --region us-east-1
+[lambdas/codigo/niif-dev-configuration-primas-rentas.zip]
+  End-of-central-directory signature not found.  Either this file is not
+  a zipfile, or it constitutes one disk of a multi-part archive.  In the
+  latter case the central directory and zipfile comment will be found on
+  the last disk(s) of this archive.
+unzip:  cannot find zipfile directory in one of lambdas/codigo/niif-dev-configuration-primas-rentas.zip or
+        lambdas/codigo/niif-dev-configuration-primas-rentas.zip.zip, and cannot find lambdas/codigo/niif-dev-configuration-primas-rentas.zip.ZIP, period.
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-configuration-primas-rentas --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-configuration-primas-rentas --region us-east-1
+lambdas/codigo/niif-dev-configuration-reserva-matematica-arp/pytz/tzinfo.py:  write error (disk full?).  Continue? (y/n/^C) 
+warning:  lambdas/codigo/niif-dev-configuration-reserva-matematica-arp/pytz/tzinfo.py is probably truncated
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-configuration-reserva-matematica-arp --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-configuration-reserva-matematica-arp --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunction operation: Function not found: arn:aws:lambda:us-east-1:533267035849:function:configuration-reserva-matematica-rvi
+
+Additional error details:
+Type: User
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name configuration-reserva-matematica-rvi --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the ListAliases operation: Function not found: arn:aws:lambda:us-east-1:533267035849:function:configuration-reserva-matematica-rvi
+
+Additional error details:
+Type: User
+FALLO: aws lambda list-aliases --function-name configuration-reserva-matematica-rvi --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name configuration-reserva-matematica-rvi --region us-east-1
+[lambdas/codigo/niif-dev-copy-s3-cert.zip]
+  End-of-central-directory signature not found.  Either this file is not
+  a zipfile, or it constitutes one disk of a multi-part archive.  In the
+  latter case the central directory and zipfile comment will be found on
+  the last disk(s) of this archive.
+unzip:  cannot find zipfile directory in one of lambdas/codigo/niif-dev-copy-s3-cert.zip or
+        lambdas/codigo/niif-dev-copy-s3-cert.zip.zip, and cannot find lambdas/codigo/niif-dev-copy-s3-cert.zip.ZIP, period.
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-copy-s3-cert --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-copy-s3-cert --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-finalizador-ejecucion --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-iniciador-ejecucion --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-iniciador-ejecucion --region us-east-1
+[lambdas/codigo/niif-dev-manager-configuration.zip]
+  End-of-central-directory signature not found.  Either this file is not
+  a zipfile, or it constitutes one disk of a multi-part archive.  In the
+  latter case the central directory and zipfile comment will be found on
+  the last disk(s) of this archive.
+unzip:  cannot find zipfile directory in one of lambdas/codigo/niif-dev-manager-configuration.zip or
+        lambdas/codigo/niif-dev-manager-configuration.zip.zip, and cannot find lambdas/codigo/niif-dev-manager-configuration.zip.ZIP, period.
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-manager-configuration --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-manager-configuration --region us-east-1
+[lambdas/codigo/niif-dev-move-s3-certification.zip]
+  End-of-central-directory signature not found.  Either this file is not
+  a zipfile, or it constitutes one disk of a multi-part archive.  In the
+  latter case the central directory and zipfile comment will be found on
+  the last disk(s) of this archive.
+unzip:  cannot find zipfile directory in one of lambdas/codigo/niif-dev-move-s3-certification.zip or
+        lambdas/codigo/niif-dev-move-s3-certification.zip.zip, and cannot find lambdas/codigo/niif-dev-move-s3-certific
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-move-s3-certification --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-move-s3-certification --region us-east-1
+[lambdas/codigo/niif-dev-notification-certification-trigger.zip]
+  End-of-central-directory signature not found.  Either this file is not
+  a zipfile, or it constitutes one disk of a multi-part archive.  In the
+  latter case the central directory and zipfile comment will be found on
+  the last disk(s) of this archive.
+unzip:  cannot find zipfile directory in one of lambdas/codigo/niif-dev-notification-certification-trigger.zip or
+        lambdas/codigo/niif-dev-notification-certification-trigger.zip.zip, and cannot find lambdas/codigo/niif-dev-notification-certification-trigger.zip.ZIP, period.
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-notification-certification-trigger --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-notification-certification-trigger --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-programacion-cargues-target --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-programacion-cargues-target --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-programador-cargues --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-programador-cargues --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name niif-dev-programador-configuraciones --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-programador-configuraciones --region us-east-1
+lambdas/codigo/niif-dev-short-link-redirect/botocore/__pycache__/signers.cpython-312.pyc:  write error (disk full?).  Continue? (y/n/^C) 
+warning:  lambdas/codigo/niif-dev-short-link-redirect/botocore/__pycache__/signers.cpython-312.pyc is probably truncated
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name niif-dev-short-link-redirect --region us-east-1
+
+aws: [ERROR]: An error occurred (ParamValidation): argument --function-name: expected one argument
+
+usage: aws [options] <command> <subcommand> [<subcommand> ...] [parameters]
+To see help text, you can run:
+
+  aws help
+  aws <command> help
+  aws <command> <subcommand> help
+
+aws: [ERROR]: An error occurred (ParamValidation): argument --function-name: expected one argument
+
+usage: aws [options] <command> <subcommand> [<subcommand> ...] [parameters]
+To see help text, you can run:
+
+  aws help
+  aws <command> help
+  aws <command> <subcommand> help
+FALLO: aws lambda list-event-source-mappings --function-name -login --region us-east-1
+
+aws: [ERROR]: An error occurred (ParamValidation): argument --function-name: expected one argument
+
+usage: aws [options] <command> <subcommand> [<subcommand> ...] [parameters]
+To see help text, you can run:
+
+  aws help
+  aws <command> help
+  aws <command> <subcommand> help
+FALLO: aws lambda get-policy --function-name -login --region us-east-1
+
+aws: [ERROR]: An error occurred (ParamValidation): argument --function-name: expected one argument
+
+usage: aws [options] <command> <subcommand> [<subcommand> ...] [parameters]
+To see help text, you can run:
+
+  aws help
+  aws <command> help
+  aws <command> <subcommand> help
+FALLO: aws lambda list-aliases --function-name -login --region us-east-1
+
+aws: [ERROR]: An error occurred (ParamValidation): argument --function-name: expected one argument
+
+usage: aws [options] <command> <subcommand> [<subcommand> ...] [parameters]
+To see help text, you can run:
+
+  aws help
+  aws <command> help
+  aws <command> <subcommand> help
+FALLO: aws lambda get-function-url-config --function-name -login --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name postLogin --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name PRUEBA_JQ --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name PRUEBA_JQ --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name Prueba_MC --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name Prueba_MC --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name Prueba_MC_1 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name Prueba_MC_1 --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name ReProcessLambda --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name ReProcessLambda --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name rollback-bronce --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name rollback-bronce --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name test --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name test --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name test-lambda --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name test-lambda --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name testMapFunction --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name testMapFunction --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetPolicy operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-policy --function-name testNotifications --region us-east-1
+
+aws: [ERROR]: An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.
+
+Additional error details:
+Type: User
+FALLO: aws lambda get-function-url-config --function-name testNotifications --region us-east-1
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-bronce-job-clients.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-bronce-job-copy.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-bronce-job-SIPREN-Tierra.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-clients-gold-job-copy.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-clients-gold-job-MB.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-clients-gold-test.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-clients-silver-job-copy.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-clients-silver-job-new.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-gold-job-compt4.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-gold-job-copy.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-gold-job-incremental-compt4.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-gold-job-MB.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-gold-job-M.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-gold-job-test-MB.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-modify-job.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-silver-job-copy.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-silver-job-MB.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/silver-job-test.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/test_bronce-job-copy.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/test-import-libraries.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/niff/jobs/datalake-dev-endosos-gold-reports-copy.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/niff/jobs/datalake-dev-files-bronce-quality-" does not exist
+
+aws: [ERROR]: An error occurred (ParamValidation): usage: aws s3 cp <LocalPath> <S3Uri> or <S3Uri> <LocalPath> or <S3Uri> <S3Uri>
+Error: Invalid argument type
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/niff/jobs/pcr_tradicional_gold_info_dev_reports.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/niff/jobs/pcr_tradicional_gold_operativos_dev_reports.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/niff/jobs/reserva_arp_gold_dev_reports-copy.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/niff/jobs/reserva_arp_gold_dev_reports.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/niff/jobs/reserva_rvi_gold_dev_reports-copy.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/niff/jobs/reserva_rvi_gold_dev_reports.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/niff/jobs/reserva_rvi_gold_dev_reports-vfinal.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/datalake-dev-clientes-bronze-poc-jluna.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue_resources/jobs/test_delete_deltas.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue-resources/estandar/extraccion_estandar.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue-resources/job-prueba/script.py" does not exist
+fatal error: An error occurred (404) when calling the HeadObject operation: Key "glue-resources/notification/test/notification_certification_ses.py" does not exist
+
+aws: [ERROR]: An error occurred (EntityNotFoundException) when calling the GetTables operation: Database test-bronce-catalog not found.
+FALLO: aws glue get-tables --database-name test-bronce-catalog --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name datalake-dev-bronce-catalog-db --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name datalake-dev-gold-catalog-db --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name datalake-dev-silver-catalog-db --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name datalake-dev-silver-catalog-db-test --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name niif-dev-bronze-catalog-db --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name niif-dev-gold-catalog-db --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name niif-dev-silver-catalog-db --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name niif_validacion_rm_arp --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name primasarl_gold --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name primasarl_gold_prueba --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name primasarl_validacion_tecnica --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name quality_test --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name silver-db-causas --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name test-union-sources --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws glue get-tables --database-name test_data_dev --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws dynamodb describe-table --table-name alfa-analitica-dev-terraform-locks --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws dynamodb describe-table --table-name alfa-datalake-terraform-locks --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws dynamodb describe-table --table-name datalake-dev-adm-cargue --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws dynamodb describe-table --table-name datalake-dev-adm-composicion-ejecucion --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws dynamodb describe-table --table-name datalake-dev-adm-extraccion-costo --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws dynamodb describe-table --table-name datalake-dev-adm-extraccion-ejecucion --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws dynamodb describe-table --table-name datalake-dev-adm-extraccion-parametro --region us-east-1
+Exception ignored while flushing sys.stdout:
+OSError: [Errno 28] No space left on device
+FALLO: aws dyn

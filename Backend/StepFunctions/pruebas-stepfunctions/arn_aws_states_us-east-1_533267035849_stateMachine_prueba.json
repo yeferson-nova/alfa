@@ -1,0 +1,20 @@
+{
+    "stateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:prueba",
+    "name": "prueba",
+    "status": "ACTIVE",
+    "definition": "{\"Comment\":\"Configuración de variables Step Calidad\",\"StartAt\":\"SetupStaticVariables\",\"States\":{\"SetupStaticVariables\":{\"Type\":\"Pass\",\"Parameters\":{\"mes_actual.$\":\"$$.Execution.StartTime\"},\"Next\":\"GetSMBConfiguration\"},\"GetSMBConfiguration\":{\"Type\":\"Pass\",\"End\":true}}}",
+    "roleArn": "arn:aws:iam::533267035849:role/service-role/StepFunctions-prueba-role-c35x13z4m",
+    "type": "STANDARD",
+    "creationDate": "2026-10-15T16:54:35.032000+00:00",
+    "loggingConfiguration": {
+        "level": "OFF",
+        "includeExecutionData": false
+    },
+    "tracingConfiguration": {
+        "enabled": false
+    },
+    "revisionId": "ac14bf3f-8d21-4240-adb8-9d6b2d48dc88",
+    "encryptionConfiguration": {
+        "type": "AWS_OWNED_KEY"
+    }
+}

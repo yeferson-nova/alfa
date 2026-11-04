@@ -1,0 +1,50 @@
+{
+    "Configuration": {
+        "FunctionName": "CloudGuardJavaCodeAnalysisV33",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CloudGuardJavaCodeAnalysisV33",
+        "Runtime": "java25",
+        "Role": "arn:aws:iam::533267035849:role/CloudGuardServerlessCodeAnalysisJavaLambdaExecutionRole",
+        "Handler": "io.protego.lambda.Handler",
+        "CodeSize": 6847834,
+        "Description": "Statically analyze Java code",
+        "Timeout": 860,
+        "MemorySize": 3008,
+        "LastModified": "2026-10-22T15:01:57.000+0000",
+        "CodeSha256": "OmtcYllIW+i8MRVnaO/LRSksmoP5ZQEMRXywVnbAarY=",
+        "Version": "$LATEST",
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "3e12d28f-9210-4210-a4d0-0580c5d3f308",
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:b7bc8644427a8bf91dff30ae0e2a737cf02b8d8ab7bcaefc84a08767246a52de"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/CloudGuardJavaCodeAnalysisV33"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/CloudGuardJavaCodeAnalysisV33-9a4b910a-c5bc-46a8-817f-e3a5ef85c924?versionId=djcnl7bOQjopaEqvCnFowU5oOs_NedX7&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQCrabhc2197zCX3xgp2QPNGs%2FCUMmhpqqbRqlm4WcQKtAIgJwewhFaYY5Z9EFYSlv567gVJ7fgfoL%2FhOQWfLsB55UkqlAIIk%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgw0NzkyMzMwMjUzNzkiDOfP5hpGhNREpozwYSroAcYMv%2FAcFX5m4YsRamdBT03zyU96OpsZy%2B4pVr0IuSBVkMdrzzmdOP6EgyLp8oXkdLeMJHdx2nKOuUnXUfEp%2BBiBiALYWJ896ra%2BHVTIknRSggMFpDcoX75IqUuyVlGkXSTDONgClQVBUOvCKQyHBn%2BlpfaT8Lw%2BPStH8%2B6UHYxAZqZP9QGT3Z7pMCCD4jXVLctVAz6DA%2FEoVZqInmCfgiKD0iLGr6ZORvfqvXRJcaFR4y%2FED5k6Xx1qtt%2FBrt%2BPlo%2F%2BHB%2B6aoAJ8WcCmBEzrPqv1lnQIt54ddYvDPmgBnU85w9xB%2Flqcxgwweqm1wY6jQHv3I0tZXX%2BWh2KgUE5ysEfhP%2BVvypIl%2FEjhysMTMmV36eBVIZXZcKpJHPEQHyWkkzACj4PDqajgSLS9L7n24IHYeESb%2BAr5Zg5FDY7aB9DfoMeCWBPDKOUVbppE%2F8KKWYqSAjkE0w%2FOehR8jqOKyY%2BYEwThGCPuljOqckAJsRfOWtL%2BPs%2BgiOpbE%2Be9vc%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164132Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVRWXT7WWLT%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=94b2c2db08bba0d99a5e6c6b90aacc11d04dff040c9eab6bb073a584fa4f1e99"
+    },
+    "Tags": {
+        "aws:cloudformation:stack-name": "CloudGuard-Onboarding-Serverless",
+        "Owner": "Cloudguard Serverless Security",
+        "aws:cloudformation:stack-id": "arn:aws:cloudformation:us-east-1:533267035849:stack/CloudGuard-Onboarding-Serverless/38979d50-aea2-11ef-be51-0ebb5ba8eef3",
+        "aws:cloudformation:logical-id": "CloudGuardJavaCodeAnalysisV33"
+    }
+}

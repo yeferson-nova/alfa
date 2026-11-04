@@ -1,0 +1,20 @@
+{
+    "stateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-smb-client-sf",
+    "name": "datalake-dev-smb-client-sf",
+    "status": "ACTIVE",
+    "definition": "{\n    \"QueryLanguage\": \"JSONPath\",\n    \"Comment\": \"A description of my state machine\",\n    \"StartAt\": \"Map\",\n    \"States\": {\n      \"Map\": {\n        \"Type\": \"Map\",\n        \"InputPath\": \"$.data\",\n        \"ItemProcessor\": {\n          \"ProcessorConfig\": {\n            \"Mode\": \"INLINE\"\n          },\n          \"StartAt\": \"Lambda Invoke\",\n          \"States\": {\n            \"Lambda Invoke\": {\n              \"Type\": \"Task\",\n              \"Resource\": \"arn:aws:states:::lambda:invoke\",\n              \"OutputPath\": \"$.Payload\",\n              \"Parameters\": {\n                \"Payload.$\": \"$\",\n                \"FunctionName\": \"arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-smb-lambda:$LATEST\"\n              },\n              \"Retry\": [\n                {\n                  \"ErrorEquals\": [\n                    \"Lambda.ServiceException\",\n                    \"Lambda.AWSLambdaException\",\n                    \"Lambda.SdkClientException\",\n                    \"Lambda.TooManyRequestsException\"\n                  ],\n                  \"IntervalSeconds\": 60,\n                  \"MaxAttempts\": 5,\n                  \"BackoffRate\": 2,\n                  \"JitterStrategy\": \"FULL\"\n                }\n              ],\n              \"End\": true\n            }\n          }\n        },\n        \"End\": true,\n        \"MaxConcurrency\": 10,\n        \"ResultPath\": \"$.data.files\",\n        \"ItemsPath\": \"$.files\"\n      }\n    }\n  }",
+    "roleArn": "arn:aws:iam::533267035849:role/datalake-dev-smb-client-sf",
+    "type": "STANDARD",
+    "creationDate": "2025-01-23T14:38:04.897000+00:00",
+    "loggingConfiguration": {
+        "level": "OFF",
+        "includeExecutionData": false
+    },
+    "tracingConfiguration": {
+        "enabled": true
+    },
+    "revisionId": "3dfaf265-9f20-4d5d-9ee6-b371f585eb68",
+    "encryptionConfiguration": {
+        "type": "AWS_OWNED_KEY"
+    }
+}

@@ -1,0 +1,4 @@
+{
+    "Policy": "{\"Version\":\"2012-10-17\",\"Id\":\"default\",\"Statement\":[{\"Sid\":\"9c024a55-e469-50ca-b45a-7e1d838f4312\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-short-link-redirect\",\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:execute-api:us-east-1:533267035849:53x06brwqh/*/GET/redirect\"}}},{\"Sid\":\"4ad6cf88-c48f-5cc8-8082-7a1f2d58f289\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-short-link-redirect\",\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:execute-api:us-east-1:533267035849:53x06brwqh/*/GET/r\"}}}]}",
+    "RevisionId": "e73b3f32-4dcd-471f-b205-51a7c184a115"
+}

@@ -1,0 +1,9 @@
+{
+    "Name": "niif-dev-finalizar-ejecucion-primas-arl",
+    "Arn": "arn:aws:events:us-east-1:533267035849:rule/niif-dev-finalizar-ejecucion-primas-arl",
+    "EventPattern": "{\n  \"source\": [\n    \"aws.states\"\n  ],\n  \"detail-type\": [\n    \"Step Functions Execution Status Change\"\n  ],\n  \"detail\": {\n    \"stateMachineArn\": [\n      \"arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-arl\"\n    ],\n    \"status\": [\n      \"SUCCEEDED\",\n      \"FAILED\",\n      \"TIMED_OUT\",\n      \"ABORTED\"\n    ]\n  }\n}\n",
+    "State": "ENABLED",
+    "Description": "Finaliza trazabilidad EJC para Primas ARL",
+    "EventBusName": "default",
+    "CreatedBy": "533267035849"
+}

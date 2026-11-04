@@ -1,0 +1,8 @@
+{
+    "Targets": [
+        {
+            "Id": "ApplicationInsights",
+            "Arn": "arn:aws:applicationinsights:us-east-1:::"
+        }
+    ]
+}

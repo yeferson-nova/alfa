@@ -1,0 +1,52 @@
+{
+    "Configuration": {
+        "FunctionName": "datalake-dev-niif-certification",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-certification",
+        "Runtime": "python3.14",
+        "Role": "arn:aws:iam::533267035849:role/service-role/datalake-dev-niif-certification-role-f5xtlwsp",
+        "Handler": "lambda_function.lambda_handler",
+        "CodeSize": 2810,
+        "Description": "",
+        "Timeout": 3,
+        "MemorySize": 128,
+        "LastModified": "2026-05-25T17:08:55.000+0000",
+        "CodeSha256": "UAdLXDF7GeqDimwByb3jP61eVeEthaGEA0LsEtPlL2k=",
+        "Version": "$LATEST",
+        "Environment": {
+            "Variables": {
+                "APPROVERS_LOG_TABLE": "datalake-dev-approval-audit-log",
+                "CONFIG_BUCKET": "alfa-datalake-dev-assets",
+                "GLOBAL_CONFIG_KEY": "niif/configs/certification/json_global/json_global_notif_cert.json",
+                "NOTIFICATIONS_TABLE": "datalake-dev-notification-certification"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "e7406ec1-7ee8-4011-949f-749e68605638",
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:e75e9c9c41239a44ec0c6835b8565881fa9de069823be371f86023888ce6aeed"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/datalake-dev-niif-certification"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/datalake-dev-niif-certification-cd4ca419-ace4-4330-9cee-96d4d8437041?versionId=JGlhMcOVwqNrjzUcqlqNUcQTssxAcvij&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIAGVsK5N8bFMlV72IQN2fQY0QpjlzrFShFCFUnNqs3ysAiEAzCvR8KZVuF15kP1g79K3cehkhZLnS8gA9S1C4TdQjl8qlAIIlP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgw0NzkyMzMwMjUzNzkiDAtcm8JvXo7diK83XSroAZ03hl46FQ9GNDPVm541HEiDfbYk1J11Ymfjhzl3uYqdtY2uVdCO60mdZv6G%2Buq9ykZzWfqIKXtTcppH%2F7rNpif8cuYUP8%2BJV4mcuQtw8GEyipYShMr%2FmmNLAMH5eDcoTfOdf3QRIs3ksHRd0HmieSE8bRILt9Bzviomv%2FfANRZJ7r6QD7YhKSIa38dhATfF%2FcogzHsRPjUaXD5vEI0FyszTSfAG40wP5oU9csBZr4aXgJODCa1h%2FErObXZR8LYdtNK6bewzurxbEi0q%2BOvgpXxdb371nWO4vVJ14y4zLg7n9Dxh%2BVaWz64w%2Bo6n1wY6jQFelzEz9hyJ6kQa5tRyMb123AYvqibHEzW1BCj%2FQL10nWRsgs%2BZYBS3JsrghjvmBsbdgKZIDN7qpPam%2FRzGZ%2FjVbSfUisU10tJRGv5His1kVnN5H41L1cod28D2DahiQEy7HIQNMuA7EiBlpAUqR7dw1aNxf5%2BRrj2MTlDIlOVSlP4yRIWTsdQ0trin%2Blg%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164207Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVR5YWX7FPP%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=5bf228560c4c8098ec6fcc9cb33a4607611ebd1ee16bf7c35c04db51d3900208"
+    }
+}

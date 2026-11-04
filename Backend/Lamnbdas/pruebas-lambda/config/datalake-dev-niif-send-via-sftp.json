@@ -1,0 +1,70 @@
+{
+    "Configuration": {
+        "FunctionName": "datalake-dev-niif-send-via-sftp",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-send-via-sftp",
+        "Role": "arn:aws:iam::533267035849:role/datalake-dev-niif-send-via-sftp",
+        "CodeSize": 0,
+        "Description": "Lambda funtion to send file via sftp connection",
+        "Timeout": 300,
+        "MemorySize": 512,
+        "LastModified": "2026-10-09T22:58:16.000+0000",
+        "CodeSha256": "60782759ddec155c83235b87f86eaf0f9e24f027b1270405135c49f1cd2670b3",
+        "Version": "$LATEST",
+        "VpcConfig": {
+            "SubnetIds": [
+                "subnet-08bc5c88ea3cd3409",
+                "subnet-0ec6603c9b0f57496"
+            ],
+            "SecurityGroupIds": [
+                "sg-0e1f9e44776aa3b85"
+            ],
+            "VpcId": "vpc-09d6c75629d78076a",
+            "Ipv6AllowedForDualStack": false
+        },
+        "Environment": {
+            "Variables": {
+                "SFTP_PORT": "2222",
+                "SFTP_BASE_DIR": "In",
+                "CREDS_SECRET_ID": "/datalake/dev/niif/credentials/sftp/prophets",
+                "S3_ROOT_PREFIX": "export",
+                "SFTP_HOST": "seguroalfa-sftp.ctxuse.fiscloudservices.com"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "39806f42-221a-4b03-a6e6-def4a82d7d5c",
+        "State": "Inactive",
+        "StateReason": "The function is currently idle.",
+        "StateReasonCode": "Idle",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Image",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/datalake-dev-niif-send-via-sftp"
+        }
+    },
+    "Code": {
+        "RepositoryType": "ECR",
+        "ImageUri": "533267035849.dkr.ecr.us-east-1.amazonaws.com/datalake_dev_niif_send_via_sftp_lambda:20261008-2321",
+        "ResolvedImageUri": "533267035849.dkr.ecr.us-east-1.amazonaws.com/datalake_dev_niif_send_via_sftp_lambda@sha256:60782759ddec155c83235b87f86eaf0f9e24f027b1270405135c49f1cd2670b3"
+    },
+    "Tags": {
+        "Project": "NIIF17",
+        "Owner": "NIIF",
+        "terraform-aws-modules": "lambda",
+        "ManagedBy": "Terraform-Terragrunt",
+        "Environment": "dev",
+        "Layer": "Serverless"
+    }
+}

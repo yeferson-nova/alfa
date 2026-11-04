@@ -1,0 +1,18 @@
+{
+    "Subscriptions": [
+        {
+            "SubscriptionArn": "arn:aws:sns:us-east-1:533267035849:GFT-Notifications-Budgets:ddacabd9-079c-4798-a0c7-13f706aa814d",
+            "Owner": "533267035849",
+            "Protocol": "email",
+            "Endpoint": "wilson.morales@segurosalfa.com.co",
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:GFT-Notifications-Budgets"
+        },
+        {
+            "SubscriptionArn": "arn:aws:sns:us-east-1:533267035849:GFT-Notifications-Budgets:2b2b242c-260e-4fbf-8026-db7cd46a1295",
+            "Owner": "533267035849",
+            "Protocol": "email",
+            "Endpoint": "administracionplataformaaws@segurosalfa.com.co",
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:GFT-Notifications-Budgets"
+        }
+    ]
+}

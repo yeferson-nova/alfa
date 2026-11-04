@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      color: #333;
+    }
+
+    table.dataframe {
+      border-collapse: collapse;
+      margin: 10px 0;
+      width: auto;
+      max-width: 100%;
+    }
+
+    table.dataframe th, table.dataframe td {
+      border: 1px solid #999;
+      padding: 8px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    table.dataframe th {
+      background-color: #eee;
+    }
+
+    table.dataframe tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    th, td {
+      border: 1px solid #999;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #eee;
+    }
+
+    .link {
+      color: #0000EE;
+    }
+  </style>
+</head>
+<body>
+
+  <p>Cordial saludo,</p>
+
+  <p>
+    La herramienta datalake ha generado los datos para certificar las cifras del caso de uso de 
+    <strong>$useCaseName</strong> correspondientes al periodo <strong>$periodRange</strong>
+    A continuación, un resumen de la información:
+  </p>
+  <h3>Total General</h3>
+  $tableTotal
+
+  <p><strong>Rentas Vitalicias:</strong></p>
+  <h3>Total Resumen</h3>
+  $tableSummary
+
+  <p>
+    Para mayor detalle puede realizar la descarga en un archivo excel dando clic en el siguiente enlace.
+  </p>
+  <h3>Archivos de detalle</h3>
+  $tableDetail
+
+  <!-- <p>
+    Para mayor detalle puede realizar la consulta de los registros en el siguiente enlace:
+  </p>
+
+  <p>
+    <a class="link" href="$redshiftLink">Redshift.</a>
+  </p> -->
+
+
+  <p>
+    De acuerdo con lo anterior, seleccione la opción correspondiente teniendo en cuenta su validación:
+  </p>
+
+  <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+    style="margin-top: 20px; border-collapse: collapse; border: none;">
+    <tr>
+      <td style="border: none; padding: 0;">
+        <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+          style="border-collapse: collapse; border: none;">
+          <tr>
+            <td align="center" bgcolor="#dff0d8"
+                style="padding: 12px 24px; border: 2px solid #006400;
+                        border-radius: 6px; background-color: #dff0d8;">
+              <a href="$certificarLink"
+                style="font-size: 14px; font-weight: bold; color: #006400;
+                        text-decoration: none; display: inline-block;">
+                ✅ Certificar
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+
+      <td style="width: 20px; border: none; padding: 0;">&nbsp;</td>
+
+      <td style="border: none; padding: 0;">
+        <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+          style="border-collapse: collapse; border: none;">
+          <tr>
+            <td align="center" bgcolor="#f2dede"
+              style="padding: 12px 24px; border: 2px solid #a94442;
+                      border-radius: 6px; background-color: #f2dede;">
+              <a href="$nocertificarLink"
+                style="font-size: 14px; font-weight: bold; color: #a94442;
+                        text-decoration: none; display: inline-block;">
+                ❌ No certificar
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+
+  <p>En caso de no certificar las cifras del caso de uso favor reportar las incidencias por medio de la herramienta de mesa de ayuda.</p>
+
+  <p>
+    Atentamente,
+  </p>
+
+  <p>
+    <strong>Administrador Datalake</strong><br>
+    <strong>Vicepresidencia de Tecnología e Información</strong>
+  </p>
+
+  <p>
+    <q>
+      <em>Este correo electrónico es informativo para el proceso. Favor no responder, si deseas contactar al área de Tecnología, 
+      comunícate a través de nuestros canales de atención disponibles en la Compañía.</em>
+    </q>
+  </p>
+
+</body>
+</html>

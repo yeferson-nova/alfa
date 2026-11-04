@@ -1,0 +1,10 @@
+{
+    "Targets": [
+        {
+            "Id": "terraform-XeTV5t4WPzZl2vV4u2AyArucmd",
+            "Arn": "arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-clientes-silver-sf",
+            "RoleArn": "arn:aws:iam::533267035849:role/default",
+            "Input": "{\"description\":\"Ejecucion programada\",\"environment\":\"Produccion\",\"executed_by\":\"Cron\",\"test_id\":\"EjecucionProgramada-YYYYMMDDhhmm\"}"
+        }
+    ]
+}

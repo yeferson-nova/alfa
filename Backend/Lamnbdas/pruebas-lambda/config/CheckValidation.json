@@ -1,0 +1,60 @@
+{
+    "Configuration": {
+        "FunctionName": "CheckValidation",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CheckValidation",
+        "Runtime": "python3.12",
+        "Role": "arn:aws:iam::533267035849:role/service-role/CheckValidation-role-btagjola",
+        "Handler": "lambda_function.lambda_handler",
+        "CodeSize": 2081,
+        "Description": "",
+        "Timeout": 60,
+        "MemorySize": 128,
+        "LastModified": "2025-08-20T15:49:37.000+0000",
+        "CodeSha256": "VSLDlrYPILbdynrHpFpd3MAfSFAEnNgOeMFqpKNQJtg=",
+        "Version": "$LATEST",
+        "Environment": {
+            "Variables": {
+                "S3_BUCKET": "alfa-datalake-dev-landing-prophet",
+                "QUERY_TABLE": "datalake-dev-use-case-queries",
+                "S3_PREFIX": "landing/prophets",
+                "DYNAMODB_CERT_TABLE": "datalake-dev-use-case-certification",
+                "CERTIFICATION_TABLE": "datalake-dev-use-case-certification",
+                "DYNAMODB_QUERY_TABLE": "datalake-dev-use-case-queries",
+                "ENVIRONMENT": "dev",
+                "TABLE_USE_CASE": "datalake-dev-use-case-queries",
+                "DYNAMODB_TABLE_NAME": "datalake-dev-use-case-certification",
+                "QUERY_TABLE_NAME": "datalake-dev-use-case-queries",
+                "LOG_LEVEL": "INFO",
+                "BUCKET_NAME": "alfa-datalake-dev-landing-prophet"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "951149f4-63f7-4ca2-8e13-e6250c8c098d",
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:c5f5e406a9c3cb643bed8c9fcbd71b784f53b3a1d0247d261e05976ab9923400"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/CheckValidation"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/CheckValidation-ab0198df-04ee-4e2e-b028-0b7e7373ee4c?versionId=8UxypWPt0UIrU1tWh4NIeJY7y40dwcx8&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIB9eUZZVEqMxxYgNIIRLSYBuh%2BXON7f2LaCm4QKY1a3HAiBfm5YaC8%2FWm27m%2F7riykkAwhuU1xJAebdXngtFtkLIbCqUAgiT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAQaDDQ3OTIzMzAyNTM3OSIMous3hjIJgCzJVnZNKugB7LD7aMI61WmBErl5m9DLqIZI7WRV2cu3B4dM4D1Gw6QEWPfV%2FHhjA5t9jPMQTk51DqYhcszPNv7EbRU8uV4jTdwbjxLavU1ZTmvwtcF1uSRPYT5il20MyxV4hvPU%2BT48r0ZIonHjxOIV76xrI9YbctKJLl%2F4SLxFkiSohIP1RAHRjqcaGbuAJVlvK5knE1otkYbFmivGgQAMHpK7pTmXYgJ39fSo7I%2BMXzNx60qTk1IrmOs6%2F2wrm9LZeB4ZRwSgzoyv%2F%2BJkP%2Fz%2B74r4Th%2FeqjGzAZunk0iSBgtu8akgGQpQgYmfTULSHDC%2F6qbXBjqOAR0zZPPNQmj%2BgewXKxlaytRjWYJCVdgRAgE4dEvxd28HMvYIt3HY0JDXFWPZ%2BMPSgmJ%2Bs%2FiZ9bBi38qk99Adiaw5EypRlJWVMeBGZQSRj%2BN00SDRmdiCnZGXxL7kO5JS7nLUsWCtFYS%2BMVNaTqW5CIIGa9W1PnFcTQkI8VhpczNsCYhg3mTQj2yMc9yM%2F1g%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164118Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVRQXK4FSG3%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=ba02b59c35c233215721d23e39be55adae8970544203ac8c994cc42afb37482f"
+    }
+}

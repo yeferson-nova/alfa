@@ -1,0 +1,57 @@
+{
+    "Configuration": {
+        "FunctionName": "niif-dev-configurador-extraccion",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configurador-extraccion",
+        "Runtime": "python3.12",
+        "Role": "arn:aws:iam::533267035849:role/niif-dev-configurador-extraccion-role",
+        "Handler": "lambda_function.lambda_handler",
+        "CodeSize": 4463,
+        "Description": "",
+        "Timeout": 30,
+        "MemorySize": 128,
+        "LastModified": "2026-09-18T04:33:39.000+0000",
+        "CodeSha256": "bX/MyY2BSJu8g5LpehI5Af1uWjl5zNuL9jNyxQw5c0w=",
+        "Version": "$LATEST",
+        "Environment": {
+            "Variables": {
+                "TABLE_NAME": "niif-dev-gestor-configuracion",
+                "FUNCTION_NAME": "niif-dev-configurador-extraccion",
+                "INICIADOR_FUNCTION_NAME": "niif-dev-iniciador-ejecucion",
+                "CONFIG_VERSION": "8"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "73116375-6b50-45ab-b43a-6e58be2a3e64",
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:a8b19198a828662ade07d066a1dce047429a5869166346747ab7d57435583a29"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/niif-dev-configurador-extraccion"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/niif-dev-configurador-extraccion-5ad83543-28c2-4d7e-8610-2410745b208a?versionId=.p6EXie5wVZzoxyUZhW6wr4JsmLnJSPP&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDcgRm35fSjgZB%2BnkcTy5CujdODJgEQPXT2FOhsLhRKewIgc%2BaF4Rf%2BwbZldoe9ad%2BqMJ%2B39WEau%2BsveobcgArk8%2BsqlAIIlP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgw0NzkyMzMwMjUzNzkiDCxrVBFkgkC79BEtwSroAYkZzJNX8KxyY0cI3ZA7ERbmOhEadr7nbJmtAsuAM7DHpwJS%2BTRNz2kH2M7NK5saRsCgNJlz5%2BpI80Sqbab%2FaFuFj19YNGZuHzSXoeZ8SloEPkTAY9kLmEly8YWQO3JnM3XftvuJm82jxwu4wgnPp7TsWIMt1SFc6hjoGHfQ8mJuTqmVcEVVNK2KspJWZ02HR13AEb6GiEIBExUna8NHqxUpKG7AE4vA8TS3ftLkkt62X2M%2FiqJpsj2UUKtCHWjFbqaDQIE0DA023Sc0IhfuhJqjxE3c%2BD3JLW9RkeOrbWimd7ns9FsvTmkwy46n1wY6jQEGmiMFGvTf81cQrZrbTaZXPn1fKG31WzzDjkX%2BUjAQymR5ENTGenjmqyL%2FWcpc8NG0oxnOWp5SAEOZj%2FUN8zSmNVrawPV6%2BYGi11JSXOKMmwmdcFpIRhfj1xTSWRlh4DJlnuhi1BQ8mr5Q1uDCiEeZGBqzhGR7s49AFfEhDmyjM0f2sJmXdFoyZ2Sv8c0%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164329Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVRQMAP46BS%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=592a6d2d6df93dda80e58ee19c84c1cbf8ba4c7bf17a85c8a29ca70eb2b32339"
+    },
+    "Tags": {
+        "Proyecto": "NIIF17",
+        "Ambiente": "DEV",
+        "Componente": "ConfiguradorExtraccion"
+    }
+}

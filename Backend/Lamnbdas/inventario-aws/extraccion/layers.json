@@ -1,0 +1,62 @@
+{
+    "Layers": [
+        {
+            "LayerName": "SmbLayer",
+            "LayerArn": "arn:aws:lambda:us-east-1:533267035849:layer:SmbLayer",
+            "LatestMatchingVersion": {
+                "LayerVersionArn": "arn:aws:lambda:us-east-1:533267035849:layer:SmbLayer:5",
+                "Version": 5,
+                "Description": "A custom Python layer with requests library to smb function",
+                "CreatedDate": "2025-01-22T21:15:44.226+0000",
+                "CompatibleRuntimes": [
+                    "python3.11",
+                    "python3.12"
+                ]
+            }
+        },
+        {
+            "LayerName": "paramiko-3_11",
+            "LayerArn": "arn:aws:lambda:us-east-1:533267035849:layer:paramiko-3_11",
+            "LatestMatchingVersion": {
+                "LayerVersionArn": "arn:aws:lambda:us-east-1:533267035849:layer:paramiko-3_11:1",
+                "Version": 1,
+                "CreatedDate": "2025-08-19T19:12:22.745+0000",
+                "CompatibleRuntimes": [
+                    "python3.11"
+                ]
+            }
+        },
+        {
+            "LayerName": "paramiko-py313",
+            "LayerArn": "arn:aws:lambda:us-east-1:533267035849:layer:paramiko-py313",
+            "LatestMatchingVersion": {
+                "LayerVersionArn": "arn:aws:lambda:us-east-1:533267035849:layer:paramiko-py313:3",
+                "Version": 3,
+                "CreatedDate": "2025-09-30T05:31:14.908+0000",
+                "CompatibleRuntimes": [
+                    "python3.13"
+                ]
+            }
+        },
+        {
+            "LayerName": "smbprotocol",
+            "LayerArn": "arn:aws:lambda:us-east-1:533267035849:layer:smbprotocol",
+            "LatestMatchingVersion": {
+                "LayerVersionArn": "arn:aws:lambda:us-east-1:533267035849:layer:smbprotocol:3",
+                "Version": 3,
+                "Description": "Library to download files using network file sharing protoco",
+                "CreatedDate": "2024-08-30T13:06:29.983+0000",
+                "CompatibleArchitectures": [
+                    "x86_64"
+                ],
+                "CompatibleRuntimes": [
+                    "python3.10",
+                    "python3.11",
+                    "python3.8",
+                    "python3.9",
+                    "python3.12"
+                ]
+            }
+        }
+    ]
+}

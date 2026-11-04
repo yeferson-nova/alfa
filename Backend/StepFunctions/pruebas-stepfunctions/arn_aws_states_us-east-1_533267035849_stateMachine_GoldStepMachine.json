@@ -1,0 +1,20 @@
+{
+    "stateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:GoldStepMachine",
+    "name": "GoldStepMachine",
+    "status": "ACTIVE",
+    "definition": "{\"Comment\":\"A description of my state machine\",\"StartAt\":\"Glue ExtractGoldJob\",\"States\":{\"Glue ExtractGoldJob\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::glue:startJobRun\",\"Parameters\":{\"JobName\":\"acsele_gol\",\"Arguments\":{\"--BUCKET_NAME_GOLD\":\"alfa-datalake-dev-gold\",\"--BUCKET_NAME_SILVER\":\"alfa-datalake-dev-silver\",\"--NM_BUCKET_ASSETS\":\"alfa-datalake-dev-assets\"}},\"ResultSelector\":{\"JobName.$\":\"$.JobName\",\"JobRunId.$\":\"$.JobRunId\"},\"Next\":\"WaitJobRunSilver\",\"ResultPath\":\"$.result\"},\"WaitJobRunSilver\":{\"Type\":\"Wait\",\"Seconds\":5,\"Next\":\"GetJobRun\"},\"GetJobRun\":{\"Type\":\"Task\",\"Parameters\":{\"JobName.$\":\"$.result.JobName\",\"RunId.$\":\"$.result.JobRunId\"},\"ResultSelector\":{\"JobName.$\":\"$.JobRun.JobName\",\"JobRunId.$\":\"$.JobRun.Id\",\"JobRunState.$\":\"$.JobRun.JobRunState\"},\"Resource\":\"arn:aws:states:::aws-sdk:glue:getJobRun\",\"Next\":\"JobFinish?\",\"ResultPath\":\"$.result\"},\"JobFinish?\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.result.JobRunState\",\"StringEquals\":\"SUCCEEDED\",\"Next\":\"StartCrawler\"},{\"Variable\":\"$.result.JobRunState\",\"StringEquals\":\"FAILED\",\"Next\":\"FailedWithError\"}],\"Default\":\"WaitJobRunSilver\"},\"StartCrawler\":{\"Type\":\"Task\",\"Parameters\":{\"Name\":\"gold_crawler\"},\"Resource\":\"arn:aws:states:::aws-sdk:glue:startCrawler\",\"End\":true},\"FailedWithError\":{\"Type\":\"Pass\",\"End\":true}}}",
+    "roleArn": "arn:aws:iam::533267035849:role/service-role/StepFunctions-GoldStepMachine-role-7p8drzx3r",
+    "type": "STANDARD",
+    "creationDate": "2024-10-08T06:21:25.558000+00:00",
+    "loggingConfiguration": {
+        "level": "OFF",
+        "includeExecutionData": false
+    },
+    "tracingConfiguration": {
+        "enabled": false
+    },
+    "revisionId": "15911d43-b0ac-4c3e-8bd9-b7f81101cf80",
+    "encryptionConfiguration": {
+        "type": "AWS_OWNED_KEY"
+    }
+}

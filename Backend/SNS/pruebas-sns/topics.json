@@ -1,0 +1,25 @@
+{
+    "Topics": [
+        {
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:ALFA-DEV-DATALAKE-Critical"
+        },
+        {
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:ALFA-DEV-DATALAKE-Warning"
+        },
+        {
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:CloudGuardOnboardingOrchestrator"
+        },
+        {
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:GFT-Notifications-Budgets"
+        },
+        {
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:aws-controltower-SecurityNotifications"
+        },
+        {
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:datalake-dev-niif-certification-email"
+        },
+        {
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:niif-dev-certification-email"
+        }
+    ]
+}

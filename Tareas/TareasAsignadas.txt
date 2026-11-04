@@ -1,0 +1,9 @@
+A continuación, te dejo un listado de los temas que debes abordar en el plan de trabajo de AWS:
+
+1.	Ajuste de notificaciones AWS.
+a.	Cambio del servicio SNS a SES.
+b.	Ajuste de la presentación del correo de notificación a html.
+c.	Generación de notificaciones a equipo de soporte cuando un proceso falla.
+d.	Revisar escenarios adicionales de notificación que hagan falta.
+2.	Arreglo de las lambdas del gestor de configuración para unificar el modelo de programación (debe ser un solo modelo).
+3.	En reserva matemática se deben generar validaciones para detectar errores sobre la consistencia de la data procesada (en proceso de definición funcional).

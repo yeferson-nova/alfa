@@ -1,0 +1,2043 @@
+{
+    "TableList": [
+        {
+            "Name": "scd_auxilios_funerarios",
+            "DatabaseName": "alfa-datalake-niif-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-06-17T19:28:33+00:00",
+            "UpdateTime": "2026-07-02T19:58:40+00:00",
+            "LastAccessTime": "2026-07-02T19:58:39+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "num_solicitud_tesoreria",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "num_poliza",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "tipo_identificacion_afiliado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "num_identificacion_afiliado",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fec_expedicion_pension",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "per_expedicion_pension",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "vlr_total",
+                        "Type": "decimal(14,2)"
+                    },
+                    {
+                        "Name": "fec_envio_tesoreria",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "per_envio_tesoreria",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_concepto",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_concepto",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_origen",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_origen",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "lote_cargue_id",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "fec_ini_vig_reg",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "fec_fin_vig_reg",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "vrs_reg",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "act_reg",
+                        "Type": "int"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/niif/scd_auxilios_funerarios/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "9474",
+                    "objectCount": "1",
+                    "UPDATED_BY_CRAWLER": "crawler-niif-gold",
+                    "DEPRECATED_BY_CRAWLER": "1783022319957",
+                    "CRAWL_RUN_ID": "47fc9f55-c7aa-4431-bafe-ccc52b862670",
+                    "recordCount": "169",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "36",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "9474",
+                "objectCount": "1",
+                "UPDATED_BY_CRAWLER": "crawler-niif-gold",
+                "DEPRECATED_BY_CRAWLER": "1783022319957",
+                "CRAWL_RUN_ID": "47fc9f55-c7aa-4431-bafe-ccc52b862670",
+                "recordCount": "169",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "36",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/datalake-dev-niif-crawler-gold-role/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "1",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "scd_primas_arl",
+            "DatabaseName": "alfa-datalake-niif-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-06-16T21:29:37+00:00",
+            "UpdateTime": "2026-07-02T19:58:40+00:00",
+            "LastAccessTime": "2026-07-02T19:58:39+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "nid_poliza",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nid_endoso",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "vlr_prima",
+                        "Type": "decimal(17,2)"
+                    },
+                    {
+                        "Name": "fec_expedicion",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "per_expedicion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_proceso_point",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "per_proceso_point",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tipo_endoso",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "cod_tipo_endoso_arp",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_sucursal_alfa",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_sucursal_alfa",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "modulo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nid_afiliacion",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "cod_tipo_identificacion_tercero",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nid_nro_identificacion_tercero",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nom_tercero",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "lote_cargue_id",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fec_ini_vig_reg",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "fec_fin_vig_reg",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "vrs_reg",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "act_reg",
+                        "Type": "int"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/niif/scd_primas_arl/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "18421894",
+                    "objectCount": "16",
+                    "UPDATED_BY_CRAWLER": "crawler-niif-gold",
+                    "DEPRECATED_BY_CRAWLER": "1783022319957",
+                    "CRAWL_RUN_ID": "d5ab850b-3a87-470e-a0bf-55b7bf8b584a",
+                    "recordCount": "1195871",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "21",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "18421894",
+                "objectCount": "16",
+                "UPDATED_BY_CRAWLER": "crawler-niif-gold",
+                "DEPRECATED_BY_CRAWLER": "1783022319957",
+                "CRAWL_RUN_ID": "d5ab850b-3a87-470e-a0bf-55b7bf8b584a",
+                "recordCount": "1195871",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "21",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/datalake-dev-niif-crawler-gold-role/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "1",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "scd_reserva_matematica_arp",
+            "DatabaseName": "alfa-datalake-niif-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-07-02T19:58:39+00:00",
+            "UpdateTime": "2026-07-02T19:58:39+00:00",
+            "LastAccessTime": "2026-07-02T19:58:39+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "per_corte",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "fec_ini_per_corte",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "fec_fin_per_corte",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "ani_corte",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "ramo",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "unidad",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "equivalencia",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_poliza",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fec_exp_poliza",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "per_exp_poliza",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "fec_ini_per_exp_poliza",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "fec_fin_per_exp_poliza",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "ani_exp_poliza",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "vig_inicial",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "nro_siniestro",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fec_cau_derecho",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "per_cau_derecho",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "fec_ini_per_cau_derecho",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "fec_fin_per_cau_derecho",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "cod_org_pension",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_pension",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "par_afiliado",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_afiliado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_afiliado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_afiliado",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "gen_afiliado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_afiliado",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_afiliado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_afiliado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_afiliado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_afiliado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_afiliado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_afiliado",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "fec_mrt_afiliado",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "etd_afiliado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "est_afiliado",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "nro_hjs_ttl_afiliado",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "nro_hjs_inv_afiliado",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "igr_bse_liq_afiliado",
+                        "Type": "decimal(18,2)"
+                    },
+                    {
+                        "Name": "msd_afiliado",
+                        "Type": "decimal(18,2)"
+                    },
+                    {
+                        "Name": "nro_msd_afiliado",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "retroactivo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "grd_inv_inicial",
+                        "Type": "decimal(5,2)"
+                    },
+                    {
+                        "Name": "fec_ult_mod",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "grd_inv_actual",
+                        "Type": "decimal(5,2)"
+                    },
+                    {
+                        "Name": "gastos",
+                        "Type": "decimal(5,2)"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_1",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_1",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_1",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_1",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_1",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_1",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_1",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_1",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_1",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_1",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_2",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_2",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_2",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_2",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_2",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_2",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_2",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_2",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_2",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_2",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_3",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_3",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_3",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_3",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_3",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_3",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_3",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_3",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_3",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_3",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_4",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_4",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_4",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_4",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_4",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_4",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_4",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_4",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_4",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_4",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_5",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_5",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_5",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_5",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_5",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_5",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_5",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_5",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_5",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_5",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_6",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_6",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_6",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_6",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_6",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_6",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_6",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_6",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_6",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_6",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_7",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_7",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_7",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_7",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_7",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_7",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_7",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_7",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_7",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_7",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_8",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_8",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_8",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_8",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_8",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_8",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_8",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_8",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_8",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_8",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_9",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_9",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_9",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_9",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_9",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_9",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_9",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_9",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_9",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_9",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_10",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_10",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_10",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_10",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_10",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_10",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_10",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_10",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_10",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_10",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_11",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_11",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_11",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_11",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_11",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_11",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_11",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_11",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_11",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_11",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_12",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_12",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_12",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_12",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_12",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_12",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_12",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_12",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_12",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_12",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_13",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_13",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_13",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_13",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_13",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_13",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_13",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_13",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_13",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_13",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_14",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_14",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_14",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_14",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_14",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_14",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_14",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_14",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_14",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_14",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_prt_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_org_prt_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_prt_beneficiario_15",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "dsc_prt_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_org_tip_idt_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tip_idt_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_doc_idt_beneficiario_15",
+                        "Type": "decimal(15,0)"
+                    },
+                    {
+                        "Name": "gen_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sex_beneficiario_15",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "pmr_ape_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_ape_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "pmr_nom_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "sgn_nom_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nom_cpt_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_nac_beneficiario_15",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "edd_ben_cny_cmp_15",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "edd_ben_hijo_15",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "tmp_bnf_beneficiario_15",
+                        "Type": "decimal(38,2)"
+                    },
+                    {
+                        "Name": "cnt_hjs_beneficiario_15",
+                        "Type": "decimal(2,0)"
+                    },
+                    {
+                        "Name": "etd_beneficiario_15",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_est_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dsc_est_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "con_der_beneficiario_15",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nro_rad_not_tec",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "interes_tec_prima",
+                        "Type": "decimal(18,6)"
+                    },
+                    {
+                        "Name": "tasa_crec_prima",
+                        "Type": "decimal(5,2)"
+                    },
+                    {
+                        "Name": "gastos_prima",
+                        "Type": "decimal(18,6)"
+                    },
+                    {
+                        "Name": "prima",
+                        "Type": "decimal(18,6)"
+                    },
+                    {
+                        "Name": "fec_ini_renta_diferida",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "vlr_mesada_benef_perio_difer",
+                        "Type": "decimal(18,6)"
+                    },
+                    {
+                        "Name": "vlr_auxilio_funerario",
+                        "Type": "decimal(16,0)"
+                    },
+                    {
+                        "Name": "observaciones",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "vlr_reserva_rv89",
+                        "Type": "decimal(14,2)"
+                    },
+                    {
+                        "Name": "vlr_reserva_rv08",
+                        "Type": "decimal(14,2)"
+                    },
+                    {
+                        "Name": "par_0",
+                        "Type": "decimal(21,2)"
+                    },
+                    {
+                        "Name": "parma",
+                        "Type": "decimal(27,6)"
+                    },
+                    {
+                        "Name": "por_exc_parma",
+                        "Type": "decimal(18,6)"
+                    },
+                    {
+                        "Name": "por_amort_acum",
+                        "Type": "decimal(33,0)"
+                    },
+                    {
+                        "Name": "fec_aviso_siniestro",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "fair_value",
+                        "Type": "decimal(18,6)"
+                    },
+                    {
+                        "Name": "inscripcion_mecanismo",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "fec_inscripcion",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "parametro_deslizamiento",
+                        "Type": "decimal(5,2)"
+                    },
+                    {
+                        "Name": "tasa_fac_seg",
+                        "Type": "decimal(5,2)"
+                    },
+                    {
+                        "Name": "valor_cobertura",
+                        "Type": "decimal(18,6)"
+                    },
+                    {
+                        "Name": "interes_tecnico_niif4",
+                        "Type": "decimal(18,6)"
+                    },
+                    {
+                        "Name": "ramo_reserva",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nid_auditoria_medica",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nid_siniestro_reserva_pcj",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nid_hist_datos_inv_mte_ini",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nid_hist_datos_inv_mte_act",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fec_ini_vig_reg",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "fec_fin_vig_reg",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "vrs_reg",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "act_reg",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "lote_cargue_id",
+                        "Type": "bigint"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/niif/scd_reserva_matematica_arp/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "172994",
+                    "objectCount": "1",
+                    "UPDATED_BY_CRAWLER": "crawler-niif-gold",
+                    "CRAWL_RUN_ID": "2647d226-e8bb-4111-8d1b-c70e5e8780a1",
+                    "recordCount": "166",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "568",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "172994",
+                "objectCount": "1",
+                "UPDATED_BY_CRAWLER": "crawler-niif-gold",
+                "CRAWL_RUN_ID": "2647d226-e8bb-4111-8d1b-c70e5e8780a1",
+                "recordCount": "166",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "568",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/datalake-dev-niif-crawler-gold-role/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        }
+    ]
+}

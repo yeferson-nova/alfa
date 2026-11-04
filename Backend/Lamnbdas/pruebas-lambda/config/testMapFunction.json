@@ -1,0 +1,44 @@
+{
+    "Configuration": {
+        "FunctionName": "testMapFunction",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:testMapFunction",
+        "Runtime": "python3.13",
+        "Role": "arn:aws:iam::533267035849:role/service-role/testMapFunction-role-ge6xb8gp",
+        "Handler": "lambda_function.lambda_handler",
+        "CodeSize": 327,
+        "Description": "",
+        "Timeout": 3,
+        "MemorySize": 128,
+        "LastModified": "2025-01-10T13:47:58.000+0000",
+        "CodeSha256": "g3bH8ivWfR56NTxerdn9OjyXKCWtuaPWk4f6MSHy1uw=",
+        "Version": "$LATEST",
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "1f1090c3-e876-4f36-8790-79cceaef5623",
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:094c1a542c94fd9606a43b193682e6a9f866e8eb918c13f437ebf4b45edf2bd9"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/testMapFunction"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/testMapFunction-fe02e515-e98d-4440-b928-0e8aed61d513?versionId=XVxUXmqojx3SfyC_MYU1uCfHsbF5P0DK&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIBDn6dJkwTSCUC8Pqb94c737ptwSzGxQMsGRMXyJb4iVAiARq9jDtzZTaa9KCtow8jJUQ50JOhof4nWrMZJ%2Bddf%2FVSqUAgiT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAQaDDQ3OTIzMzAyNTM3OSIMHKs68cRrxym9DujcKugBV%2F88yiIhe0pAlFmwqbsgOzPgdALYb9JyqEofQXmiX1ra%2BJRNlugO9JxEbV7%2FvNYH%2B09KjhRUqdjP4HkKSxMQH5oPUmfxdb5KO1sAyp1kU%2B6VK66yOuOUn5zqOgS1xNMPNjrqNiOeMVUYuoA2XDfWCNGiB5obAcBqsTyU9TbZKlkwzF0zlTwozPegjIgx2axloKP3qRGF%2BaHkZo75tC8XsK2RRKlPbvjjQ4ejsIzoawC%2BlSDWU9RGRC16id5SImQ%2FMj5ZgpP1Per33CibU3Jcronr5A958csnxUb9sP%2BeX%2BPDZx1nGt9kRTC%2B6qbXBjqOAepxwy4JM6vDpn%2Bm8KpkOBF%2B0diKXBmWiXkFEaA5onrSUTi0w69JD3%2FdemgYssOFtAcz8LwlJagNJ7mDv29UxA6GJy5CaKXmPggF7QZx8BCOsyhiTKG4hp7aH9laGQ%2F%2B4TBoxfAfPrtzswOz4BFe2TI1G%2Bbfxkwi9041IylqCkEjmfyJ23KM5M56l9aDBz0%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164617Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVR3Y4GTQO6%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=22d43cddee7f6e3cbffb1c75581e8426743800bbb038e0ef6f1b74265fa74c35"
+    }
+}

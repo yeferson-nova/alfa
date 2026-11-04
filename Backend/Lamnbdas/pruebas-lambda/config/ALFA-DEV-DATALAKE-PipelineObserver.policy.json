@@ -1,0 +1,4 @@
+{
+    "Policy": "{\"Version\":\"2012-10-17\",\"Id\":\"default\",\"Statement\":[{\"Sid\":\"stack-cf-observability-ObserverInvokePermission-uV9TWfxycGCu\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"events.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:533267035849:function:ALFA-DEV-DATALAKE-PipelineObserver\",\"Condition\":{\"StringEquals\":{\"AWS:SourceAccount\":\"533267035849\"},\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:events:us-east-1:533267035849:rule/ALFA-DEV-DATALAKE-*\"}}}]}",
+    "RevisionId": "1705be35-f70e-4723-afc8-316e128e5141"
+}

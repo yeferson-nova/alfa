@@ -1,0 +1,11 @@
+{
+    "Subscriptions": [
+        {
+            "SubscriptionArn": "arn:aws:sns:us-east-1:533267035849:datalake-dev-niif-certification-email:f29484ee-8f2f-44f2-8df0-afe33c124da1",
+            "Owner": "533267035849",
+            "Protocol": "email",
+            "Endpoint": "manuel.machado@segurosalfa.com.co",
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:datalake-dev-niif-certification-email"
+        }
+    ]
+}

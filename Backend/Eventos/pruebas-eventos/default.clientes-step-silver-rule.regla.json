@@ -1,0 +1,9 @@
+{
+    "Name": "clientes-step-silver-rule",
+    "Arn": "arn:aws:events:us-east-1:533267035849:rule/clientes-step-silver-rule",
+    "ScheduleExpression": "cron(0 8 11 * ? *)",
+    "State": "ENABLED",
+    "Description": "Ejecutar Step Function Silver cada 11 del mes a las 03:00 hora Colombia",
+    "EventBusName": "default",
+    "CreatedBy": "533267035849"
+}

@@ -1,0 +1,60 @@
+{
+    "Configuration": {
+        "FunctionName": "ALFA-DEV-DATALAKE-PipelineObserver",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:ALFA-DEV-DATALAKE-PipelineObserver",
+        "Runtime": "python3.12",
+        "Role": "arn:aws:iam::533267035849:role/stack-cf-observability-ObserverRole-Ut7IM2wZtBh9",
+        "Handler": "index.handler",
+        "CodeSize": 2111,
+        "Description": "Enriquece eventos de Glue, Crawlers y Step Functions para observabilidad",
+        "Timeout": 120,
+        "MemorySize": 256,
+        "LastModified": "2026-10-20T20:56:28.313+0000",
+        "CodeSha256": "qHyBLCDw7OlU9w81tPbAkSJmQti9W8tZG4UutmBmvkM=",
+        "Version": "$LATEST",
+        "DeadLetterConfig": {
+            "TargetArn": "arn:aws:sqs:us-east-1:533267035849:ALFA-DEV-DATALAKE-Observer-DLQ"
+        },
+        "Environment": {
+            "Variables": {
+                "CRIT": "arn:aws:sns:us-east-1:533267035849:ALFA-DEV-DATALAKE-Critical",
+                "NS": "ALFA/DATALAKE",
+                "ENV": "DEV",
+                "WARN": "arn:aws:sns:us-east-1:533267035849:ALFA-DEV-DATALAKE-Warning"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "641117a2-39ae-4763-81e5-21f98bd7974a",
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "arm64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:32a1571ff3983884c2d9fd9c73e6a0bc51a8cf33eb4af62312ef05f2756a2eee"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/ALFA-DEV-DATALAKE-PipelineObserver"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/ALFA-DEV-DATALAKE-PipelineObserver-9a8dd351-aae6-4475-a8b0-4cdc2c402dd4?versionId=ak8in.qdLmx5OFNk.0S9Q9qaxTiqoyWM&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEM3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQD9fTft%2BuJ8wqcAFSsP8ZEkKSztqQL4yXY01D5Ymz7x5gIhAMTbkelsQUPbR6Kp05c1Z59xgIFkIyfjBuEM0Qi6KLB7KpQCCJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQBBoMNDc5MjMzMDI1Mzc5IgzIFZb7mqn5ZBAnRCkq6AEXlRliXHw5%2BsRdhD%2BIa6wnQybAA%2BtLwe2RnzD6j%2BSYpbMuQJlagXMZi%2F808BaZE6w%2F0AFMue6C0QahKI1eoFWo7r%2BHVCeJdrnyvVLdb9iWXond%2BMePgolkUUy1pdJsTePanQPXVYdHMStqsiB9YG3J6wavGMrrm3pzx5dE1eDw%2BjKHUIx8LNqmoqIqHE8ge3%2FRc%2Fd9DQBhm7RAMG4%2FkJCwOU%2FvO%2FAkT4dFHUlooF2iPL4y79N63lyjG%2FKn6Bkg9adoKW6cbTaXdOE920%2F1cR7DDy0TlUtQQuQG1Q%2FtgmHels74CYj%2Fivy7MOmwp9cGOowBx0gE8%2FRLf3eBvnKCDiQ006oE6E57rY1qCGLVUJquTkHkxJA%2FkktnIl%2BraFjRT6Tg8e5XI1K%2BslDsy4HYTocf%2FQfKzxYruedCsWA2NSERFRFs%2F%2Fx313pOUhfA4Wy4zPKiSiswjQFOLkUBeFJCB0v85yFXK7Mq%2FeSinctFio4hT1VM8hNhaaxp0z0zfOA%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164054Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVRZHH2VIS7%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=305a830f1aa1a2ec36b2a6d64ac9df8b3b5148279a19d00b0813aa7ee20886a5"
+    },
+    "Tags": {
+        "aws:cloudformation:stack-name": "stack-cf-observability",
+        "aws:cloudformation:stack-id": "arn:aws:cloudformation:us-east-1:533267035849:stack/stack-cf-observability/d3122610-c8af-11f1-9eff-0afffb51535d",
+        "aws:cloudformation:logical-id": "ObserverFunction"
+    }
+}

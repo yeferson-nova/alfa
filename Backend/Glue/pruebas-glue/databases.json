@@ -1,0 +1,519 @@
+﻿[
+    {
+        "Name":  " test-bronce-catalog",
+        "CreateTime":  "2025-10-27T08:22:50+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-catalog-dev-bronce",
+        "CreateTime":  "2024-08-21T21:43:53+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-acsele-bronce",
+        "Description":  "base de datos de Acsel-e",
+        "CreateTime":  "2026-02-10T19:51:36+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-alfaprod-arpprod-bronce",
+        "Description":  "Base de datos para bronce arp",
+        "CreateTime":  "2026-02-11T13:21:50+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-alfaprod-general-bronce",
+        "CreateTime":  "2026-02-11T13:41:33+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-alfaprod-prv-bronce",
+        "CreateTime":  "2026-02-11T14:05:17+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-calidad-bronce",
+        "Description":  "Aqui quedaran los datos de datalake calidad bronce ",
+        "CreateTime":  "2026-03-11T19:54:08+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-calidad-gold",
+        "CreateTime":  "2026-04-11T01:17:52+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-cardif-bronce",
+        "CreateTime":  "2026-02-11T14:48:40+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-dev-cal-silver",
+        "CreateTime":  "2026-04-06T22:18:14+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-dev-clients-bronze",
+        "CreateTime":  "2025-07-23T21:49:47+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-dev-clients-silver",
+        "Description":  "Glue catalog database for silver layer in clients",
+        "CreateTime":  "2025-08-04T22:56:55+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-dev-gold",
+        "CreateTime":  "2024-08-21T21:47:32+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-dev-gold-hub",
+        "CreateTime":  "2025-06-11T22:14:24+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-dev-silver",
+        "CreateTime":  "2024-08-21T21:47:14+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-niif-bronze",
+        "Description":  "base de datos de niif17",
+        "CreateTime":  "2026-04-23T16:53:54+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-niif-gold",
+        "Description":  "base de datos de niif17\n",
+        "CreateTime":  "2026-04-23T16:55:12+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-datalake-niif-silver",
+        "Description":  "base de datos de niif17",
+        "CreateTime":  "2026-04-23T16:54:30+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-gold-dev-incremental",
+        "CreateTime":  "2025-01-08T15:26:29+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-silver-dev-incremental",
+        "CreateTime":  "2025-01-09T14:49:47+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "alfa-test-silver",
+        "Description":  "BD  pruebas",
+        "CreateTime":  "2024-10-10T15:45:22+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "bronce_incremental",
+        "CreateTime":  "2024-11-21T16:31:12+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "calidad-dev-bronze-catalog-db",
+        "Description":  "Glue catalog database",
+        "CreateTime":  "2026-07-01T17:59:58+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "calidad-dev-gold-catalog-db",
+        "Description":  "Glue catalog database",
+        "CreateTime":  "2026-07-01T17:59:58+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "calidad-dev-silver-catalog-db",
+        "Description":  "Glue catalog database",
+        "CreateTime":  "2026-07-01T17:59:58+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "calidad-dqdl-result",
+        "CreateTime":  "2026-03-13T21:22:40+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "datalake-dev-bronce-catalog-db",
+        "Description":  "Glue catalog database for bronce layer",
+        "CreateTime":  "2024-10-29T12:44:44+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "datalake-dev-bronce-catalog-db-niif-manuelmachado",
+        "Description":  "Base de datos para zona Bronce - NIIF17 Primas ARL",
+        "LocationUri":  "s3://alfa-datalake-dev-bronce/bronze/primas_arl/",
+        "CreateTime":  "2026-03-17T22:02:28+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "datalake-dev-gold-catalog-db",
+        "Description":  "Glue catalog database for gold layer",
+        "CreateTime":  "2024-10-29T12:44:45+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "datalake-dev-niif-prm",
+        "Description":  "Glue catalog database for PRM",
+        "CreateTime":  "2026-03-05T14:53:15+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "datalake-dev-prm-catalog-db",
+        "Description":  "Glue catalog database for prm layer",
+        "CreateTime":  "2025-10-21T01:29:01+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "datalake-dev-silver-catalog-db",
+        "Description":  "Glue catalog database for silver layer",
+        "CreateTime":  "2024-10-29T12:44:44+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "datalake-dev-silver-catalog-db-test",
+        "Description":  "Test create catalog",
+        "CreateTime":  "2025-07-31T19:47:48+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "default",
+        "CreateTime":  "2024-08-23T18:59:56+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "factelec-gold-catalog-db",
+        "Description":  "Glue catalog database for bronce layer",
+        "CreateTime":  "2026-07-15T15:01:57+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "jhoan_crawler_database",
+        "CreateTime":  "2024-11-26T04:33:13+00:00",
+        "CreateTableDefaultPermissions":  [
+                                              {
+                                                  "Principal":  {
+                                                                    "DataLakePrincipalIdentifier":  "IAM_ALLOWED_PRINCIPALS"
+                                                                },
+                                                  "Permissions":  [
+                                                                      "ALL"
+                                                                  ]
+                                              }
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "niif-qa-gold-catalog-db",
+        "Description":  "Catalogo Gold requerido para NIIF Previsional",
+        "CreateTime":  "2026-09-21T21:43:16+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "niif17_bronze",
+        "CreateTime":  "2026-04-14T20:37:42+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "niif_segmentos",
+        "CreateTime":  "2026-06-16T22:57:10+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "niif_validacion_rm_arp",
+        "CreateTime":  "2026-06-16T22:27:22+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "primasarl_bronze",
+        "CreateTime":  "2026-04-15T19:35:49+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "primasarl_gold",
+        "CreateTime":  "2026-04-16T14:45:38+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "primasarl_gold_prueba",
+        "CreateTime":  "2026-04-14T16:28:51+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "primasarl_validacion_tecnica",
+        "CreateTime":  "2026-04-14T16:00:52+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "quality_test",
+        "CreateTime":  "2026-03-31T16:02:59+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "silver-db-causas",
+        "CreateTime":  "2025-09-04T22:31:51+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "test-union-sources",
+        "CreateTime":  "2024-10-14T20:01:58+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    },
+    {
+        "Name":  "test_data_dev",
+        "CreateTime":  "2026-09-01T13:30:00+00:00",
+        "CreateTableDefaultPermissions":  [
+
+                                          ],
+        "CatalogId":  "533267035849"
+    }
+]

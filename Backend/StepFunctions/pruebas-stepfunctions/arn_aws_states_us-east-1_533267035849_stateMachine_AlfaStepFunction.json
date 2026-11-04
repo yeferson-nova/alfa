@@ -1,0 +1,20 @@
+{
+    "stateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:AlfaStepFunction",
+    "name": "AlfaStepFunction",
+    "status": "ACTIVE",
+    "definition": "{\"Comment\":\"A description of my state machine\",\"StartAt\":\"Glue ExtractBronceJob\",\"States\":{\"Glue ExtractBronceJob\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::glue:startJobRun\",\"Parameters\":{\"JobName\":\"acsele_dev_bronce_st\",\"Arguments\":{\"--BUCKET_NAME\":\"alfa-datalake-dev-bronce\",\"--DB_SCHEMA\":\"ACSELE_ALFA\",\"--NM_BUCKET_ASSETS\":\"alfa-datalake-dev-assets\"}},\"ResultSelector\":{\"JobName.$\":\"$.JobName\",\"JobRunId.$\":\"$.JobRunId\"},\"Next\":\"WaitJobRunBronce\",\"ResultPath\":\"$.result\"},\"WaitJobRunBronce\":{\"Type\":\"Wait\",\"Seconds\":60,\"Next\":\"GetJobRun\"},\"GetJobRun\":{\"Type\":\"Task\",\"Parameters\":{\"JobName.$\":\"$.result.JobName\",\"RunId.$\":\"$.result.JobRunId\"},\"ResultSelector\":{\"JobName.$\":\"$.JobRun.JobName\",\"JobRunId.$\":\"$.JobRun.Id\",\"JobRunState.$\":\"$.JobRun.JobRunState\"},\"Resource\":\"arn:aws:states:::aws-sdk:glue:getJobRun\",\"Next\":\"JobFinish?\",\"ResultPath\":\"$.result\"},\"JobFinish?\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.result.JobRunState\",\"StringEquals\":\"SUCCEEDED\",\"Next\":\"StartCrawler\"},{\"Variable\":\"$.result.JobRunState \",\"StringEquals\":\"FAILED\",\"Next\":\"FinishWithErros\"}],\"Default\":\"WaitJobRunBronce\"},\"StartCrawler\":{\"Type\":\"Task\",\"Parameters\":{\"Name\":\"BronceExtract\"},\"Resource\":\"arn:aws:states:::aws-sdk:glue:startCrawler\",\"Next\":\"StepFunctionSilver\"},\"StepFunctionSilver\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::states:startExecution.sync:2\",\"Parameters\":{\"StateMachineArn\":\"arn:aws:states:us-east-1:533267035849:stateMachine:AlfaStepFunctionSilver\",\"Input\":{\"StatePayload\":\"Hello from Step Functions!\",\"AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$\":\"$$.Execution.Id\"}},\"End\":true},\"FinishWithErros\":{\"Type\":\"Pass\",\"End\":true}}}",
+    "roleArn": "arn:aws:iam::533267035849:role/service-role/StepFunctions-AlfaStepFunction-role-fxicb1o8l",
+    "type": "STANDARD",
+    "creationDate": "2024-10-02T21:04:48.026000+00:00",
+    "loggingConfiguration": {
+        "level": "OFF",
+        "includeExecutionData": false
+    },
+    "tracingConfiguration": {
+        "enabled": false
+    },
+    "revisionId": "434957e1-d8ee-460d-bcef-91e278f9ab6e",
+    "encryptionConfiguration": {
+        "type": "AWS_OWNED_KEY"
+    }
+}

@@ -1,0 +1,60 @@
+{
+    "Triggers": [
+        {
+            "Name": "BRONZE_A_SILVER",
+            "WorkflowName": "ORQUESTADOR_PRIMAS_ARL_MANUEL_MACHADO",
+            "Type": "CONDITIONAL",
+            "State": "ACTIVATED",
+            "Description": "REPLICA DE LOS DATOS DESDE LA CAPA BRONZE A SILVER",
+            "Actions": [
+                {
+                    "JobName": "primasarl_slv_dev_transformation"
+                }
+            ],
+            "Predicate": {
+                "Logical": "AND",
+                "Conditions": [
+                    {
+                        "LogicalOperator": "EQUALS",
+                        "JobName": "primasarl_brz_dev_extraction",
+                        "State": "SUCCEEDED"
+                    }
+                ]
+            }
+        },
+        {
+            "Name": "ORACLE_A_BRONZE",
+            "WorkflowName": "ORQUESTADOR_PRIMAS_ARL_MANUEL_MACHADO",
+            "Type": "ON_DEMAND",
+            "State": "CREATED",
+            "Description": "EXTRACCION DE LOS DATOS DESDE LA BASE DE DATOS DE ORACLE A LA CAPA BRONZE",
+            "Actions": [
+                {
+                    "JobName": "primasarl_brz_dev_extraction"
+                }
+            ]
+        },
+        {
+            "Name": "SILVER_A_GOLD",
+            "WorkflowName": "ORQUESTADOR_PRIMAS_ARL_MANUEL_MACHADO",
+            "Type": "CONDITIONAL",
+            "State": "ACTIVATED",
+            "Description": "PROCESAMIENTO DE LOS DATOS DESDE LA CAPA SILVER A GOLD",
+            "Actions": [
+                {
+                    "JobName": "primasarl_gold_dev_transformation"
+                }
+            ],
+            "Predicate": {
+                "Logical": "AND",
+                "Conditions": [
+                    {
+                        "LogicalOperator": "EQUALS",
+                        "JobName": "primasarl_slv_dev_transformation",
+                        "State": "SUCCEEDED"
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,50 @@
+{
+    "Configuration": {
+        "FunctionName": "datalake-dev-niif-move-s3",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-move-s3",
+        "Runtime": "python3.14",
+        "Role": "arn:aws:iam::533267035849:role/service-role/datalake-dev-niif-move-s3-role-makehhbp",
+        "Handler": "lambda_function.lambda_handler",
+        "CodeSize": 1890,
+        "Description": "",
+        "Timeout": 3,
+        "MemorySize": 128,
+        "LastModified": "2026-05-25T20:50:55.000+0000",
+        "CodeSha256": "jIhnyZHHxyxhSP6cOhifPGK1urm3mUxVz9HrnbYcJ2A=",
+        "Version": "$LATEST",
+        "Environment": {
+            "Variables": {
+                "REPORT_BUCKET": "alfa-datalake-dev-niif-certification",
+                "NOTIFICATIONS_TABLE": "datalake-dev-notification-certification"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "29305fa0-34c2-4ab5-abcd-203ff42ce0b8",
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:e75e9c9c41239a44ec0c6835b8565881fa9de069823be371f86023888ce6aeed"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/datalake-dev-niif-move-s3"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/datalake-dev-niif-move-s3-785f9052-9b5d-4007-bdea-458ac144aa19?versionId=naHEGSKY_t2bLz83FdRZaXWQZxfB3sHt&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIEqaWbieCi145KJ9lPcvwW93RGg%2FzKCs3vgvtJgEzj1BAiEAzkhs%2FTb0yH7gAiKLr06rKpj%2BKyLG0sMGkWG9M4%2BokLYqlAIIkP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgw0NzkyMzMwMjUzNzkiDESKaD1ghcXXmC4vZyroATO1jDT3pVyHzxgpEwQOHKkdjRWWcFBTN91B75aZ%2BRRsAI88z9AftpR2vqTjUIkHpeRoPLzD%2FFx72suc06JNMO5t%2F5asmmEtkiwop8vkxjP%2B8lNfeaNqXDnnJG1MZG2AbF8BqhsofkIJ%2FRpm7iJfbS1fj8LyWLe41wSQ%2Fw87vU5dV%2B3YLW2ZrMOCcc23SVH7A4zCBV3fRM76dKcOSCBe8P42RPJuJ%2BhEKvSMCZITkJZUV2G2rmeulmmRv%2BZF9J2PISEzwHnkEiVYwnDKRBIoq%2FoDRidz6vz21LSsK0YryPRp8yUbiN2OIcMw%2F42m1wY6jQEP86WH3KWfWCu4y7LzyL%2BSdDRc5jvv11SNz5Wv8zvl3Z62fMJ9AgEtPTzEKHTyANoY%2B6PQLaMk%2F%2FSU1gLzSY28C%2FSmTcZWY6QmRYWdy83eqgtn%2F5BJ44PUt019dMoZpArgZtiozv3iqXDRykfRr5u3r7P9Me0tYiBIxr3hADFEb82F%2BuZKcqIRep41aBw%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164216Z&X-Amz-SignedHeaders=host&X-Amz-Expires=599&X-Amz-Credential=ASIAW7FEDUVR5JJGUF5W%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=3357c4d55181f7e83fdfdd00d85010e72a29e12dfc2908a74c07a99ff00b8fe5"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "Targets": [
+        {
+            "Id": "terraform-20250515040343332500000001",
+            "Arn": "arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-bronce-sf",
+            "RoleArn": "arn:aws:iam::533267035849:role/datalake-dev_eventbridge_role"
+        }
+    ]
+}

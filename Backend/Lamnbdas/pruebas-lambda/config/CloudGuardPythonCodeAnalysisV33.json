@@ -1,0 +1,50 @@
+{
+    "Configuration": {
+        "FunctionName": "CloudGuardPythonCodeAnalysisV33",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CloudGuardPythonCodeAnalysisV33",
+        "Runtime": "python3.11",
+        "Role": "arn:aws:iam::533267035849:role/CloudGuardServerlessCodeAnalysisPython3LambdaExecutionRole",
+        "Handler": "function_code_analysis_python.lambda_handler",
+        "CodeSize": 24088311,
+        "Description": "Statically analyze Python code",
+        "Timeout": 860,
+        "MemorySize": 3008,
+        "LastModified": "2026-07-20T09:05:57.000+0000",
+        "CodeSha256": "X3nzpjqVxosmq2KWjDwB8kk1ggHeEqf7MCfD1sfwc7k=",
+        "Version": "$LATEST",
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "7f11d716-b240-4ff3-84cc-89df037b264a",
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:e49ac50086e0d865c78bd2e7c92cf0e492f61f39031b3572eb0d429affd59f50"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/CloudGuardPythonCodeAnalysisV33"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/CloudGuardPythonCodeAnalysisV33-d5bafe9d-86a4-4d65-9acc-5e5b03819aeb?versionId=AXjf_dV2Lbj7L8sVWokYYb_fxt7dNeuq&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIEqaWbieCi145KJ9lPcvwW93RGg%2FzKCs3vgvtJgEzj1BAiEAzkhs%2FTb0yH7gAiKLr06rKpj%2BKyLG0sMGkWG9M4%2BokLYqlAIIkP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgw0NzkyMzMwMjUzNzkiDESKaD1ghcXXmC4vZyroATO1jDT3pVyHzxgpEwQOHKkdjRWWcFBTN91B75aZ%2BRRsAI88z9AftpR2vqTjUIkHpeRoPLzD%2FFx72suc06JNMO5t%2F5asmmEtkiwop8vkxjP%2B8lNfeaNqXDnnJG1MZG2AbF8BqhsofkIJ%2FRpm7iJfbS1fj8LyWLe41wSQ%2Fw87vU5dV%2B3YLW2ZrMOCcc23SVH7A4zCBV3fRM76dKcOSCBe8P42RPJuJ%2BhEKvSMCZITkJZUV2G2rmeulmmRv%2BZF9J2PISEzwHnkEiVYwnDKRBIoq%2FoDRidz6vz21LSsK0YryPRp8yUbiN2OIcMw%2F42m1wY6jQEP86WH3KWfWCu4y7LzyL%2BSdDRc5jvv11SNz5Wv8zvl3Z62fMJ9AgEtPTzEKHTyANoY%2B6PQLaMk%2F%2FSU1gLzSY28C%2FSmTcZWY6QmRYWdy83eqgtn%2F5BJ44PUt019dMoZpArgZtiozv3iqXDRykfRr5u3r7P9Me0tYiBIxr3hADFEb82F%2BuZKcqIRep41aBw%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164148Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVR5JJGUF5W%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=9a74ea318a3314f3533da79ffe7f4f8c9fc2dcc091228b769ace1f97d07be14f"
+    },
+    "Tags": {
+        "aws:cloudformation:stack-name": "CloudGuard-Onboarding-Serverless",
+        "Owner": "Cloudguard Serverless Security",
+        "aws:cloudformation:stack-id": "arn:aws:cloudformation:us-east-1:533267035849:stack/CloudGuard-Onboarding-Serverless/38979d50-aea2-11ef-be51-0ebb5ba8eef3",
+        "aws:cloudformation:logical-id": "CloudGuardPythonCodeAnalysisV33"
+    }
+}

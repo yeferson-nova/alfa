@@ -1,0 +1,18 @@
+INVENTARIO AWS EN CLOUDSHELL (solo lectura)
+
+1. Abra AWS CloudShell en la region donde estan las Lambdas.
+2. Menu Actions > Upload file > suba cloudshell-inventario.zip
+3. Ejecute:
+     unzip -o cloudshell-inventario.zip
+     bash inventario.sh                 # todas las Lambdas
+     bash inventario.sh MI_PREFIJO      # solo las que contengan el prefijo
+     REGION=us-east-1 bash inventario.sh MI_PREFIJO   # forzar region
+4. Al terminar: Actions > Download file > inventario.zip
+5. Revise _errores.log dentro del zip: lista lo que no se pudo leer por permisos.
+
+Notas:
+- No modifica nada en AWS: solo get/list/describe.
+- Los valores de variables de entorno de las Lambdas se reemplazan por ***OCULTO***;
+  solo se conservan los nombres (lambdas/env-nombres/).
+- Lambdas tipo imagen de contenedor no tienen codigo descargable (ver lambdas/sin_codigo.txt).
+- Duracion tipica: 2 a 10 minutos segun la cantidad de Lambdas.

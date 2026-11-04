@@ -1,0 +1,18 @@
+{
+    "Attributes": {
+        "Policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"__default_statement_ID\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::533267035849:root\"},\"Action\":[\"SNS:Subscribe\",\"SNS:SetTopicAttributes\",\"SNS:RemovePermission\",\"SNS:Publish\",\"SNS:ListSubscriptionsByTopic\",\"SNS:GetTopicAttributes\",\"SNS:DeleteTopic\",\"SNS:AddPermission\"],\"Resource\":\"arn:aws:sns:us-east-1:533267035849:niif-dev-certification-email\"}]}",
+        "LambdaSuccessFeedbackSampleRate": "0",
+        "Owner": "533267035849",
+        "SubscriptionsPending": "0",
+        "KmsMasterKeyId": "arn:aws:kms:us-east-1:533267035849:key/c417247b-8e2c-4d21-9b5b-6b6b5c548bea",
+        "TopicArn": "arn:aws:sns:us-east-1:533267035849:niif-dev-certification-email",
+        "EffectiveDeliveryPolicy": "{\"http\":{\"defaultHealthyRetryPolicy\":{\"minDelayTarget\":20,\"maxDelayTarget\":20,\"numRetries\":3,\"numMaxDelayRetries\":0,\"numNoDelayRetries\":0,\"numMinDelayRetries\":0,\"backoffFunction\":\"linear\"},\"disableSubscriptionOverrides\":false,\"defaultRequestPolicy\":{\"headerContentType\":\"text/plain; charset=UTF-8\"}}}",
+        "FirehoseSuccessFeedbackSampleRate": "0",
+        "SubscriptionsConfirmed": "2",
+        "SQSSuccessFeedbackSampleRate": "0",
+        "HTTPSuccessFeedbackSampleRate": "0",
+        "ApplicationSuccessFeedbackSampleRate": "0",
+        "DisplayName": "NIIF17",
+        "SubscriptionsDeleted": "0"
+    }
+}

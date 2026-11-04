@@ -1,0 +1,447 @@
+{
+    "TableList": [
+        {
+            "Name": "par_afiliaciones",
+            "DatabaseName": "primasarl_bronze",
+            "Owner": "hadoop",
+            "CreateTime": "2026-04-20T22:37:10+00:00",
+            "UpdateTime": "2026-04-20T22:37:10+00:00",
+            "LastAccessTime": "1970-01-01T00:00:00+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "nid_afiliacion",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nid_afiliacion_potencial",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "cod_tipo_identificacion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nid_numero_identificacion",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nid_consecutivo",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fec_inicio_vigencia",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "fec_radicacion",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "periodo_ultima_proyeccion",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "periodo_ultimo_pago",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fec_registro",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "cod_estado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_procesamiento_autoliq",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_forma_pago",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_excepcion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_sucursal_alfa",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "bln_intermediario",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "num_sucursales",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "num_centros_trabajo",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "cod_clase_afiliacion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "p_anterior",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "bln_extemporanea",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "bln_acuerdo_pago",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "bln_pyme",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_fin_vigencia",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "pcj_maximo_intermediacion",
+                        "Type": "decimal(5,2)"
+                    },
+                    {
+                        "Name": "bln_contratante",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "num_formulario",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tipo_aportante",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tipo_vinculador_laboral",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "usuario_registro",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "usuario_modificacion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_modificacion",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "usuario_encargado",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fec_asigna_encargado",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "bln_olcsa",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "bln_empresa_especial",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tipo_cliente",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tipo_desafiliacion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_clase_aportante",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tipo_carnet",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "bln_actualiza_tipo_carne",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nid_intermediario",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nid_canal",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "pcj_intermediacion",
+                        "Type": "decimal(5,2)"
+                    },
+                    {
+                        "Name": "estado_sincronizacion",
+                        "Type": "decimal(38,10)"
+                    },
+                    {
+                        "Name": "sede_principal",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "zona",
+                        "Type": "bigint"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-bronce/scripts_caso_primasarl_niif_manuelmachado/arpprod/par_afiliaciones",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {},
+                "SkewedInfo": {
+                    "SkewedColumnNames": [],
+                    "SkewedColumnValues": [],
+                    "SkewedColumnValueLocationMaps": {}
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "EXTERNAL": "TRUE",
+                "transient_lastDdlTime": "1776724630"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/AWSReservedSSO_ALFA-DEV-DATALAKE-ADM_d41d4bf9003a32d8/jmesias@segurosalfa.com.co",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "par_endosos",
+            "DatabaseName": "primasarl_bronze",
+            "Owner": "hadoop",
+            "CreateTime": "2026-04-15T19:38:22+00:00",
+            "UpdateTime": "2026-04-15T19:38:22+00:00",
+            "LastAccessTime": "1970-01-01T00:00:00+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "nid_poliza",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nid_endoso",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "vlr_prima",
+                        "Type": "decimal(17,2)"
+                    },
+                    {
+                        "Name": "fec_expedicion",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "periodo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_tipo_endoso",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "cod_tipo_endoso_arp",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_sucursal_alfa",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "modulo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nid_afiliacion",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "lote_cargue_id",
+                        "Type": "bigint"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-bronce/scripts_caso_primasarl_niif_manuelmachado/arpprod/par_endosos",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {},
+                "SkewedInfo": {
+                    "SkewedColumnNames": [],
+                    "SkewedColumnValues": [],
+                    "SkewedColumnValueLocationMaps": {}
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "EXTERNAL": "TRUE",
+                "transient_lastDdlTime": "1776281902"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/AWSReservedSSO_ALFA-DEV-DATALAKE-ADM_d41d4bf9003a32d8/mmachado@segurosalfa.com.co",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "par_polizas",
+            "DatabaseName": "primasarl_bronze",
+            "Owner": "hadoop",
+            "CreateTime": "2026-04-16T14:34:14+00:00",
+            "UpdateTime": "2026-04-16T14:34:14+00:00",
+            "LastAccessTime": "1970-01-01T00:00:00+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "cod_sucursal_alfa",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nid_poliza",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "modulo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_poliza_point",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "num_endoso",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fec_expedicion",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "hora_desde",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "hora_hasta",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_ramo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_coaseguro",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "cod_departamento",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_ciudad",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_agente",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fec_inicial_vigencia",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "fec_final_vigencia",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "fec_ingreso_point",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "periodo_activo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "bln_vigente",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "cod_producto",
+                        "Type": "bigint"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-bronce/scripts_caso_primasarl_niif_manuelmachado/arpprod/par_polizas",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {},
+                "SkewedInfo": {
+                    "SkewedColumnNames": [],
+                    "SkewedColumnValues": [],
+                    "SkewedColumnValueLocationMaps": {}
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "EXTERNAL": "TRUE",
+                "transient_lastDdlTime": "1776350054"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/AWSReservedSSO_ALFA-DEV-DATALAKE-ADM_d41d4bf9003a32d8/mmachado@segurosalfa.com.co",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        }
+    ]
+}

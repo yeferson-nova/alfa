@@ -1,0 +1,20 @@
+{
+    "stateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:PRUEBA_JQ",
+    "name": "PRUEBA_JQ",
+    "status": "ACTIVE",
+    "definition": "{\"Comment\":\"Mi primera Step Function que llama a un Lambda\",\"StartAt\":\"InvocarLambda\",\"States\":{\"InvocarLambda\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"arn:aws:lambda:us-east-1:533267035849:function:PRUEBA_JQ\",\"Payload.$\":\"$\"},\"OutputPath\":\"$.Payload\",\"End\":true}}}",
+    "roleArn": "arn:aws:iam::533267035849:role/service-role/StepFunctions-sf-datalake-dev-smb-clientes-role-pz9nv7kxy",
+    "type": "STANDARD",
+    "creationDate": "2026-02-12T20:01:36.172000+00:00",
+    "loggingConfiguration": {
+        "level": "OFF",
+        "includeExecutionData": false
+    },
+    "tracingConfiguration": {
+        "enabled": false
+    },
+    "revisionId": "74712764-1983-4c73-95e8-54b479201f86",
+    "encryptionConfiguration": {
+        "type": "AWS_OWNED_KEY"
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "stateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-gold-sf",
+    "name": "datalake-dev-gold-sf",
+    "status": "ACTIVE",
+    "definition": "{\n  \"Comment\": \"A description of my state machine\",\n  \"StartAt\": \"Glue ExtractGoldJob\",\n  \"States\": {\n    \"Glue ExtractGoldJob\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"arn:aws:states:::glue:startJobRun\",\n      \"Parameters\": {\n        \"JobName\": \"datalake-dev-gold-job\",\n        \"Arguments\": {\n          \"--BUCKET_NAME_ASSETS\": \"alfa-datalake-dev-assets\",\n          \"--BUCKET_NAME_SILVER\": \"alfa-datalake-dev-silver\",\n          \"--BUCKET_NAME_GOLD\": \"alfa-datalake-dev-gold\"\n        }\n      },\n      \"ResultSelector\": {\n        \"JobName.$\": \"$.JobName\",\n        \"JobRunId.$\": \"$.JobRunId\"\n      },\n      \"Next\": \"WaitJobRunSilver\",\n      \"ResultPath\": \"$.result\"\n    },\n    \"WaitJobRunSilver\": {\n      \"Type\": \"Wait\",\n      \"Seconds\": 5,\n      \"Next\": \"GetJobRun\"\n    },\n    \"GetJobRun\": {\n      \"Type\": \"Task\",\n      \"Parameters\": {\n        \"JobName.$\": \"$.result.JobName\",\n        \"RunId.$\": \"$.result.JobRunId\"\n      },\n      \"ResultSelector\": {\n        \"JobName.$\": \"$.JobRun.JobName\",\n        \"JobRunId.$\": \"$.JobRun.Id\",\n        \"JobRunState.$\": \"$.JobRun.JobRunState\"\n      },\n      \"Resource\": \"arn:aws:states:::aws-sdk:glue:getJobRun\",\n      \"Next\": \"JobFinish?\",\n      \"ResultPath\": \"$.result\"\n    },\n    \"JobFinish?\": {\n      \"Type\": \"Choice\",\n      \"Choices\": [\n        {\n          \"Variable\": \"$.result.JobRunState\",\n          \"StringEquals\": \"SUCCEEDED\",\n          \"Next\": \"StartCrawler\"\n        },\n        {\n          \"Variable\": \"$.result.JobRunState\",\n          \"StringEquals\": \"FAILED\",\n          \"Next\": \"FailedWithError\"\n        }\n      ],\n      \"Default\": \"WaitJobRunSilver\"\n    },\n    \"StartCrawler\": {\n      \"Type\": \"Task\",\n      \"Parameters\": {\n        \"Name\": \"datalake-dev-gold-crawler\"\n      },\n      \"Resource\": \"arn:aws:states:::aws-sdk:glue:startCrawler\",\n      \"Next\": \"StepFunctionBronceChange\"\n    },\n    \"StepFunctionBronceChange\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"arn:aws:states:::states:startExecution.sync:2\",\n      \"Parameters\": {\n        \"StateMachineArn\": \"arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-bronce-change-sf\",\n        \"Input\": {\n          \"StatePayload\": \"Hello from Step Functions!\",\n          \"AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$\": \"$$.Execution.Id\"\n        }\n      },\n      \"End\": true\n    },\n    \"FailedWithError\": {\n      \"Type\": \"Pass\",\n      \"End\": true\n    }\n  }\n}",
+    "roleArn": "arn:aws:iam::533267035849:role/datalake-dev-gold-sf",
+    "type": "STANDARD",
+    "creationDate": "2024-10-29T12:46:28.221000+00:00",
+    "loggingConfiguration": {
+        "level": "OFF",
+        "includeExecutionData": false
+    },
+    "tracingConfiguration": {
+        "enabled": true
+    },
+    "revisionId": "1718aa6f-e899-44ed-a877-141be52e71e0",
+    "encryptionConfiguration": {
+        "type": "AWS_OWNED_KEY"
+    }
+}

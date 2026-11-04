@@ -1,0 +1,11 @@
+{
+    "Subscriptions": [
+        {
+            "SubscriptionArn": "arn:aws:sns:us-east-1:533267035849:ALFA-DEV-DATALAKE-Warning:3127eba9-6d89-4ee8-8675-8692d1b50f10",
+            "Owner": "533267035849",
+            "Protocol": "email",
+            "Endpoint": "cbarrera@segurosalfa.com.co",
+            "TopicArn": "arn:aws:sns:us-east-1:533267035849:ALFA-DEV-DATALAKE-Warning"
+        }
+    ]
+}

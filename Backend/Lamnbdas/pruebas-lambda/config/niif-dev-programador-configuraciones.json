@@ -1,0 +1,53 @@
+{
+    "Configuration": {
+        "FunctionName": "niif-dev-programador-configuraciones",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-programador-configuraciones",
+        "Runtime": "python3.13",
+        "Role": "arn:aws:iam::533267035849:role/niif-dev-programador-configuraciones-role",
+        "Handler": "lambda_function.lambda_handler",
+        "CodeSize": 2813,
+        "Description": "Programador compartido Gestor Configuracion NIIF DEV",
+        "Timeout": 30,
+        "MemorySize": 128,
+        "LastModified": "2026-09-25T20:04:23.000+0000",
+        "CodeSha256": "GYqAmtf574NZG3uBTfqYgBDuYNoII4rOlvd74fczdNI=",
+        "Version": "$LATEST",
+        "Environment": {
+            "Variables": {
+                "SCHEDULER_ROLE_ARN": "arn:aws:iam::533267035849:role/niif-dev-scheduler-configuradores-role",
+                "ACCOUNT_ID": "533267035849",
+                "CONFIGURADORES_JSON": "{\"AUXILIOS_FUNERARIOS\":\"niif-dev-configurador-auxilios-funerarios\",\"PRIMAS_ARL\":\"niif-dev-configurador-primas-arl\",\"PRIMAS_ENDOSOS\":\"niif-dev-configurador-primas-endosos\",\"PRIMAS_RENTAS\":\"niif-dev-configurador-primas-rentas\",\"RESERVA_MATEMATICA_RVI\":\"niif-dev-configurador-reserva-matematica-rvi\",\"RESERVA_MATEMATICA_ARP\":\"niif-dev-configurador-reserva-matematica-arp\"}",
+                "PRG_TABLE": "niif-dev-prg-programaciones",
+                "SCHEDULE_GROUP": "niif-dev-programacion-configuradores"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "f43cf268-fda1-44b3-9577-9277f999490f",
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:a57ada4e55c073ec92cc8770cbeb247827d22095fbfa8de3509923cb9ce48bd1"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/niif-dev-programador-configuraciones"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/niif-dev-programador-configuraciones-36be7e9b-739d-4390-bd78-457ea8e953d9?versionId=HdBtq3GjU5pidlc275._n2dwyPgic5aG&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEM3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIFckLsq%2Brb2kOOClceu3MyloZGhjhJvdR2pr2PwWwxekAiAV2Q5JBX9zmhTuX8jZVD1qARYTsN5oZjWC6feUgzABSSqUAgiV%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAQaDDQ3OTIzMzAyNTM3OSIMQ9xxKrp9nPlXcQ4oKugBQF9SlbBTPV1F6udKLUd5lwsGiqHCYrqwrcIEFPJ5t0yKgGR94ihieYQqL7%2Fk2SKu4FSuhLRIqSO%2FqpQDYPi1xyVq%2FBwk7tClVqWBmf4VVjBM0TGehPSyugOMTWBteieEQUi8DMi8uoLmxWm0ADYr4J9orB%2FnoIT0Mnmnj1wAHUVI7q4eJppTj%2FxT9i5rHZqeMQjM7pnBL2qM%2FGAQAF9p4rbGVrvEhWJQr46bAWUJzjuRKZA%2F68l5s%2FNng57k49QUEkJ3P5XlwGvV%2BkuhZz7G%2FWnllGfr4yTFPi6%2BOv18DyDXV%2Bz%2F04gegjCIsqfXBjqOAQJVpte0BAitsZAFeGGXfHfGopBB3A9OhQYBbXdQvf%2BhWFE%2B7pChamv21YpqfreZ5DKJPJHmt2TxoWNCaglM575qw08%2FQSEB5DGPXobtYgUGauHyG8s8grPZSwXruKeVSll7UaTSIj7G%2F9re5jpnAW%2BqOKbLL3bRwGyHTVsiUELbVyllUL3wtBgVBpyZm4k%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164509Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVRUWLDOYUN%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=73f4682125c46f0e2d7283dfb4ba494798ccc62c99e269ab86c8192f790d4350"
+    }
+}

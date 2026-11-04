@@ -1,0 +1,55 @@
+{
+    "Configuration": {
+        "FunctionName": "niif-dev-iniciador-ejecucion",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-iniciador-ejecucion",
+        "Runtime": "python3.12",
+        "Role": "arn:aws:iam::533267035849:role/niif-dev-iniciador-ejecucion-role",
+        "Handler": "lambda_function.lambda_handler",
+        "CodeSize": 3440,
+        "Description": "",
+        "Timeout": 30,
+        "MemorySize": 128,
+        "LastModified": "2026-09-18T05:05:05.000+0000",
+        "CodeSha256": "6cZQDZpdzZucKcFacHpDkS1Q7lu2Ve4U7s9hPrihxpc=",
+        "Version": "$LATEST",
+        "Environment": {
+            "Variables": {
+                "TABLE_NAME": "niif-dev-gestor-configuracion",
+                "CONFIG_VERSION": "5"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "9fffe0ee-192a-4601-885d-013066eb4b95",
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:a8b19198a828662ade07d066a1dce047429a5869166346747ab7d57435583a29"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/niif-dev-iniciador-ejecucion"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/niif-dev-iniciador-ejecucion-15e26138-b9d8-4286-9c63-e365cd315c58?versionId=tOwEmYt9QSqkvAgC.XajGnBunGwaFDYC&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDortLeOII6ykz0CRjzaOhWPFSJQfKMLwi9zDQDqF52kwIgeiH%2Fe2VnoZrM221TQWvGXOxJkxUSzffrzS5GX9VM0pMqlAIIlP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgw0NzkyMzMwMjUzNzkiDEVo0HuphQPAXLw%2FPCroARoXz5tzsJktOcxnIyrfE6LowtVBaOnxRTiVNiIvFj9MCgOVTgIrzD53gg1jMbq4SYL5AViScEASx57iW4%2BmnZPwOIwu2JrNgIHTjA%2B8wNmzhKu7e%2FDAzZMITdfh1GUUt7MImbTTD9143kUjzgTxMZ9jyCiZs%2BjMTa5uvfO2dOn7Ch%2FskLDwYx0Us3Vz2z8%2FHgeWqkGTy04HfRwCMz6CkcmIWiaS0M1qlDSc8VJyd7pu9%2F4J0PhAquFYVnETXshQVu6Cw%2FGQMI9RsR7FhW0nQzfH%2BkS3ccaON0qQgqmwLGSVmKqTvEyJ5tMwzY2n1wY6jQFDziOXtkW277%2FrtRSOXc2DB74zKGi3pel3qOtG%2FNmX%2FbGj%2Bpn0i9fLvtsjSqIkZnRrJy%2FXZ4V3d3ZxZ4fnXEAITlqQmKK%2FpDuI%2BWxMuQDamr37L9Mxd3eCVLT9V5Ymw3fH3S1zz888N9ARV5iv4xA2uQxHFckrlcjnJy2ehf36u2QjLz40cst2J08Cf6U%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164440Z&X-Amz-SignedHeaders=host&X-Amz-Expires=599&X-Amz-Credential=ASIAW7FEDUVRX5RG5DTR%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=45ee182c1c79a5f93d53ed7ce2a950ecf568aa530dc6ab81a74a282b52528204"
+    },
+    "Tags": {
+        "Proyecto": "NIIF17",
+        "Ambiente": "DEV",
+        "Componente": "IniciadorEjecucion"
+    }
+}

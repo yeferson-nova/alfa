@@ -1,0 +1,70 @@
+{
+    "Configuration": {
+        "FunctionName": "EnvioSftpFis",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:EnvioSftpFis",
+        "Runtime": "python3.13",
+        "Role": "arn:aws:iam::533267035849:role/service-role/EnvioSftpFis-role-qj2zfw0h",
+        "Handler": "lambda_function.lambda_handler",
+        "CodeSize": 2727,
+        "Description": "",
+        "Timeout": 180,
+        "MemorySize": 512,
+        "LastModified": "2025-09-30T14:38:17.000+0000",
+        "CodeSha256": "iaW0/HfplZoG6t6yF4uMPwdkBdYkq+0d2P39Rno+Gjg=",
+        "Version": "$LATEST",
+        "VpcConfig": {
+            "SubnetIds": [
+                "subnet-08bc5c88ea3cd3409",
+                "subnet-0ec6603c9b0f57496"
+            ],
+            "SecurityGroupIds": [
+                "sg-0578b01d8f573d2d0"
+            ],
+            "VpcId": "vpc-09d6c75629d78076a",
+            "Ipv6AllowedForDualStack": false
+        },
+        "Environment": {
+            "Variables": {
+                "SFTP_PORT": "2222",
+                "SFTP_BASE_DIR": "/In",
+                "CREDS_SECRET_ID": "transfer/connector/seguroalfa",
+                "SFTP_HOST": "seguroalfa-sftp.ctxuse.fiscloudservices.com",
+                "PREFIX_FILTER": "landing/"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "76c52822-962d-4967-a40e-d4445881f05a",
+        "Layers": [
+            {
+                "Arn": "arn:aws:lambda:us-east-1:533267035849:layer:paramiko-py313:3",
+                "CodeSize": 6820488
+            }
+        ],
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:094c1a542c94fd9606a43b193682e6a9f866e8eb918c13f437ebf4b45edf2bd9"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/EnvioSftpFis"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/EnvioSftpFis-f44528ab-89c2-4a1e-baa0-2c2a75908692?versionId=kDbf4tNanyPV.jxaSA_U8fVQEMlALYIz&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIAbBsgk0ARNbWMyH%2FpwkApkV598She3jCOx9xyZcBcfwAiEA1AQsInb4e4vJv9Pyv7j%2Bi6qVG0XN6qcOUgSzsoJND74qlAIIlP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgw0NzkyMzMwMjUzNzkiDADQzXqCs0x1Aan7XyroAQe8SjWvv%2FAQKM7IA9dKUR%2BoXtc%2FZ7fnsKBjPUZP%2F6Q3KNBfcwO9Mack1LwwQUiXRpzK%2Fmf6wWSrt2sBnHJxJP3CtxzRNyhFDPgsxgvgdG7EwyP2ghxE45mfPfthwykFgL%2BNbxz5DbgPdwmaCKsfsw13Sj%2Fwy1tSxfH8ZhRuOiazESzvDCXcyqqWxDmuI02g4b8ZF%2BePz9Vh5FkdErEbt9ZniKmNsjP3LF1ax%2FpzIk2rid2rYiYfT6vKaV5GiW%2FK39YSUHZgAYKVGM1cNBQT%2F0UEVUjidwb%2BbjoW1J6p%2BTr%2B2y61VzkiAmQwxImn1wY6jQEFRgnkWI55rktt6av76TIsjUivTnbsUeKe1Sb4CKZBwWfhJ3wWC5c2IizifHn5iSsUyRs%2BDFLEMg1Pe9obDijkYveUnuAi3Dy5ZegVnXy2P5c4jLORWCLsmQK3maLSOH6RIgQMDqzOI1JqJGfsxc6b3V5sWtkNI%2FFAWnV%2FEz1slixbHk2pcZOKU6Yb1zQ%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164252Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVRWKUW6MWM%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=85c5def6f119896b9eeb42a45abd0b7d70cffcfc102ebf066be24ddc245500e7"
+    }
+}

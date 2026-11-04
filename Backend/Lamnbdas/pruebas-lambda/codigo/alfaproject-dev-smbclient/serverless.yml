@@ -1,0 +1,62 @@
+service: alfaproject
+frameworkVersion: '4'
+
+plugins:
+    - serverless-offline
+
+custom:
+    # aws_id: 011221923990
+    aws_id: 533267035849
+    control_name: ccwc012
+
+provider:
+    name: aws
+    region: us-east-1
+    stage: ${opt:stage, 'dev'}
+    runtime: python3.12
+    profile: serverless
+    logRetentionInDays: 1
+    versionFunctions: false
+
+layers:
+  SmbLayer:
+    path: layers
+    compatibleRuntimes:
+      - python3.11
+      - python3.12
+    description: A custom Python layer with requests library to smb function
+
+package:
+    patterns:
+        - "!tmp/**"
+        - "!test/**"
+        - "!logs/**"
+        - "!node_modules/**"
+        - "!input/**"
+        - "!Dockerfile"
+        - "!**/__pycache__/**"
+        - "!*.{xlsx,csv,txt,log,md,json,ipynb}"
+        - "!.env"
+        - "!.dockerignore"
+        - "!.gitignore"
+        - "!.coverage"
+        - "!.venv/**"
+        - "!.pytest_cache"
+
+functions:
+
+    smbclient:
+        memorySize: 1024
+        ephemeralStorageSize: 512
+        timeout: 300
+        handler: lambda_function.lambda_handler
+        # role: arn:aws:iam::${aws:accountId, self:custom.aws_id}:role/ctrlsox-role-lambda-${opt:stage, 'dev'}-lambda
+        role: arn:aws:iam::${aws:accountId, self:custom.aws_id}:role/service-role/smb_test-role-y44va765
+        environment:
+            BUCKET_NAME: alfa-datalake-dev-assets
+            BUCKET_PATH: test/FS_files/lmbd/
+            SECRET_NAME: /datalake/dev/filesystem
+
+        layers:
+            - !Ref SmbLayerLambdaLayer
+            - arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python312:15

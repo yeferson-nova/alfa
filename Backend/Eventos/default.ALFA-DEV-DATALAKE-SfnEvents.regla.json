@@ -1,0 +1,9 @@
+{
+    "Name": "ALFA-DEV-DATALAKE-SfnEvents",
+    "Arn": "arn:aws:events:us-east-1:533267035849:rule/ALFA-DEV-DATALAKE-SfnEvents",
+    "EventPattern": "{\"detail-type\":[\"Step Functions Execution Status Change\"],\"source\":[\"aws.states\"],\"detail\":{\"status\":[\"SUCCEEDED\",\"FAILED\",\"TIMED_OUT\",\"ABORTED\"]}}",
+    "State": "ENABLED",
+    "Description": "Fin de ejecuciones Standard de Step Functions",
+    "EventBusName": "default",
+    "CreatedBy": "533267035849"
+}

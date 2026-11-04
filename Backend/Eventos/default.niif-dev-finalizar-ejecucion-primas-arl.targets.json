@@ -1,0 +1,8 @@
+{
+    "Targets": [
+        {
+            "Id": "FinalizadorEjecucion",
+            "Arn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-finalizador-ejecucion"
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "stateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:test_dynamo_orch",
+    "name": "test_dynamo_orch",
+    "status": "ACTIVE",
+    "definition": "{\"StartAt\":\"Add empty LastEvaluatedKey\",\"States\":{\"Add empty LastEvaluatedKey\":{\"Type\":\"Pass\",\"Next\":\"Scan\",\"Result\":{\"LastEvaluatedKey\":null},\"ResultPath\":\"$\"},\"Scan\":{\"Type\":\"Task\",\"Next\":\"Map\",\"Parameters\":{\"TableName\":\"test_jl_orchestation\",\"FilterExpression\":\"step = :stepValue\",\"ExpressionAttributeValues\":{\":stepValue\":{\"S\":\"bronce\"}}},\"Resource\":\"arn:aws:states:::aws-sdk:dynamodb:scan\"},\"Map\":{\"Type\":\"Map\",\"Next\":\"Check for more\",\"Iterator\":{\"StartAt\":\"Process\",\"States\":{\"Process\":{\"Type\":\"Pass\",\"Next\":\"Glue StartJobRun\"},\"Glue StartJobRun\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::glue:startJobRun\",\"Parameters\":{\"JobName\":\"datalake-dev-bronce-job\",\"Arguments\":{\"--BUCKET_NAME_ASSETS.$\":\"$.BUCKET_NAME_ASSETS.S\",\"--BUCKET_NAME.$\":\"$.BUCKET_NAME.S\",\"--CONNECT_NAME.$\":\"$.CONNECT_NAME.S\",\"--DB_SCHEMA.$\":\"$.DB_SCHEMA.S\",\"--PROJECT.$\":\"$.PROJECT.S\"}},\"ResultSelector\":{\"JobName.$\":\"$.JobName\",\"JobRunId.$\":\"$.JobRunId\"},\"Next\":\"WaitJobRunBronce\",\"ResultPath\":\"$.result\"},\"WaitJobRunBronce\":{\"Type\":\"Wait\",\"Seconds\":60,\"Next\":\"GetJobRun\"},\"GetJobRun\":{\"Type\":\"Task\",\"Parameters\":{\"JobName.$\":\"$.result.JobName\",\"RunId.$\":\"$.result.JobRunId\"},\"ResultSelector\":{\"JobName.$\":\"$.JobRun.JobName\",\"JobRunId.$\":\"$.JobRun.Id\",\"JobRunState.$\":\"$.JobRun.JobRunState\"},\"Resource\":\"arn:aws:states:::aws-sdk:glue:getJobRun\",\"Next\":\"JobFinish?\",\"ResultPath\":\"$.result\"},\"JobFinish?\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.result.JobRunState\",\"StringEquals\":\"SUCCEEDED\",\"Next\":\"StartCrawler\"},{\"Variable\":\"$.result.JobRunState \",\"StringEquals\":\"FAILED\",\"Next\":\"FinishWithErros\"}],\"Default\":\"WaitJobRunBronce\"},\"StartCrawler\":{\"Type\":\"Task\",\"Parameters\":{\"Name\":\"datalake-dev-bronce-crawler\"},\"Resource\":\"arn:aws:states:::aws-sdk:glue:startCrawler\",\"End\":true},\"FinishWithErros\":{\"Type\":\"Pass\",\"End\":true}}},\"ItemsPath\":\"$.Items\",\"ResultPath\":null,\"MaxConcurrency\":1},\"Check for more\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.LastEvaluatedKey\",\"IsPresent\":true,\"Next\":\"Add new LastEvaluatedKey\"}],\"Default\":\"Done\"},\"Done\":{\"Type\":\"Succeed\"},\"Add new LastEvaluatedKey\":{\"Type\":\"Pass\",\"Next\":\"Scan\",\"Parameters\":{\"LastEvaluatedKey.$\":\"$.LastEvaluatedKey\"},\"ResultPath\":null}}}",
+    "roleArn": "arn:aws:iam::533267035849:role/service-role/StepFunctions-test_dynamo_orch-role-oyjc4nzzq",
+    "type": "STANDARD",
+    "creationDate": "2025-04-29T16:43:58.864000+00:00",
+    "loggingConfiguration": {
+        "level": "OFF",
+        "includeExecutionData": false
+    },
+    "tracingConfiguration": {
+        "enabled": false
+    },
+    "revisionId": "6b06fab7-5d07-49f6-a0f5-5e7a74d89430",
+    "encryptionConfiguration": {
+        "type": "AWS_OWNED_KEY"
+    }
+}

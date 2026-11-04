@@ -1,0 +1,19 @@
+{
+    "stateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:calidad-dev-silver",
+    "name": "calidad-dev-silver",
+    "status": "ACTIVE",
+    "definition": "{\n  \"Comment\": \"Silver\",\n  \"StartAt\": \"ExecuteBronzeQualityJob\",\n  \"States\": {\n    \"ExecuteBronzeQualityJob\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"arn:aws:states:::glue:startJobRun.sync\",\n      \"Parameters\": {\n        \"JobName\": \"\",\n        \"Arguments\": {}\n      },\n      \"Retry\": [\n        {\n          \"ErrorEquals\": [\n            \"States.TaskFailed\"\n          ],\n          \"IntervalSeconds\": 30,\n          \"MaxAttempts\": 2,\n          \"BackoffRate\": 1.5\n        }\n      ],\n      \"Catch\": [\n        {\n          \"ErrorEquals\": [\n            \"States.ALL\"\n          ],\n          \"ResultPath\": \"$.errorDetail\",\n          \"Next\": \"ErrorHandling\"\n        }\n      ],\n      \"Next\": \"ExecuteSilverCrawler\"\n    },\n    \"ExecuteSilverCrawler\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"arn:aws:states:::aws-sdk:glue:startCrawler\",\n      \"Comment\": \"Ejecutar crawler silver\",\n      \"Parameters\": {\n        \"Name\": \"calidad-dev-silver-crwl\"\n      },\n      \"ResultPath\": \"$.crawler_start_result\",\n      \"Retry\": [\n        {\n          \"ErrorEquals\": [\"Glue.CrawlerRunningException\"],\n          \"IntervalSeconds\": 60,\n          \"MaxAttempts\": 3,\n          \"BackoffRate\": 2.0\n        }\n      ],\n      \"Catch\": [\n        {\n          \"ErrorEquals\": [\n            \"States.ALL\"\n          ],\n          \"ResultPath\": \"$.errorDetail\",\n          \"Next\": \"ErrorHandling\"\n        }\n      ],\n      \"Next\": \"WaitForSilverCrawlerIsFinished\"\n    },\n    \"WaitForSilverCrawlerIsFinished\": {\n      \"Type\": \"Wait\",\n      \"Seconds\": 30,\n      \"Next\": \"GetSilverCrawlerStatus\"\n    },\n    \"GetSilverCrawlerStatus\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"arn:aws:states:::aws-sdk:glue:getCrawler\",\n      \"Comment\": \"Obtener estado del crawler Silver\",\n      \"Parameters\": {\n        \"Name\": \"calidad-dev-silver-crwl\"\n      },\n      \"ResultPath\": \"$.crawler_status\",\n      \"Next\": \"CheckSilverCrawlerStatus\"\n    },\n    \"CheckSilverCrawlerStatus\": {\n      \"Type\": \"Choice\",\n      \"Comment\": \"Verificar estatus del crawler Silver\",\n      \"Choices\": [\n        {\n          \"Variable\": \"$.crawler_status.Crawler.State\",\n          \"StringEquals\": \"RUNNING\",\n          \"Next\": \"WaitForSilverCrawlerIsFinished\"\n        },\n        {\n          \"Variable\": \"$.crawler_status.Crawler.State\",\n          \"StringEquals\": \"FAILED\",\n          \"Next\": \"ErrorSilverCrawler\"\n        }\n      ],\n      \"Default\": \"Success\"\n    },\n    \"ErrorSilverCrawler\": {\n      \"Type\": \"Pass\",\n      \"Parameters\": {\n        \"Error\": \"CrawlerFailedError\",\n        \"Cause\": \"El crawler terminó con estado FAILED en Glue.\"\n      },\n      \"ResultPath\": \"$.errorDetalle\",\n      \"Next\": \"ErrorHandling\"\n    },\n    \"ErrorHandling\": {\n      \"Type\": \"Fail\",\n      \"CausePath\": \"$.errorDetail.Error\",\n      \"ErrorPath\": \"$.errorDetail.Cause\"\n    },\n    \"Success\": {\n      \"Type\": \"Succeed\",\n      \"Comment\": \"Flujo finalizado correctamente\"\n    }\n  }\n}",
+    "roleArn": "arn:aws:iam::533267035849:role/calidad-dev-silver",
+    "type": "STANDARD",
+    "creationDate": "2026-07-01T18:03:03.819000+00:00",
+    "loggingConfiguration": {
+        "level": "OFF",
+        "includeExecutionData": false
+    },
+    "tracingConfiguration": {
+        "enabled": true
+    },
+    "encryptionConfiguration": {
+        "type": "AWS_OWNED_KEY"
+    }
+}

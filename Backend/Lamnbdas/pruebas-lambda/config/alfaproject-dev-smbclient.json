@@ -1,0 +1,78 @@
+{
+    "Configuration": {
+        "FunctionName": "alfaproject-dev-smbclient",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:alfaproject-dev-smbclient",
+        "Runtime": "python3.12",
+        "Role": "arn:aws:iam::533267035849:role/service-role/smb_test-role-y44va765",
+        "Handler": "lambda_function.lambda_handler",
+        "CodeSize": 10363,
+        "Description": "",
+        "Timeout": 300,
+        "MemorySize": 1024,
+        "LastModified": "2025-10-12T01:26:16.000+0000",
+        "CodeSha256": "c66OcbFINlAMmmy9gTy5vO6OlexlX+sumYmGQ04zQ7o=",
+        "Version": "$LATEST",
+        "VpcConfig": {
+            "SubnetIds": [
+                "subnet-08bc5c88ea3cd3409",
+                "subnet-0ec6603c9b0f57496"
+            ],
+            "SecurityGroupIds": [
+                "sg-0e1f9e44776aa3b85"
+            ],
+            "VpcId": "vpc-09d6c75629d78076a",
+            "Ipv6AllowedForDualStack": false
+        },
+        "Environment": {
+            "Variables": {
+                "BUCKET_PATH": "test/FS_files/lmbd/",
+                "SECRET_NAME": "/datalake/dev/filesystem",
+                "BUCKET_NAME": "alfa-datalake-dev-assets"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "b2dd13d5-e6da-4aaf-ae06-06f40fc0655f",
+        "Layers": [
+            {
+                "Arn": "arn:aws:lambda:us-east-1:533267035849:layer:SmbLayer:5",
+                "CodeSize": 7872444
+            },
+            {
+                "Arn": "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python312:15",
+                "CodeSize": 54118125
+            }
+        ],
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:c5f5e406a9c3cb643bed8c9fcbd71b784f53b3a1d0247d261e05976ab9923400"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/alfaproject-dev-smbclient"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/alfaproject-dev-smbclient-dc632c7b-dbe8-4f98-8f02-1bde9658ca3c?versionId=himTWlN5lHCXuHixttKljnGPHXvbRaXA&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDiWGW7X%2FTpx2vJp1pU0nyYqAou%2BiJXtn1Lbrvii7JUgAIhAPsoqKOcGoEWucwm7bWndhF0AHaV%2F8BWQ2a6TaWUhci9KpQCCJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQBBoMNDc5MjMzMDI1Mzc5IgynzCHPdNClO2SPTDwq6AF4wAN%2BV37GDgU6lsozYIav00aIJLo34e1F58UImGsT5hgw8%2FeNk834WSJKQSGyqKZFKVQTfmC%2F8FabhTEyXeq%2B8J9hqxEBLVW36eAABM24mojaSHgeYxCUYM2dVd4Fqbmwtqf7wX%2FJiPqJqZj0uUsPQmvzmsQjft25rjtBY5sKYKKXtjj3MYI7d38tH9dGOJv%2BmuGvUT3asfrRnHRsqb9DqhHU3MAD9%2BmyEJISYmMXkBYiAt299oKwj1La516pywkt0mpRbcv3GLhseP6q%2BkLESBBx9EIEbhW2VQuwS206bG8x63RhgmUtMK3mptcGOowBqTfJsVY87JXTGasfFTUnj9aRKf156zlyu5MCMGlIwUNhdMUgpaVmI%2BAtY1uPnqiBwUD%2Bd86wfusarUSkk5NdG713iIejN8GJBESkewBPZkJ1JVHhIz8n0YYCX3FrDEABEnVEpIlUZ4UiqgfcWjNzWhwD%2BBRtnMDEt23socsba6cNE3sU5YJsF5gVi0w%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164059Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVRYUJMCO4K%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=f1a52f86b36476bc63dc225ef7cd7b57a8b22d940fad648af33f7916066cc699"
+    },
+    "Tags": {
+        "aws:cloudformation:stack-name": "alfaproject-dev",
+        "aws:cloudformation:stack-id": "arn:aws:cloudformation:us-east-1:533267035849:stack/alfaproject-dev/066072b0-d906-11ef-ad8b-0e947989e88d",
+        "STAGE": "dev",
+        "aws:cloudformation:logical-id": "SmbclientLambdaFunction"
+    }
+}

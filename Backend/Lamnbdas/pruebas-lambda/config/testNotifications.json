@@ -1,0 +1,61 @@
+{
+    "Configuration": {
+        "FunctionName": "testNotifications",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:testNotifications",
+        "Runtime": "python3.13",
+        "Role": "arn:aws:iam::533267035849:role/service-role/testNotifications-role-mizum4h8",
+        "Handler": "lambda_function.lambda_handler",
+        "CodeSize": 4874,
+        "Description": "",
+        "Timeout": 300,
+        "MemorySize": 512,
+        "LastModified": "2025-06-11T21:51:12.000+0000",
+        "CodeSha256": "hXTMCd7hhqfMpJtotdanB21v0AR1fFtjWVQNorSPqso=",
+        "Version": "$LATEST",
+        "Environment": {
+            "Variables": {
+                "REPORT_BUCKET": "alfa-datalake-dev-niif-con",
+                "QUERY_DYNAMODB_TABLE": "datalake-dev-use-case-queries",
+                "ASSETS_BUCKET": "alfa-datalake-dev-assets",
+                "ENVIRONMENT": "dev",
+                "CERTIFICATION_DYNAMODB_TABLE": "datalake-dev-use-case-certification",
+                "EMAIL_DYNAMODB_TABLE": "datalake-dev-use-case-emails",
+                "LOG_LEVEL": "INFO"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "72b1c355-90e6-4d3b-a4f6-2144c582ed83",
+        "Layers": [
+            {
+                "Arn": "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python313:1",
+                "CodeSize": 46673683
+            }
+        ],
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:094c1a542c94fd9606a43b193682e6a9f866e8eb918c13f437ebf4b45edf2bd9"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/testNotifications"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/testNotifications-c1307725-1637-447c-ba3b-a765fc6e400c?versionId=m0n6FkUZ.Mdarecv5S1zBbNR.OAuSlr1&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIHMSYkdDp1wnHXQGE61QFt3UK3UWH4vn27Sn9z5ZPByNAiEA1YB3%2B3%2F6qet%2BmmVvj0xqL4Wkl0wf2X0%2FdgIqfbz%2FAI0qlAIIk%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgw0NzkyMzMwMjUzNzkiDOtwR9%2B2JAtXGp6%2BcSroAdQ6AXxKrK9Taco1E4kUc8C5kZhUoM1u4hJmsB9%2FEtpLeSn%2FtIpJAvLPM%2FKSz%2BNhfk%2F3lq0eexWkScFRpTyBKyCQ9C%2BpY1HlGA74aPpK3YD%2FqZFsC0yeJaDhbSPOkLtvH6Bft6pqp4PO0kp5atPAS1dOC7asknjIc1MdPNDL1StGCYNXWyganEDia3hiy4NGWuVft6SCQhdKTrUyCKxrv%2BotDBpAA8FuWUR%2Bzh8VL2supQASiQOCPElyxjmq3jOjTKOEF1Frq18Sunmi0v5alh7B6OZiv%2FsA%2FZ2hGoDmQxGgxvFfWhtntZkw0%2Bem1wY6jQG8CZuT7qPv1ED1fpBUqb7TrH2GDDf9yLiViAXmT1qDiua1WK%2FijZqObhGzNFGpTo%2Fg8WQhrt23C7cKGTV%2F9N6CNBS%2FXmi7WPPyqswEc4CR66FUDu9UDhFVI6b92bkt2475WYlPnxE3MUf9vUS4wdKd%2FrLQAtjY5JGV7BVynyLXUleC4VTtYzmKu2z%2FCnE%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164621Z&X-Amz-SignedHeaders=host&X-Amz-Expires=599&X-Amz-Credential=ASIAW7FEDUVR6SXXAIZ4%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c25b1af75d97dcc6185a4b1323746a0ce4f52ab9cafdecd6b4eb6626ad1c6d71"
+    }
+}

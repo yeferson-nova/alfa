@@ -1,0 +1,26 @@
+{
+    "EventSourceMappings": [
+        {
+            "UUID": "c46b2024-ab25-4dba-a758-31aded2ac53d",
+            "StartingPosition": "LATEST",
+            "BatchSize": 10,
+            "MaximumBatchingWindowInSeconds": 0,
+            "ParallelizationFactor": 1,
+            "EventSourceArn": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-composite-notification-status/stream/2026-07-16T22:04:25.769",
+            "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-composite-notification-evaluator",
+            "LastModified": "2026-11-02T16:37:00+00:00",
+            "LastProcessingResult": "OK",
+            "State": "Enabled",
+            "StateTransitionReason": "User action",
+            "DestinationConfig": {
+                "OnFailure": {}
+            },
+            "MaximumRecordAgeInSeconds": -1,
+            "BisectBatchOnFunctionError": false,
+            "MaximumRetryAttempts": -1,
+            "TumblingWindowInSeconds": 0,
+            "FunctionResponseTypes": [],
+            "EventSourceMappingArn": "arn:aws:lambda:us-east-1:533267035849:event-source-mapping:c46b2024-ab25-4dba-a758-31aded2ac53d"
+        }
+    ]
+}

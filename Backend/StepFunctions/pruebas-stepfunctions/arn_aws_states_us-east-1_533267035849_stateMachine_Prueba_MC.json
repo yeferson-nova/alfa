@@ -1,0 +1,20 @@
+{
+    "stateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:Prueba_MC",
+    "name": "Prueba_MC",
+    "status": "ACTIVE",
+    "definition": "{\"Comment\":\"A description of my state machine\",\"StartAt\":\"Lambda Invoke\",\"States\":{\"Lambda Invoke\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Output\":\"{% $states.result.Payload %}\",\"Arguments\":{\"FunctionName\":\"arn:aws:lambda:us-east-1:533267035849:function:Prueba_MC\",\"Payload\":\"{% $states.input %}\"},\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\",\"Lambda.TooManyRequestsException\"],\"IntervalSeconds\":1,\"MaxAttempts\":3,\"BackoffRate\":2,\"JitterStrategy\":\"FULL\"}],\"Next\":\"MC_1\"},\"MC_1\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Output\":\"{% $states.result.Payload %}\",\"Arguments\":{\"FunctionName\":\"arn:aws:lambda:us-east-1:533267035849:function:Prueba_MC_1\",\"Payload\":\"{% $states.input %}\"},\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\",\"Lambda.TooManyRequestsException\"],\"IntervalSeconds\":1,\"MaxAttempts\":3,\"BackoffRate\":2,\"JitterStrategy\":\"FULL\"}],\"End\":true}},\"QueryLanguage\":\"JSONata\"}",
+    "roleArn": "arn:aws:iam::533267035849:role/service-role/StepFunctions-test-invoke-lambdas-role-fdzdm6ct2",
+    "type": "STANDARD",
+    "creationDate": "2026-02-12T17:57:58.020000+00:00",
+    "loggingConfiguration": {
+        "level": "OFF",
+        "includeExecutionData": false
+    },
+    "tracingConfiguration": {
+        "enabled": false
+    },
+    "revisionId": "3a9ec92d-a2c8-44c7-98e6-0540decf0a80",
+    "encryptionConfiguration": {
+        "type": "AWS_OWNED_KEY"
+    }
+}

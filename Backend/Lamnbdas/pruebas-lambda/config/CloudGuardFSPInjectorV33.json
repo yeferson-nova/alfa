@@ -1,0 +1,51 @@
+{
+    "Configuration": {
+        "FunctionName": "CloudGuardFSPInjectorV33",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CloudGuardFSPInjectorV33",
+        "Runtime": "python3.11",
+        "Role": "arn:aws:iam::533267035849:role/CloudGuardServerlessFSPInjectorLambdaExecutionRole",
+        "Handler": "fsp_injector.lambda_handler",
+        "CodeSize": 29259,
+        "Description": "FSP injector, add FSP runtime protection to functions",
+        "Timeout": 860,
+        "MemorySize": 3008,
+        "LastModified": "2026-07-20T13:36:21.000+0000",
+        "CodeSha256": "14xVXdMb6a6tNd9mT2VtX7e36wmT3ZdqejXH1sjjDHo=",
+        "Version": "$LATEST",
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "ed352c70-9e7a-4292-82f2-242c2dc3a820",
+        "Layers": [],
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:e49ac50086e0d865c78bd2e7c92cf0e492f61f39031b3572eb0d429affd59f50"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/CloudGuardFSPInjectorV33"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/CloudGuardFSPInjectorV33-ba9bdc8d-2b0e-4a1a-b18d-4a34dca9c857?versionId=62PQAKYeSRSZJ0OFXFNck0lLQl_C6a1E&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQCZMiOrhmKmJFXdL3sVjTRSWN%2BvNYbUlGpqc78o5qp7ugIhAMZ8Ml3WnaY3n0T2DgQdXlINAn0rF8WZzCZb%2F5wGr3WyKpQCCJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQBBoMNDc5MjMzMDI1Mzc5IgwXb4ITpq2BJgumT%2BAq6AF%2Fbi3QmebcrDqA2YB7jRMp%2FZd8fAJyvXpj2tcj4oTnxNN8keOAbv4xZRwyQrPK8qiHfV8EDSZ74V6HMcYLa0PED3W%2BOz4WxmOwtfvMvyi0%2BfY4G9adbL%2BoDFNAYTj1Y7y%2B%2BdmYSYk%2FFYQKN7zVREq6wTScHti5KugGL61KfmFtRv3NmoIE4hJPF6si0276qFE4omPRJG60sbelRY9TYsh5xkWDeebnrz17QW2aWWVJ%2BN3rIJw2dxS91pJAOLS2w%2BMSO0SxEicdVMiX9n%2FI8B6meqQacOPx3XWUHUttbwD11IjBsg%2BKeiZUMI2Np9cGOowBCCxD%2FBPZXXRzSTXW86dfiv%2FuxSRj5gf7pmdhgCIIbdzHPo8%2FYvGrfiea%2B5p8MDYg1%2Bm1z39b3ha9FxDgny8kgYGjGFfMtE1u8pk1Ipf%2Ft3j3wg8ME7VdrgLRKAH90sRhublYLx0wQZ%2BjrWIyHtM6yweXopE%2FhEO6EzIpAvp2O2XpjklumigX0%2F9NT0U%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164127Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVRT4RYKMBA%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=e560d3828ef21ec089cabfa2515e878baabadcd69ae710dd94072709e8a84190"
+    },
+    "Tags": {
+        "aws:cloudformation:stack-name": "CloudGuard-Onboarding-Serverless",
+        "Owner": "Cloudguard Serverless Security",
+        "aws:cloudformation:stack-id": "arn:aws:cloudformation:us-east-1:533267035849:stack/CloudGuard-Onboarding-Serverless/38979d50-aea2-11ef-be51-0ebb5ba8eef3",
+        "aws:cloudformation:logical-id": "CloudGuardFSPInjectorV33"
+    }
+}

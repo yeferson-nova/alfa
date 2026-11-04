@@ -1,0 +1,61 @@
+{
+    "Configuration": {
+        "FunctionName": "datalake-dev-smb-clientes",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-smb-clientes",
+        "Role": "arn:aws:iam::533267035849:role/datalake-dev-smb-lambda-role",
+        "CodeSize": 0,
+        "Description": "Lambda to make mirror from FileServer to S3",
+        "Timeout": 600,
+        "MemorySize": 1024,
+        "LastModified": "2025-12-23T17:54:10.000+0000",
+        "CodeSha256": "86f01752064ddcee1c06d2ba5b97c7c5dbb6b7809a24c1bf75075b03493ae017",
+        "Version": "$LATEST",
+        "VpcConfig": {
+            "SubnetIds": [
+                "subnet-08bc5c88ea3cd3409",
+                "subnet-0ec6603c9b0f57496"
+            ],
+            "SecurityGroupIds": [
+                "sg-0e1f9e44776aa3b85"
+            ],
+            "VpcId": "vpc-09d6c75629d78076a",
+            "Ipv6AllowedForDualStack": false
+        },
+        "Environment": {
+            "Variables": {
+                "BUCKET_PATH": "phase_bronze/",
+                "SECRET_NAME": "/datalake/dev/filesystem",
+                "BUCKET_NAME": "alfa-datalake-dev-clientes-assets"
+            }
+        },
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "506981db-8a51-4161-bde1-7fa979d2563c",
+        "State": "Inactive",
+        "StateReason": "The function is currently idle.",
+        "StateReasonCode": "Idle",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Image",
+        "ImageConfigResponse": {},
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/datalake-dev-smb-clientes"
+        }
+    },
+    "Code": {
+        "RepositoryType": "ECR",
+        "ImageUri": "533267035849.dkr.ecr.us-east-1.amazonaws.com/datalake_dev_clientes_smb_lambda@sha256:86f01752064ddcee1c06d2ba5b97c7c5dbb6b7809a24c1bf75075b03493ae017",
+        "ResolvedImageUri": "533267035849.dkr.ecr.us-east-1.amazonaws.com/datalake_dev_clientes_smb_lambda@sha256:86f01752064ddcee1c06d2ba5b97c7c5dbb6b7809a24c1bf75075b03493ae017"
+    }
+}

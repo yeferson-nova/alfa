@@ -1,0 +1,1100 @@
+{
+    "TableList": [
+        {
+            "Name": "dim_activo",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-07-12T00:25:20+00:00",
+            "UpdateTime": "2026-07-12T00:25:20+00:00",
+            "LastAccessTime": "2026-07-12T00:25:20+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id_activo",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nombre_fisico",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fuente_origen",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "retencion_meses",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "id_estado",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "id_dominio",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nombre_activo_funcional",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "id_tipo",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "tipo_tabla",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "load_dt",
+                        "Type": "date"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD_CARGA_GOLD/dim_activo/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "79525",
+                    "objectCount": "20",
+                    "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                    "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                    "recordCount": "296",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "89",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "79525",
+                "objectCount": "20",
+                "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                "recordCount": "296",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "89",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "dim_atributo",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-07-12T00:25:20+00:00",
+            "UpdateTime": "2026-07-12T00:25:20+00:00",
+            "LastAccessTime": "2026-07-12T00:25:20+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id_atributo",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "id_activo",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nombre_campo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "id_tipo_dato",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "precision_dato",
+                        "Type": "double"
+                    },
+                    {
+                        "Name": "escala_dato",
+                        "Type": "double"
+                    },
+                    {
+                        "Name": "valor_ejemplo",
+                        "Type": "double"
+                    },
+                    {
+                        "Name": "es_pk",
+                        "Type": "double"
+                    },
+                    {
+                        "Name": "es_nulo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "load_dt",
+                        "Type": "date"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD_CARGA_GOLD/dim_atributo/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "158120",
+                    "objectCount": "20",
+                    "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                    "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                    "recordCount": "4917",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "32",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "158120",
+                "objectCount": "20",
+                "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                "recordCount": "4917",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "32",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "dim_calendario",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-07-12T00:25:20+00:00",
+            "UpdateTime": "2026-07-12T00:25:20+00:00",
+            "LastAccessTime": "2026-07-12T00:25:20+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "id_periodo",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "fecha",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "fecha_corta",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "periodo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "año",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "mes",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dia",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "load_dt",
+                        "Type": "date"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD_CARGA_GOLD/dim_calendario/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "5048332",
+                    "objectCount": "1",
+                    "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                    "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                    "recordCount": "401767",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "13",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "5048332",
+                "objectCount": "1",
+                "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                "recordCount": "401767",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "13",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "dim_capa",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-07-12T00:25:20+00:00",
+            "UpdateTime": "2026-07-12T00:25:20+00:00",
+            "LastAccessTime": "2026-07-12T00:25:20+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id_capa",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "descripcion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "load_dt",
+                        "Type": "date"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD_CARGA_GOLD/dim_capa/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "5345",
+                    "objectCount": "6",
+                    "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                    "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                    "recordCount": "5",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "102",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "5345",
+                "objectCount": "6",
+                "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                "recordCount": "5",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "102",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "dim_dominio",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-07-12T00:25:20+00:00",
+            "UpdateTime": "2026-07-12T00:25:20+00:00",
+            "LastAccessTime": "2026-07-12T00:25:20+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "descripcion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "id_capa",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "id_umbral",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "id_categoria",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "load_dt",
+                        "Type": "date"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD_CARGA_GOLD/dim_dominio/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "7758",
+                    "objectCount": "5",
+                    "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                    "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                    "recordCount": "4",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "215",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "7758",
+                "objectCount": "5",
+                "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                "recordCount": "4",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "215",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "dim_lista_referencia",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-07-12T00:25:20+00:00",
+            "UpdateTime": "2026-07-12T00:25:20+00:00",
+            "LastAccessTime": "2026-07-12T00:25:20+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id_lista",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "nombre_lista",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "codigo",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "descripcion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "load_dt",
+                        "Type": "date"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD_CARGA_GOLD/dim_lista_referencia/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "69302",
+                    "objectCount": "20",
+                    "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                    "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                    "recordCount": "1781",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "26",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "69302",
+                "objectCount": "20",
+                "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                "recordCount": "1781",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "26",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "dim_regla",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-07-12T00:25:20+00:00",
+            "UpdateTime": "2026-07-12T00:25:20+00:00",
+            "LastAccessTime": "2026-07-12T00:25:20+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "codigo_regla",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dimension",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "tipo_regla",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "nombre_tecnico",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "descripcion_estandar",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "ejemplos",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "dqdl",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "load_dt",
+                        "Type": "date"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD_CARGA_GOLD/dim_regla/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "79860",
+                    "objectCount": "20",
+                    "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                    "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                    "recordCount": "63",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "391",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "79860",
+                "objectCount": "20",
+                "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                "recordCount": "63",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "391",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "dim_regla_atributo",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-07-12T00:25:20+00:00",
+            "UpdateTime": "2026-07-12T00:25:20+00:00",
+            "LastAccessTime": "2026-07-12T00:25:20+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id_atributo",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "id_regla",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "criticidad",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "aplica",
+                        "Type": "boolean"
+                    },
+                    {
+                        "Name": "parametros",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fecha_vigencia_desde",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "fecha_vigencia_hasta",
+                        "Type": "double"
+                    },
+                    {
+                        "Name": "load_dt",
+                        "Type": "date"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD_CARGA_GOLD/dim_regla_atributo/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "50266",
+                    "objectCount": "20",
+                    "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                    "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                    "recordCount": "120",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "83",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "50266",
+                "objectCount": "20",
+                "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                "recordCount": "120",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "83",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "dim_tipodat",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-07-12T00:25:20+00:00",
+            "UpdateTime": "2026-07-12T00:25:20+00:00",
+            "LastAccessTime": "2026-07-12T00:25:20+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id_tipo_dato",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "desc_tipo_dato",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "load_dt",
+                        "Type": "date"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD_CARGA_GOLD/dim_tipodat/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "9402",
+                    "objectCount": "10",
+                    "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                    "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                    "recordCount": "9",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "101",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "9402",
+                "objectCount": "10",
+                "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                "recordCount": "9",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "101",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "dim_umbral",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "Owner": "owner",
+            "CreateTime": "2026-07-12T00:25:20+00:00",
+            "UpdateTime": "2026-07-12T00:25:20+00:00",
+            "LastAccessTime": "2026-07-12T00:25:20+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id_umbral",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "descripcion",
+                        "Type": "double"
+                    },
+                    {
+                        "Name": "valor_alto",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "valor_medio",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "valor_bajo",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "load_dt",
+                        "Type": "date"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD_CARGA_GOLD/dim_umbral/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {
+                    "sizeKey": "5867",
+                    "objectCount": "4",
+                    "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                    "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                    "recordCount": "3",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                    "averageRecordSize": "203",
+                    "compressionType": "none",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "classification": "parquet",
+                    "typeOfData": "file"
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "sizeKey": "5867",
+                "objectCount": "4",
+                "UPDATED_BY_CRAWLER": "crw_gold_calidad",
+                "CRAWL_RUN_ID": "3d477421-3c2b-47dd-9720-9f1e49360b5d",
+                "recordCount": "3",
+                "CrawlerSchemaSerializerVersion": "1.0",
+                "averageRecordSize": "203",
+                "compressionType": "none",
+                "CrawlerSchemaDeserializerVersion": "1.0",
+                "classification": "parquet",
+                "typeOfData": "file"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/AWS-Crawler",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "fct_calidad",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "CreateTime": "2026-07-14T19:14:36+00:00",
+            "UpdateTime": "2026-07-14T19:14:36+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "id_periodo",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "fecha",
+                        "Type": "date"
+                    },
+                    {
+                        "Name": "id_activo",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "id_atributo",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "id_dominio",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "id_capa",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "id_regla",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "id_umbral",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "valor_referencia",
+                        "Type": "int"
+                    },
+                    {
+                        "Name": "valor_resultado",
+                        "Type": "bigint"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD_CARGA_GOLD/fct_calidad/",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": 0,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "SortColumns": [],
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "EXTERNAL": "TRUE",
+                "classification": "parquet"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/AWSReservedSSO_ALFA-DEV-DATALAKE-ADM_d41d4bf9003a32d8/kpinzon@segurosalfa.com.co",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        },
+        {
+            "Name": "fct_perfilamiento",
+            "DatabaseName": "alfa-datalake-calidad-gold",
+            "Owner": "spark",
+            "CreateTime": "2026-07-16T02:48:55+00:00",
+            "UpdateTime": "2026-07-16T02:48:55+00:00",
+            "LastAccessTime": "1970-01-01T00:00:00+00:00",
+            "Retention": 0,
+            "StorageDescriptor": {
+                "Columns": [
+                    {
+                        "Name": "id",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "fecha ejecucion",
+                        "Type": "timestamp"
+                    },
+                    {
+                        "Name": "activo de informacion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "fuente de informacion",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "tabla o conjunto de datos",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "columna o atributo",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "registros totales",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "cantidad de registros nulos",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "% nulos",
+                        "Type": "double"
+                    },
+                    {
+                        "Name": "%completitud",
+                        "Type": "double"
+                    },
+                    {
+                        "Name": "valor que mas ser repite (moda)",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "frecuencia",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "id_capa",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "id_tipo de dato",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "cantidad de registros unicos",
+                        "Type": "bigint"
+                    },
+                    {
+                        "Name": "% porcentaje",
+                        "Type": "double"
+                    },
+                    {
+                        "Name": "longitud",
+                        "Type": "double"
+                    },
+                    {
+                        "Name": "maximo",
+                        "Type": "double"
+                    },
+                    {
+                        "Name": "minimo",
+                        "Type": "double"
+                    }
+                ],
+                "Location": "s3://alfa-datalake-dev-gold/GOLD/CALIDAD/fct_perfilamiento",
+                "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "Compressed": false,
+                "NumberOfBuckets": -1,
+                "SerdeInfo": {
+                    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+                    "Parameters": {
+                        "serialization.format": "1"
+                    }
+                },
+                "BucketColumns": [],
+                "SortColumns": [],
+                "Parameters": {},
+                "SkewedInfo": {
+                    "SkewedColumnNames": [],
+                    "SkewedColumnValues": [],
+                    "SkewedColumnValueLocationMaps": {}
+                },
+                "StoredAsSubDirectories": false
+            },
+            "PartitionKeys": [
+                {
+                    "Name": "load_dt",
+                    "Type": "string"
+                }
+            ],
+            "TableType": "EXTERNAL_TABLE",
+            "Parameters": {
+                "spark.sql.sources.schema.partCol.0": "load_dt",
+                "transient_lastDdlTime": "1784170135",
+                "spark.sql.sources.schema": "{\"type\":\"struct\",\"fields\":[{\"name\":\"id\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"fecha ejecucion\",\"type\":\"timestamp\",\"nullable\":true,\"metadata\":{}},{\"name\":\"activo de informacion\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"fuente de informacion\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"tabla o conjunto de datos\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"columna o atributo\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"registros totales\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"cantidad de registros nulos\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"% nulos\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"%completitud\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"valor que mas ser repite (moda)\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"frecuencia\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"id_capa\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"id_tipo de dato\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"cantidad de registros unicos\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"% porcentaje\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"longitud\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"maximo\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"minimo\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"load_dt\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}",
+                "EXTERNAL": "TRUE",
+                "spark.sql.sources.schema.numPartCols": "1",
+                "spark.sql.create.version": "3.3.0-amzn-1"
+            },
+            "CreatedBy": "arn:aws:sts::533267035849:assumed-role/Alfa-Datalake-AWSGlueServiceRole/GlueJobRunnerSession",
+            "IsRegisteredWithLakeFormation": false,
+            "CatalogId": "533267035849",
+            "VersionId": "0",
+            "IsMultiDialectView": false,
+            "IsMaterializedView": false
+        }
+    ]
+}

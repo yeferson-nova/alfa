@@ -1,0 +1,56 @@
+{
+    "Configuration": {
+        "FunctionName": "CloudGuardNodeCodeAnalysisV33",
+        "FunctionArn": "arn:aws:lambda:us-east-1:533267035849:function:CloudGuardNodeCodeAnalysisV33",
+        "Runtime": "nodejs24.x",
+        "Role": "arn:aws:iam::533267035849:role/CloudGuardServerlessCodeAnalysisNode14LambdaExecutionRole",
+        "Handler": "index.handler",
+        "CodeSize": 30396209,
+        "Description": "Statically analyze NodeJs code",
+        "Timeout": 860,
+        "MemorySize": 4096,
+        "LastModified": "2026-09-15T22:38:32.000+0000",
+        "CodeSha256": "ilefq6NO2d3aHO2StByHdzD+NMU6BRTJX4mgTEK/axg=",
+        "Version": "$LATEST",
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        },
+        "RevisionId": "41a11002-8c02-4de3-ad32-7f2679e594de",
+        "Layers": [
+            {
+                "Arn": "arn:aws:lambda:us-east-1:317307795746:layer:aws-lambda-layer-java:1",
+                "CodeSize": 42877079
+            }
+        ],
+        "State": "Active",
+        "LastUpdateStatus": "Successful",
+        "PackageType": "Zip",
+        "Architectures": [
+            "x86_64"
+        ],
+        "EphemeralStorage": {
+            "Size": 512
+        },
+        "SnapStart": {
+            "ApplyOn": "None",
+            "OptimizationStatus": "Off"
+        },
+        "RuntimeVersionConfig": {
+            "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:7f5762a310d5d036f3e404886dda25ff46a91a996f097d2568d514f304024b3a"
+        },
+        "LoggingConfig": {
+            "LogFormat": "Text",
+            "LogGroup": "/aws/lambda/CloudGuardNodeCodeAnalysisV33"
+        }
+    },
+    "Code": {
+        "RepositoryType": "S3",
+        "Location": "https://prod-iad-c1-djusa-tasks.s3.us-east-1.amazonaws.com/snapshots/533267035849/CloudGuardNodeCodeAnalysisV33-7f25dfa7-8a1b-4935-9232-4a8b2e9d6c52?versionId=UVdZRo1UDNTb42i0xGKifHWFocSfiUhq&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIGkQq7ZrWmZHLtN1DyYCK9sdKep7i6JwmEEnnmQ0HV0mAiEA0VO2rwhiHukHRiamGN%2F2T8oKw2Fi6OvQxySfcBNuIAEqlAIIkv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgw0NzkyMzMwMjUzNzkiDD7%2FA%2Fg0Jcb3Idv7qCroAZPMqoIKS%2FscyEuOVuCOvPfWRt7vLa%2FeBz3OeP1UwR1DcKwcGgRmOA%2BZDfICmne7VkEx%2FXpmNVBLH4k%2FyMUwK2ITL57cluvgVzWjRb8stIwzKxBUi%2BcBXl6IKol0qK%2Fyv2jg0hFEI%2BBIZtyeKT95JLIg4zvY0e07vxrWRFsSo3DhsLwFuwNwTlvAfYw9OwFhu2OqUr1lYGVtAlcgD2rUeFtRlq4C4AlCf324EpTS1Hn3MNmHHCG7wBO37N1zY1lp4ArzpyYtpDstVn2UpOR8S2H2R8iNTITjKNirX19vN8tBIF0Sd9iD6kww2uem1wY6jQHWwVVS5qYZj5excFz30yesypqtZRRo3sgh7pR%2BSExsFK5e8A3%2FsA3AnbHrcp%2FC7aP%2F0MD04TgPGN0z%2BkPMOvtMCy28zYtieEauj4U93aYE9t5X%2FLqEwThAklSOW%2FA6wrsQ9E9ik73b6bOixWDj1sD2pt93QvXz0pgcxrFHcZJzQpOumCgAKTytIiABusc%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T164137Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAW7FEDUVRWF5HUSYY%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=22f7b9b1ae0e7557d5ca80858501f70c88e98633fd38c92da33f2fe5eb9fa482"
+    },
+    "Tags": {
+        "aws:cloudformation:stack-name": "CloudGuard-Onboarding-Serverless",
+        "Owner": "Cloudguard Serverless Security",
+        "aws:cloudformation:stack-id": "arn:aws:cloudformation:us-east-1:533267035849:stack/CloudGuard-Onboarding-Serverless/38979d50-aea2-11ef-be51-0ebb5ba8eef3",
+        "aws:cloudformation:logical-id": "CloudGuardNodeCodeAnalysisV33"
+    }
+}

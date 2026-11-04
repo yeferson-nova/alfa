@@ -1,0 +1,8 @@
+{
+    "Targets": [
+        {
+            "Id": "SesDeliveryLogs",
+            "Arn": "arn:aws:logs:us-east-1:533267035849:log-group:/aws/events/niif-dev-ses-delivery-test"
+        }
+    ]
+}
