@@ -21,6 +21,7 @@ URI_PLANTILLA = "s3://assets/plantillas/remediacion.json"
 CATALOGO_DOC = {
     "version": "1.0.0",
     "modosEjecucion": ["NORMAL", "REPROCESO_COMPLETO"],
+    "valoresPorDefecto": {"modoEjecucion": "NORMAL", "origen": "CONFIGURADOR"},
     "mallas": {
         MALLA: {
             "nombreCaso": "primas_prueba",
@@ -28,13 +29,21 @@ CATALOGO_DOC = {
             "stateMachineName": "niif-dev-primas-prueba",
             "programacion": {"pk": f"PROGRAMACION#{MALLA}", "sk": "METADATA"},
             "totalCiclos": 2,
-            "estadosRemediacionPermitidos": ["PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS"],
+            "remediacion": {"estadoSinReglas": "PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS",
+                            "estadoConReglas": None},
             "periodo": {
                 "columnasFecha": ["FEC_INICIAL", "FEC_APROBACION_PENSION"],
+                "operadoresFecha": [">=", "<", "<="],
                 "columnaPeriodo": "PERIODO",
+                "ajustarSegmentacion": True,
                 "patronIdentificadorSegmento": "niif17_([0-9]{6})_",
             },
-            "incluirRangoFechasEnEntrada": True,
+            "tablaExtraccion": {
+                "camposOpcionales": {"where": "where", "dependencia": "dependencia"},
+                "omitirNulos": False,
+            },
+            "entradaStepFunction": {"incluirRutaConfigExtraccion": True,
+                                    "incluirRangoFechas": True},
         }
     },
 }

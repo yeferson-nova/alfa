@@ -1,8 +1,9 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "ambiente": "dev",
-  "_origenDatos": "AUXILIOS_FUNERARIOS sale del codigo desplegado (conf_auxilios.py). Las demas salen de la version anterior (configurador-<malla>): confirmar contra el codigo real antes de produccion.",
+  "_origenDatos": "AUXILIOS_FUNERARIOS sale del codigo desplegado (conf_auxilios.py). Las otras cinco salen de la version anterior (Backend/Lamnbdas/niif-dev-configuration-<malla>/lambda_function.py) mas las variables de entorno desplegadas; las reglas de periodo se igualaron a las de auxilios porque la version desplegada agrega _evento_desde_prg y _resolver_where_periodo (ver ORIGEN.md). Confirmar contra el codigo desplegado antes de produccion.",
   "modosEjecucion": ["NORMAL", "REPROCESO_COMPLETO"],
+  "valoresPorDefecto": {"modoEjecucion": "NORMAL", "origen": "CONFIGURADOR"},
   "mallas": {
     "AUXILIOS_FUNERARIOS": {
       "_estado": "CONFIRMADO",
@@ -11,13 +12,19 @@
       "stateMachineName": "niif-dev-auxilios-funerarios",
       "programacion": {"pk": "PROGRAMACION#AUXILIOS_FUNERARIOS", "sk": "METADATA"},
       "totalCiclos": 3,
-      "estadosRemediacionPermitidos": ["PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS"],
+      "remediacion": {"estadoSinReglas": "PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS", "estadoConReglas": null},
       "periodo": {
         "columnasFecha": ["FEC_ENVIO_TES", "FEC_INICIAL", "FEC_APROBACION_PENSION"],
+        "operadoresFecha": [">=", "<", "<="],
         "columnaPeriodo": "PERIODO",
+        "ajustarSegmentacion": true,
         "patronIdentificadorSegmento": "niif17_([0-9]{6})_"
       },
-      "incluirRangoFechasEnEntrada": true
+      "tablaExtraccion": {
+        "camposOpcionales": {"where": "where", "dependencia": "dependencia"},
+        "omitirNulos": false
+      },
+      "entradaStepFunction": {"incluirRutaConfigExtraccion": true, "incluirRangoFechas": true}
     },
     "PRIMAS_RENTAS": {
       "_estado": "POR_CONFIRMAR",
@@ -26,13 +33,19 @@
       "stateMachineName": "niif-dev-primas-rentas",
       "programacion": {"pk": "PROGRAMACION#PRIMAS_RENTAS", "sk": "METADATA"},
       "totalCiclos": 4,
-      "estadosRemediacionPermitidos": ["PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS"],
+      "remediacion": {"estadoSinReglas": "PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS", "estadoConReglas": null},
       "periodo": {
         "columnasFecha": ["FEC_ENVIO_TES", "FEC_INICIAL", "FEC_APROBACION_PENSION"],
+        "operadoresFecha": [">=", "<", "<="],
         "columnaPeriodo": "PERIODO",
+        "ajustarSegmentacion": true,
         "patronIdentificadorSegmento": "niif17_([0-9]{6})_"
       },
-      "incluirRangoFechasEnEntrada": false
+      "tablaExtraccion": {
+        "camposOpcionales": {"where": "where", "dependencia": "dependencia"},
+        "omitirNulos": false
+      },
+      "entradaStepFunction": {"incluirRutaConfigExtraccion": true, "incluirRangoFechas": false}
     },
     "PRIMAS_ENDOSOS": {
       "_estado": "POR_CONFIRMAR",
@@ -41,13 +54,19 @@
       "stateMachineName": "niif-dev-primas-endosos",
       "programacion": {"pk": "PROGRAMACION#PRIMAS_ENDOSOS", "sk": "METADATA"},
       "totalCiclos": 2,
-      "estadosRemediacionPermitidos": ["PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS"],
+      "remediacion": {"estadoSinReglas": "PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS", "estadoConReglas": null},
       "periodo": {
         "columnasFecha": ["FEC_ENVIO_TES", "FEC_INICIAL", "FEC_APROBACION_PENSION"],
+        "operadoresFecha": [">=", "<", "<="],
         "columnaPeriodo": "PERIODO",
+        "ajustarSegmentacion": true,
         "patronIdentificadorSegmento": "niif17_([0-9]{6})_"
       },
-      "incluirRangoFechasEnEntrada": false
+      "tablaExtraccion": {
+        "camposOpcionales": {"where": "where", "dependencia": "dependencia"},
+        "omitirNulos": false
+      },
+      "entradaStepFunction": {"incluirRutaConfigExtraccion": true, "incluirRangoFechas": false}
     },
     "PRIMAS_ARL": {
       "_estado": "POR_CONFIRMAR",
@@ -56,13 +75,19 @@
       "stateMachineName": "niif-dev-primas-arl",
       "programacion": {"pk": "PROGRAMACION#PRIMAS_ARL", "sk": "METADATA"},
       "totalCiclos": 3,
-      "estadosRemediacionPermitidos": ["PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS"],
+      "remediacion": {"estadoSinReglas": "PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS", "estadoConReglas": null},
       "periodo": {
         "columnasFecha": ["FEC_ENVIO_TES", "FEC_INICIAL", "FEC_APROBACION_PENSION"],
+        "operadoresFecha": [">=", "<", "<="],
         "columnaPeriodo": "PERIODO",
+        "ajustarSegmentacion": true,
         "patronIdentificadorSegmento": "niif17_([0-9]{6})_"
       },
-      "incluirRangoFechasEnEntrada": false
+      "tablaExtraccion": {
+        "camposOpcionales": {"where": "where", "dependencia": "dependencia"},
+        "omitirNulos": false
+      },
+      "entradaStepFunction": {"incluirRutaConfigExtraccion": true, "incluirRangoFechas": false}
     },
     "RESERVA_MATEMATICA_ARP": {
       "_estado": "POR_CONFIRMAR",
@@ -71,13 +96,19 @@
       "stateMachineName": "niif-dev-reserva-matematica-arp",
       "programacion": {"pk": "PROGRAMACION#RESERVA_MATEMATICA_ARP", "sk": "METADATA"},
       "totalCiclos": 3,
-      "estadosRemediacionPermitidos": ["PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS"],
+      "remediacion": {"estadoSinReglas": "PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS", "estadoConReglas": "DEFINIDA_CON_REGLAS_TRANSFORMATIVAS"},
       "periodo": {
         "columnasFecha": ["FEC_ENVIO_TES", "FEC_INICIAL", "FEC_APROBACION_PENSION"],
+        "operadoresFecha": [">=", "<", "<="],
         "columnaPeriodo": "PERIODO",
+        "ajustarSegmentacion": true,
         "patronIdentificadorSegmento": "niif17_([0-9]{6})_"
       },
-      "incluirRangoFechasEnEntrada": false
+      "tablaExtraccion": {
+        "camposOpcionales": {"where": "where", "dependencia": "dependencia", "reutilizacionCompartida": "reutilizacion_compartida"},
+        "omitirNulos": true
+      },
+      "entradaStepFunction": {"incluirRutaConfigExtraccion": false, "incluirRangoFechas": false}
     },
     "RESERVA_MATEMATICA_RVI": {
       "_estado": "POR_CONFIRMAR",
@@ -86,13 +117,19 @@
       "stateMachineName": "niif-dev-reserva-matematica-rvi",
       "programacion": {"pk": "PROGRAMACION#RESERVA_MATEMATICA_RVI", "sk": "METADATA"},
       "totalCiclos": 4,
-      "estadosRemediacionPermitidos": ["PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS"],
+      "remediacion": {"estadoSinReglas": "PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS", "estadoConReglas": "DEFINIDA_CON_REGLAS_TRANSFORMATIVAS"},
       "periodo": {
         "columnasFecha": ["FEC_ENVIO_TES", "FEC_INICIAL", "FEC_APROBACION_PENSION"],
+        "operadoresFecha": [">=", "<", "<="],
         "columnaPeriodo": "PERIODO",
+        "ajustarSegmentacion": true,
         "patronIdentificadorSegmento": "niif17_([0-9]{6})_"
       },
-      "incluirRangoFechasEnEntrada": false
+      "tablaExtraccion": {
+        "camposOpcionales": {"where": "where", "dependencia": "dependencia", "reutilizacionCompartida": "reutilizacion_compartida"},
+        "omitirNulos": true
+      },
+      "entradaStepFunction": {"incluirRutaConfigExtraccion": false, "incluirRangoFechas": false}
     }
   }
 }

@@ -63,13 +63,26 @@ class TestFlujo:
         assert item["executionArn"] == resultado.execution_arn
         assert "EJECUCION_INICIADA" in capturador.eventos()
 
-    def test_sin_rango_de_fechas_si_el_catalogo_no_lo_pide(self, documento_catalogo, capturador):
+    def test_sin_campos_opcionales_si_el_catalogo_no_los_pide(self, documento_catalogo,
+                                                              capturador):
         from configurador_mallas.dominio import catalogo
-        documento_catalogo["mallas"][MALLA]["incluirRangoFechasEnEntrada"] = False
+        documento_catalogo["mallas"][MALLA]["entradaStepFunction"] = {
+            "incluirRutaConfigExtraccion": False, "incluirRangoFechas": False}
         entorno = Entorno(catalogo.parsear(documento_catalogo))
         resultado = _ejecutar(entorno, capturador, _evento(publicar=True))
         _, entrada = entorno.orquestador.ejecuciones[resultado.execution_name]
-        assert "fecDesde" not in entrada and "fecHasta" not in entrada
+        assert not {"fecDesde", "fecHasta", "rutaConfigExtraccion"} & set(entrada)
+
+    def test_origen_y_modo_por_defecto_salen_del_catalogo(self, entorno, capturador):
+        resultado = _ejecutar(entorno, capturador, _evento(publicar=True))
+        _, entrada = entorno.orquestador.ejecuciones[resultado.execution_name]
+        assert (entrada["origen"], entrada["modoEjecucion"]) == ("CONFIGURADOR", "NORMAL")
+        item = entorno.ejecuciones.items[(resultado.ejc_pk, resultado.ejc_sk)]
+        assert item["origen"] == "CONFIGURADOR"
+
+    def test_informa_las_estructuras_prs_validadas(self, entorno, capturador):
+        resultado = _ejecutar(entorno, capturador, _evento())
+        assert resultado.to_dict()["estructurasPRSValidadas"] == 3
 
     def test_el_periodo_del_evento_debe_coincidir_con_la_programacion(self, entorno, capturador):
         assert _ejecutar(entorno, capturador, _evento(periodoNegocio="202610")).periodo_negocio \

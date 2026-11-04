@@ -69,16 +69,19 @@ def resolver_estructura(contenido, viejo, nuevo):
 def resolver_where(where, viejo, nuevo, reglas):
     """Ajusta un filtro SQL al periodo.
 
-    Para las columnas de fecha configuradas: ``>=`` toma el primer día, ``<`` el
-    primer día del mes siguiente y ``<=`` el último día. La columna de periodo
-    (``COL = 'YYYYMM'``) toma el periodo nuevo.
+    Para las columnas y los operadores de fecha configurados: ``>=`` toma el primer
+    día, ``<`` el primer día del mes siguiente y ``<=`` el último día. La columna de
+    periodo (``COL = 'YYYYMM'``) toma el periodo nuevo.
     """
     inicio, siguiente, fin = rango_mes(nuevo)
     resultado = where
-    if reglas.columnas_fecha:
+    if reglas.columnas_fecha and reglas.operadores_fecha:
         columnas = "|".join(re.escape(c) for c in reglas.columnas_fecha)
-        patron = (rf"(\b(?:[A-Za-z_][A-Za-z_0-9]*\.)?(?:{columnas})\s*)(>=|<=|<)(\s*DATE\s*)"
-                  + _FECHA_O_MARCADOR)
+        # Los más largos primero, para que "<=" no se lea como "<".
+        operadores = "|".join(re.escape(o) for o in sorted(reglas.operadores_fecha, key=len,
+                                                            reverse=True))
+        patron = (rf"(\b(?:[A-Za-z_][A-Za-z_0-9]*\.)?(?:{columnas})\s*)({operadores})"
+                  r"(\s*DATE\s*)" + _FECHA_O_MARCADOR)
         valores = {">=": inicio, "<": siguiente, "<=": fin}
         resultado = re.sub(
             patron,
@@ -136,7 +139,7 @@ def _ajustar_uso(clave, uso, viejo, nuevo, reglas):
         uso["where"] = resolver_where(where, viejo, nuevo, reglas)
 
     segmentacion = uso.get("segmentacionHorizontal")
-    if isinstance(segmentacion, dict) and segmentacion:
+    if reglas.ajustar_segmentacion and isinstance(segmentacion, dict) and segmentacion:
         uso["segmentacionHorizontal"] = _ajustar_segmentacion(segmentacion, nuevo, reglas)
 
 

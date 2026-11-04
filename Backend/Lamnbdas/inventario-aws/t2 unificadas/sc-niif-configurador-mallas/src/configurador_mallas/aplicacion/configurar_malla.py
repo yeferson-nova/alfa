@@ -3,6 +3,7 @@
 Es el mismo para las seis mallas: lo que cambia entre ellas llega en ``MallaSpec``
 desde el catálogo.
 """
+from dataclasses import replace
 from datetime import datetime, timezone
 
 from ..dominio import constructores, periodo, validaciones
@@ -30,6 +31,11 @@ class ConfiguradorMallas:
 
     def ejecutar(self, evento, invocacion, observador):
         spec = self._catalogo.obtener(evento.malla)
+        evento = replace(
+            evento,
+            modo_ejecucion=evento.modo_ejecucion or self._catalogo.modo_por_defecto,
+            origen=evento.origen or self._catalogo.origen_por_defecto,
+        )
         if evento.modo_ejecucion not in self._catalogo.modos_ejecucion:
             raise ErrorEntrada("modoEjecucion no permitido", codigo="CFG-ENT-005",
                                detalle={"permitidos": list(self._catalogo.modos_ejecucion)})
@@ -87,6 +93,7 @@ class ConfiguradorMallas:
             periodo_negocio=periodo_negocio,
             registros_cnf=len(cnf),
             ejecucion_id=id_corrida,
+            estructuras_prs_validadas=constructores.contar_estructuras_prs(cnf, spec),
         )
         if evento.publicar:
             resultado.publicados = self._publicar(spec, cnf, antes, generados, id_corrida)
@@ -134,11 +141,12 @@ class ConfiguradorMallas:
             "malla": spec.codigo,
             "periodoNegocio": periodo_negocio,
             "modoEjecucion": evento.modo_ejecucion,
-            "rutaConfigExtraccion": cnf["EXTRACCION"]["archivoActivoUri"],
             "origen": evento.origen,
             "ejecucionId": resultado.ejecucion_id,
         }
-        if spec.incluir_rango_fechas:
+        if spec.entrada_orquestacion.incluir_ruta_config_extraccion:
+            entrada["rutaConfigExtraccion"] = cnf["EXTRACCION"]["archivoActivoUri"]
+        if spec.entrada_orquestacion.incluir_rango_fechas:
             inicio, _, fin = periodo.rango_mes(periodo_negocio)
             entrada["fecDesde"] = inicio.isoformat()
             entrada["fecHasta"] = fin.isoformat()

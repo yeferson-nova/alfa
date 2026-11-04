@@ -6,8 +6,10 @@ from configurador_mallas.dominio import periodo
 from configurador_mallas.dominio.errores import ErrorConfiguracion, ErrorEntrada
 from configurador_mallas.dominio.modelos import ReglasPeriodo
 
-REGLAS = ReglasPeriodo(("FEC_INICIAL", "FEC_APROBACION_PENSION"), "PERIODO", r"niif17_([0-9]{6})_")
-SIN_REGLAS = ReglasPeriodo((), None, None)
+TODOS = (">=", "<", "<=")
+REGLAS = ReglasPeriodo(("FEC_INICIAL", "FEC_APROBACION_PENSION"), TODOS, "PERIODO", True,
+                       r"niif17_([0-9]{6})_")
+SIN_REGLAS = ReglasPeriodo((), (), None, True, None)
 
 
 def test_rango_de_diciembre_cruza_el_anio():
@@ -44,6 +46,25 @@ def test_where_ajusta_cada_operador_de_las_columnas_configuradas():
     assert "PERIODO = '202610'" in resultado
 
 
+@pytest.mark.parametrize("operadores, esperado", [
+    (("<=",), "F >= DATE '2025-01-01' AND F < DATE '2025-02-01' AND F <= DATE '2026-10-31'"),
+    (("<",), "F >= DATE '2025-01-01' AND F < DATE '2026-11-01' AND F <= DATE '2025-01-31'"),
+    ((">=", "<"), "F >= DATE '2026-10-01' AND F < DATE '2026-11-01' AND F <= DATE '2025-01-31'"),
+])
+def test_where_solo_ajusta_los_operadores_configurados(operadores, esperado):
+    reglas = ReglasPeriodo(("F",), operadores, None, True, None)
+    where = "F >= DATE '2025-01-01' AND F < DATE '2025-02-01' AND F <= DATE '2025-01-31'"
+    assert periodo.resolver_where(where, "202501", "202610", reglas) == esperado
+
+
+def test_sin_ajuste_de_segmentacion_los_segmentos_no_cambian(cnf):
+    reglas = ReglasPeriodo((), (), None, False, r"niif17_([0-9]{6})_")
+    salida, _ = periodo.preparar_periodo(cnf, "202610", reglas)
+    segmento = salida["CICLO#002"]["segmentos"][0]["estructuras"][0]["segmentacionHorizontal"]
+    assert segmento == cnf["CICLO#002"]["segmentos"][0]["estructuras"][0][
+        "segmentacionHorizontal"]
+
+
 def test_where_sin_reglas_solo_cambia_el_periodo():
     assert periodo.resolver_where("PERIODO = '202501'", "202501", "202610",
                                   SIN_REGLAS) == "PERIODO = '202610'"
@@ -71,8 +92,7 @@ def test_preparar_periodo_ajusta_filtros_y_segmentos(cnf):
 
 
 def test_segmentacion_sin_patron_usa_solo_el_periodo_declarado(cnf):
-    reglas = ReglasPeriodo((), None, None)
-    salida, _ = periodo.preparar_periodo(cnf, "202610", reglas)
+    salida, _ = periodo.preparar_periodo(cnf, "202610", SIN_REGLAS)
     segmento = salida["CICLO#002"]["segmentos"][0]["estructuras"][0]["segmentacionHorizontal"]
     assert segmento["identificador"] == "niif17_202610_lote"
 

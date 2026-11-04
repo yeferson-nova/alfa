@@ -8,18 +8,23 @@ import re
 from dataclasses import dataclass
 
 from .errores import ErrorConfiguracion
-from .modelos import MallaSpec, ReglasPeriodo
+from .modelos import (EntradaOrquestacion, FormatoTablaExtraccion, MallaSpec, ReglasPeriodo,
+                      ReglasRemediacion)
 
 _CODIGO = re.compile(r"[A-Z][A-Z0-9_]{1,62}")
 _PREFIJO = re.compile(r"[a-z0-9][a-z0-9-]{0,29}")
 _NOMBRE_MAQUINA = re.compile(r"[A-Za-z0-9_-]{1,80}")
 _COLUMNA = re.compile(r"[A-Za-z_][A-Za-z_0-9]{0,127}")
+_CAMPO = re.compile(r"[A-Za-z_][A-Za-z_0-9]{0,63}")
+OPERADORES_FECHA = (">=", "<", "<=")
 
 
 @dataclass(frozen=True)
 class Catalogo:
     version: str
     modos_ejecucion: tuple[str, ...]
+    modo_por_defecto: str
+    origen_por_defecto: str
     mallas: dict
 
     def obtener(self, codigo):
@@ -38,12 +43,18 @@ def parsear(documento):
         _invalido("el documento debe ser un objeto")
     version = _texto(documento, "version", "catálogo")
     modos = _lista_textos(documento, "modosEjecucion", "catálogo")
+    defectos = _objeto(documento, "valoresPorDefecto", "catálogo")
+    modo_por_defecto = _texto(defectos, "modoEjecucion", "catálogo.valoresPorDefecto")
+    if modo_por_defecto not in modos:
+        _invalido("valoresPorDefecto.modoEjecucion debe estar en modosEjecucion")
     mallas = documento.get("mallas")
     if not isinstance(mallas, dict) or not mallas:
         _invalido("'mallas' debe ser un objeto con al menos una malla")
     return Catalogo(
         version=version,
         modos_ejecucion=modos,
+        modo_por_defecto=modo_por_defecto,
+        origen_por_defecto=_texto(defectos, "origen", "catálogo.valoresPorDefecto"),
         mallas={codigo: _malla(codigo, datos) for codigo, datos in mallas.items()},
     )
 
@@ -54,13 +65,9 @@ def _malla(codigo, datos):
     if not isinstance(datos, dict):
         _invalido(f"{codigo}: la definición debe ser un objeto")
     programacion = _objeto(datos, "programacion", codigo)
-    periodo = _objeto(datos, "periodo", codigo)
     total_ciclos = datos.get("totalCiclos")
     if isinstance(total_ciclos, bool) or not isinstance(total_ciclos, int) or total_ciclos < 1:
         _invalido(f"{codigo}: totalCiclos debe ser un entero mayor que cero")
-    incluir_rango = datos.get("incluirRangoFechasEnEntrada")
-    if not isinstance(incluir_rango, bool):
-        _invalido(f"{codigo}: incluirRangoFechasEnEntrada debe ser true o false")
 
     return MallaSpec(
         codigo=codigo,
@@ -70,10 +77,20 @@ def _malla(codigo, datos):
         prg_pk=_texto(programacion, "pk", f"{codigo}.programacion"),
         prg_sk=_texto(programacion, "sk", f"{codigo}.programacion"),
         total_ciclos=total_ciclos,
-        estados_remediacion=_lista_textos(datos, "estadosRemediacionPermitidos", codigo),
-        reglas_periodo=_reglas_periodo(codigo, periodo),
-        incluir_rango_fechas=incluir_rango,
+        remediacion=_remediacion(codigo, _objeto(datos, "remediacion", codigo)),
+        reglas_periodo=_reglas_periodo(codigo, _objeto(datos, "periodo", codigo)),
+        formato_tabla=_formato_tabla(codigo, _objeto(datos, "tablaExtraccion", codigo)),
+        entrada_orquestacion=_entrada_orquestacion(
+            codigo, _objeto(datos, "entradaStepFunction", codigo)),
     )
+
+
+def _remediacion(codigo, datos):
+    contexto = f"{codigo}.remediacion"
+    con_reglas = datos.get("estadoConReglas")
+    if con_reglas is not None:
+        con_reglas = _texto(datos, "estadoConReglas", contexto)
+    return ReglasRemediacion(_texto(datos, "estadoSinReglas", contexto), con_reglas)
 
 
 def _reglas_periodo(codigo, periodo):
@@ -81,19 +98,63 @@ def _reglas_periodo(codigo, periodo):
     if not isinstance(columnas, list) or not all(
             isinstance(c, str) and _COLUMNA.fullmatch(c) for c in columnas):
         _invalido(f"{codigo}: periodo.columnasFecha debe ser una lista de nombres de columna")
+    operadores = periodo.get("operadoresFecha")
+    if not isinstance(operadores, list) or not all(o in OPERADORES_FECHA for o in operadores):
+        _invalido(f"{codigo}: periodo.operadoresFecha debe ser una lista con "
+                  f"valores de {list(OPERADORES_FECHA)}")
+    if columnas and not operadores:
+        _invalido(f"{codigo}: periodo.operadoresFecha no puede estar vacía si hay columnasFecha")
     columna_periodo = periodo.get("columnaPeriodo")
     if columna_periodo is not None and (
             not isinstance(columna_periodo, str) or not _COLUMNA.fullmatch(columna_periodo)):
         _invalido(f"{codigo}: periodo.columnaPeriodo inválida")
-    patron = periodo.get("patronIdentificadorSegmento")
-    if patron is not None:
-        try:
-            compilado = re.compile(patron)
-        except (re.error, TypeError):
-            _invalido(f"{codigo}: periodo.patronIdentificadorSegmento no es una expresión válida")
-        if compilado.groups != 1:
-            _invalido(f"{codigo}: patronIdentificadorSegmento debe tener un solo grupo (el periodo)")
-    return ReglasPeriodo(tuple(columnas), columna_periodo, patron)
+    return ReglasPeriodo(
+        columnas_fecha=tuple(columnas),
+        operadores_fecha=tuple(operadores),
+        columna_periodo=columna_periodo,
+        ajustar_segmentacion=_booleano(periodo, "ajustarSegmentacion", f"{codigo}.periodo"),
+        patron_segmento=_patron_segmento(codigo, periodo.get("patronIdentificadorSegmento")),
+    )
+
+
+def _patron_segmento(codigo, patron):
+    if patron is None:
+        return None
+    try:
+        compilado = re.compile(patron)
+    except (re.error, TypeError):
+        _invalido(f"{codigo}: periodo.patronIdentificadorSegmento no es una expresión válida")
+    if compilado.groups != 1:
+        _invalido(f"{codigo}: patronIdentificadorSegmento debe tener un solo grupo (el periodo)")
+    return patron
+
+
+def _formato_tabla(codigo, datos):
+    campos = datos.get("camposOpcionales")
+    if not isinstance(campos, dict) or not all(
+            isinstance(v, str) and _CAMPO.fullmatch(k) and _CAMPO.fullmatch(v)
+            for k, v in campos.items()):
+        _invalido(f"{codigo}: tablaExtraccion.camposOpcionales debe ser un objeto "
+                  "{campoCnf: campo_json}")
+    return FormatoTablaExtraccion(
+        campos_opcionales=tuple(campos.items()),
+        omitir_nulos=_booleano(datos, "omitirNulos", f"{codigo}.tablaExtraccion"),
+    )
+
+
+def _entrada_orquestacion(codigo, datos):
+    contexto = f"{codigo}.entradaStepFunction"
+    return EntradaOrquestacion(
+        incluir_ruta_config_extraccion=_booleano(datos, "incluirRutaConfigExtraccion", contexto),
+        incluir_rango_fechas=_booleano(datos, "incluirRangoFechas", contexto),
+    )
+
+
+def _booleano(datos, nombre, contexto):
+    valor = datos.get(nombre)
+    if not isinstance(valor, bool):
+        _invalido(f"{contexto}: '{nombre}' debe ser true o false")
+    return valor
 
 
 def _objeto(datos, nombre, contexto):

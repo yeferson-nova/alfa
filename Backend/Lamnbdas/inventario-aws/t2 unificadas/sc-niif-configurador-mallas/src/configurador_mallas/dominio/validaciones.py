@@ -19,9 +19,10 @@ def validar_registros_cnf(cnf, spec):
     if faltantes:
         raise ErrorConfiguracion("Registros CNF faltantes", codigo="CFG-CNF-004",
                                  detalle={"faltantes": faltantes})
-    sobrantes = sorted(k for k in cnf if k.startswith("CICLO#") and k not in requeridos)
+    # Las lambdas anteriores exigían el número exacto de registros: tampoco se aceptan sobrantes.
+    sobrantes = sorted(set(cnf) - requeridos)
     if sobrantes:
-        raise ErrorConfiguracion("Hay más ciclos en CNF que los del catálogo",
+        raise ErrorConfiguracion("Hay registros CNF que no corresponden al catálogo",
                                  codigo="CFG-CNF-004", detalle={"sobrantes": sobrantes})
     nombre_caso = cnf["GENERAL"].get("nombreCaso")
     if nombre_caso != spec.nombre_caso:
@@ -47,7 +48,8 @@ def validar_generados(generados, spec):
     periodo = extraccion["periodo_negocio"]
     if periodo != extraccion["control_extraccion"]["periodo_negocio"]:
         raise ErrorConfiguracion("Periodo inconsistente en la extracción", codigo="CFG-CNF-008")
-    _validar_segmentos(extraccion, periodo, spec.reglas_periodo.patron_segmento)
+    if spec.reglas_periodo.ajustar_segmentacion:
+        _validar_segmentos(extraccion, periodo, spec.reglas_periodo.patron_segmento)
 
 
 def _validar_segmentos(extraccion, periodo, patron):

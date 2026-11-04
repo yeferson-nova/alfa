@@ -1,6 +1,6 @@
 [project]
 name = "sc-niif-configurador-mallas"
-version = "1.0.0"
+version = "1.1.0"
 description = "Lambda general que configura las mallas NIIF 17 (reemplaza a las 6 configuration-<malla>)"
 requires-python = ">=3.12"
 dependencies = []  # boto3 viene en el runtime de Lambda

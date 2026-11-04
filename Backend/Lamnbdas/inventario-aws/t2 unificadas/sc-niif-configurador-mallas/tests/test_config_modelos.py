@@ -46,8 +46,9 @@ class TestEvento:
     def test_valores_por_defecto_de_validacion(self):
         evento = Evento.desde_dict({"malla": "PRIMAS_ARL"})
         assert (evento.publicar, evento.ejecutar) == (False, False)
-        assert evento.modo_ejecucion == "NORMAL"
-        assert evento.origen == "INVOCACION_DIRECTA"
+        # Sin valores de negocio en el código: el caso de uso los toma del catálogo.
+        assert evento.modo_ejecucion is None
+        assert evento.origen is None
         assert evento.clave_idempotencia is None
 
     def test_publicar_implica_ejecutar_salvo_que_se_indique(self):

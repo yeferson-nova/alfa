@@ -70,7 +70,7 @@ ls -lh dist/
 
 Resultado esperado:
 ```
-Artefacto: .../dist/sc-niif-configurador-mallas-1.0.0.zip
+Artefacto: .../dist/sc-niif-configurador-mallas-1.1.0.zip
 Handler:   configurador_mallas.adaptadores.entrada.lambda_handler.lambda_handler
 ```
 
@@ -230,7 +230,7 @@ aws lambda create-function \
   --handler configurador_mallas.adaptadores.entrada.lambda_handler.lambda_handler \
   --role $ROL_ARN \
   --zip-file fileb://$ZIP \
-  --memory-size 256 \
+  --memory-size 512 \
   --timeout 300 \
   --environment file:///tmp/entorno.json \
   --logging-config LogFormat=Text \
@@ -362,7 +362,7 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
 pytest --cov
 ```
-Debe terminar con 174 pruebas pasando y cobertura de ramas mayor a 85 %.
+Debe terminar con 245 pruebas pasando y cobertura de ramas mayor a 85 %. Las 36 de equivalencia necesitan las carpetas `niif-dev-configuration-<malla>` del repositorio (opción B del paso 1); si no están, se omiten.
 
 ---
 

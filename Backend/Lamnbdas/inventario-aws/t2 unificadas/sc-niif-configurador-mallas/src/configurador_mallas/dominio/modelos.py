@@ -12,8 +12,6 @@ from .periodo import validar_formato
 PREFIJO_MALLA = "MALLA#"
 PREFIJO_EJC = "EJC#"
 PREFIJO_EJECUCION = "EJECUCION#"
-ORIGEN_POR_DEFECTO = "INVOCACION_DIRECTA"
-MODO_POR_DEFECTO = "NORMAL"
 
 _CLAVE_IDEMPOTENCIA = re.compile(r"[A-Za-z0-9._:\-]{1,128}")
 
@@ -23,8 +21,38 @@ class ReglasPeriodo:
     """Cómo se traslada el periodo a los filtros (`where`) y a los segmentos."""
 
     columnas_fecha: tuple[str, ...]
+    operadores_fecha: tuple[str, ...]
     columna_periodo: str | None
+    ajustar_segmentacion: bool
     patron_segmento: str | None
+
+
+@dataclass(frozen=True)
+class ReglasRemediacion:
+    """Estado de definición que debe tener la remediación.
+
+    Si ``estado_con_reglas`` es ``None``, se exige siempre ``estado_sin_reglas``;
+    si no, el estado esperado depende de si la CNF trae reglas transformativas.
+    """
+
+    estado_sin_reglas: str
+    estado_con_reglas: str | None
+
+
+@dataclass(frozen=True)
+class FormatoTablaExtraccion:
+    """Campos de la estructura (CNF) que se copian a cada tabla del JSON de extracción."""
+
+    campos_opcionales: tuple[tuple[str, str], ...]  # (campo en CNF, campo en el JSON)
+    omitir_nulos: bool
+
+
+@dataclass(frozen=True)
+class EntradaOrquestacion:
+    """Campos opcionales de la entrada de la Step Function."""
+
+    incluir_ruta_config_extraccion: bool
+    incluir_rango_fechas: bool
 
 
 @dataclass(frozen=True)
@@ -38,9 +66,10 @@ class MallaSpec:
     prg_pk: str
     prg_sk: str
     total_ciclos: int
-    estados_remediacion: tuple[str, ...]
+    remediacion: ReglasRemediacion
     reglas_periodo: ReglasPeriodo
-    incluir_rango_fechas: bool
+    formato_tabla: FormatoTablaExtraccion
+    entrada_orquestacion: EntradaOrquestacion
 
     @property
     def pk(self):
@@ -66,8 +95,8 @@ class Evento:
     publicar: bool
     ejecutar: bool
     periodo_negocio: str | None
-    modo_ejecucion: str
-    origen: str
+    modo_ejecucion: str | None  # None: se usa el valor por defecto del catálogo
+    origen: str | None
     clave_idempotencia: str | None
 
     @classmethod
@@ -103,8 +132,8 @@ class Evento:
             publicar=publicar,
             ejecutar=ejecutar,
             periodo_negocio=periodo,
-            modo_ejecucion=_texto(event, "modoEjecucion", MODO_POR_DEFECTO),
-            origen=_texto(event, "origen", ORIGEN_POR_DEFECTO),
+            modo_ejecucion=_texto_opcional(event, "modoEjecucion"),
+            origen=_texto_opcional(event, "origen"),
             clave_idempotencia=clave,
         )
 
@@ -118,6 +147,7 @@ class Resultado:
     registros_cnf: int
     ejecucion_id: str
     estado: str = "VALIDADO"
+    estructuras_prs_validadas: int = 0
     publicados: list = field(default_factory=list)
     execution_name: str | None = None
     execution_arn: str | None = None
@@ -133,6 +163,7 @@ class Resultado:
             "ejecutar": self.ejecutar,
             "periodoNegocio": self.periodo_negocio,
             "registrosCNF": self.registros_cnf,
+            "estructurasPRSValidadas": self.estructuras_prs_validadas,
             "ejecucionId": self.ejecucion_id,
             "publicados": self.publicados,
             "executionName": self.execution_name,
@@ -152,6 +183,7 @@ class Resultado:
             periodo_negocio=datos["periodoNegocio"],
             registros_cnf=datos["registrosCNF"],
             ejecucion_id=datos["ejecucionId"],
+            estructuras_prs_validadas=datos.get("estructurasPRSValidadas", 0),
             publicados=list(datos.get("publicados", [])),
             execution_name=datos.get("executionName"),
             execution_arn=datos.get("executionArn"),
@@ -170,8 +202,10 @@ def _booleano(event, nombre, por_defecto):
     return valor
 
 
-def _texto(event, nombre, por_defecto):
-    valor = event.get(nombre, por_defecto)
+def _texto_opcional(event, nombre):
+    if nombre not in event:
+        return None
+    valor = event[nombre]
     if not isinstance(valor, str) or not valor.strip():
         raise ErrorEntrada(f"'{nombre}' debe ser un texto no vacío", codigo="CFG-ENT-001")
     return valor.strip()

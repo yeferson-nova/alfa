@@ -55,17 +55,17 @@ La regla de dependencias (`dominio ← aplicacion ← adaptadores`, y solo `conf
 | `publicar` | booleano | No (`false`) | Escribe CNF y los JSON en S3 |
 | `ejecutar` | booleano | No (igual a `publicar`) | Arranca la Step Function; exige `publicar=true` |
 | `periodoNegocio` | texto `YYYYMM` | No | Solo confirma: debe coincidir con la programación |
-| `modoEjecucion` | texto | No (`NORMAL`) | Debe estar en `modosEjecucion` del catálogo |
-| `origen` | texto | No (`INVOCACION_DIRECTA`) | Quién invoca (`PROGRAMACION_GESTOR`, ...) |
+| `modoEjecucion` | texto | No (`valoresPorDefecto` del catálogo: `NORMAL`) | Debe estar en `modosEjecucion` del catálogo |
+| `origen` | texto | No (`valoresPorDefecto` del catálogo: `CONFIGURADOR`) | Quién invoca (`PROGRAMACION_GESTOR`, ...) |
 | `idempotencyKey` | texto (1-128) | No (usa `aws_request_id`) | En Scheduler: `<aws.scheduler.execution-id>` |
 
 Ejemplos en `eventos/`.
 
 ### Respuesta
-`estado`, `malla`, `publicar`, `ejecutar`, `periodoNegocio`, `registrosCNF`, `ejecucionId`, `publicados[]`, `executionName`, `executionArn`, `ejcPK`, `ejcSK`, `reutilizado`.
+`estado`, `malla`, `publicar`, `ejecutar`, `periodoNegocio`, `registrosCNF`, `estructurasPRSValidadas` (calculado: estructuras de origen distintas más la Gold), `ejecucionId`, `publicados[]`, `executionName`, `executionArn`, `ejcPK`, `ejcSK`, `reutilizado`.
 
 ### Entrada que recibe la Step Function
-`ejcPK`, `ejcSK`, `malla`, `periodoNegocio`, `modoEjecucion`, `rutaConfigExtraccion`, `origen`, `ejecucionId`, y `fecDesde`/`fecHasta` si el catálogo lo indica (auxilios funerarios).
+`ejcPK`, `ejcSK`, `malla`, `periodoNegocio`, `modoEjecucion`, `origen` y `ejecucionId`. Según `entradaStepFunction` del catálogo: `rutaConfigExtraccion` (todas menos las reservas matemáticas) y `fecDesde`/`fecHasta` (auxilios funerarios).
 
 ---
 
@@ -88,9 +88,19 @@ Ejemplos en `eventos/`.
 `AWS_REGION` la pone Lambda; la cuenta y la partición se toman del ARN de la función. Si falta una variable obligatoria, la función falla con `CFG-CNF-001` y la lista de las que faltan.
 
 ### Catálogo de mallas
-`config/catalogo-mallas.<amb>.json`: todo lo que antes estaba quemado en cada copia (ciclos, prefijo de ejecución, Step Function, llave de programación, estados de remediación permitidos, columnas de fecha, patrón de segmentos y si se envía el rango de fechas). Sumar una malla = agregar una entrada. Se lee una vez por contenedor.
+`config/catalogo-mallas.<amb>.json`: todo lo que antes estaba quemado en cada copia. Sumar una malla = agregar una entrada. Se lee y valida una vez por contenedor; si falta un campo, falla con `CFG-CNF-002` (no hay valores implícitos).
 
-> Auxilios funerarios sale del código desplegado. **Las otras cinco salen de la versión anterior** (`configurador-<malla>`) y están marcadas `POR_CONFIRMAR`: hay que confirmarlas con el código real (script `recolectar-faltantes.sh`).
+| Campo | Qué define | Diferencia entre mallas |
+|---|---|---|
+| `modosEjecucion`, `valoresPorDefecto` | Modos permitidos; `modoEjecucion` y `origen` cuando el evento no los trae | Iguales para todas |
+| `nombreCaso`, `prefijoEjecucion`, `stateMachineName`, `programacion`, `totalCiclos` | Identidad de la malla | Una por malla |
+| `remediacion.estadoSinReglas` / `estadoConReglas` | Estado de definición exigido. Con `estadoConReglas`, depende de si `REMEDIACION` trae `reglasTransformativas` | `estadoConReglas` solo en RVI y ARP |
+| `periodo.columnasFecha`, `operadoresFecha`, `columnaPeriodo` | Qué límites de los `where` se ajustan al periodo | Iguales hoy (regla de auxilios) |
+| `periodo.ajustarSegmentacion`, `patronIdentificadorSegmento` | Si se ajusta y valida el periodo de la segmentación horizontal | Iguales hoy |
+| `tablaExtraccion.camposOpcionales`, `omitirNulos` | Campos de la estructura que pasan a cada tabla del JSON de extracción | RVI y ARP agregan `reutilizacion_compartida` y omiten nulos |
+| `entradaStepFunction.incluirRutaConfigExtraccion`, `incluirRangoFechas` | Campos opcionales de la entrada de la Step Function | Sin ruta: RVI y ARP. Con rango: auxilios |
+
+> Auxilios funerarios sale del código desplegado. **Las otras cinco salen de la versión anterior** (`Backend\Lamnbdas\niif-dev-configuration-<malla>`) y están marcadas `POR_CONFIRMAR`. Sus reglas de periodo se igualaron a las de auxilios porque la versión desplegada agrega la lectura de PRG y el ajuste de filtros (ver `ORIGEN.md` de cada una); hay que confirmarlas con el código real (script `recolectar-faltantes.sh`).
 
 ---
 
@@ -137,7 +147,8 @@ fields @timestamp, evento, malla, ejecucion_id, error.codigo, error.mensaje
 pip install -r requirements-dev.txt
 pytest --cov --cov-report=xml:coverage.xml --junitxml=reports/pytest.xml
 ```
-- 174 pruebas: dominio, caso de uso con dobles en memoria, adaptadores con `botocore.stub.Stubber` (sin AWS), handler y la regla de arquitectura.
+- 245 pruebas: dominio, caso de uso con dobles en memoria, adaptadores con `botocore.stub.Stubber` (sin AWS), handler, la regla de arquitectura y la **equivalencia con las seis lambdas actuales**.
+- `tests/test_equivalencia_lambdas_actuales.py` ejecuta el código de cada `niif-dev-configuration-<malla>` con AWS simulado y esta lambda con los mismos datos, y compara los 4 JSON y sus metadatos, la transacción sobre CNF, la entrada de la Step Function, el registro EJC y la respuesta. Toma las lambdas de `LAMBDAS_ACTUALES_DIR` (por defecto, la carpeta del repositorio) y se omite si no están.
 - Cobertura de ramas: **99 %** (mínimo configurado 85 %; el lineamiento exige más de 80 % en código nuevo).
 - SonarQube: `sonar-project.properties` toma `coverage.xml` y `reports/pytest.xml`.
 
@@ -146,7 +157,7 @@ pytest --cov --cov-report=xml:coverage.xml --junitxml=reports/pytest.xml
 ## Despliegue
 
 1. `bash scripts/empaquetar.sh` → `dist/sc-niif-configurador-mallas-<versión>.zip` (solo el código; boto3 viene en el runtime).
-2. Configuración de la función (en el IaC del proyecto, no a mano): Python 3.12, 256 MB, 300 s, el handler indicado arriba, las variables de entorno, **formato de log `Text`** (las líneas ya son JSON y EMF las necesita sin envolver), invocación asíncrona con 2 reintentos y destino de fallo (cola SQS).
+2. Configuración de la función (en el IaC del proyecto, no a mano): Python 3.12, 512 MB (igual que las seis actuales), 300 s, el handler indicado arriba, las variables de entorno, **formato de log `Text`** (las líneas ya son JSON y EMF las necesita sin envolver), invocación asíncrona con 2 reintentos y destino de fallo (cola SQS).
 3. Subir el catálogo del ambiente a la ruta de `CATALOGO_MALLAS_URI`.
 
 ### Permisos mínimos del rol
@@ -168,12 +179,15 @@ pytest --cov --cov-report=xml:coverage.xml --junitxml=reports/pytest.xml
 
 ---
 
-## Diferencias con las lambdas actuales (validar)
+## Diferencias con las lambdas actuales (intencionales)
+La auditoría completa está en `..\AUDITORIA-configurador-mallas.md`.
 1. `publicar` y `ejecutar` deben ser booleanos; antes `"false"` (texto) se tomaba como verdadero.
 2. El nombre de la ejecución es `<prefijo>-<periodo>-auto-<ejecucionId>` (determinista) en vez de llevar fecha y hora.
-3. La Step Function recibe además `ejecucionId`; `fecDesde`/`fecHasta` solo donde el catálogo lo indica.
-4. La respuesta ya no trae `estructurasPRSValidadas` ni `comparaciones` (estaban fijos o vacíos); agrega `ejecucionId` y `reutilizado`.
+3. La Step Function, el registro EJC y los metadatos de S3 llevan además `ejecucionId`.
+4. `estructurasPRSValidadas` se calcula (antes era un número fijo en cada copia); `comparaciones` se retira (siempre salía vacía); se agregan `ejecucionId` y `reutilizado`.
 5. El registro en `ejc-ejecuciones` no sobrescribe uno existente.
+6. `modoEjecucion` solo acepta los valores de `modosEjecucion` del catálogo (antes, cualquier texto).
+7. Idempotencia por clave (antes, un reintento repetía la publicación y arrancaba otra ejecución).
 
 ## Antes de producción
 - [ ] Confirmar el catálogo de las 5 mallas `POR_CONFIRMAR` con el código real.
