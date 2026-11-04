@@ -1,0 +1,33 @@
+[15:41:24] == 0. Identidad ==
+[15:41:25] Cuenta=992382496548  Region=us-east-1  ENV=prd  Periodo=202606
+[15:41:25] == 1. Step Function niif-prd-primas-arl ==
+[15:41:26] Ejecucion: arl-202606-auto-20261102T030032Z-976ae7fc
+[15:41:29] Estado: SUCCEEDED
+[15:41:30] configKey resueltos en la ejecucion:
+{"notificationMode":"SIMPLE","shouldStartCertification":true,"useCaseId":"primasArl","period":"202606","loteCargueId":"1793588486","configBucket":"niif-prd-assets","configKey":"primas-arl/primasArl.json","compositeId":null,"compositeGroupId":null}
+[15:41:30] Ventana: 2026-11-02T02:50:32Z a 2026-11-02T09:24:02Z
+[15:41:30] == 2. Glue job runs ==
+[15:41:37] Corridas relevantes: 10
+niif-prd-extraccion-estandar-optimized  SUCCEEDED  2026-11-02T06:00:49.756000+00:00  jr_c5fb073a17b87feef04c53f5e57e645a3bd6b3a8185546037b524c92f4b16add  
+niif-prd-extraccion-estandar-optimized  SUCCEEDED  2026-11-02T03:00:32.724000+00:00  jr_b6f2322a6e60e5c4f0f382404e974b2238da8e59369a5a9616034a8fa4989fd6  
+niif-prd-val-tecnica  SUCCEEDED  2026-11-02T07:26:35.877000+00:00  jr_84a736f8e4f3ac9f3aea81be490a0917454c125da606d2b449a02999d3d38ae0  
+niif-prd-val-tecnica  SUCCEEDED  2026-11-02T03:09:15.227000+00:00  jr_0cc3c3dd60f698069b19e88940872519e405e70c7766d69b1b879f0517833f47  
+niif-prd-remediacion-estandar  SUCCEEDED  2026-11-02T07:29:35.565000+00:00  jr_84626ebe42c24c015f52eff724eb1aaac452c5f16acedeaf06b53d90cad38341  
+niif-prd-remediacion-estandar  SUCCEEDED  2026-11-02T03:12:16.917000+00:00  jr_16a9c267801b2ade3bcd55ec70b7baf1da52ad5ca6c242fc1b299c5b7964dafe  
+niif-prd-silver-primas-arl  SUCCEEDED  2026-11-02T03:14:17.447000+00:00  jr_0b1d1cb2a569e88c34288d4aa8ae34826030e449a796a2b168685956618ccfcc  
+niif-prd-scd  SUCCEEDED  2026-11-02T03:17:23.035000+00:00  jr_f93edfd163b3ebae994906021aed160a10a72e6f250e4f5776f6756be0a31945  
+niif-prd-certification  SUCCEEDED  2026-11-02T03:22:58.622000+00:00  jr_3c33924f7261481fbdbfa5a71d07b80013c71bc7d971e554bda878454514754a  
+niif-prd-notification-certification  SUCCEEDED  2026-11-02T03:23:43.293000+00:00  jr_314ef2e44d8e530794f849fec841eeecf5e6c49ce7985d679cbc50e1c1c88be8  
+[15:41:37] CONFIG_KEY usados: primas-arl/primasArl.json
+[15:41:37] certCode: 202606-20261101-2223
+[15:41:37] == 3. S3 (niif-prd-assets) ==
+[15:41:38] OK s3://niif-prd-assets/configs/certification/json_global_notif_cert.json
+[15:41:39] OK s3://niif-prd-assets/configs/certification/composite_groups.json
+[15:41:40] OK s3://niif-prd-assets/primas-arl/parametros_extraccion.json
+[15:41:41] OK s3://niif-prd-assets/primas-arl/config_extraccion_primas_arl.json
+[15:41:42] OK s3://niif-prd-assets/primas-arl/primasArl.json
+--- config_caso_1_primasArl.json
+{"useCaseId":"primasArl","summary":0,"total":1,"detail":1,"dataPresence":0}
+--- grupos que mencionan primasArl:
+[15:41:42] Tabla de notificaciones: niif-prd-notification-certification
+[15:41:42] == 4. CloudWatch Logs ==

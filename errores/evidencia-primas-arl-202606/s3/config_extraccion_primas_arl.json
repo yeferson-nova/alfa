@@ -1,0 +1,264 @@
+{
+  "nombre_caso": "primas_arl",
+  "periodo_negocio": "202606",
+  "fuente": {
+    "fetchsize": 10000,
+    "sistema": "ALFAPRD",
+    "usar_schema_en_dbtable": false,
+    "tipo": "oracle",
+    "connection_name": "datalake-prd-alfaprd-prd-connection"
+  },
+  "rutas": {
+    "ruta_parametros_extraccion": "s3://niif-prd-assets/primas-arl/parametros_extraccion.json",
+    "s3_bronze_base": "s3://alfa-datalake-prd-bronce/niif/ALFAPRD/",
+    "s3_silver_base": "s3://alfa-datalake-prd-silver/niif/ALFAPRD/",
+    "ruta_segmentos_base": "s3://niif-prd-assets/segmentos/"
+  },
+  "control_extraccion": {
+    "calcular_unidades_extraccion": true,
+    "limite_unidades_extraccion": 1000000,
+    "modo_ejecucion": "INICIAL",
+    "periodo_negocio": "202606",
+    "usar_checkpoints": true,
+    "permitir_reanudacion": true,
+    "persistir_dataframe": true,
+    "contar_registros": true,
+    "accion_si_supera_limite": "ADVERTIR",
+    "excluir_llaves_segmento": true
+  },
+  "ciclos": [
+    {
+      "orden": 1,
+      "nombre": "ciclo_1_pivote",
+      "segmentos": [
+        {
+          "orden": 1,
+          "nombre": "segmento_1_par_endosos",
+          "forma": "CASCADA",
+          "tablas": [
+            {
+              "orden": 1,
+              "schema": "ARPPROD",
+              "tabla": "PAR_ENDOSOS",
+              "tabla_relativa": "arpprod/par_endosos",
+              "tipo_tabla": "PIVOTE",
+              "where": "PERIODO <= '202606'",
+              "dependencia": null,
+              "segmentacion_horizontal": {
+                "llaves_segmentacion": [
+                  "NID_ENDOSO"
+                ],
+                "habilitada": true,
+                "modo": "EXCLUIR_EXTRAIDOS",
+                "periodo_negocio": "202606",
+                "requiere_preparacion_con_lotes_segmento": true,
+                "segmento_id": "niif17_202606_alfaprd_arpprod_par_endosos",
+                "id_negocio": "primas_arl"
+              }
+            }
+          ]
+        }
+      ],
+      "descripcion": "Extraccion de tabla pivote del caso Primas ARL"
+    },
+    {
+      "orden": 2,
+      "nombre": "ciclo_2_dependencias_principales",
+      "segmentos": [
+        {
+          "orden": 1,
+          "nombre": "segmento_1_dependencias_principales",
+          "forma": "CASCADA",
+          "tablas": [
+            {
+              "orden": 1,
+              "schema": "ARPPROD",
+              "tabla": "PAR_POLIZAS",
+              "tabla_relativa": "arpprod/par_polizas",
+              "tipo_tabla": "DEPENDENCIA",
+              "where": null,
+              "dependencia": {
+                "tabla_origen": "arpprod/par_endosos",
+                "llaves": [
+                  "NID_POLIZA",
+                  "COD_SUCURSAL_ALFA",
+                  "MODULO"
+                ]
+              },
+              "segmentacion_horizontal": {
+                "habilitada": true,
+                "modo": "EXCLUIR_EXTRAIDOS",
+                "periodo_negocio": "202606",
+                "requiere_preparacion_con_lotes_segmento": true,
+                "llaves_segmentacion": [
+                  "NID_POLIZA",
+                  "COD_SUCURSAL_ALFA",
+                  "MODULO"
+                ],
+                "segmento_id": "niif17_202606_alfaprd_arpprod_par_polizas",
+                "id_negocio": "primas_arl"
+              }
+            },
+            {
+              "orden": 2,
+              "schema": "ARPPROD",
+              "tabla": "PAR_AFILIACIONES",
+              "tabla_relativa": "arpprod/par_afiliaciones",
+              "tipo_tabla": "COMPLEMENTARIA",
+              "where": null,
+              "dependencia": null,
+              "segmentacion_horizontal": {
+                "segmento_id": "niif17_202606_alfaprd_arpprod_par_afiliaciones",
+                "llaves_segmentacion": [
+                  "NID_AFILIACION"
+                ],
+                "periodo_negocio": "202606",
+                "requiere_preparacion_con_lotes_segmento": true,
+                "modo": "EXCLUIR_EXTRAIDOS",
+                "habilitada": true,
+                "id_negocio": "primas_arl"
+              }
+            },
+            {
+              "orden": 3,
+              "schema": "GENERAL",
+              "tabla": "CGR_TIPOS_ENDOSOS",
+              "tabla_relativa": "general/cgr_tipos_endosos",
+              "tipo_tabla": "CATALOGO",
+              "where": null,
+              "dependencia": {
+                "tabla_origen": "arpprod/par_endosos",
+                "llaves": [
+                  "COD_TIPO_ENDOSO"
+                ]
+              },
+              "segmentacion_horizontal": {
+                "habilitada": false,
+                "periodo_negocio": "202606"
+              }
+            },
+            {
+              "orden": 4,
+              "schema": "ARPPROD",
+              "tabla": "GAR_TIPOS_ENDOSOS_ARP",
+              "tabla_relativa": "arpprod/gar_tipos_endosos_arp",
+              "tipo_tabla": "CATALOGO",
+              "where": null,
+              "dependencia": {
+                "tabla_origen": "arpprod/par_endosos",
+                "llaves": [
+                  "COD_TIPO_ENDOSO_ARP"
+                ]
+              },
+              "segmentacion_horizontal": {
+                "habilitada": false,
+                "periodo_negocio": "202606"
+              }
+            },
+            {
+              "orden": 5,
+              "schema": "GENERAL",
+              "tabla": "CGR_SUCURSALES_ALFA",
+              "tabla_relativa": "general/cgr_sucursales_alfa",
+              "tipo_tabla": "CATALOGO",
+              "where": null,
+              "dependencia": {
+                "llaves": [
+                  "COD_SUCURSAL_ALFA"
+                ],
+                "tabla_origen": "arpprod/par_endosos"
+              },
+              "segmentacion_horizontal": {
+                "habilitada": false,
+                "periodo_negocio": "202606"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "orden": 3,
+      "nombre": "ciclo_3_personas",
+      "segmentos": [
+        {
+          "orden": 1,
+          "nombre": "segmento_1_personas",
+          "forma": "CASCADA",
+          "tablas": [
+            {
+              "orden": 1,
+              "schema": "GENERAL",
+              "tabla": "ACU_PERSONAS_JURIDICAS",
+              "tabla_relativa": "general/acu_personas_juridicas",
+              "tipo_tabla": "COMPLEMENTARIA",
+              "where": null,
+              "dependencia": {
+                "llaves": [
+                  "COD_TIPO_IDENTIFICACION",
+                  "NID_NUMERO_IDENTIFICACION"
+                ],
+                "tabla_origen": "arpprod/par_afiliaciones"
+              },
+              "segmentacion_horizontal": {
+                "id_negocio": "primas_arl",
+                "periodo_negocio": "202606",
+                "llaves_segmentacion": [
+                  "COD_TIPO_IDENTIFICACION",
+                  "NID_NUMERO_IDENTIFICACION",
+                  "NID_CONSECUTIVO"
+                ],
+                "requiere_preparacion_con_lotes_segmento": true,
+                "segmento_id": "niif17_202606_alfaprd_general_acu_personas_juridicas",
+                "habilitada": true,
+                "modo": "EXCLUIR_EXTRAIDOS"
+              }
+            },
+            {
+              "orden": 2,
+              "schema": "GENERAL",
+              "tabla": "ACU_PERSONAS_NATURALES",
+              "tabla_relativa": "general/acu_personas_naturales",
+              "tipo_tabla": "COMPLEMENTARIA",
+              "where": null,
+              "dependencia": {
+                "llaves": [
+                  "COD_TIPO_IDENTIFICACION",
+                  "NID_NUMERO_IDENTIFICACION"
+                ],
+                "tabla_origen": "arpprod/par_afiliaciones"
+              },
+              "segmentacion_horizontal": {
+                "habilitada": true,
+                "periodo_negocio": "202606",
+                "modo": "EXCLUIR_EXTRAIDOS",
+                "requiere_preparacion_con_lotes_segmento": true,
+                "segmento_id": "niif17_202606_alfaprd_general_acu_personas_naturales",
+                "id_negocio": "primas_arl",
+                "llaves_segmentacion": [
+                  "COD_TIPO_IDENTIFICACION",
+                  "NID_NUMERO_IDENTIFICACION"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "salida_runtime": {
+    "estructura_dataset": {
+      "compresion": "snappy",
+      "formato": "parquet",
+      "modo_escritura": "overwrite",
+      "agregar_lote_cargue_id": true,
+      "agregar_nro_registro": true
+    },
+    "generar_parametros_extraccion": true,
+    "checkpoint_extraccion": {
+      "saltar_tablas_exitosas_en_reanudacion": true,
+      "guardar_checkpoint_inicio_tabla": false,
+      "guardar_detalle_eventos": false
+    }
+  }
+}

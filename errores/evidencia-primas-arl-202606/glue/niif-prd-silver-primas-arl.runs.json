@@ -1,0 +1,83 @@
+{
+    "JobRuns": [
+        {
+            "Id": "jr_0b1d1cb2a569e88c34288d4aa8ae34826030e449a796a2b168685956618ccfcc",
+            "Attempt": 0,
+            "JobName": "niif-prd-silver-primas-arl",
+            "JobMode": "SCRIPT",
+            "JobRunQueuingEnabled": false,
+            "StartedOn": "2026-11-02T03:14:17.447000+00:00",
+            "LastModifiedOn": "2026-11-02T03:15:56.889000+00:00",
+            "CompletedOn": "2026-11-02T03:15:56.889000+00:00",
+            "JobRunState": "SUCCEEDED",
+            "Arguments": {
+                "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-prd-assets/primas-arl/parametros_extraccion.json",
+                "--S3_TMP_PREP_PATH": "s3://alfa-datalake-prd-silver/niif/t_data_domain/primas_arl/tmp_preparacion_primas_arl/",
+                "--PER_CORTE": "202606",
+                "--S3_SLV_PREP_PATH": "s3://alfa-datalake-prd-silver/niif/t_data_domain/primas_arl/silver_preparado_primas-arl/"
+            },
+            "PredecessorRuns": [],
+            "AllocatedCapacity": 4,
+            "ExecutionTime": 91,
+            "Timeout": 2880,
+            "MaxCapacity": 4.0,
+            "WorkerType": "G.1X",
+            "NumberOfWorkers": 4,
+            "LogGroupName": "/aws-glue/jobs",
+            "GlueVersion": "4.0",
+            "DPUSeconds": 367.0
+        },
+        {
+            "Id": "jr_8860e3971d36a498ab5e214cafa30b6eae10cea3d990782b613a2c0700e8f054",
+            "Attempt": 0,
+            "JobName": "niif-prd-silver-primas-arl",
+            "JobMode": "SCRIPT",
+            "JobRunQueuingEnabled": false,
+            "StartedOn": "2026-10-05T16:57:58.367000+00:00",
+            "LastModifiedOn": "2026-10-05T17:01:01.800000+00:00",
+            "CompletedOn": "2026-10-05T17:01:01.800000+00:00",
+            "JobRunState": "SUCCEEDED",
+            "Arguments": {
+                "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-prd-assets/primas-arl/parametros_extraccion.json",
+                "--S3_TMP_PREP_PATH": "s3://alfa-datalake-prd-silver/niif/t_data_domain/primas_arl/tmp_preparacion_primas_arl/",
+                "--PER_CORTE": "202606",
+                "--S3_SLV_PREP_PATH": "s3://alfa-datalake-prd-silver/niif/t_data_domain/primas_arl/silver_preparado_primas-arl/"
+            },
+            "PredecessorRuns": [],
+            "AllocatedCapacity": 4,
+            "ExecutionTime": 169,
+            "Timeout": 2880,
+            "MaxCapacity": 4.0,
+            "WorkerType": "G.1X",
+            "NumberOfWorkers": 4,
+            "LogGroupName": "/aws-glue/jobs",
+            "GlueVersion": "4.0",
+            "DPUSeconds": 677.0
+        },
+        {
+            "Id": "jr_3ab44ad3c651d7381b1a7b78744e02662bfb413245f07e89fdad77a8de286c1b",
+            "Attempt": 0,
+            "JobName": "niif-prd-silver-primas-arl",
+            "JobMode": "SCRIPT",
+            "JobRunQueuingEnabled": false,
+            "StartedOn": "2026-08-15T02:15:23.242000+00:00",
+            "LastModifiedOn": "2026-08-15T02:17:18.608000+00:00",
+            "CompletedOn": "2026-08-15T02:17:18.608000+00:00",
+            "JobRunState": "SUCCEEDED",
+            "Arguments": {
+                "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-prd-assets/primas-arl/parametros_extraccion.json",
+                "--S3_SLV_PREP_PATH": "s3://alfa-datalake-prd-silver/niif/t_data_domain/primas_arl/silver_preparado_primas-arl/"
+            },
+            "PredecessorRuns": [],
+            "AllocatedCapacity": 4,
+            "ExecutionTime": 101,
+            "Timeout": 2880,
+            "MaxCapacity": 4.0,
+            "WorkerType": "G.1X",
+            "NumberOfWorkers": 4,
+            "LogGroupName": "/aws-glue/jobs",
+            "GlueVersion": "4.0",
+            "DPUSeconds": 407.0
+        }
+    ]
+}

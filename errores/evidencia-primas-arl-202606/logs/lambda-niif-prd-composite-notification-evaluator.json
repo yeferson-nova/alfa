@@ -1,0 +1,47 @@
+{
+    "events": [
+        {
+            "logStreamName": "2026/11/02/[$LATEST]fb25716e924e40cd9acb1c9d175efd82",
+            "timestamp": 1793589777649,
+            "message": "INIT_START Runtime Version: python:3.12.mainlinev2.v82\tRuntime Version ARN: arn:aws:lambda:us-east-1::runtime:a8b19198a828662ade07d066a1dce047429a5869166346747ab7d57435583a29\n",
+            "ingestionTime": 1793589782438,
+            "eventId": "39998388622039544724112779790817652271161197363316916224"
+        },
+        {
+            "logStreamName": "2026/11/02/[$LATEST]fb25716e924e40cd9acb1c9d175efd82",
+            "timestamp": 1793589778226,
+            "message": "START RequestId: 21aff9b3-4589-4721-b23a-e51b27b2e2b0 Version: $LATEST\n",
+            "ingestionTime": 1793589782438,
+            "eventId": "39998388634907074703664949343483761714479301952267616257"
+        },
+        {
+            "logStreamName": "2026/11/02/[$LATEST]fb25716e924e40cd9acb1c9d175efd82",
+            "timestamp": 1793589778227,
+            "message": "{\"configBucket\": \"niif-prd-assets\", \"configKey\": \"primas-arl/primasArl.json\", \"mode\": \"RESOLVE_NOTIFICATION\", \"useCaseId\": \"primasArl\", \"period\": \"202606\", \"loteCargueId\": \"1793588486\", \"sourceExecutionId\": \"arn:aws:states:us-east-1:992382496548:execution:niif-prd-primas-arl:arl-202606-auto-20261102T030032Z-976ae7fc\"}\n",
+            "ingestionTime": 1793589782438,
+            "eventId": "39998388634929375448863479966625297432751950313773596674"
+        },
+        {
+            "logStreamName": "2026/11/02/[$LATEST]fb25716e924e40cd9acb1c9d175efd82",
+            "timestamp": 1793589778409,
+            "message": "[RESOLVE_NOTIFICATION_RESULT] {\"notificationMode\": \"SIMPLE\", \"shouldStartCertification\": true, \"useCaseId\": \"primasArl\", \"period\": \"202606\", \"loteCargueId\": \"1793588486\", \"configBucket\": \"niif-prd-assets\", \"configKey\": \"primas-arl/primasArl.json\"}\n",
+            "ingestionTime": 1793589782438,
+            "eventId": "39998388638988111074996053378384798158373952107862032387"
+        },
+        {
+            "logStreamName": "2026/11/02/[$LATEST]fb25716e924e40cd9acb1c9d175efd82",
+            "timestamp": 1793589778411,
+            "message": "END RequestId: 21aff9b3-4589-4721-b23a-e51b27b2e2b0\n",
+            "ingestionTime": 1793589782438,
+            "eventId": "39998388639032712565393114624667869594919248830873993220"
+        },
+        {
+            "logStreamName": "2026/11/02/[$LATEST]fb25716e924e40cd9acb1c9d175efd82",
+            "timestamp": 1793589778411,
+            "message": "REPORT RequestId: 21aff9b3-4589-4721-b23a-e51b27b2e2b0\tDuration: 184.28 ms\tBilled Duration: 758 ms\tMemory Size: 512 MB\tMax Memory Used: 105 MB\tInit Duration: 573.45 ms\t\n",
+            "ingestionTime": 1793589782438,
+            "eventId": "39998388639032712565393114624667869594919248830873993221"
+        }
+    ],
+    "searchedLogStreams": []
+}

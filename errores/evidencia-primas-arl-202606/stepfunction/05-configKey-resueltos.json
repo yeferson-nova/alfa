@@ -1,0 +1,13 @@
+[
+  {
+    "notificationMode": "SIMPLE",
+    "shouldStartCertification": true,
+    "useCaseId": "primasArl",
+    "period": "202606",
+    "loteCargueId": "1793588486",
+    "configBucket": "niif-prd-assets",
+    "configKey": "primas-arl/primasArl.json",
+    "compositeId": null,
+    "compositeGroupId": null
+  }
+]
