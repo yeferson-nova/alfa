@@ -322,3 +322,86 @@ Todos son de **solo lectura**. Cuenta de prod (`992382496548`), región **us-eas
 | 6 | `periodo` ≤ 202606 y `per_proceso` = 202610 | Hipótesis confirmada: filtro por `PERIODO` ≠ periodo de certificación |
 | 7 | `summary` vacío | Corregir configuración (copiar de QA) |
 | 8 | Suscripción pendiente o sin filtro | Corregir destinatarios antes de reenviar |
+
+---
+
+## 8. Cómo verlo con los logs que ya tenemos (sin entrar a AWS)
+
+La evidencia capturada (`errores/evidencia-primas-arl-202606/`) ya permite reconstruir qué pasó, minuto a minuto, sin acceso a prod.
+
+### 8.1 Qué registros hay y para qué sirven
+
+| Archivo | Qué contiene | ¿Sirve? |
+|---|---|---|
+| `stepfunction/02-estados-entrada-salida.json` | Cada estado de la Step Function con hora, entrada y salida | Sí: línea de tiempo y orden del flujo |
+| `stepfunction/03-fallos-y-reintentos.json` | Fallos y reintentos de la ejecución | Sí: está vacío (`[]`) → **no hubo fallos ni reintentos** |
+| `glue/job-runs-relevantes.jsonl` | Corridas de los jobs de Glue: estado, inicio, fin, id, argumentos | Sí: todos `SUCCEEDED`, sin mensaje de error |
+| `glue/<job>.runs.json` | Últimas 50 corridas de cada job (**de todas las mallas**) | Sí, filtrando por la hora de la ejecución |
+| `logs/lambda-niif-prd-composite-notification-evaluator.json` | Log real de la lambda: `notificationMode`, `configKey`, duración | Sí |
+| `s3/parametros_extraccion_primas_arl.json` | Métricas que escribió cada job (extracción, Silver, SCD) | Sí: es el "resultado" de cada job |
+| `athena/*.csv` | Estado real de Gold (`act_reg` por periodo) | Sí (sección 6) |
+| `logs/niif-prd-certification_..._output/error.*` | Log de salida de Glue | **No**: están **vacíos** (2 bytes): falló la captura por el error de credenciales de CloudShell |
+
+### 8.2 Verlo todo junto (un comando)
+```
+python -I errores/ver-logs-evidencia.py errores/evidencia-primas-arl-202606
+```
+No necesita AWS. Imprime cinco bloques: **A** estados de la Step Function en orden, **B** corridas de Glue de esa ejecución con duración, **C** log de la lambda, **D** métricas escritas por los jobs, **E** límites de lo capturado. Fragmentos de la salida real:
+
+```
+Ejecucion Step Function: estado=SUCCEEDED  2026-11-02 03:00:32 -> 03:24:02 UTC
+
+B. GLUE
+   niif-prd-extraccion-estandar-optimized   SUCCEEDED  03:00:32  03:07:29   416
+   niif-prd-val-tecnica                     SUCCEEDED  03:09:15  03:11:18   123
+   niif-prd-remediacion-estandar            SUCCEEDED  03:12:16  03:14:11   114
+   niif-prd-silver-primas-arl               SUCCEEDED  03:14:17  03:15:56    99
+   niif-prd-scd                             SUCCEEDED  03:17:23  03:19:39   136
+   niif-prd-certification                   SUCCEEDED  03:22:58  03:23:52    53
+   niif-prd-notification-certification      SUCCEEDED  03:23:43  03:24:31    48
+
+C. LAMBDA   03:22:58  [RESOLVE_NOTIFICATION_RESULT] {"notificationMode": "SIMPLE", ... "configKey": "primas-arl/primasArl.json"}
+
+D. Extraccion : registros extraidos=4,857  excluidos par_endosos=1,203,789  llaves nuevas=209
+   Validacion : estado=FAILED  errores=13  (el flujo continua por diseno)
+   Silver     : registros preparados=209  modo=overwrite
+   Gold SCD   : entrada=209  insertados=209  apagados por ausencia=1,203,789  gold anterior=1,207,243  gold final=1,207,452
+```
+
+### 8.3 Cómo leer la línea de tiempo (qué concluye cada parte)
+
+| Qué se ve | Qué significa |
+|---|---|
+| Todos los jobs `SUCCEEDED` y `03-fallos-y-reintentos.json` = `[]` | El flujo **no falló**: nada alertó porque técnicamente todo salió bien |
+| Estados: `GoldSCD` 03:17:22 → `CrawlerGold` 03:20:12 → fin del crawler 03:22:56 → `ResolverNotificacion` 03:22:56 → certificación 03:22:58 | El crawler de Gold **terminó antes** de la certificación. **Descarta** la hipótesis de que Athena consultó con el catálogo sin actualizar (fila "Crawler terminó después del correo" de la sección 3) |
+| Lambda: `notificationMode = SIMPLE`, `configKey = primas-arl/primasArl.json`, lote `1793588486` | El correo usó solo el JSON del caso; no es un caso compuesto |
+| Extracción: `excluidos par_endosos = 1.203.789`, `llaves nuevas = 209` | La extracción fue **incremental** (solo 209 de ~1,2 millones) |
+| Silver: `209`, `overwrite` | Silver quedó solo con los nuevos |
+| SCD: `entrada = 209`, `apagados por ausencia = 1.203.789` | **Aquí está el fallo**: apagó todo lo que no venía en la entrada |
+| Validación técnica `FAILED` con 13 errores | Hallazgos de datos; el flujo continúa por diseño (no es la causa) |
+
+El orden de los hechos es el del fallo: **extracción incremental (03:00) → Silver parcial (03:14) → SCD apaga lo ausente (03:17) → certificación consulta Gold (03:22) → correo vacío (03:23)**.
+
+### 8.4 Verlo a mano (PowerShell, sin instalar nada)
+Desde la raíz del repo (`alfa`):
+
+```powershell
+$b = "errores\evidencia-primas-arl-202606"
+
+# Log de la lambda (hora UTC)
+$e = Get-Content "$b\logs\lambda-niif-prd-composite-notification-evaluator.json" -Raw | ConvertFrom-Json
+$e.events | ForEach-Object { "{0:HH:mm:ss}Z  {1}" -f ([DateTimeOffset]::FromUnixTimeMilliseconds($_.timestamp).UtcDateTime), $_.message.Trim() }
+
+# Corridas de Glue del SCD (el log group base y el estado)
+(Get-Content "$b\glue\niif-prd-scd.runs.json" -Raw | ConvertFrom-Json).JobRuns |
+  Select-Object JobRunState, StartedOn, ExecutionTime, LogGroupName | Format-Table -AutoSize
+
+# Métricas del SCD
+(Get-Content "$b\s3\parametros_extraccion_primas_arl.json" -Raw | ConvertFrom-Json).metricas_gold_scd
+```
+Ojo: `glue\<job>.runs.json` mezcla corridas de **todas las mallas** (por ejemplo, el SCD tiene una corrida del 3 de noviembre a las 03:31 que no es de esta ejecución). La corrida de Primas ARL es la del **2 de noviembre 03:17:23**. El `LogGroupName` que muestra es el prefijo `/aws-glue/jobs`; los logs de salida están en `/aws-glue/jobs/output` y `/aws-glue/jobs/error`.
+
+### 8.5 Qué no se puede ver con estos logs y cómo obtenerlo
+Faltan las **líneas de texto** de los jobs de Glue (por ejemplo `Registros apagados por ausencia : 1203789` o `[TABLES] tipo=summary, queries=0`). Las cifras ya están confirmadas por las métricas (sección D del script) y por el CSV de Athena, pero para ver el log literal:
+- En la consola web: pasos 4, 5 y 9 de la sección 7.
+- Con el script `recolectar-evidencia-prd.sh` o los comandos de `aws logs get-log-events` (si las credenciales de CloudShell funcionan).
