@@ -97,6 +97,18 @@ flowchart TD
 ### B. Configuración (lambda `niif-dev-configuration-<malla>`)
 Descrito con el código desplegado de Auxilios Funerarios (`conf_auxilios.py`).
 
+> **Relación con la tarea T2 (lambda general estandarizada).** Estas son las 6 lambdas que T2 consolida en **una sola**: `niif-dev-configuration-primas-rentas`, `-primas-endosos`, `-primas-arl`, `-auxilios-funerarios`, `-reserva-matematica-rvi` y `-reserva-matematica-arp`. `niif-dev-manager-configuration` no se consolida con ellas: sigue siendo el programador y pasaría a apuntar todos los schedules a la lambda general, con la malla en el `Input`.
+>
+> **Lo que hay que quitar del código para unificarlas.** El inventario dice que las copias solo difieren en 3 variables de entorno (`MALLA_PK`, `PRG_PK`, `STATE_MACHINE_ARN`). Al comparar el código, además tienen **valores quemados por malla**:
+> - el nombre de la malla en los metadatos de S3 y en el registro `INICIADA` (`PRIMAS_ARL`, `AUXILIOS_FUNERARIOS`, ...), y la clave `EJC#<MALLA>#`;
+> - el prefijo del nombre de la ejecución (`arl-`, `auxilios-`);
+> - el nombre del caso que valida la plantilla de remediación (`primas_arl`, `auxilios_funerarios`, ...);
+> - el **número fijo de registros y ciclos** que debe tener `cnf-mallas`: 8 y 3 en Auxilios (código desplegado), y en las copias de la versión anterior 8 y 3 en ARL, 9 y 4 en Rentas y RVI, 7 y 2 en Endosos. Una malla con más o menos ciclos falla aunque su configuración sea válida;
+> - Auxilios calcula `fecDesde` y `fecHasta` para la Step Function; las demás no;
+> - en las copias de ARP y RVI, `where` y `dependencia` se arman solo si existen.
+>
+> La lambda general debe derivar todo eso de la malla recibida y de lo que haya en `cnf-mallas`, no de constantes.
+
 5. Lee los registros de la malla en `cnf-mallas` (`PK = MALLA#<MALLA>`): exige exactamente `GENERAL`, `EXTRACCION`, `VALIDACION`, `REMEDIACION`, `SCD` y `CICLO#001` a `CICLO#003` (8 registros); si falta uno, falla. Cada uno trae la ruta S3 de su archivo activo (`archivoActivoUri`).
 6. Lee la fila de la malla en `prg-programaciones` (variables `PRG_PK` y `PRG_SK`) y **toma de ahí el periodo** (`YYYYMM`). Si el evento trae otro periodo, **falla sin publicar**. Por eso el periodo vive en la fila: una programación recurrente repite el mismo periodo hasta que alguien lo actualice.
 7. Lee las estructuras de `prs-estructuras` (`SK = SRC` para fuentes, `GLD` para Gold) y construye 4 JSON: extracción, validación y SCD desde `cnf-mallas`; **remediación se copia de una plantilla en S3** (`plantillaUri`). Reemplaza los marcadores `${PERIODO_NEGOCIO}`, `${FECHA_INICIO}`, `${FECHA_FIN}` y `${FECHA_SIGUIENTE_MES}`, y falla si queda alguno sin resolver.
