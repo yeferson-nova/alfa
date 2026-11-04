@@ -1,13 +1,13 @@
 ---
 tipo: tarea
-actualizado: 2026-11-03
+actualizado: 2026-11-04
 ---
 # Tareas del plan de trabajo AWS
 
 Fuente: `Tareas\TareasAsignadas.txt`. Versión humana con contexto completo: `Tareas\00-LEEME.md` y un `README.md` por tarea (T1, T2, T3). Los entregables de cada tarea van en su carpeta. Contexto en [[arquitectura-niif17]].
 
 1. **Ajuste de notificaciones AWS** (paso 3)
-   - 1a. Cambio del servicio SNS a SES.
+   - 1a. Cambio del servicio SNS a SES. Implementado en local (no desplegado) en el job de Glue de notificación, ver [[job-notificacion-ses]].
    - 1b. Correo de notificación en HTML, ver [[correo-notificacion]].
    - 1c. Soporte NO se entera por email: pasa a ser un ciclo de monitoreo continuo con logs a Grafana, ver [[monitoreo-grafana]] (en iteración).
    - 1d. Revisar escenarios adicionales de notificación que hagan falta.

@@ -1,0 +1,6 @@
+{
+    "--useCaseId": "primasArl",
+    "--certCode": "CERT-EJEMPLO-0001",
+    "--emailType": "certification",
+    "--CONFIG_KEY": "configs/certification/primas-arl/primasArl.json"
+}

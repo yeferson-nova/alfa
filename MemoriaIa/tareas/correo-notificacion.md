@@ -33,4 +33,6 @@ Ejemplo en `Docs\05-arquitectura\ejemplo-correo-certificacion.png`. Es el objeti
 - Endpoint (API Gateway + Lambda) para Certificar / No certificar, con token firmado de un solo uso. Registra decisión, usuario y fecha.
 - Identidad del dominio verificada en SES (SPF/DKIM).
 
+Envío por SES (1a) ya implementado en el job de notificación: [[job-notificacion-ses]]. Falta la plantilla HTML (1b).
+
 Ver [[diseno-propuesto]] y [[preguntas-abiertas]].
