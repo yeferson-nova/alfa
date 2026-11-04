@@ -17,6 +17,29 @@ El correo salió con "Resumen: No hay resumen configurado" y "Totales: No hay da
 
 Ningún job falló: todo terminó en `SUCCESS`, por eso nada alertó.
 
+### Dónde está la evidencia de cada problema
+
+Rutas relativas a la carpeta `errores/`. Para abreviar, `EV` = `Evidencia/evidencia-primas-arl-202606/evidencia-primas-arl-202606` (la carpeta queda anidada porque el `.tar.gz` se extrajo dentro de otra con el mismo nombre). La carpeta `Evidencia/` no se versiona en git; vive en el equipo local donde se descargó.
+
+| # | Problema | Archivo de evidencia | Campo o línea |
+|---|---|---|---|
+| 1 | Resumen vacío | `EV/s3/config_caso_1_primasArl.json` | `queries.summary` = `[]` (línea 16); `queries.total` (línea 17) y `queries.detail` (línea 9) sí existen |
+| 1 | Resumen vacío | `EV/00-resumen.txt` | Línea 30: `"summary":0,"total":1,"detail":1,"dataPresence":0` |
+| 1 | Resumen vacío | `Evidencia/LOG.txt` | Salida de `jq '.queries.total'` ejecutada en CloudShell (texto de la consulta `total#1`) |
+| 2 | SCD apagó 1.203.789 registros | `EV/s3/parametros_extraccion_primas_arl.json` | `metricas_gold_scd` (entrada 209, anterior 1.207.243, apagados 1.203.789, final 1.207.452) |
+| 2 | Extracción incremental | `EV/s3/parametros_extraccion_primas_arl.json` | `datasets_extraidos[arpprod/par_endosos].segmentacion_horizontal`: `modo_segmentacion`, `total_llaves_segmento` = 209, `registros_excluidos_por_segmento` = 1.203.789 |
+| 2 | Extracción incremental | `EV/s3/config_extraccion_primas_arl.json` | `where` de `par_endosos` = `PERIODO <= '202606'` y modo `EXCLUIR_EXTRAIDOS` |
+| 2 | Silver con solo 209 | `EV/s3/parametros_extraccion_primas_arl.json` | `total_registros_silver_preparada` = 209, `modo_escritura_silver_preparada` = `overwrite` |
+| 2 | Periodo ya corrido antes | `EV/stepfunction/ejecuciones-recientes.json` | Dos ejecuciones `arl-202606-auto-…`: 2026-10-05 y 2026-11-02 |
+| 2 | Flujo terminó bien | `EV/stepfunction/01-estado-y-entrada.json` y `EV/glue/job-runs-relevantes.jsonl` | Estado `SUCCEEDED` y corridas de los jobs en `SUCCEEDED` |
+| 2 | Código del SCD | `Backend/Glue/niif-dev-scd/scd.py` | Líneas 340-367 (`full join` y apagado por ausencia con `ACT_REG = 0`) |
+| 3 | CSV nunca vacío | `EV/s3/config_caso_1_primasArl.json` | `queries.detail[0].query`: `UNION ALL` con fila de encabezado (`0 AS orden`) |
+| 3 | `sinDatosPeriodo` no se activa | `Backend/Glue/niif-dev-certification/niif_certification.py` | Líneas 573-620 (`exportar_csv_raw`) |
+| — | Entrada de la ejecución y `configKey` usado | `EV/stepfunction/01-estado-y-entrada.json` y `EV/stepfunction/05-configKey-resueltos.json` | `primas-arl/primasArl.json`, modo `SIMPLE` |
+| — | Archivo original descargado | `Evidencia/evidencia-primas-arl-202606.tar.gz` | Paquete completo tal como salió de CloudShell |
+
+Las verificaciones de estas rutas se ejecutan con `python -I validar-analisis.py Evidencia/evidencia-primas-arl-202606/evidencia-primas-arl-202606`.
+
 ## 2. Flujo y dónde falló
 
 ```
