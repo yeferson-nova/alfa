@@ -18,6 +18,12 @@
 #   EJECUTAR_ATHENA=1    ejecuta las consultas summary/total/dataPresence del JSON
 #                        del caso (SELECT sobre Gold; genera costo en Athena)
 #   LOGS_COMPLETOS=1     trae los logs sin filtrar (pueden ser grandes)
+#   PRECIO_TB_USD=5      precio de Athena por TB escaneado (us-east-1: 5 USD)
+#   MAX_QUERIES_ATHENA=500  cuantas consultas recientes del workgroup revisar
+#
+# Costo de Athena: se calcula como bytes escaneados / 1 TB * PRECIO_TB_USD, con
+# minimo de 10 MB por consulta. Es una ESTIMACION (no incluye capacidad
+# provisionada ni descuentos); las consultas fallidas o DDL no se cobran.
 # ============================================================================
 set -u
 
@@ -27,6 +33,8 @@ REGION="${REGION:-us-east-1}"
 EXECUTION_NAME="${EXECUTION_NAME:-}"
 EJECUTAR_ATHENA="${EJECUTAR_ATHENA:-0}"
 LOGS_COMPLETOS="${LOGS_COMPLETOS:-0}"
+PRECIO_TB_USD="${PRECIO_TB_USD:-5}"
+MAX_QUERIES_ATHENA="${MAX_QUERIES_ATHENA:-500}"
 
 ASSETS_BUCKET="${ASSETS_BUCKET:-niif-${ENV}-assets}"
 GLOBAL_CONFIG_KEY="${GLOBAL_CONFIG_KEY:-configs/certification/json_global_notif_cert.json}"
@@ -49,6 +57,13 @@ FALLOS="$SALIDA/00-fallos.txt"
 
 log()  { echo "[$(date +%H:%M:%S)] $*" | tee -a "$RESUMEN"; }
 fallo() { echo "[FALLO] $*" | tee -a "$FALLOS" "$RESUMEN"; }
+
+# Costo estimado en USD de una consulta de Athena a partir de los bytes escaneados
+# (minimo facturable 10 MB; 1 TB = 1024^4 bytes).
+costo_usd() {
+  awk -v b="${1:-0}" -v p="$PRECIO_TB_USD" \
+    'BEGIN { if (b == 0) { printf "0.000000"; exit } if (b < 10485760) b = 10485760; printf "%.6f", b / 1099511627776 * p }'
+}
 
 for cmd in aws jq python3; do
   command -v "$cmd" >/dev/null 2>&1 || { echo "Falta el comando: $cmd"; exit 1; }
@@ -266,6 +281,7 @@ PY
   if [ "$EJECUTAR_ATHENA" = "1" ]; then
     CATALOGO="$(jq -r '.catalog // "AwsDataCatalog"' "$SALIDA/s3/global_notif_cert.json")"
     SALIDA_ATHENA="s3://$(jq -r '.buckets.assets' "$SALIDA/s3/global_notif_cert.json")/$(jq -r '.athena.output_path' "$SALIDA/s3/global_notif_cert.json")/"
+    echo "consulta,estado,bytes_escaneados,ms_motor,costo_usd" > "$SALIDA/athena/costos-consultas-caso.csv"
     for SQL in "$SALIDA"/athena/*.sql; do
       [ -f "$SQL" ] || continue
       BASE="${SQL%.sql}"; DB="$(cat "$BASE.db")"
@@ -281,13 +297,73 @@ PY
       aws athena get-query-execution --query-execution-id "$QID" --output json > "$BASE.estado.json" 2>/dev/null
       [ "$ESTADO" = "SUCCEEDED" ] && aws athena get-query-results --query-execution-id "$QID" --output json > "$BASE.resultado.json" 2>>"$FALLOS"
       FILAS="$(jq '(.ResultSet.Rows|length) - 1' "$BASE.resultado.json" 2>/dev/null)"
-      log "Athena $(basename "$SQL"): $ESTADO  filas=${FILAS:-n/a}"
+      BYTES="$(jq -r '.QueryExecution.Statistics.DataScannedInBytes // 0' "$BASE.estado.json" 2>/dev/null)"
+      MS="$(jq -r '.QueryExecution.Statistics.EngineExecutionTimeInMillis // 0' "$BASE.estado.json" 2>/dev/null)"
+      COSTO="$(costo_usd "${BYTES:-0}")"
+      log "Athena $(basename "$SQL"): $ESTADO  filas=${FILAS:-n/a}  escaneado=${BYTES:-0} bytes  costo~USD ${COSTO}"
+      echo "$(basename "$SQL"),$ESTADO,${BYTES:-0},${MS:-0},$COSTO" >> "$SALIDA/athena/costos-consultas-caso.csv"
     done
+    log "Costo total de las consultas del caso ejecutadas ahora: USD $(awk -F, 'NR>1 {s+=$5} END {printf "%.6f", s}' "$SALIDA/athena/costos-consultas-caso.csv")"
   else
     log "Athena NO ejecutado (usar EJECUTAR_ATHENA=1). Las consultas quedaron en athena/*.sql"
   fi
 else
   fallo "No hay JSON de caso o global: se omite Athena"
+fi
+
+# ----------------------------------------------------------------------------
+# 6b. Costo de Athena de lo que YA se ejecuto durante el incidente
+#     (consultas del workgroup dentro de la ventana de la ejecucion)
+# ----------------------------------------------------------------------------
+log "== 6b. Costo de Athena en la ventana =="
+if [ "$WIN_INI" -gt 0 ]; then
+  WG="$(jq -r '.athena.workgroup // "primary"' "$SALIDA/s3/global_notif_cert.json" 2>/dev/null)"
+  WG="${WG:-primary}"
+  log "Workgroup: $WG  (revisando hasta $MAX_QUERIES_ATHENA consultas recientes)"
+  aws athena list-query-executions --work-group "$WG" --max-items "$MAX_QUERIES_ATHENA" \
+    --query 'QueryExecutionIds' --output text 2>>"$FALLOS" | tr '\t' '\n' | grep -v '^$' > "$SALIDA/athena/ids-recientes.txt" \
+    || fallo "athena list-query-executions (workgroup $WG)"
+  if [ -s "$SALIDA/athena/ids-recientes.txt" ]; then
+    split -l 50 "$SALIDA/athena/ids-recientes.txt" "$SALIDA/athena/lote_ids_"
+    for LOTE in "$SALIDA"/athena/lote_ids_*; do
+      aws athena batch-get-query-execution --query-execution-ids $(cat "$LOTE") --output json \
+        > "${LOTE}.json" 2>>"$FALLOS" || fallo "athena batch-get-query-execution $(basename "$LOTE")"
+    done
+    jq -s '[.[].QueryExecutions[]?]' "$SALIDA"/athena/lote_ids_*.json > "$SALIDA/athena/consultas-recientes-completo.json" 2>/dev/null
+    rm -f "$SALIDA"/athena/lote_ids_*
+
+    # Filtra la ventana del incidente y calcula el costo por consulta
+    jq -r --argjson a "$WIN_INI" --argjson b "$WIN_FIN" --argjson p "$PRECIO_TB_USD" "$JQ_TS"'
+      def costo: ((if . == 0 then 0 elif . < 10485760 then 10485760 else . end) / 1099511627776 * $p);
+      ["id","inicio","estado","base","bytes_escaneados","ms_motor","costo_usd","consulta"],
+      ( .[] | select((.Status.SubmissionDateTime|ts|fromdateiso8601) >= $a and (.Status.SubmissionDateTime|ts|fromdateiso8601) <= $b)
+            | select(.StatementType == "DML")
+            | [ .QueryExecutionId, .Status.SubmissionDateTime, .Status.State,
+                (.QueryExecutionContext.Database // ""),
+                (.Statistics.DataScannedInBytes // 0), (.Statistics.EngineExecutionTimeInMillis // 0),
+                ((.Statistics.DataScannedInBytes // 0) | costo),
+                (.Query | gsub("[\\n\\r,]";" ") | .[0:200]) ] )
+      | @csv' "$SALIDA/athena/consultas-recientes-completo.json" > "$SALIDA/athena/costos-ventana.csv" 2>>"$FALLOS" \
+      || fallo "calculo de costos de la ventana"
+
+    jq -r --argjson a "$WIN_INI" --argjson b "$WIN_FIN" --argjson p "$PRECIO_TB_USD" "$JQ_TS"'
+      def costo: ((if . == 0 then 0 elif . < 10485760 then 10485760 else . end) / 1099511627776 * $p);
+      [ .[] | select((.Status.SubmissionDateTime|ts|fromdateiso8601) >= $a and (.Status.SubmissionDateTime|ts|fromdateiso8601) <= $b)
+            | select(.StatementType == "DML") ] as $q
+      | "Consultas DML en la ventana: \($q|length)  (fallidas: \([$q[]|select(.Status.State!="SUCCEEDED")]|length))",
+        "Bytes escaneados: \([$q[].Statistics.DataScannedInBytes // 0]|add // 0)",
+        "Costo estimado total: USD \(([$q[] | (.Statistics.DataScannedInBytes // 0) | costo]|add // 0) * 1000000 | round / 1000000)",
+        "Por base de datos:",
+        ( $q | group_by(.QueryExecutionContext.Database // "(sin base)")[]
+             | "  \(.[0].QueryExecutionContext.Database // "(sin base)"): \(length) consultas, USD \(([.[] | (.Statistics.DataScannedInBytes // 0) | costo]|add) * 1000000 | round / 1000000)" )' \
+      "$SALIDA/athena/consultas-recientes-completo.json" 2>>"$FALLOS" | tee -a "$RESUMEN" "$SALIDA/athena/costos-ventana-resumen.txt"
+    log "Detalle por consulta: athena/costos-ventana.csv (las mas caras primero: sort -t, -k7 -nr)"
+    log "AVISO: si el workgroup tiene mucho trafico, subir MAX_QUERIES_ATHENA para llegar hasta la ventana."
+  else
+    fallo "No se obtuvieron consultas de Athena del workgroup $WG"
+  fi
+else
+  log "Sin ventana de tiempo: se omite el costo historico de Athena."
 fi
 
 # ----------------------------------------------------------------------------
