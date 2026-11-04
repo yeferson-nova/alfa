@@ -5,6 +5,7 @@ Esta carpeta reúne el trabajo asignado sobre la plataforma AWS de NIIF 17. Aqu�
 | Archivo o carpeta | Contenido |
 |---|---|
 | `TareasAsignadas.txt` | Lista original de tareas. No se edita. |
+| `roadmap-cambios.md` | **Empezar aquí.** Tareas de las dos fuentes (txt e imagen) consolidadas, roadmap validado (T2 y luego SES), qué cambia en cada paso y qué falta. |
 | `T1-notificaciones\` | Cambio de SNS a SES, correo HTML, alertas de fallo y escenarios de notificación. |
 | `T2-lambdas-gestor-configuracion\` | Unificar el modelo de programación de las lambdas. |
 | `T3-validaciones-reserva-matematica\` | Validaciones de consistencia de los datos procesados. |
