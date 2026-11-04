@@ -112,6 +112,7 @@ Tabla `niif-prd-notification-certification`, filtrando por el `certCode` del cor
 | `total` a mano devuelve filas, el job no | Permisos, catálogo o momento | Pasos 6 y 9; reenviar |
 | `total` a mano sin filas, el detalle con filas | Filtro distinto entre `total` y `detail` | Alinear filtros de `total` |
 | CSV vacío y Gold sin 202606 | Datos no llegaron a Gold | Revisar extracción, Silver y SCD |
+| CSV vacío y Gold **con** 202606 pero todo `act_reg = 0` (caso real de este incidente) | El SCD apagó los registros activos (entrada parcial) | Ver sección 6 y `analisis-flujo-primas-arl-202606.md` |
 | Crawler terminó después del correo | Catálogo desactualizado | Reenviar la notificación |
 
 ## 4. Cierre
@@ -127,3 +128,95 @@ Tabla `niif-prd-notification-certification`, filtrando por el `certCode` del cor
 
 - Hoy un `summary` vacío se muestra igual que "sin resumen configurado" y el correo sale de todas formas. Propuesta: que el job **falle o alerte** si un caso no tiene `summary` o `total` configurados, en vez de enviar un correo para certificar.
 - Validar el JSON del caso en el despliegue (existencia de `summary`, `total`, base y periodo) y compararlo entre entornos como parte del pipeline.
+
+---
+
+## 6. Qué muestra el CSV de Athena y cómo se llegó a las conclusiones
+
+### 6.1 De dónde sale
+Es el resultado de esta consulta, ejecutada en Athena (prod) sobre la tabla Gold de Primas ARL:
+
+```sql
+SELECT act_reg, per_proceso_point, COUNT(*) AS registros
+FROM "niif-prd-gold-catalog-db"."scd_primas_arl"
+GROUP BY 1, 2
+ORDER BY 1 DESC, 2 DESC;
+```
+Archivo: `errores/evidencia-primas-arl-202606/athena/SELECT act_reg, per_proceso_point COUNT() AS registros.csv` (49 filas).
+
+### 6.2 Cómo leerlo
+Cada fila es un grupo: cuántos registros (`registros`) hay con ese `act_reg` y ese `per_proceso_point` (periodo de proceso, formato `AAAAMM`).
+
+| Columna | Significado |
+|---|---|
+| `act_reg = 1` | Registro **activo** (vigente) en Gold. Es el único que ven las consultas `total` y `detail` del correo (`WHERE act_reg = 1`) |
+| `act_reg = 0` | Registro **inactivo** (histórico o apagado por el SCD) |
+| `per_proceso_point` | Periodo del endoso. Las consultas del correo filtran `= '202606'` |
+| (vacío) | `per_proceso_point` nulo: el endoso no tiene fecha de proceso |
+
+Las únicas dos filas con `act_reg = 1` del CSV:
+
+| act_reg | per_proceso_point | registros |
+|---|---|---|
+| 1 | 202610 | 206 |
+| 1 | (nulo) | 3 |
+
+Todas las demás filas (47) tienen `act_reg = 0`.
+
+### 6.3 Paso a paso de las validaciones
+Cada paso responde una pregunta, se calcula sobre el CSV y se compara con otra fuente independiente (las métricas del SCD en `parametros_extraccion_primas_arl.json`). Así ninguna conclusión depende de una sola fuente.
+
+| # | Pregunta | Cómo se calcula | Resultado | Conclusión |
+|---|---|---|---|---|
+| 1 | ¿Cuántos registros activos hay en Gold? | Sumar `registros` de las filas con `act_reg = 1` | 206 + 3 = **209** | Solo quedan 209 activos |
+| 2 | ¿Coincide con lo que el SCD dijo que insertó? | Comparar con `metricas_gold_scd.total_insertados_nuevos` | 209 = **209** | Los únicos activos son los registros nuevos de la corrida del 2 de noviembre |
+| 3 | ¿Algún activo es del periodo 202606? | Contar filas con `act_reg = 1` y `per_proceso_point = 202606` | **0** | La consulta `total` (que filtra periodo 202606 y `act_reg = 1`) devuelve 0 filas → "Totales: No hay datos" |
+| 4 | ¿El CSV cuadra con el Gold final del SCD? | Sumar **todas** las filas y comparar con `total_gold_final` | 1.207.452 = **1.207.452** | El CSV es completo y confiable |
+| 5 | ¿Cuántos inactivos hay y cuadran con el Gold previo? | Sumar `registros` con `act_reg = 0` y comparar con `total_gold_anterior` | 1.207.243 = **1.207.243** | Gold nuevo = Gold previo + 209; nada se borró, todo lo anterior quedó inactivo |
+| 6 | ¿Qué pasó con el periodo 202606? | `registros` con `act_reg = 0` y `per_proceso_point = 202606` | **2.094** inactivos, 0 activos | El periodo existía en Gold y quedó inactivo (no es que no llegara). Un total correcto habría mostrado hasta 2.094 |
+| 7 | ¿Hay datos sin periodo? | `registros` con `act_reg = 0` y `per_proceso_point` vacío | **1.100.009** (91,1 % de Gold) | Esos registros nunca aparecen en la certificación de ningún periodo (sin causa determinada, por analizar) |
+
+### 6.4 Cómo se encadenan las conclusiones
+1. **Pasos 1 a 3:** Gold solo tiene 209 activos y ninguno es de 202606 → la consulta `total` no puede devolver filas → "No hay datos". El CSV de detalle sale con solo el encabezado porque su consulta siempre incluye una fila de encabezado (`UNION ALL`, `0 AS orden`).
+2. **Pasos 4 y 5:** el CSV coincide **exactamente** con las métricas del SCD (1.207.452 y 1.207.243). Esto prueba que el CSV es completo y que el SCD no perdió filas: las dejó inactivas.
+3. **De las métricas del SCD** (no del CSV): `total_registros_apagados_por_ausencia = 1.203.789` = `registros_excluidos_por_segmento` de `par_endosos`. El CSV solo muestra el resultado (todo inactivo); las métricas explican el porqué: la entrada del SCD tenía 209 filas y apagó todo lo activo que no venía en ella.
+4. **Conclusión:** el fallo está en los jobs de Glue (extracción incremental + SCD que apaga por ausencia). El resumen vacío es aparte (configuración del JSON del caso).
+
+### 6.5 Qué NO prueba el CSV
+- **No distingue** cuántos de los 1.207.243 inactivos eran activos antes y cuántos ya eran históricos. Ese reparto (1.203.789 apagados y 3.454 históricos) se **deduce** de las métricas del SCD y de la lógica de `scd.py`, no del CSV.
+- **No explica por qué** los 209 nuevos son de octubre (202610) si el `WHERE` de la extracción era `PERIODO <= '202606'`. Es una hipótesis sin verificar (columnas distintas: `PERIODO` contra `per_proceso_point`).
+- **No dice nada** de los 13 hallazgos de validación técnica ni de por qué hay 1,1 millones de registros sin periodo.
+
+### 6.6 Cómo reproducir las validaciones
+
+**Opción A: script (recomendado).** Hace los 4 primeros chequeos de forma automática y sale con código 0 si todos pasan:
+```
+python -I errores/validar-athena.py errores/evidencia-primas-arl-202606
+```
+
+**Opción B: a mano en PowerShell**, sobre el mismo CSV:
+```powershell
+$csv = Import-Csv "errores\evidencia-primas-arl-202606\athena\SELECT act_reg, per_proceso_point COUNT() AS registros.csv"
+($csv | Where-Object { $_.act_reg -eq '1' } | Measure-Object registros -Sum).Sum                                  # 1) 209
+@($csv | Where-Object { $_.act_reg -eq '1' -and $_.per_proceso_point -eq '202606' }).Count                        # 3) 0
+($csv | Measure-Object registros -Sum).Sum                                                                        # 4) 1207452
+($csv | Where-Object { $_.act_reg -eq '0' } | Measure-Object registros -Sum).Sum                                  # 5) 1207243
+($csv | Where-Object { $_.act_reg -eq '0' -and $_.per_proceso_point -eq '202606' }).registros                      # 6) 2094
+($csv | Where-Object { $_.act_reg -eq '0' -and -not $_.per_proceso_point }).registros                              # 7) 1100009
+```
+Los valores del comentario de cada línea son los obtenidos con el CSV real.
+
+**Opción C: contraste con las métricas del SCD** (para los pasos 2, 4 y 5), con el archivo `errores/evidencia-primas-arl-202606/s3/parametros_extraccion_primas_arl.json`, campo `metricas_gold_scd`:
+```
+total_insertados_nuevos = 209
+total_gold_anterior     = 1.207.243
+total_gold_final        = 1.207.452
+total_registros_apagados_por_ausencia = 1.203.789
+```
+
+**Opción D: directamente en Athena** (si hay acceso), para repetir el mismo conteo con el dato vivo:
+```sql
+SELECT act_reg, COUNT(*) AS registros
+FROM "niif-prd-gold-catalog-db"."scd_primas_arl"
+GROUP BY 1;   -- esperado hoy: act_reg=1 → 209 ; act_reg=0 → 1.207.243
+```
