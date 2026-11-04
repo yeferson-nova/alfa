@@ -124,7 +124,7 @@ Métricas de `metricas_gold_scd`:
 
 | Punto | Estado |
 |---|---|
-| Que los 209 activos no son del periodo 202606 | **Deducido** de que el total salió sin filas. Los logs de Athena no se recolectaron (error de credenciales de CloudShell). Se confirma con la consulta de la sección 6. |
+| Que los 209 activos no son del periodo 202606 | **CONFIRMADO con Athena real** (sección 6): 206 activos son del periodo 202610 y 3 tienen `per_proceso_point` nulo; 0 son de 202606. Antes era una deducción (los logs de Athena no se recolectaron por el error de credenciales de CloudShell). |
 | Por qué en QA el correo sale bien | **Hipótesis**: en QA fue una carga inicial completa. No verificado. |
 | Si existe versionado o respaldo de `scd_primas_arl` en el bucket Gold | **Sin verificar** |
 | Los 13 hallazgos de validación técnica | No son la causa (el flujo continúa por diseño). No analizados a fondo. |
@@ -145,6 +145,22 @@ GROUP BY 1, 2
 ORDER BY 1 DESC, 2 DESC;
 ```
 Resultado esperado si el análisis es correcto: `act_reg = 1` con 209 registros en total, ninguno con `per_proceso_point = '202606'`.
+
+### Resultado real (ejecutado en prod; evidencia en `errores/evidencia-primas-arl-202606/athena/`)
+
+Validado con `validar-athena.py` (**4 de 4 verificaciones PASS**):
+
+| Verificación | Resultado |
+|---|---|
+| Registros activos (`act_reg = 1`) | **209** = 206 del periodo **202610** + 3 con `per_proceso_point` nulo. Coincide con los 209 insertados por el SCD |
+| Activos del periodo 202606 | **0** → por eso "Totales: No hay datos" y el CSV con solo encabezado |
+| Total de filas en Gold | 1.207.452 = `total_gold_final` del SCD |
+| Registros inactivos | 1.207.243 = `total_gold_anterior` (históricos previos + 1.203.789 apagados) |
+
+Hallazgos nuevos:
+- El periodo **202606 tiene 2.094 registros inactivos y 0 activos**. Un "Totales" correcto habría mostrado hasta 2.094 registros (cota superior: algunos pudieron ser históricos antes del 2 de noviembre).
+- Los 209 "nuevos" de la corrida pertenecen al periodo de proceso **202610 (octubre)** (206) o no tienen periodo (3), no a 202606. **Por qué entraron con `WHERE PERIODO <= '202606'` no está determinado:** el filtro usa la columna `PERIODO` de `par_endosos`, mientras `per_proceso_point` se deriva de `FEC_PROCESO_POINT` (en `silver_primas_arl.py`); son campos distintos. *Hipótesis sin verificar:* endosos con `PERIODO` ≤ 202606 procesados en octubre.
+- **1.100.009 registros (91,1 % de Gold) tienen `per_proceso_point` nulo**: no aparecen en la certificación de ningún periodo. Sin causa determinada (no analizado).
 
 ## 7. Acciones recomendadas
 
@@ -168,6 +184,8 @@ Resultado esperado si el análisis es correcto: `act_reg = 1` con 209 registros 
 | `validar-analisis.py` | Verificaciones con código de este análisis (`python -I validar-analisis.py <carpeta-evidencia>`) |
 | `replicar-fallo-en-dev.md` y `replicar-fallo-dev.sh` | Cómo replicar el fallo en DEV, validar destinatarios y agregar un correo |
 | `simular-limpieza-segmentos.py` | Simulación de la propuesta "limpiar los segmentos" (sección 9) |
+| `validar-athena.py` | Valida el CSV real de Athena contra las métricas del SCD (sección 6): `python -I validar-athena.py <carpeta-evidencia>` |
+| `evidencia-primas-arl-202606/` | Evidencia de prod subida al repo por el equipo (incluye `athena/` con el CSV de la sección 6) |
 | `Evidencia/` | Evidencia recolectada de prod (no se versiona; datos sensibles) |
 
 ## 9. Propuesta de prod: "limpiar los segmentos de Primas ARL"
