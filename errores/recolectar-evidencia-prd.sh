@@ -49,7 +49,10 @@ JOBS_FLUJO="niif-${ENV}-extraccion-estandar-optimized niif-${ENV}-val-tecnica ni
 
 export AWS_DEFAULT_REGION="$REGION" AWS_PAGER=""
 
-SALIDA="evidencia-primas-arl-${PERIODO}-$(date +%Y%m%d-%H%M%S)"
+# Nombre fijo por dia (evidencia-primas-arl-202606-20261104.zip). Si se corre dos
+# veces el mismo dia, se reemplaza la corrida anterior.
+SALIDA="evidencia-primas-arl-${PERIODO}-$(date +%Y%m%d)"
+rm -rf "$SALIDA" "${SALIDA}.zip" "${SALIDA}.tar.gz"
 mkdir -p "$SALIDA"/{stepfunction,glue,logs,s3,dynamodb,athena}
 RESUMEN="$SALIDA/00-resumen.txt"
 FALLOS="$SALIDA/00-fallos.txt"
