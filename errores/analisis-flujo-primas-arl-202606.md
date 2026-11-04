@@ -5,6 +5,17 @@
 **Evidencia:** carpeta `Evidencia/` (recolectada con `recolectar-evidencia-prd.sh`, no se sube a git por contener datos de prod).
 **Validación con código:** `validar-analisis.py` → **17 de 17 verificaciones PASS**.
 
+## Conclusión
+
+> El fallo se origina en los **jobs de Glue** de Primas ARL, no en la infraestructura: la extracción incremental (`EXCLUIR_EXTRAIDOS`) y la preparación Silver entregan solo los registros nuevos (209), y el job `niif-prd-scd` los interpreta como la foto completa, apagando **1.203.789** registros activos de Gold (`ACT_REG = 0`). El flujo no falló técnicamente (Step Function y todos los jobs en `SUCCEEDED`). Adicionalmente, el JSON del caso no tiene consulta de resumen (`queries.summary = []`), lo cual es configuración y no un job de Glue.
+
+| Job de Glue | Qué hace | Evidencia |
+|---|---|---|
+| `niif-prd-scd` (causa principal) | Trata la entrada como foto completa y apaga lo ausente | `scd.py` líneas 360-367; 1.203.789 apagados |
+| `niif-prd-extraccion-estandar-optimized` | Con `EXCLUIR_EXTRAIDOS` entrega solo los nuevos | 209 extraídos, 1.203.789 excluidos |
+| `niif-prd-silver-primas-arl` | Escribe con `overwrite` solo el lote actual | `total_registros_silver_preparada` = 209 |
+| `niif-prd-certification` (efecto) | El CSV de detalle siempre trae encabezado, no detecta "sin datos" | `niif_certification.py` líneas 573-620 |
+
 ## 1. Resumen
 
 El correo salió con "Resumen: No hay resumen configurado" y "Totales: No hay datos". Son **dos problemas distintos** y un tercero que impidió notarlos:
