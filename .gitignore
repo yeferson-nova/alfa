@@ -24,3 +24,6 @@ dist/
 .mypy_cache/
 .ruff_cache/
 .ipynb_checkpoints/
+
+# Evidencia capturada de prod (datos sensibles: correos, ids de cuenta/Cognito); no versionar
+errores/Evidencia/

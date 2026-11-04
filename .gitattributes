@@ -1,0 +1,2 @@
+# Scripts de shell siempre con fin de linea LF (se ejecutan en CloudShell/Linux)
+*.sh text eol=lf
