@@ -1,0 +1,135 @@
+# Análisis del incidente: certificación Primas ARL 202606 sin datos (prod)
+
+**Correo:** "NIIF 17 - Certificación Primas ARL Periodo 202606", 2026-11-01 22:23 (hora Colombia).
+**Ejecución:** `niif-prd-primas-arl` → `arl-202606-auto-20261102T030032Z-976ae7fc` (2026-11-02 03:00 a 03:24 UTC), estado `SUCCEEDED`.
+**Evidencia:** carpeta `Evidencia/` (recolectada con `recolectar-evidencia-prd.sh`, no se sube a git por contener datos de prod).
+**Validación con código:** `validar-analisis.py` → **17 de 17 verificaciones PASS**.
+
+## 1. Resumen
+
+El correo salió con "Resumen: No hay resumen configurado" y "Totales: No hay datos". Son **dos problemas distintos** y un tercero que impidió notarlos:
+
+| # | Problema | Dónde | Gravedad |
+|---|---|---|---|
+| 1 | El JSON del caso no tiene consulta de resumen (`queries.summary = []`) | Configuración `primas-arl/primasArl.json` | Media |
+| 2 | **El SCD de Gold apagó 1.203.789 registros activos**: tras la corrida solo quedan 209 con `act_reg = 1` | Job `niif-prd-scd` (diseño) | **Alta** |
+| 3 | El CSV de detalle nunca queda vacío (siempre lleva encabezado), así que no se avisa de "sin datos" | Job `niif-prd-certification` / consulta `detail` | Media |
+
+Ningún job falló: todo terminó en `SUCCESS`, por eso nada alertó.
+
+## 2. Flujo y dónde falló
+
+```
+Programación del gestor (origen PROGRAMACION_GESTOR, 03:00 UTC)
+  │  entrada: malla PRIMAS_ARL, periodoNegocio 202606, modoEjecucion NORMAL
+  ▼
+[1] Extracción (extraccion-estandar-optimized)          OK  — pero INCREMENTAL
+  │  WHERE PERIODO <= '202606' + EXCLUIR_EXTRAIDOS por NID_ENDOSO
+  │  extrajo 209 endosos; excluyó 1.203.789 ya extraídos
+  ▼
+[2] Validación técnica (val-tecnica)                    FAILED con 13 hallazgos, el flujo continúa (por diseño)
+  ▼
+[3] Remediación (remediacion-estandar)                  OK
+  ▼
+[4] Silver (silver-primas-arl)                          OK — overwrite: queda SOLO con los 209
+  ▼
+[5] Gold SCD (scd)                              ❌ AQUÍ SE ROMPE EL DATO
+  │  full join: Silver preparada (209) contra Gold activo
+  │  todo lo que no viene en la entrada → ACT_REG = 0 ("apagados por ausencia")
+  │  apagó 1.203.789; insertó 209; Gold activo final = 209
+  ▼
+[6] Certificación (certification)               ⚠ detecta mal "sin datos"
+  │  total: act_reg = 1 AND per_proceso_point = '202606' → 0 filas
+  │  detail: UNION ALL con fila de encabezado → CSV con solo encabezado
+  │  sinDatosPeriodo = false (porque el UNLOAD siempre trae la fila de encabezado)
+  ▼
+[7] Notificación (notification-certification)   ⚠ resumen y totales vacíos, igual envía
+     resumen: queries.summary = []  → "No hay resumen configurado."
+     totales: 0 filas               → "No hay datos"
+     correo enviado a certificadores con enlaces Certificar / No certificar
+```
+
+## 3. Evidencia por punto (todo comprobado con `validar-analisis.py`)
+
+### 3.1 El flujo terminó bien (no es falla técnica)
+- Step Function `SUCCEEDED`; extracción, remediación, disponibilización Silver, preparación Silver y Gold SCD en `SUCCESS`.
+- Modo de notificación `SIMPLE` (`primasArl` no está en ningún grupo de `composite_groups.json`).
+
+### 3.2 Resumen vacío (configuración)
+- `primas-arl/primasArl.json`: `queries.summary = []`, `queries.total` con 1 consulta, `queries.detail` con 1.
+- El código del job de notificación muestra "No hay resumen configurado." cuando la lista de resumen está vacía.
+
+### 3.3 La extracción fue incremental
+- Existen dos ejecuciones del mismo periodo: `2026-10-05` y `2026-11-02`.
+- `par_endosos`: `modo_segmentacion = EXCLUIR_EXTRAIDOS`, llave `NID_ENDOSO`.
+- `total_registros = 209`; `registros_excluidos_por_segmento = 1.203.789`.
+- Silver preparada: `total_registros_silver_preparada = 209`, modo `overwrite` (sin histórico).
+
+### 3.4 El SCD apagó todo lo que no vino
+Métricas de `metricas_gold_scd`:
+
+| Métrica | Valor |
+|---|---|
+| `total_entrada_silver_preparada` | 209 |
+| `total_gold_anterior` | 1.207.243 |
+| `total_insertados_nuevos` | 209 |
+| `total_registros_sin_cambio` | 0 |
+| `total_versiones_cerradas_por_cambio` | 0 |
+| `total_registros_apagados_por_ausencia` | **1.203.789** |
+| `total_gold_final` | 1.207.452 (= anterior + insertados) |
+
+- **Coincidencia exacta:** apagados por ausencia (1.203.789) = excluidos por segmento (1.203.789).
+- Código (`scd.py`, líneas 340-367): el `full join` entre entrada y Gold activo marca `ACT_REG = 0` a todo registro activo que no esté en la entrada.
+- **Deducido de las métricas:** activos antes = 1.203.789; históricos antes = 3.454; activos después = **209**.
+
+### 3.5 Por qué los totales y el CSV salen vacíos
+- Las consultas `total` y `detail` filtran `act_reg = 1` y `per_proceso_point = '$period'`. Con solo 209 activos, no devuelven filas del periodo.
+- La consulta `detail` hace `UNION ALL` con una fila de encabezado (`0 AS orden`), así el UNLOAD siempre genera archivo. En `niif_certification.py` (`exportar_csv_raw`) `sinDatosPeriodo` solo se activa si el UNLOAD no genera archivos, por lo que nunca se activa aquí.
+
+## 4. Lo que NO está comprobado
+
+| Punto | Estado |
+|---|---|
+| Que los 209 activos no son del periodo 202606 | **Deducido** de que el total salió sin filas. Los logs de Athena no se recolectaron (error de credenciales de CloudShell). Se confirma con la consulta de la sección 6. |
+| Por qué en QA el correo sale bien | **Hipótesis**: en QA fue una carga inicial completa. No verificado. |
+| Si existe versionado o respaldo de `scd_primas_arl` en el bucket Gold | **Sin verificar** |
+| Los 13 hallazgos de validación técnica | No son la causa (el flujo continúa por diseño). No analizados a fondo. |
+
+## 5. Impacto y riesgos
+
+- **Gold de prod quedó con 209 registros activos** de Primas ARL. Cualquier otro periodo que se certifique ahora saldrá vacío.
+- La certificación del 5 de octubre ya no es reproducible desde Gold activo.
+- El correo con enlaces **Certificar / No certificar** se envió sin resumen ni totales. No se debe certificar con él.
+- El mismo patrón (extracción incremental con `EXCLUIR_EXTRAIDOS` + SCD que apaga por ausencia) puede estar en las otras mallas que usen los mismos jobs. No revisado.
+
+## 6. Cómo confirmar el punto pendiente (solo lectura, Athena en prod)
+
+```sql
+SELECT act_reg, per_proceso_point, COUNT(*) AS registros
+FROM "niif-prd-gold-catalog-db"."scd_primas_arl"
+GROUP BY 1, 2
+ORDER BY 1 DESC, 2 DESC;
+```
+Resultado esperado si el análisis es correcto: `act_reg = 1` con 209 registros en total, ninguno con `per_proceso_point = '202606'`.
+
+## 7. Acciones recomendadas
+
+| # | Acción | Prioridad |
+|---|---|---|
+| 1 | No volver a ejecutar el flujo de Primas ARL ni certificar el periodo hasta resolverlo | Inmediata |
+| 2 | Verificar si `alfa-datalake-prd-gold` tiene versionado de S3 o respaldo de `niif/scd_primas_arl/` y restaurar el estado previo a la corrida del 2 de noviembre | Inmediata |
+| 3 | Ejecutar la consulta de la sección 6 para confirmar | Alta |
+| 4 | Agregar `queries.summary` al JSON de prod `primas-arl/primasArl.json` (tomándolo del de QA) | Alta |
+| 5 | Corregir el diseño: que el SCD no apague por ausencia cuando la entrada es incremental (o que la extracción no excluya llaves cuando alimenta un SCD de foto completa) | Alta |
+| 6 | Detectar "sin datos" en el detalle contando filas reales sin contar el encabezado, y no enviar el correo si total y resumen están vacíos | Media |
+| 7 | Revisar si las otras mallas comparten el mismo riesgo | Media |
+| 8 | Comparar el JSON del caso y el de extracción entre QA y prod | Media |
+
+## 8. Archivos relacionados en esta carpeta
+
+| Archivo | Qué es |
+|---|---|
+| `errores.md` | Paso a paso inicial para validar el incidente |
+| `recolectar-evidencia-prd.sh` | Script de CloudShell que recolecta la evidencia (solo lectura) |
+| `validar-analisis.py` | Verificaciones con código de este análisis (`python -I validar-analisis.py <carpeta-evidencia>`) |
+| `Evidencia/` | Evidencia recolectada de prod (no se versiona) |
