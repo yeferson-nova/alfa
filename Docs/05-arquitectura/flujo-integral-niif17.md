@@ -21,6 +21,8 @@
 
 Una **programación** (fila en DynamoDB) dispara la creación de un *schedule*; cuando llega la hora, un **configurador** valida la configuración de la malla, publica sus parámetros en S3 y arranca una **Step Function**. La Step Function encadena jobs de Glue (extraer → validar → remediar → preparar Silver → consolidar Gold), decide si hay datos nuevos, registra el estado en DynamoDB y, al final, lanza el job de **certificación**, que genera los reportes y abre la cadena de aprobación y transporte. Los jobs **no se pasan datos entre sí**: se pasan un archivo de estado en S3 (`parametros_extraccion.json`).
 
+> **Diagrama AS-IS con iconos de AWS (editable en draw.io):** `diagramaslujo-niif17-asis.drawio` (vista: `diagramaslujo-niif17-asis.png`). El diagrama siguiente es la versión resumida.
+
 ```mermaid
 flowchart TD
     subgraph P["A. Programación"]

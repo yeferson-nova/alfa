@@ -31,7 +31,8 @@ Raíz: `C:\Users\rdpuser\Git\`. Mapa humano en `Docs\00-LEEME.md`.
 - `03-historias-usuario\`: 6 xlsx de HUs técnicas (gobierno de ingestas, linaje, trazabilidad, DevOps/DataOps, remediación, seguridad y acceso). Fichas en `MemoriaIa\hu\` (prefijo `hu-`).
 - `04-manuales\`: Manual de usuario Proyecto Nuevos Cargues V5, ver [[est-nuevos-cargues]].
 - `05-arquitectura\`
-  - `arquitectura-tobe-niif17.png`: arquitectura actual; nos competen los pasos 2 y 3. Ver [[arquitectura-niif17]].
+  - `arquitectura-tobe-niif17.png`: arquitectura **objetivo (TO-BE)**, de alto nivel; nos competen los pasos 2 y 3. Ver [[arquitectura-niif17]].
+  - `diagramas\`: `flujo-niif17-asis.drawio` (+ `.png`) es el diagrama **AS-IS** de punta a punta de los pasos 2 y 3, con iconos AWS y carriles por fase; `README.md` explica cómo leerlo.
   - `ejemplo-correo-certificacion.png`: ejemplo del correo, ver [[correo-notificacion]].
   - `aws_pasos_2_y_3.drawio`: parte AWS con tareas marcadas, ver [[diseno-propuesto]].
 - `06-brechas\`: análisis de brechas (seguridad, costos, arquitectura, cumplimiento).
