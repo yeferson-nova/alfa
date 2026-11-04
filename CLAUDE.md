@@ -15,7 +15,7 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 
 ## Estructura
 - `Tareas\`: tareas asignadas para humanos. `00-LEEME.md` (contexto del proyecto) y una carpeta por asignación (`T1-notificaciones`, `T2-lambdas-gestor-configuracion`, `T3-validaciones-reserva-matematica`) con `README.md` y sus entregables.
-- `Docs\`: `02-estandares-banco` (solo lectura, nombres originales), `03-historias-usuario`, `04-manuales`, `05-arquitectura`, `06-brechas`, `07-entregables`.
+- `Docs\`: `02-estandares-banco` (solo lectura, nombres originales), `03-historias-usuario`, `04-manuales`, `05-arquitectura`, `06-brechas`, `07-entregables`, `08-estandares-desarrollo` (estándar propio de código, ver [[est-desarrollo-hexagonal]]).
 - `MemoriaIa\`: `meta`, `contexto`, `tareas`, `estandares`, `hu`, `brechas`.
 - `Backend\`: solo código.
 - Detalle archivo por archivo en [[rutas-workspace]].
@@ -64,6 +64,7 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - [[est-codigo-seguro]] - SonarQube GTC-GDD-003: línea base, cobertura > 80 %, comité de cambios
 - [[est-databrew]] - manual de recetas Glue DataBrew (estado actual de preparación)
 - [[est-nuevos-cargues]] - manual de Nuevos Cargues: precedente de aprobación por correo
+- [[est-desarrollo-hexagonal]] - **estándar propio** para todo código Python: arquitectura hexagonal, sin valores quemados, errores con taxonomía, logs JSON/EMF, idempotencia, pruebas > 80 % (humano: `Docs\08-estandares-desarrollo\`)
 
 **hu** (estándares transversales obligatorios)
 - [[hu-gobierno-ingestas]] - metadata en DynamoDB, taxonomía de errores, eventos y alarmas
