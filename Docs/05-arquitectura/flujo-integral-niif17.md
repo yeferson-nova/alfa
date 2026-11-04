@@ -97,7 +97,7 @@ Cada malla tiene su copia. **Solo cambian las rutas S3, el nombre del job Silver
 | 5 | `niif-dev-scd` | `config_scd` y `ruta_silver_preparada` | `alfa-datalake-dev-gold/niif/scd_<malla>/` | Consolida en Gold como dimensión de cambio lento. Si no hay datos, inicializa Gold vacío. |
 | 6 | `niif-dev-certification` | Config de certificación (`niif-dev-assets/configs/...`), **Athena** sobre Gold | CSV en S3 y filas en `notification-certification` | Ver sección E. |
 
-**Cómo se pasan el trabajo:** cada job lee `parametros_extraccion.json`, comprueba el estado del anterior (`estado_extraccion`, `estado_validacion`, `estado_remediacion`, `estado_preparacion_silver`, ...), hace lo suyo y **reescribe el mismo JSON** con su propio estado, rutas, fechas y métricas. Es, en la práctica, el manifiesto que pedía la propuesta de `riesgos-glue-notificacion`, pero con un archivo fijo por malla (ver hallazgo FLU-02).
+**Cómo se pasan el trabajo:** cada job lee `parametros_extraccion.json`, comprueba el estado del anterior (`estado_extraccion`, `estado_validacion`, `estado_remediacion`, `estado_preparacion_silver`, ...), hace lo suyo y **reescribe el mismo JSON** con su propio estado, rutas, fechas y métricas. Es, en la práctica, el manifiesto que pedía la propuesta de `riesgos-glue-notificacion`, pero con un archivo fijo por malla (riesgo FLU-02 en `revision-pre-produccion.md`).
 
 **Crawlers:** tras Bronce, Silver y Gold, la Step Function lanza `niif-dev-crawler-bronze/silver/gold` y consulta su estado cada 20 s. Actualizan el catálogo `niif-dev-*-catalog-db` para que Athena vea los datos.
 
@@ -106,9 +106,22 @@ Cada malla tiene su copia. **Solo cambian las rutas S3, el nombre del job Silver
 10. La lambda decide: **SIMPLE** (la malla notifica sola), **COMPOSITE_WAITING** (faltan mallas del grupo; guarda `READY_TO_NOTIFY` en `composite-notification-status`), **COMPOSITE_READY** (la última malla toma un *lock* y notifica por todo el grupo) o **COMPOSITE_ALREADY_LOCKED**. Reserva Matemática ARP y RVI comparten un solo correo por esto.
 11. Solo si `shouldStartCertification = true`, la Step Function lanza el job `niif-dev-certification`.
 12. El job ejecuta las consultas del caso en **Athena**, descarga el resultado como CSV al bucket de reportes y escribe en `niif-dev-notification-certification` filas con `useCaseId`, `executionId`, `period`, `certCode`, `s3_url` y estado `PROCESSED`; luego las pasa a `PENDING`.
-13. El **stream** de esa tabla, con `status = PENDING`, dispara `notification-certification-trigger` (código no extraído): lanza el job de Glue de notificación y publica el correo por SNS (`niif-dev-certification-email`), con un enlace corto (`niif-dev-short-links`).
+13. El **stream** de esa tabla, con `status = PENDING`, dispara `notification-certification-trigger` (su código no se extrajo; solo se conocen sus variables y que lanza el job de Glue de notificación).
+    El job **`niif-dev-notification-certification`** (`Backend\Glue\`, código completo) es quien arma y envía el correo:
+    - lee la configuración global y la del caso (`email.subject`, `stringVars`, `destinations`) desde `niif-dev-assets`;
+    - consulta Athena para armar las tablas de **resumen** y **totales**, y crea enlaces cortos (`niif-dev-short-links`) para Certificar, No certificar y descargar cada CSV;
+    - **publica en SNS** (`niif-dev-certification-email`) un **mensaje de texto plano** por destinatario, con el asunto cortado a 100 caracteres. Antes de enviar, reconfigura el `FilterPolicy` por `recipient` de las suscripciones;
+    - marca las filas como `SENT` y cierra el grupo compuesto.
+    Si el caso se regenera sin datos nuevos, antepone `[REGENERADO]` al asunto y un aviso al cuerpo. Las plantillas HTML (`Backend\htmlNew\`) **no se usan en ningún punto del código**.
 14. El aprobador usa el enlace → `POST /certify` o `/not_certify` (API Gateway con Cognito) → lambda `niif-dev-certification`. Si el caso exige varios aprobadores, deja `PENDING_APPROVERS` hasta completar `approvers.required`; cada voto se audita en `approval-audit-log`.
 15. El estado final (`CERTIFICATE` o `NO_CERTIFICATE`) dispara por **stream** a `copy-s3-cert` (copia a `niif-dev-transport` y de ahí `send-via-sftp` a FIS) o a `move-s3-certification`.
+
+### F. Cuando algo falla (qué existe hoy)
+- **Dentro de la Step Function:** cada job y cada crawler tiene un `Catch` hacia su estado de registro de fallo. Al fallar escribe `FAILED` con el paso fallido y `reanudar_desde` en `pipeline-estado`, marca `FAILED` en `ejc-ejecuciones` y termina en `EJCFailState`. La ejecución queda en estado `FAILED`.
+- **Aviso al equipo:** la regla `ALFA-DEV-DATALAKE-SfnEvents` envía el fin de **cualquier** Step Function a la lambda `PipelineObserver`. Si el estado no es `SUCCEEDED`, publica en SNS: `ALFA-DEV-DATALAKE-Critical` (FAILED y TIMED_OUT) o `...-Warning` (ABORTED), con los pasos fallidos, el error y el enlace a la consola. Ambos tópicos tienen suscriptores de correo.
+- **Jobs y crawlers:** `PipelineObserver` solo publica **métricas** (`GlueJobFailed`, `CrawlerFailed`, duración, DPU-horas). No envía aviso por sí solo; el aviso sale únicamente si ese fallo hace fallar la Step Function.
+- **No hay aviso** para fallos fuera de la Step Function: el configurador (la invocación del Scheduler se reintenta 2 veces y se descarta), el manager, el job de notificación, las lambdas de los streams (`copy-s3-cert`, `move-s3-certification`) ni el envío por SFTP. Tampoco hay alerta de rebote del correo (la regla de SES `niif-dev-ses-delivery-test` solo escribe a un log).
+- **Logs:** las Step Functions tienen el registro de ejecución apagado y las lambdas escriben en texto plano; no hay formato común.
 
 ---
 
@@ -168,29 +181,24 @@ Cada malla tiene su copia. **Solo cambian las rutas S3, el nombre del job Silver
 
 ---
 
-## 6. Hallazgos nuevos al unir todo
-Los IDs son locales (`FLU-xx`); se consolidan en la matriz de la fase 3. Complementan LMB-xx y SF-xx.
+## 6. Dónde seguir leyendo
 
-| ID | Categoría | Hallazgo | Evidencia |
-|---|---|---|---|
-| FLU-01 | Arquitectura | **Dos tablas registran el estado de la misma ejecución:** `ejc-ejecuciones` (una fila por ejecución) y `pipeline-estado` (una por caso y periodo). Con el `finalizador` de ARL (SF-04) son tres escritores. | Step Function: 18 escrituras a EJC y 54 a pipeline-estado |
-| FLU-02 | Arquitectura | **El bus entre jobs es un archivo fijo por malla** (`parametros_extraccion.json`). Dos ejecuciones simultáneas o un reproceso se pisan el estado; no hay `ejecucion_id` en la ruta. | Los 5 jobs leen y reescriben la misma ruta |
-| FLU-03 | Seguridad / datos | Los jobs generan los datos de certificación con **Athena sin grupo de trabajo** (grupo `primary`, sin tope de bytes escaneados) sobre Gold. Es el principal punto de costo de Athena del flujo. | `niif_certification.py`, `start_query_execution` sin `WorkGroup` |
-| FLU-04 | Costos | Los 11 jobs tienen `Timeout = 2880` (48 h), 4 workers G.1X y 0 reintentos. Un job colgado cuesta dos días de cómputo. | `job.json` de cada job |
-| FLU-05 | Arquitectura | **Las tablas de certificación consultan tablas del datalake anterior** (`datalake-dev-use-case-queries`, `-emails`, `-approvers`). Un cambio en ese proyecto rompe nuestros correos. | Variables de entorno de `niif-dev-certification` y del trigger |
-| FLU-06 | Calidad | Los valores por defecto de los jobs están cruzados: `silver-reserva-matematica-rvi` apunta a rutas de ARP (`reserva_matematica_arp`, `config_extraccion_primas_arl.json`). La Step Function los sobrescribe y por eso no falla, pero una ejecución manual escribiría la malla equivocada. | `job.json` de RVI y ARP |
-| FLU-07 | Calidad | `niif-dev-certification` trae por defecto `PERIOD=202411` y la configuración de Auxilios Funerarios. Si falla el paso de argumentos, certifica el caso equivocado. | `job.json` de certification |
-| FLU-08 | Arquitectura | **No hay una pantalla ni un servicio que cree las programaciones**: se escriben a mano en DynamoDB. Es el punto de entrada de todo el proceso y no tiene validación ni auditoría. | No se encontró lambda, API ni regla que lo haga (por confirmar) |
-| FLU-09 | Arquitectura | El crawler de Silver crea una tabla por cada `lote_cargue_id` y `ejecucion_preparacion` y deja copias `tmp_` e históricas (94 tablas en Silver, entre ellas 7 `lote_cargue_id_*`, 3 `ejecucion_preparacion_*` y 2 `tmp_preparacion_*`). Ensucia el catálogo y la consulta en Athena. | `Backend\Glue\catalogo\` |
-| FLU-10 | Brecha del inventario | **Faltan el código de `notification-certification-trigger`, `copy-s3-cert`, `move-s3-certification` y `send-via-sftp`**, y el job `niif-dev-notification-certification` quedó en `pruebas-glue`. La parte final de la cadena (correo y transporte) está inferida solo por sus triggers. | Código ausente en `pruebas-lambda\codigo\` |
+Este documento describe **cómo funciona hoy** el proceso. El resto del análisis está separado:
 
-Los 10 hallazgos se suman a los de `lambdas.md` (LMB-01 a LMB-15) y `step-functions-niif.md` (SF-01 a SF-14), entre ellos: la doble ejecución por dos programadores en el mismo stream (G3 y G4), la espera sin límite de los crawlers y los logs apagados.
+| Documento | Para qué |
+|---|---|
+| `jobs-glue.md` (esta carpeta) | Cada job de Glue por dentro: qué lee, qué escribe, argumentos y cómo se pasan el estado |
+| `tareas-sobre-el-flujo.md` (esta carpeta) | Cómo se conectan las tareas asignadas (T1, T2, T3) con este flujo y qué falta para hacerlas |
+| `Docs\06-brechas\rendimiento-y-costos.md` | Problemas actuales de rendimiento y costo, con evidencia |
+| `Docs\06-brechas\revision-pre-produccion.md` | Lista priorizada de lo que hay que corregir antes de producción |
+| `Backend\Lamnbdas\inventario-aws\lambdas.md` y `step-functions-niif.md` | Detalle por lambda y por estado de la Step Function |
 
 ---
 
-## 7. Lo que falta para cerrar el análisis
-1. **Código de la cadena final** (notification trigger, copy, move, SFTP) y del job `niif-dev-notification-certification`, para confirmar los pasos 13 y 15.
+## 7. Lo que no se pudo ver
+1. **Código de la cadena final** (notification trigger, copy, move, SFTP), para confirmar los pasos 13 y 15.
 2. **Los JSON de S3** (`config_*`, `json_global_notif_cert.json`, `composite_groups.json`): definen qué tablas lee cada job, qué consultas corre Athena y quién aprueba. Son lo que más explicaría el comportamiento real.
-3. **Una ejecución real** (historial de una Step Function) para ver tiempos y fallos.
-4. **Quién crea las programaciones** (FLU-08).
-5. **Cuál generación del gestor es la oficial** (G3 o G4); el flujo anterior describe G4 (`manager-configuration` → `configuration-<malla>`).
+3. **Una ejecución real** (historial de una Step Function) para ver tiempos, costos y fallos.
+4. **Quién crea las programaciones** y cómo se hace hoy.
+5. **Cuál generación del gestor es la oficial** (G3 o G4); este documento describe G4 (`manager-configuration` → `configuration-<malla>`).
+6. **Las políticas IAM de cada rol** (los roles de los jobs y lambdas se conocen por nombre, no por permisos).

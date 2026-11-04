@@ -18,6 +18,7 @@ Son los que invocan las 6 Step Functions `niif-dev-<malla>`. Cada carpeta tiene 
 | `niif-dev-silver-reserva-matematica-rvi` | Silver | `silver_reserva_matematica_rvi.py` |
 | `niif-dev-scd` | Gold (SCD) | `scd.py` |
 | `niif-dev-certification` | Certificación | `niif_certification.py` |
+| `niif-dev-notification-certification` | **Envío del correo (T1)**: arma el mensaje y lo publica por SNS. Lo dispara el trigger del stream `PENDING`, no la Step Function. Copiado de `pruebas-glue\` el 2026-11-03 | `notification_certification.py` |
 
 Extracción, validación, remediación y SCD son **genéricos**: los comparten las 6 mallas. Solo Silver es uno por malla.
 
@@ -39,7 +40,7 @@ Los otros 358 jobs (`jobs.json`) y sus scripts (`scripts\`, 267 archivos). Inclu
 - `niif-dev-pcr-vida-remediacion` y `niif-dev-pcr-vida-val-tecnica` usan el mismo script que los jobs de trabajo (`remediacion_estandar.py`, `validacion_tecnica.py`). Ese `.py` solo está en las carpetas de trabajo.
 
 ## Fuera de este alcance (pendiente de validar)
-- `niif-dev-notification-certification`: lo dispara la cadena de certificación, no las Step Functions de las 6 mallas. Está en `pruebas-glue\`; si hace parte de la tarea T1 hay que pasarlo a una carpeta de trabajo.
+- `niif-dev-notification-certification` ya está en la carpeta de trabajo (es el punto de envío del correo, T1); su copia sigue también en `pruebas-glue\`.
 - También en `pruebas-glue\`: `crawlers.json` (los otros 87), `databases.json` (las otras 48 bases), `tablas\` (35 archivos de otras bases), `triggers.json` y `workflows.json` (solo el workflow de prueba `ORQUESTADOR_PRIMAS_ARL_MANUEL_MACHADO`).
 - `Backend\inventario\glue\` quedó vacío.
 

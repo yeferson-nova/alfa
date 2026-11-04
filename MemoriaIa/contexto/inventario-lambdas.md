@@ -18,7 +18,8 @@ Humano: `Backend\Lamnbdas\inventario-aws\lambdas.md` (movido desde `Docs\05-arqu
 
 - **Jobs de Glue de trabajo (2026-11-03):** 11, los que invocan las 6 SF (extracción, val-tecnica, remediación, scd y certification genéricos; 6 silver por malla). En `Backend\Glue\`; el resto en `Backend\Glue\pruebas-glue\`. `niif-dev-notification-certification` quedó en pruebas: validar si entra por T1.
 
-- **Flujo integral (2026-11-03):** `Docs\05-arquitectura\flujo-integral-niif17.md` une programación → configurador → Step Function → 5 jobs de Glue → certificación → transporte, con las tablas DynamoDB y los 4 streams que mueven el proceso. Idea clave: los jobs se pasan el estado por un `parametros_extraccion.json` fijo por malla en S3. Hallazgos `FLU-01` a `FLU-10`. Falta el código de la cadena final (trigger de notificación, copy, move, SFTP).
+- **Flujo integral (2026-11-03):** `Docs\05-arquitectura\flujo-integral-niif17.md` une programación → configurador → Step Function → 5 jobs de Glue → certificación → transporte, con las tablas DynamoDB y los 4 streams que mueven el proceso. Idea clave: los jobs se pasan el estado por un `parametros_extraccion.json` fijo por malla en S3. Falta el código de la cadena final (trigger de notificación, copy, move, SFTP).
+- **Documentos separados (2026-11-03):** entender = `flujo-integral-niif17.md` (estado actual), `jobs-glue.md` (12 jobs y 3 crawlers) y `tareas-sobre-el-flujo.md` (T1, T2, T3 sobre el flujo), en `Docs\05-arquitectura\`. Corregir = `Docs\06-brechas\rendimiento-y-costos.md` (`RYC-01` a `RYC-17`) y `revision-pre-produccion.md` (`PP-01` a `PP-23`: 5 bloqueantes, 9 altos, 9 medios; veredicto: hoy no está listo para producción). Los `FLU-01` a `FLU-14` están en el anexo de `revision-pre-produccion.md`.
 
 ## Fuente
 - `Backend\inventario\`: extraído por script de la cuenta 533267035849 (us-east-1, DEV). **No hay repo Git: el código desplegado es la única fuente.**
