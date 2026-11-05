@@ -8,6 +8,10 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - Todo el stack es AWS. Contexto: estándares bancarios colombianos; el marco normativo se toma de los documentos entregados ([[marco-normativo]]).
 - Todo análisis busca brechas de **seguridad**, **costos** (en especial Athena) y **arquitectura**, contra los estándares de `Docs\02-estandares-banco\`.
 
+## Skill del proyecto (cargar al perder contexto)
+- Skill `niif17-alfa` en `.claude\skills\niif17-alfa\SKILL.md`: lineamientos de arquitectura, calidad, código seguro, patrones de seguros, montos y costos (Glue/Athena) y uso de esta memoria. Sin código; las referencias se cargan por tema.
+- Alcance del equipo: **sistema de jobs de Glue (medallón) y lambdas/jobs de notificación y certificación**.
+
 ## Dos formas de documentar
 - **Para humanos:** `C:\Users\rdpuser\Git\Docs\`. Prosa clara, tablas y contexto completo para quien no conoce el proyecto. Mapa en `Docs\00-LEEME.md`.
 - **Para IA (memoria):** `C:\Users\rdpuser\Git\MemoriaIa\`. Notas cortas y enlazadas, según el estándar de abajo.
@@ -19,6 +23,10 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - `MemoriaIa\`: `meta`, `contexto`, `tareas`, `estandares`, `hu`, `brechas`.
 - `Backend\`: solo código.
 - Detalle archivo por archivo en [[rutas-workspace]].
+
+## Arquitectura general del proyecto
+- Fuente de verdad: `Docs\05-arquitectura\diagramas\NIIF17_ModeloSolucion_V1.0.drawio` (draw.io, varias hojas; ~2,9 MB, no leerlo completo: extraer solo la hoja necesaria). Hojas: `Página-10`, `Página-3`, `Página-5`, `Página-1`, `Página-6`, `Página-2`, `Página-9`, `Copia de Página-5`.
+- Resumen del flujo en [[arquitectura-niif17]]. Otros diagramas de la carpeta (`flujo-niif17-asis`, `recorrido-dato-niif17`) son derivados propios.
 
 ## Estándar (memoria IA)
 - Una nota = un tema, en `MemoriaIa/<subcarpeta>/<nombre-en-kebab-case>.md`. Nombres únicos en toda la memoria.
@@ -56,6 +64,7 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - [[diseno-propuesto]] - cambios propuestos en el paso 3
 - [[correo-notificacion]] - formato del correo de certificación
 - [[job-notificacion-ses]] - job de Glue de notificación reescrito para enviar por SES (T1a), en `Backend\Glue\reposNew\`; implementado, no desplegado
+- [[estructura-repos-propuesta]] - estructura de repos y de archivos (lambdas, jobs de Glue, config, librería), decisiones del usuario, plantilla de DevOps y tablas por malla; propuesta en iteración
 - [[monitoreo-grafana]] - monitoreo y propuesta de dos planos (técnico/negocio, SNS, EventBridge, ServiceNow), pendiente de validar (humano: `Tareas\T1-notificaciones\propuesta-observabilidad-eventos.md`)
 
 **estandares** (lineamientos y manuales de Alfa)
@@ -78,3 +87,4 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 **brechas**
 - [[brechas-seguridad]] - riesgos de seguridad y mejoras (humano: `Docs\06-brechas\seguridad.md`)
 - [[riesgos-glue-notificacion]] - riesgos del paso Glue → Notificación y patrón de manifiesto + Step Functions (humano: `Tareas\riesgos-flujo-glue-notificacion.md`)
+- [[inprod-primas-arl-202606]] - incidente en prod: certificación Primas ARL 202606 vacía; extracción incremental + SCD que apaga por ausencia (Gold quedó con 209 activos); hechos, hipótesis y pendientes (humano: `errores\`)

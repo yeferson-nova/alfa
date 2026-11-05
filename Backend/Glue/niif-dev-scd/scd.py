@@ -29,13 +29,16 @@ logger = logging.getLogger(__name__)
 # -------------------------------------------------
 # PARAMETROS
 # -------------------------------------------------
+ARGUMENTOS_OPCIONALES = ("PERMITIR_APAGADO_MASIVO",)
+
 args = getResolvedOptions(
     sys.argv,
     [
         "JOB_NAME",
         "RUTA_CONFIG_SCD",
-        "RUTA_PARAMETROS_EXTRACCION"
-    ]
+        "RUTA_PARAMETROS_EXTRACCION",
+        "UMBRAL_APAGADO_PCT"
+    ] + [o for o in ARGUMENTOS_OPCIONALES if f"--{o}" in sys.argv]
 )
 
 ruta_config_scd = args["RUTA_CONFIG_SCD"]
@@ -102,6 +105,38 @@ def inicializar_gold_vacio(spark, df_entrada, ruta_gold):
 
 
 # -------------------------------------------------
+# FRENO DE APAGADO MASIVO
+# El SCD apaga por ausencia lo que no viene en la entrada. Con una entrada parcial
+# (carga incremental) apagaria casi todo Gold. Se detiene antes de escribir.
+# -------------------------------------------------
+class FrenoApagadoMasivo(Exception):
+    pass
+
+
+def leer_umbral_pct(valor) -> float:
+    try:
+        umbral = float(valor)
+    except (TypeError, ValueError):
+        raise ValueError(f"UMBRAL_APAGADO_PCT invalido: {valor!r}")
+    if not 0 <= umbral <= 100:
+        raise ValueError(f"UMBRAL_APAGADO_PCT fuera de 0 a 100: {umbral}")
+    return umbral
+
+
+def evaluar_freno_apagado(total_apagados: int, total_gold_activos: int, umbral_pct: float, permitir_masivo: bool) -> float:
+    if total_gold_activos <= 0:
+        return 0.0
+    porcentaje = 100.0 * total_apagados / total_gold_activos
+    if porcentaje > umbral_pct and not permitir_masivo:
+        raise FrenoApagadoMasivo(
+            f"SCD_APAGADO_MASIVO: se apagarian {total_apagados} de {total_gold_activos} "
+            f"registros activos de Gold ({porcentaje:.2f}% > umbral {umbral_pct}%). "
+            f"Gold no se modifico."
+        )
+    return porcentaje
+
+
+# -------------------------------------------------
 # CONTEXTO GLUE
 # -------------------------------------------------
 sc = SparkContext.getOrCreate()
@@ -125,6 +160,8 @@ cfg = cargar_json_s3(ruta_config_scd)
 parametros_extraccion = cargar_json_s3(ruta_parametros_extraccion)
 
 nombre_caso = cfg["nombre_caso"]
+umbral_apagado_pct = leer_umbral_pct(cfg.get("umbral_apagado_pct", args["UMBRAL_APAGADO_PCT"]))
+permitir_apagado_masivo = str(args.get("PERMITIR_APAGADO_MASIVO", "false")).lower() == "true"
 ruta_gold = ensure_trailing_slash(cfg["salida"]["ruta_gold"])
 
 columnas_llave = cfg["llaves"]["primaria"]
@@ -425,6 +462,19 @@ else:
         logger.info(f"Registros sin cambio             : {total_sin_cambio}")
         logger.info(f"Versiones cerradas por cambio    : {total_cerrados_cambio}")
         logger.info(f"Nuevas versiones por cambio      : {total_nuevas_versiones}")
+
+        try:
+            porcentaje_apagado = evaluar_freno_apagado(
+                total_apagados, total_gold_act, umbral_apagado_pct, permitir_apagado_masivo
+            )
+        except FrenoApagadoMasivo as e:
+            logger.error(str(e))
+            parametros_extraccion["estado_gold_scd"] = "FAILED"
+            parametros_extraccion["estado_consolidacion_gold"] = "FAILED"
+            parametros_extraccion["motivo_gold_scd"] = str(e)
+            guardar_json_s3(ruta_parametros_extraccion, parametros_extraccion)
+            raise
+        logger.info(f"Porcentaje apagado por ausencia  : {porcentaje_apagado:.2f}% (umbral {umbral_apagado_pct}%)")
 
         df_final = (
             df_gold_hist
