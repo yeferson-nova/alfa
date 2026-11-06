@@ -1,0 +1,14 @@
+{
+    "WorkGroups": [
+        {
+            "Name": "primary",
+            "State": "ENABLED",
+            "Description": "",
+            "CreationTime": "2024-05-30T19:38:44.308000+00:00",
+            "EngineVersion": {
+                "SelectedEngineVersion": "AUTO",
+                "EffectiveEngineVersion": "Athena engine version 3"
+            }
+        }
+    ]
+}

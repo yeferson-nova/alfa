@@ -1,0 +1,18 @@
+{
+    "n": "niif-dev-prg-programaciones",
+    "items": 7,
+    "stream": {
+        "StreamEnabled": true,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+    },
+    "sse": {
+        "Status": "ENABLED",
+        "SSEType": "KMS",
+        "KMSMasterKeyArn": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb"
+    },
+    "billing": {
+        "BillingMode": "PAY_PER_REQUEST",
+        "LastUpdateToPayPerRequestDateTime": "2026-10-07T21:47:43.424000+00:00"
+    },
+    "ttl": null
+}

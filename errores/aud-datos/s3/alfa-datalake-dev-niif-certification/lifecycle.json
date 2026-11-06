@@ -1,0 +1,16 @@
+{
+    "TransitionDefaultMinimumObjectSize": "all_storage_classes_128K",
+    "Rules": [
+        {
+            "Expiration": {
+                "Days": 15
+            },
+            "ID": "delete-csv-after-15-days",
+            "Filter": {},
+            "Status": "Enabled",
+            "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 15
+            }
+        }
+    ]
+}

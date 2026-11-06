@@ -26,7 +26,28 @@ IDs de la matriz (fase 3): **sin asignar**. Usar `INC-1`…`INC-6` de abajo y ma
 La Step Function no decide nada de esto: solo arranca `GoldSCD` pasando `--RUTA_CONFIG_SCD` y `--RUTA_PARAMETROS_EXTRACCION`.
 
 ## 3. Hallazgo de diseño (hipótesis fuerte, sin verificar)
-`scd.py` (líneas 207-210) **asume que Silver preparada es la foto completa**, "conformada por varios lotes reutilizados". En el código de **DEV**, la extracción, al excluir llaves, guarda en `lotes_segmento` los lotes de respaldo **más** el actual (`combinar_lotes_respaldados`, marca `LOTES_RESPALDO_EXCLUSION_V2`), de modo que Silver relee todo y el SCD no apaga nada. En prod los 5 segmentos muestran **solo el lote actual** y `lotes_respaldo_exclusion` nulo. **Hipótesis INC-5:** el job de extracción desplegado en prod **no es la misma versión** que el código de DEV del repo. Comprobar: comparar el script de `niif-prd-extraccion-estandar-optimized` con el repo (buscar `combinar_lotes_respaldados`) y preguntar si QA ya tiene esa versión.
+`scd.py` (líneas 207-210) **asume que Silver preparada es la foto completa**, "conformada por varios lotes reutilizados". En el código de **DEV**, la extracción, al excluir llaves, guarda en `lotes_segmento` los lotes de respaldo **más** el actual (`combinar_lotes_respaldados`, marca `LOTES_RESPALDO_EXCLUSION_V2`), de modo que Silver relee todo y el SCD no apaga nada. En prod los 5 segmentos muestran **solo el lote actual** y `lotes_respaldo_exclusion` nulo. **Hipótesis INC-5:** el job de extracción desplegado en prod **no es la misma versión** que el código de DEV del repo. **Confirmada el 2026-11-05**, ver 3b. Falta solo saber si QA tiene la versión nueva.
+
+## 3b. INC-5 CONFIRMADA (2026-11-05, diff contra el script real de prod)
+Copia del script de prod: `errores\extraccion_estandar_optimized.py` (sin datos sensibles; 1.863 líneas vs 1.886 del repo). Prod y repo son idénticos salvo 3 bloques de la exclusión por llaves:
+1. Falta la función `combinar_lotes_respaldados` (inicio del archivo).
+2. Falta `metadata["lotes_respaldo_exclusion"]` (marca `LOTES_RESPALDO_EXCLUSION_V2`) al final de `aplicar_exclusion_llaves_segmento`.
+3. Tras contar registros, prod recupera los lotes anteriores (`obtener_lotes_desde_ruta_llaves`) **solo si la exclusión deja 0 filas**. Con 209 filas nuevas `lotes_segmento` queda en `[lote_actual]` → Silver 209 → el SCD apaga 1.203.789. El repo siempre fija respaldos + lote actual.
+`scd.py` **no tiene el defecto**: hace lo que diseñó; la extracción le entregó una entrada incompleta.
+
+## 3c. Cambios que se deben hacer (plan, nada desplegado)
+**Objetivo del fix (usuario, 2026-11-05):** que este fallo no se repita en prod ni obligue a **eliminar un periodo** para recuperarlo; los tickets en prod son **multas para el equipo**, por eso debe ser resiliente. Es un fix **transitorio** mientras se corrige el pipeline completo. **La recuperación de 202606 ya la hizo el equipo** (el periodo está resuelto); lo que queda es solo el fix preventivo.
+| Cambio | Archivo | Obligatorio | Nota |
+|---|---|---|---|
+| **Fix de la causa** | `extraccion_estandar_optimized.py` (dentro del job de Glue `niif-prd-extraccion-estandar-optimized`, no es lambda) | Sí | Reemplazar el script de prod por el del repo; es el **único** cambio, sin infra nueva (sin recursos, permisos ni cambio de configuración o de Step Function). Son 3 bloques que **dependen entre sí**: el 3 (fijar `lotes_segmento` tras excluir) llama a la función del 1 (`combinar_lotes_respaldados`) con el dato del 2 (`lotes_respaldo_exclusion`). Sin el 1 → error de nombre; sin el 2 → falla "Exclusion sin lotes de respaldo validados" en las 5 tablas con exclusión; 1 y 2 sin el 3 → no falla pero no arregla. Por eso se entrega el **archivo completo**, congelado y adjunto (con commit o hash), no "la versión del repo", porque el repo seguirá cambiando. Reversa: el script de prod guardado en `errores\`. Campo nuevo en `parametros_extraccion.json` (`lotes_respaldo_exclusion`): no probado en ejecución real, confirmar en QA. Confirmar antes si QA ya tiene esta versión. |
+| Freno de apagado masivo | `niif-dev-scd\scd.py` + `tests\test_freno_apagado.py` (18 pruebas) | No (seguro) | **Defecto a corregir antes de entregar:** `getResolvedOptions` exige `--UMBRAL_APAGADO_PCT` y la Step Function no lo pasa (solo `RUTA_CONFIG_SCD` y `RUTA_PARAMETROS_EXTRACCION`) → el SCD de todas las mallas fallaría al arrancar. Hacerlo opcional, umbral desde `umbral_apagado_pct` del JSON del caso, por defecto 20 % (propuesta); calibrar por malla con `metricas_gold_scd`. Probar en DEV con `replicar-fallo-dev.sh`. |
+| Correo con totales vacíos | `notification_certification.py` / `niif_certification.py` | No (seguro) | Contar filas reales sin el encabezado del CSV; si total y detalle están en 0, no enviar y avisar a soporte. Agregar `queries.summary` al JSON de prod (copiar de QA). |
+| Alarma de fallo | Step Function / CloudWatch | No | **Trabajo futuro del monitoreo (nuestro, no se pide a otro equipo), no va en este release.** Si el freno salta, `GoldSCD` → `RegistrarFallo_GoldSCD` → `FailState` y no se avisa a nadie; solo comprobado en la definición de DEV. |
+
+Orden del fix: (1) congelar el script corregido (commit o hash) y adjuntarlo; (2) release lo prueba en QA; (3) release lo sube a prod; (4) primera corrida posterior: `lotes_segmento` con varios lotes y SCD apagando ~0. Mientras no llegue a prod, una re-ejecución incremental puede repetir el fallo (considerar pausar la programación de Primas ARL).
+Mensaje al equipo técnico/monitoreo (Teams): redactado en la conversación del 2026-11-05; solo describe el fix (3 cambios, sin infra, reversa, transitorio) y no menciona 202606 ni alertas.
+Decisión de método: el fix mínimo va **antes** y separado de la migración a la estructura modular (ver [[estructura-repos-propuesta]]); la migración parte del script ya corregido con pruebas de caracterización que incluyan este caso (209 nuevas + ~1,2 M excluidas).
+Dónde verlo en AWS: Glue → ETL jobs → `niif-prd-extraccion-estandar-optimized` → pestaña Script y Job details (Script path); el flujo se ve en Step Functions (`niif-prd-primas-arl`, definición y ejecuciones), no en Glue Workflows.
 
 ## 4. Hallazgos secundarios
 - **INC-6:** 1.100.009 registros (91,1 % de Gold) tienen `per_proceso_point` nulo → nunca salen en la certificación de ningún periodo. Causa sin analizar.
@@ -35,15 +56,15 @@ La Step Function no decide nada de esto: solo arranca `GoldSCD` pasando `--RUTA_
 - Las otras mallas usan los mismos jobs genéricos (extracción y SCD): riesgo similar, no revisado.
 
 ## 5. Qué NO está comprobado
-- Versión desplegada de la extracción en prod (INC-5).
+- ~~Versión desplegada de la extracción en prod (INC-5)~~: confirmada, ver 3b. Sigue sin saberse la versión de QA.
 - De qué lote(s) vienen los 1.203.789 excluidos (solo se ve la corrida previa del 5 oct; el campo de lotes de respaldo está vacío).
-- Si el bucket Gold de prod tiene versionado de S3 o respaldo anterior al 2 nov (decide si se puede restaurar).
+- ~~Si el bucket Gold de prod tiene versionado de S3~~: ya no aplica, la recuperación de 202606 la hizo el equipo.
 - Si QA se comporta igual (el usuario dijo que allí el correo sale completo, con datos replicados).
 - Los logs de texto de los jobs de Glue **no se capturaron** (vacíos, falló CloudShell con error de credenciales 500). Las cifras se sustentan en las métricas de `parametros_extraccion.json` y en el CSV de Athena.
 
 ## 6. Acciones propuestas (no ejecutadas)
 1. No volver a correr el flujo de Primas ARL ni certificar el periodo hasta resolverlo.
-2. Ver versionado de Gold y restaurar desde antes del 2 nov (mejor opción); verificar con la consulta de `act_reg` por periodo.
+2. ~~Ver versionado de Gold y restaurar~~: hecho por el equipo de prod.
 3. "Limpiar los segmentos" (propuesta del equipo de prod) es **parche, no solución**: la simulación (`simular-limpieza-segmentos.py`) recupera 1.203.998 activos pero deja 1.203.789 llaves con dos filas (historial duplicado) y el fallo se repite en la siguiente re-ejecución incremental. Si se hace: limpiar los **5** segmentos, respaldar antes (copiar, no borrar).
 4. Corregir la causa: que la extracción conserve los lotes de respaldo (alinear prod con el código de DEV) o que el SCD no apague por ausencia en cargas incrementales.
 5. Agregar `queries.summary` al JSON del caso (copiar de QA); no enviar el correo de certificación si resumen y totales están vacíos; detectar "sin datos" contando filas reales sin el encabezado.

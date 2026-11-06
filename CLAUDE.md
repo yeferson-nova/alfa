@@ -87,4 +87,5 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 **brechas**
 - [[brechas-seguridad]] - riesgos de seguridad y mejoras (humano: `Docs\06-brechas\seguridad.md`)
 - [[riesgos-glue-notificacion]] - riesgos del paso Glue → Notificación y patrón de manifiesto + Step Functions (humano: `Tareas\riesgos-flujo-glue-notificacion.md`)
+- [[auditoria-pipeline-2026-11]] - auditoría validada en código del pipeline (Bronce/Plata/Oro, SCD, certificación) y de las lambdas, contrastada con el diagrama (humano: `Docs\06-brechas\auditoria-pipeline-datos-vs-arquitectura.md` y `auditoria-lambdas.md`)
 - [[inprod-primas-arl-202606]] - incidente en prod: certificación Primas ARL 202606 vacía; extracción incremental + SCD que apaga por ausencia (Gold quedó con 209 activos); hechos, hipótesis y pendientes (humano: `errores\`)

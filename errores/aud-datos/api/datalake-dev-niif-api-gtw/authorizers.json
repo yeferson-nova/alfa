@@ -1,0 +1,24 @@
+{
+    "items": [
+        {
+            "id": "fmywcu",
+            "name": "CognitoAuthorizer",
+            "type": "COGNITO_USER_POOLS",
+            "providerARNs": [
+                "arn:aws:cognito-idp:us-east-1:533267035849:userpool/us-east-1_gg6kZ9C4O"
+            ],
+            "authType": "cognito_user_pools",
+            "identitySource": "method.request.header.Authorization"
+        },
+        {
+            "id": "is5r2o",
+            "name": "CognitoAuthorizerDev",
+            "type": "COGNITO_USER_POOLS",
+            "providerARNs": [
+                "arn:aws:cognito-idp:us-east-1:533267035849:userpool/us-east-1_7B1QUgeNT"
+            ],
+            "authType": "cognito_user_pools",
+            "identitySource": "method.request.header.Authorization"
+        }
+    ]
+}

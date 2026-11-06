@@ -1,0 +1,30 @@
+
+aws: [ERROR]: An error occurred (NoSuchLifecycleConfiguration) when calling the GetBucketLifecycleConfiguration operation: The lifecycle configuration does not exist
+FALLO: aws s3api get-bucket-lifecycle-configuration --bucket niif-dev-assets
+
+aws: [ERROR]: An error occurred (NoSuchBucketPolicy) when calling the GetBucketPolicy operation: The bucket policy does not exist
+FALLO: aws s3api get-bucket-policy --bucket niif-dev-assets --query Policy --output text
+
+aws: [ERROR]: An error occurred (NoSuchLifecycleConfiguration) when calling the GetBucketLifecycleConfiguration operation: The lifecycle configuration does not exist
+FALLO: aws s3api get-bucket-lifecycle-configuration --bucket alfa-datalake-dev-bronce
+
+aws: [ERROR]: An error occurred (NoSuchLifecycleConfiguration) when calling the GetBucketLifecycleConfiguration operation: The lifecycle configuration does not exist
+FALLO: aws s3api get-bucket-lifecycle-configuration --bucket alfa-datalake-dev-silver
+
+aws: [ERROR]: An error occurred (NoSuchLifecycleConfiguration) when calling the GetBucketLifecycleConfiguration operation: The lifecycle configuration does not exist
+FALLO: aws s3api get-bucket-lifecycle-configuration --bucket alfa-datalake-dev-gold
+
+aws: [ERROR]: An error occurred (NoSuchBucketPolicy) when calling the GetBucketPolicy operation: The bucket policy does not exist
+FALLO: aws s3api get-bucket-policy --bucket alfa-datalake-dev-gold --query Policy --output text
+
+aws: [ERROR]: An error occurred (NoSuchBucketPolicy) when calling the GetBucketPolicy operation: The bucket policy does not exist
+FALLO: aws s3api get-bucket-policy --bucket alfa-datalake-dev-niif-certification --query Policy --output text
+
+aws: [ERROR]: An error occurred (NoSuchLifecycleConfiguration) when calling the GetBucketLifecycleConfiguration operation: The lifecycle configuration does not exist
+FALLO: aws s3api get-bucket-lifecycle-configuration --bucket alfa-datalake-dev-niif-transport
+
+aws: [ERROR]: An error occurred (NoSuchBucketPolicy) when calling the GetBucketPolicy operation: The bucket policy does not exist
+FALLO: aws s3api get-bucket-policy --bucket alfa-datalake-dev-niif-transport --query Policy --output text
+
+aws: [ERROR]: An error occurred (NoSuchBucketPolicy) when calling the GetBucketPolicy operation: The bucket policy does not exist
+FALLO: aws s3api get-bucket-policy --bucket niif-dev-transport --query Policy --output text

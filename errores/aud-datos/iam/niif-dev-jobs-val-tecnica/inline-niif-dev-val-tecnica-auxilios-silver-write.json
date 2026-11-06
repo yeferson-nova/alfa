@@ -1,0 +1,40 @@
+{
+    "RoleName": "niif-dev-jobs-val-tecnica",
+    "PolicyName": "niif-dev-val-tecnica-auxilios-silver-write",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "WriteValidationDataDomain",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:PutObject",
+                    "s3:DeleteObject",
+                    "s3:AbortMultipartUpload"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/t_data_domain/*"
+                ]
+            },
+            {
+                "Sid": "ListValidationDataDomain",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:ListBucket",
+                    "s3:GetBucketLocation"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::alfa-datalake-dev-silver"
+                ],
+                "Condition": {
+                    "StringLike": {
+                        "s3:prefix": [
+                            "niif/t_data_domain",
+                            "niif/t_data_domain/*"
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

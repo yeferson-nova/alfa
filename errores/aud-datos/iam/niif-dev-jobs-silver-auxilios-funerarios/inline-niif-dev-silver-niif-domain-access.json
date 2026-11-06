@@ -1,0 +1,51 @@
+{
+    "RoleName": "niif-dev-jobs-silver-auxilios-funerarios",
+    "PolicyName": "niif-dev-silver-niif-domain-access",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "ListSilverBucket",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:ListBucket",
+                    "s3:GetBucketLocation"
+                ],
+                "Resource": "arn:aws:s3:::alfa-datalake-dev-silver"
+            },
+            {
+                "Sid": "ReadSilverBaseNiif",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetObject"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/ALFAPRD/*"
+                ]
+            },
+            {
+                "Sid": "ManagePreparedSilverNiif",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetObject",
+                    "s3:PutObject",
+                    "s3:DeleteObject",
+                    "s3:AbortMultipartUpload"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/t_data_domain/*"
+                ]
+            },
+            {
+                "Sid": "ReadRuntimeAuxilios",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetObject"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::niif-dev-assets/auxilios-funerarios/parametros_extraccion.json"
+                ]
+            }
+        ]
+    }
+}

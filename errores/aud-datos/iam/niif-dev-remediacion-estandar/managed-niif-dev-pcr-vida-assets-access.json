@@ -1,0 +1,97 @@
+{
+    "PolicyVersion": {
+        "Document": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "ListarAssetsPcrVida",
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:ListBucket"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::niif-dev-assets"
+                    ],
+                    "Condition": {
+                        "StringLike": {
+                            "s3:prefix": [
+                                "pcr-vida",
+                                "pcr-vida/*",
+                                "glue-resources/pcr-vida",
+                                "glue-resources/pcr-vida/*"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "Sid": "LeerConfiguracionesYCodigoPcrVida",
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:GetObject"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::niif-dev-assets/pcr-vida/*",
+                        "arn:aws:s3:::niif-dev-assets/glue-resources/pcr-vida/*"
+                    ]
+                },
+                {
+                    "Sid": "ActualizarRuntimePcrVida",
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:GetObject",
+                        "s3:PutObject"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::niif-dev-assets/pcr-vida/parametros_extraccion.json"
+                    ]
+                },
+                {
+                    "Sid": "ListarSilverPcrVida",
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:ListBucket"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::alfa-datalake-dev-silver"
+                    ],
+                    "Condition": {
+                        "StringLike": {
+                            "s3:prefix": [
+                                "pruebas/pcr/vida",
+                                "pruebas/pcr/vida/*",
+                                "pcr-vida",
+                                "pcr-vida/*"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "Sid": "LeerFuentesSilverPcrVida",
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:GetObject"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::alfa-datalake-dev-silver/pruebas/pcr/vida/*",
+                        "arn:aws:s3:::alfa-datalake-dev-silver/pcr-vida/*"
+                    ]
+                },
+                {
+                    "Sid": "EscribirResultadosSilverPcrVida",
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:PutObject",
+                        "s3:DeleteObject",
+                        "s3:AbortMultipartUpload"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::alfa-datalake-dev-silver/pcr-vida/*"
+                    ]
+                }
+            ]
+        },
+        "VersionId": "v2",
+        "IsDefaultVersion": true,
+        "CreateDate": "2026-10-30T20:19:13+00:00"
+    }
+}

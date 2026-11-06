@@ -33,14 +33,14 @@ actualizado: 2026-11-05
 - [ ] Resolver [[preguntas-abiertas]].
 
 ## Incidente en prod: Primas ARL 202606 (2026-11-05), ver [[inprod-primas-arl-202606]]
-- [ ] **Paquete de cambio 1 listo (2026-11-05):** freno de apagado masivo en `niif-dev-scd/scd.py` con 18 pruebas, detalle en `Tareas\paquete-release-inprod\LEEME.md`. Falta: probar en DEV (`replicar-fallo-dev.sh`), calibrar el umbral por malla y entregar a DevOps para QA. Siguen: paquete 2 (extracción alineada, INC-5) y 3 (correo con totales vacíos).
-- [ ] **Inmediato:** no volver a correr el flujo de Primas ARL ni certificar 202606 hasta resolverlo (Gold de prod quedó con 209 activos).
-- [ ] Ver si `alfa-datalake-prd-gold` tiene versionado de S3 o respaldo de `niif/scd_primas_arl/` anterior al 2 nov y restaurar (consola S3, paso 2 de `errores\errores.md` sección 7).
-- [ ] Comparar el script de `niif-prd-extraccion-estandar-optimized` con el repo (`combinar_lotes_respaldados`, `LOTES_RESPALDO_EXCLUSION_V2`) y confirmar si QA tiene la versión nueva (hipótesis INC-5).
+- [ ] **Plan de cambios del incidente (2026-11-05), detalle en [[inprod-primas-arl-202606]] secciones 3b y 3c.** INC-5 confirmada con diff contra el script de prod (`errores\extraccion_estandar_optimized.py`): faltan 3 bloques de la exclusión. Paquete 1 = **fix de extracción** (script del repo, 3 bloques juntos; el único obligatorio). Seguros opcionales: freno de `scd.py` (borrador sin entregar, 18 pruebas; **antes hay que hacer opcional `UMBRAL_APAGADO_PCT`**, la Step Function no lo pasa), correo con totales vacíos y alarma de fallo del SCD. `Tareas\paquete-release-inprod\LEEME.md` **no existe**: hay que crear el paquete de release (instrucciones, prueba en QA, reversa). Pendiente confirmar si QA tiene la versión nueva de extracción y decidir si se conserva el borrador de `scd.py`.
+- [x] ~~Inmediato: no volver a correr Primas ARL ni certificar 202606~~: la recuperación de 202606 ya la hizo el equipo (2026-11-05). Queda solo el fix preventivo.
+- [x] ~~Versionado y restauración de Gold~~: hecho por el equipo (2026-11-05).
+- [x] Comparar el script de prod con el repo: hecho 2026-11-05, INC-5 confirmada (3 bloques faltantes). [ ] Falta confirmar si QA tiene la versión nueva (comparar su script igual).
 - [ ] Ver las carpetas `lote_cargue_id=` de los 5 segmentos de 202606 en `niif-prd-assets\segmentos\` (qué corridas respaldan los 1.203.789).
 - [ ] Verificar por qué entraron endosos de 202610 con `WHERE PERIODO <= '202606'` (consulta del paso 6 de la sección 7 de `errores.md`).
 - [ ] Agregar `queries.summary` al JSON de prod `primas-arl/primasArl.json` (copiar de QA) y reenviar la notificación cuando Gold esté corregido.
-- [ ] Decidir y aplicar la corrección de diseño: extracción que conserve lotes de respaldo, o SCD que no apague por ausencia en cargas incrementales. Probar primero en DEV con `erroreseplicar-fallo-dev.sh`.
+- [ ] Decidir y aplicar la corrección de diseño: extracción que conserve lotes de respaldo, o SCD que no apague por ausencia en cargas incrementales. Probar primero en DEV con `errores\replicar-fallo-dev.sh`.
 - [ ] Detectar "sin datos" contando filas sin el encabezado del CSV y no enviar el correo de certificación con resumen y totales vacíos.
 - [ ] Revisar si las otras 5 mallas comparten el riesgo (mismos jobs genéricos de extracción y SCD).
 - [ ] Analizar los 1.100.009 registros (91 %) con `per_proceso_point` nulo en `scd_primas_arl`.

@@ -1,0 +1,82 @@
+[
+    {
+        "inicio": "2026-11-04T04:31:47.836000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 124,
+        "dpuSeg": 497.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-26T15:56:45.922000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 100,
+        "dpuSeg": 402.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-23T21:13:28.909000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 98,
+        "dpuSeg": 392.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-22T14:30:19.140000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 96,
+        "dpuSeg": 387.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-09T20:07:33.707000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 121,
+        "dpuSeg": 486.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-09-25T20:20:57.345000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 146,
+        "dpuSeg": 586.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-09-17T20:14:26.834000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 147,
+        "dpuSeg": 590.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-09-16T20:51:12.843000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 145,
+        "dpuSeg": 581.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-09-16T20:38:01.335000+00:00",
+        "estado": "FAILED",
+        "seg": 55,
+        "dpuSeg": 221.0,
+        "workers": 4,
+        "error": "ClientError: An error occurred (AccessDenied) when calling the GetObject operation: User: arn:aws:sts::533267035849:assumed-role/niif-dev-jobs-silver-primas-arl/GlueJobRunnerSession is not authorized to perform: s3:GetObject on resource: \"arn:aws:s3:::niif-dev-assets/modelo-configuracion/ejecuciones/primas_arl/periodo=202606/PRUEBA-GESTOR-202606-019/parametros_extraccion.json\" because no identity-based policy allows the s3:GetObject action"
+    },
+    {
+        "inicio": "2026-07-15T21:57:20.635000+00:00",
+        "estado": "FAILED",
+        "seg": 16,
+        "dpuSeg": 65.0,
+        "workers": 4,
+        "error": "LAUNCH ERROR | Error downloading from S3 for bucket: niif-dev-assets, key: glue-resources/primas-arl/jobs/silver_primas_arl.py.The specified key does not exist. (Service: Amazon S3; Status Code: 404; Please refer logs for details."
+    }
+]

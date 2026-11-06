@@ -1,0 +1,12 @@
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "niif-dev-pcr-vida-assets-access",
+            "PolicyArn": "arn:aws:iam::533267035849:policy/niif-dev-pcr-vida-assets-access"
+        },
+        {
+            "PolicyName": "niif-dev-glue-jobs-common-policy",
+            "PolicyArn": "arn:aws:iam::533267035849:policy/niif-dev-glue-jobs-common-policy"
+        }
+    ]
+}

@@ -1,0 +1,54 @@
+{
+    "RoleName": "niif-dev-finalizador-ejecucion-role",
+    "PolicyName": "niif-dev-finalizador-ejecucion-minima",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "EscribirLogs",
+                "Effect": "Allow",
+                "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                ],
+                "Resource": "arn:aws:logs:us-east-1:533267035849:log-group:/aws/lambda/niif-dev-finalizador-ejecucion:*"
+            },
+            {
+                "Sid": "ConsultarEjecucionStep",
+                "Effect": "Allow",
+                "Action": "states:DescribeExecution",
+                "Resource": "arn:aws:states:us-east-1:533267035849:execution:niif-dev-primas-arl:*"
+            },
+            {
+                "Sid": "ActualizarTrazabilidad",
+                "Effect": "Allow",
+                "Action": [
+                    "dynamodb:GetItem",
+                    "dynamodb:UpdateItem"
+                ],
+                "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-gestor-configuracion"
+            },
+            {
+                "Sid": "LeerParametrosEjecucion",
+                "Effect": "Allow",
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::niif-dev-assets/modelo-configuracion/ejecuciones/*"
+            },
+            {
+                "Sid": "DescifrarParametros",
+                "Effect": "Allow",
+                "Action": "kms:Decrypt",
+                "Resource": "arn:aws:kms:us-east-1:533267035849:key/c417247b-8e2c-4d21-9b5b-6b6b5c548bea",
+                "Condition": {
+                    "StringEquals": {
+                        "kms:ViaService": "s3.us-east-1.amazonaws.com"
+                    },
+                    "StringLike": {
+                        "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::niif-dev-assets/modelo-configuracion/ejecuciones/*"
+                    }
+                }
+            }
+        ]
+    }
+}

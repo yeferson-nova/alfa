@@ -1,0 +1,137 @@
+{
+  "nombre_caso": "primas_endosos",
+  "parametros_extraccion": {
+    "ruta": "s3://niif-dev-assets/primas-endosos/parametros_extraccion.json"
+  },
+  "salida": {
+    "ruta_base": "s3://alfa-datalake-dev-silver/niif/t_data_domain/primas_endosos/validacion_tecnica_primas_endosos/"
+  },
+  "datasets": [
+    {
+      "reglas": [
+        {
+          "nulo": false,
+          "tipo": "INTEGER",
+          "columna": "NID_RENTAS"
+        },
+        {
+          "nulo": true,
+          "columna": "RAMO_POINT",
+          "longitud_maxima": 3,
+          "tipo": "STRING"
+        },
+        {
+          "tipo": "DATE",
+          "nulo": true,
+          "columna": "FEC_EXPEDICION"
+        },
+        {
+          "nulo": false,
+          "longitud_maxima": 3,
+          "tipo": "STRING",
+          "columna": "COD_ORIGEN"
+        }
+      ],
+      "tabla_relativa": "prv/prv_rentas"
+    },
+    {
+      "tabla_relativa": "prv/prv_endosos_point",
+      "reglas": [
+        {
+          "columna": "NID_RENTAS",
+          "nulo": false,
+          "tipo": "INTEGER"
+        },
+        {
+          "columna": "NID_ENDOSO_POINT",
+          "nulo": false,
+          "tipo": "INTEGER"
+        },
+        {
+          "tipo": "DATE",
+          "nulo": true,
+          "columna": "FEC_EXPEDICION"
+        },
+        {
+          "columna": "FEC_ENVIO_POINT",
+          "nulo": true,
+          "tipo": "DATE"
+        },
+        {
+          "nulo": true,
+          "tipo": "DECIMAL",
+          "columna": "VLR_TOTAL",
+          "escala": 2,
+          "precision": 17
+        },
+        {
+          "escala": 2,
+          "precision": 17,
+          "nulo": true,
+          "columna": "VLR_TOTAL_RECAUDO",
+          "tipo": "DECIMAL"
+        },
+        {
+          "tipo": "INTEGER",
+          "nulo": true,
+          "columna": "NID_ENDOSO_REVERSION"
+        },
+        {
+          "columna": "NID_ENDOSO_REVERSADO",
+          "nulo": true,
+          "tipo": "INTEGER"
+        },
+        {
+          "tipo": "STRING",
+          "columna": "BLN_PROCESO",
+          "longitud_maxima": 1,
+          "nulo": false
+        },
+        {
+          "nulo": false,
+          "tipo": "INTEGER",
+          "columna": "COD_TIPO_ENDOSO"
+        }
+      ]
+    },
+    {
+      "reglas": [
+        {
+          "nulo": false,
+          "longitud_maxima": 3,
+          "columna": "COD_ORIGEN",
+          "tipo": "STRING"
+        },
+        {
+          "tipo": "STRING",
+          "columna": "NOMBRE",
+          "nulo": true,
+          "longitud_maxima": 50
+        }
+      ],
+      "tabla_relativa": "general/cgr_origenes"
+    },
+    {
+      "reglas": [
+        {
+          "columna": "COD_TIPO_ENDOSO",
+          "nulo": false,
+          "tipo": "INTEGER"
+        },
+        {
+          "columna": "NOMBRE_TIPO",
+          "nulo": false,
+          "tipo": "STRING",
+          "longitud_maxima": 30
+        },
+        {
+          "longitud_maxima": 2,
+          "columna": "COD_TRANSACCION_POINT",
+          "nulo": true,
+          "tipo": "STRING"
+        }
+      ],
+      "tabla_relativa": "general/cgr_tipos_endosos"
+    }
+  ]
+}

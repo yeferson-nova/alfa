@@ -1,0 +1,6 @@
+{
+    "PolicyNames": [
+        "niif-dev-decrypt-short-links",
+        "niif-dev-read-short-links"
+    ]
+}

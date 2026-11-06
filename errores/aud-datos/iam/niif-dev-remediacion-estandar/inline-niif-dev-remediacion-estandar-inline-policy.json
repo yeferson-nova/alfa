@@ -1,0 +1,144 @@
+{
+    "RoleName": "niif-dev-remediacion-estandar",
+    "PolicyName": "niif-dev-remediacion-estandar-inline-policy",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Action": [
+                    "s3:GetObjectVersion",
+                    "s3:GetObject"
+                ],
+                "Effect": "Allow",
+                "Resource": "arn:aws:s3:::niif-dev-assets/glue-resources/estandar/remediacion_estandar.py",
+                "Sid": "ReadRemediationScript"
+            },
+            {
+                "Action": [
+                    "s3:GetObjectVersion",
+                    "s3:GetObject"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::niif-dev-assets/reserva-matematica-rvi/parametros_extraccion.json",
+                    "arn:aws:s3:::niif-dev-assets/reserva-matematica-arp/parametros_extraccion.json",
+                    "arn:aws:s3:::niif-dev-assets/primas-rentas/parametros_extraccion.json",
+                    "arn:aws:s3:::niif-dev-assets/primas-endosos/parametros_extraccion.json",
+                    "arn:aws:s3:::niif-dev-assets/primas-arl/parametros_extraccion.json",
+                    "arn:aws:s3:::niif-dev-assets/auxilios-funerarios/parametros_extraccion.json"
+                ],
+                "Sid": "ReadRemediationParameters"
+            },
+            {
+                "Action": "s3:PutObject",
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::niif-dev-assets/reserva-matematica-rvi/parametros_extraccion.json",
+                    "arn:aws:s3:::niif-dev-assets/reserva-matematica-arp/parametros_extraccion.json",
+                    "arn:aws:s3:::niif-dev-assets/primas-rentas/parametros_extraccion.json",
+                    "arn:aws:s3:::niif-dev-assets/primas-endosos/parametros_extraccion.json",
+                    "arn:aws:s3:::niif-dev-assets/primas-arl/parametros_extraccion.json",
+                    "arn:aws:s3:::niif-dev-assets/auxilios-funerarios/parametros_extraccion.json"
+                ],
+                "Sid": "UpdateRemediationParameters"
+            },
+            {
+                "Action": "s3:GetBucketLocation",
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::niif-dev-assets",
+                    "arn:aws:s3:::alfa-datalake-dev-silver",
+                    "arn:aws:s3:::alfa-datalake-dev-bronce"
+                ],
+                "Sid": "GetRemediationBucketLocations"
+            },
+            {
+                "Action": "s3:ListBucket",
+                "Condition": {
+                    "StringLike": {
+                        "s3:prefix": [
+                            "glue-resources/estandar/remediacion_estandar.py",
+                            "auxilios-funerarios/*",
+                            "primas-arl/*",
+                            "primas-endosos/*",
+                            "primas-rentas/*",
+                            "reserva-matematica-arp/*",
+                            "reserva-matematica-rvi/*"
+                        ]
+                    }
+                },
+                "Effect": "Allow",
+                "Resource": "arn:aws:s3:::niif-dev-assets",
+                "Sid": "ListRemediationAssetsPrefixes"
+            },
+            {
+                "Action": "s3:ListBucket",
+                "Effect": "Allow",
+                "Resource": "arn:aws:s3:::alfa-datalake-dev-bronce",
+                "Sid": "ListRemediationBronzePrefixes"
+            },
+            {
+                "Action": "s3:ListBucket",
+                "Effect": "Allow",
+                "Resource": "arn:aws:s3:::alfa-datalake-dev-silver",
+                "Sid": "ListRemediationSilverPrefixes"
+            },
+            {
+                "Action": "s3:GetObject",
+                "Effect": "Allow",
+                "Resource": "arn:aws:s3:::alfa-datalake-dev-bronce/niif/ALFAPRD/*",
+                "Sid": "ReadRemediationBronzeSources"
+            },
+            {
+                "Action": [
+                    "s3:PutObject",
+                    "s3:ListMultipartUploadParts",
+                    "s3:GetObject",
+                    "s3:DeleteObject",
+                    "s3:AbortMultipartUpload"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif_$folder$",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/ALFAPRD/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/*"
+                ],
+                "Sid": "ManageRemediationSilverBase"
+            },
+            {
+                "Action": "s3:GetObject",
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/t_data_domain/reserva_matematica_rvi/validacion_tecnica_reserva_matematica_rvi/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/t_data_domain/reserva_matematica_arp/validacion_tecnica_reserva_matematica_arp/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/t_data_domain/primas_rentas/validacion_tecnica_primas_rentas/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/t_data_domain/primas_endosos/validacion_tecnica_primas_endosos/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/t_data_domain/primas_arl/validacion_tecnica_primas_arl/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/t_data_domain/auxilios_funerarios/validacion_tecnica_auxilios_funerarios/*"
+                ],
+                "Sid": "ReadValidationTechnicalResults"
+            },
+            {
+                "Action": [
+                    "s3:PutObject",
+                    "s3:ListMultipartUploadParts",
+                    "s3:GetObject",
+                    "s3:DeleteObject",
+                    "s3:AbortMultipartUpload"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif_$folder$",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/remediacion/reserva_matematica_rvi/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/remediacion/reserva_matematica_arp/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/remediacion/primas_rentas/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/remediacion/primas_endosos/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/remediacion/primas_arl/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/remediacion/auxilios_funerarios/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/*"
+                ],
+                "Sid": "WriteRemediationHistory"
+            }
+        ]
+    }
+}

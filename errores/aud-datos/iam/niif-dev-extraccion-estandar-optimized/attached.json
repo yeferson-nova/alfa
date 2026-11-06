@@ -1,0 +1,16 @@
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "niif-dev-glue-jobs-common-policy",
+            "PolicyArn": "arn:aws:iam::533267035849:policy/niif-dev-glue-jobs-common-policy"
+        },
+        {
+            "PolicyName": "niif-dev-extraccion-estandar-emisiones-s3",
+            "PolicyArn": "arn:aws:iam::533267035849:policy/niif-dev-extraccion-estandar-emisiones-s3"
+        },
+        {
+            "PolicyName": "niif-dev-glue-read-acsele-connections",
+            "PolicyArn": "arn:aws:iam::533267035849:policy/niif-dev-glue-read-acsele-connections"
+        }
+    ]
+}

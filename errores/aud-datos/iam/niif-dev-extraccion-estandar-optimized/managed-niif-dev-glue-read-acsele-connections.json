@@ -1,0 +1,24 @@
+{
+    "PolicyVersion": {
+        "Document": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "ReadRequiredAcseleConnections",
+                    "Effect": "Allow",
+                    "Action": [
+                        "glue:GetConnection"
+                    ],
+                    "Resource": [
+                        "arn:aws:glue:us-east-1:533267035849:catalog",
+                        "arn:aws:glue:us-east-1:533267035849:connection/datalake-dev-acsele-dev-connection",
+                        "arn:aws:glue:us-east-1:533267035849:connection/datalake-dev-acsele-sop-connection"
+                    ]
+                }
+            ]
+        },
+        "VersionId": "v1",
+        "IsDefaultVersion": true,
+        "CreateDate": "2026-11-04T22:17:57+00:00"
+    }
+}

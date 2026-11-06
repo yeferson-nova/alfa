@@ -1,0 +1,39 @@
+{
+    "Job": {
+        "Name": "niif-dev-remediacion-estandar",
+        "JobMode": "SCRIPT",
+        "JobRunQueuingEnabled": true,
+        "Description": "Glue job for remediacion estandar processing",
+        "Role": "arn:aws:iam::533267035849:role/niif-dev-remediacion-estandar",
+        "CreatedOn": "2026-10-26T15:28:52.885000+00:00",
+        "LastModifiedOn": "2026-10-26T15:28:52.885000+00:00",
+        "ExecutionProperty": {
+            "MaxConcurrentRuns": 1
+        },
+        "Command": {
+            "Name": "glueetl",
+            "ScriptLocation": "s3://niif-dev-assets/glue-resources/estandar/remediacion_estandar.py",
+            "PythonVersion": "3"
+        },
+        "DefaultArguments": {
+            "--enable-spark-ui": "true",
+            "--enable-metrics": "true",
+            "--spark-event-logs-path": "s3://aws-glue-assets-533267035849-us-east-1/sparkHistoryLogs/",
+            "--enable-job-insights": "true",
+            "--enable-glue-datacatalog": "true",
+            "--conf": "spark.eventLog.rolling.enabled=true",
+            "--enable-continuous-cloudwatch-log": "true",
+            "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-dev-assets/remediacion-estandar/config_remediacion_estandar.json",
+            "--job-bookmark-option": "job-bookmark-disable",
+            "--job-language": "python",
+            "--TempDir": "s3://aws-glue-assets-533267035849-us-east-1/temporary/"
+        },
+        "MaxRetries": 0,
+        "AllocatedCapacity": 4,
+        "Timeout": 2880,
+        "MaxCapacity": 4.0,
+        "WorkerType": "G.1X",
+        "NumberOfWorkers": 4,
+        "GlueVersion": "4.0"
+    }
+}

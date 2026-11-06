@@ -1,0 +1,6 @@
+{
+    "PointInTimeRecoveryStatus": "ENABLED",
+    "RecoveryPeriodInDays": 35,
+    "EarliestRestorableDateTime": "2026-10-01T22:47:07.833000+00:00",
+    "LatestRestorableDateTime": "2026-11-05T22:42:07.833000+00:00"
+}

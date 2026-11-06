@@ -1,0 +1,107 @@
+{
+  "nombre_caso": "primas_arl",
+  "parametros_extraccion": {
+    "ruta": "s3://niif-dev-assets/primas-arl/parametros_extraccion.json"
+  },
+  "salida": {
+    "ruta_base": "s3://alfa-datalake-dev-silver/niif/t_data_domain/primas_arl/validacion_tecnica_primas_arl/"
+  },
+  "datasets": [
+    {
+      "tabla_relativa": "arpprod/par_endosos",
+      "reglas": [
+        {
+          "precision": 10,
+          "nulo": false,
+          "tipo": "INTEGER",
+          "columna": "NID_ENDOSO",
+          "escala": 0
+        },
+        {
+          "nulo": false,
+          "escala": 0,
+          "tipo": "INTEGER",
+          "columna": "NID_POLIZA",
+          "precision": 10
+        },
+        {
+          "nulo": false,
+          "precision": 17,
+          "columna": "VLR_PRIMA",
+          "tipo": "DECIMAL",
+          "escala": 2
+        },
+        {
+          "columna": "FEC_EXPEDICION",
+          "tipo": "DATE",
+          "nulo": false
+        },
+        {
+          "tipo": "STRING",
+          "nulo": true,
+          "columna": "PERIODO",
+          "longitud_maxima": 6
+        },
+        {
+          "columna": "FEC_PROCESO_POINT",
+          "tipo": "DATE",
+          "nulo": true
+        },
+        {
+          "columna": "PERIODO_POINT",
+          "longitud_maxima": 6,
+          "nulo": true,
+          "tipo": "STRING"
+        },
+        {
+          "columna": "COD_TIPO_ENDOSO",
+          "tipo": "INTEGER",
+          "escala": 0,
+          "nulo": false,
+          "precision": 10
+        },
+        {
+          "nulo": false,
+          "columna": "COD_TIPO_ENDOSO_ARP",
+          "longitud_maxima": 3,
+          "tipo": "STRING"
+        },
+        {
+          "columna": "COD_SUCURSAL_ALFA",
+          "tipo": "STRING",
+          "nulo": false,
+          "longitud_maxima": 3
+        },
+        {
+          "nulo": false,
+          "columna": "MODULO",
+          "tipo": "STRING",
+          "longitud_maxima": 2
+        }
+      ]
+    },
+    {
+      "reglas": [
+        {
+          "columna": "NID_AFILIACION",
+          "escala": 0,
+          "nulo": false,
+          "tipo": "INTEGER",
+          "precision": 10
+        }
+      ],
+      "tabla_relativa": "arpprod/par_afiliaciones"
+    },
+    {
+      "tabla_relativa": "general/cgr_sucursales_alfa",
+      "reglas": [
+        {
+          "longitud_maxima": 50,
+          "tipo": "STRING",
+          "columna": "NOMBRE",
+          "nulo": false
+        }
+      ]
+    }
+  ]
+}

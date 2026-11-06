@@ -1,0 +1,82 @@
+[
+    {
+        "inicio": "2026-11-05T05:08:36.742000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 112,
+        "dpuSeg": 448.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-11-04T20:30:52.131000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 120,
+        "dpuSeg": 480.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-11-04T19:41:41.548000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 105,
+        "dpuSeg": 420.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-11-04T04:35:51.007000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 124,
+        "dpuSeg": 496.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-11-03T21:05:55.033000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 124,
+        "dpuSeg": 496.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-11-03T19:17:07.338000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 87,
+        "dpuSeg": 348.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-11-03T19:10:22.754000+00:00",
+        "estado": "FAILED",
+        "seg": 59,
+        "dpuSeg": 236.0,
+        "workers": 4,
+        "error": "ClientError: An error occurred (AccessDenied) when calling the GetObject operation: User: arn:aws:sts::533267035849:assumed-role/niif-dev-jobs-scd/GlueJobRunnerSession is not authorized to perform: s3:GetObject on resource: \"arn:aws:s3:::niif-dev-assets/pcr-vida/config_scd_pcr_vida.json\" because no identity-based policy allows the s3:GetObject action"
+    },
+    {
+        "inicio": "2026-10-26T22:06:15.687000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 254,
+        "dpuSeg": 1016.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-26T21:41:41.935000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 161,
+        "dpuSeg": 644.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-26T21:03:01.032000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 118,
+        "dpuSeg": 472.0,
+        "workers": 4,
+        "error": null
+    }
+]

@@ -1,0 +1,59 @@
+{
+    "PolicyVersion": {
+        "Document": {
+            "Statement": [
+                {
+                    "Action": "s3:GetObject",
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:s3:::niif-dev-assets/configs/certification/composite_groups.json",
+                    "Sid": "ReadCompositeGroupsConfiguration"
+                },
+                {
+                    "Action": [
+                        "dynamodb:UpdateItem",
+                        "dynamodb:Query",
+                        "dynamodb:PutItem",
+                        "dynamodb:GetItem",
+                        "dynamodb:DeleteItem"
+                    ],
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-composite-notification-status",
+                    "Sid": "ManageCompositeNotificationStatus"
+                },
+                {
+                    "Action": [
+                        "dynamodb:ListStreams",
+                        "dynamodb:GetShardIterator",
+                        "dynamodb:GetRecords",
+                        "dynamodb:DescribeStream"
+                    ],
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-composite-notification-status/stream/*",
+                    "Sid": "ConsumeCompositeNotificationStream"
+                },
+                {
+                    "Action": "glue:StartJobRun",
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:glue:us-east-1:533267035849:job/niif-dev-certification",
+                    "Sid": "StartCertificationJob"
+                },
+                {
+                    "Action": [
+                        "kms:DescribeKey",
+                        "kms:Decrypt"
+                    ],
+                    "Effect": "Allow",
+                    "Resource": [
+                        "arn:aws:kms:us-east-1:533267035849:key/c417247b-8e2c-4d21-9b5b-6b6b5c548bea",
+                        "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb"
+                    ],
+                    "Sid": "DecryptCompositeEvaluatorKeys"
+                }
+            ],
+            "Version": "2012-10-17"
+        },
+        "VersionId": "v3",
+        "IsDefaultVersion": true,
+        "CreateDate": "2026-10-07T22:11:38+00:00"
+    }
+}

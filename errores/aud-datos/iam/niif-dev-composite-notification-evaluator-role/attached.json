@@ -1,0 +1,16 @@
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "niif-dev-composite-notification-evaluator-policy-logs",
+            "PolicyArn": "arn:aws:iam::533267035849:policy/niif-dev-composite-notification-evaluator-policy-logs"
+        },
+        {
+            "PolicyName": "niif-dev-composite-notification-evaluator-policy-tracing",
+            "PolicyArn": "arn:aws:iam::533267035849:policy/niif-dev-composite-notification-evaluator-policy-tracing"
+        },
+        {
+            "PolicyName": "niif-dev-composite-notification-evaluator-policy",
+            "PolicyArn": "arn:aws:iam::533267035849:policy/niif-dev-composite-notification-evaluator-policy"
+        }
+    ]
+}

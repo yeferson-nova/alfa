@@ -1,0 +1,23 @@
+{
+    "RoleName": "niif-dev-jobs-notification-certification",
+    "PolicyName": "niif-dev-notification-manage-short-links",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "ManageCertificationShortLinks",
+                "Effect": "Allow",
+                "Action": [
+                    "dynamodb:PutItem",
+                    "dynamodb:GetItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:Query"
+                ],
+                "Resource": [
+                    "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-short-links",
+                    "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-short-links/index/*"
+                ]
+            }
+        ]
+    }
+}

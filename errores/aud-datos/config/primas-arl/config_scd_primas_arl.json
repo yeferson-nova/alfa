@@ -1,0 +1,47 @@
+{
+  "nombre_caso": "primas_arl",
+  "salida": {
+    "ruta_gold": "s3://alfa-datalake-dev-gold/niif/scd_primas_arl/"
+  },
+  "llaves": {
+    "apertura": [],
+    "primaria": [
+      "NID_POLIZA",
+      "NID_ENDOSO"
+    ]
+  },
+  "columnas_cambio": {
+    "alerta": [
+      "FEC_EXPEDICION",
+      "PER_EXPEDICION",
+      "FEC_PROCESO_POINT",
+      "PER_PROCESO_POINT"
+    ],
+    "normales": [
+      "VLR_PRIMA",
+      "COD_TIPO_ENDOSO",
+      "COD_TIPO_ENDOSO_ARP",
+      "COD_SUCURSAL_ALFA",
+      "NOM_SUCURSAL_ALFA",
+      "MODULO",
+      "NID_AFILIACION",
+      "COD_TIPO_IDENTIFICACION_TERCERO",
+      "NID_NRO_IDENTIFICACION_TERCERO",
+      "NOM_TERCERO"
+    ]
+  },
+  "columnas_fijas": [
+    "LOTE_CARGUE_ID"
+  ],
+  "columnas_administrativas": [
+    "FEC_INI_VIG_REG",
+    "FEC_FIN_VIG_REG",
+    "VRS_REG",
+    "ACT_REG"
+  ],
+  "metadatos": {
+    "capa": "gold",
+    "tipo": "scd_tipo_2",
+    "dominio": "niif17"
+  }
+}

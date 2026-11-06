@@ -1,0 +1,15 @@
+{
+    "RoleName": "niif-dev-extraccion-estandar-optimized",
+    "PolicyName": "niif-dev-pcr-vida-kms-acsele",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "DescifrarCredencialAcselePcrVida",
+                "Effect": "Allow",
+                "Action": "kms:Decrypt",
+                "Resource": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb"
+            }
+        ]
+    }
+}

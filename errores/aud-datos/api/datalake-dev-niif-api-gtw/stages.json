@@ -1,0 +1,26 @@
+[
+    {
+        "stage": "dev",
+        "logs": {
+            "format": "  {\t\"requestTime\": \"$context.requestTime\",\t\"requestId\": \"$context.requestId\",\t\"httpMethod\": \"$context.httpMethod\",\t\"path\": \"$context.path\",\t\"resourcePath\": \"$context.resourcePath\",\t\"status\": $context.status,\t\"responseLatency\": $context.responseLatency,  \"xrayTraceId\": \"$context.xrayTraceId\",  \"integrationRequestId\": \"$context.integration.requestId\",\t\"functionResponseStatus\": \"$context.integration.status\",  \"integrationLatency\": \"$context.integration.latency\",\t\"integrationServiceStatus\": \"$context.integration.integrationStatus\",  \"authorizeResultStatus\": \"$context.authorize.status\",\t\"authorizerServiceStatus\": \"$context.authorizer.status\",\t\"authorizerLatency\": \"$context.authorizer.latency\",\t\"authorizerRequestId\": \"$context.authorizer.requestId\",  \"ip\": \"$context.identity.sourceIp\",\t\"userAgent\": \"$context.identity.userAgent\",\t\"principalId\": \"$context.authorizer.principalId\",\t\"cognitoUser\": \"$context.identity.cognitoIdentityId\",  \"user\": \"$context.identity.user\"}",
+            "destinationArn": "arn:aws:logs:us-east-1:533267035849:log-group:/aws/apigateway/datalake-dev-niif-api-gtw"
+        },
+        "metodos": {
+            "*/*": {
+                "metricsEnabled": true,
+                "loggingLevel": "INFO",
+                "dataTraceEnabled": false,
+                "throttlingBurstLimit": -1,
+                "throttlingRateLimit": -1.0,
+                "cachingEnabled": false,
+                "cacheTtlInSeconds": 300,
+                "cacheDataEncrypted": false,
+                "requireAuthorizationForCacheControl": true,
+                "unauthorizedCacheControlHeaderStrategy": "SUCCEED_WITH_RESPONSE_HEADER"
+            }
+        },
+        "trace": true,
+        "waf": "arn:aws:wafv2:us-east-1:533267035849:regional/webacl/datalake-dev-niif-apigateway-waf/8e88de28-5d40-45b1-8b2a-720503d26bc9",
+        "cache": false
+    }
+]

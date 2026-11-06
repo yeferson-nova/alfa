@@ -1,0 +1,26 @@
+{
+    "PolicyVersion": {
+        "Document": {
+            "Statement": [
+                {
+                    "Action": [
+                        "xray:PutTraceSegments",
+                        "xray:PutTelemetryRecords",
+                        "xray:GetSamplingRules",
+                        "xray:GetSamplingTargets",
+                        "xray:GetSamplingStatisticSummaries"
+                    ],
+                    "Effect": "Allow",
+                    "Resource": [
+                        "*"
+                    ],
+                    "Sid": "AWSXRayDaemonWriteAccess"
+                }
+            ],
+            "Version": "2012-10-17"
+        },
+        "VersionId": "v1",
+        "IsDefaultVersion": true,
+        "CreateDate": "2026-07-01T00:56:28+00:00"
+    }
+}

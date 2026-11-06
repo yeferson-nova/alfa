@@ -1,0 +1,23 @@
+{
+    "RoleName": "niif-dev-jobs-niif-certification",
+    "PolicyName": "niif-dev-certification-use-notification-kms",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "UseNotificationCertificationKmsKey",
+                "Effect": "Allow",
+                "Action": [
+                    "kms:Decrypt",
+                    "kms:Encrypt",
+                    "kms:GenerateDataKey",
+                    "kms:GenerateDataKeyWithoutPlaintext",
+                    "kms:ReEncryptFrom",
+                    "kms:ReEncryptTo",
+                    "kms:DescribeKey"
+                ],
+                "Resource": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb"
+            }
+        ]
+    }
+}
