@@ -609,6 +609,8 @@ def exportar_csv_raw(use_case_id: str, query_name: str, execution_id: str, perio
             if len(chunk) >= 2 and chunk[0] == 31 and (chunk[1] == 139):
                 chunk = gzip.decompress(chunk)
             out_csv.write(chunk)
+        if contar_filas_datos(out_csv.getvalue(), name_file) == 0:
+            _RESULTADOS_SIN_DATOS[execution_id] = True
         s3.put_object(Bucket=REPORT_BUCKET, Key=dest_key, Body=out_csv.getvalue(), ContentType=CSV_CONTENT_TYPE)
         s3_url_reference = f's3://{REPORT_BUCKET}/{dest_key}'
         csv_url = construir_url_consola_s3(carpetas_certificacion[use_case_id], name_file)
@@ -795,6 +797,16 @@ def main():
 
 # SIN_DATOS_V1: la marca corresponde al resultado de cada consulta, no a regeneracion.
 _RESULTADOS_SIN_DATOS = {}
+
+def contar_filas_datos(cuerpo, nombre_archivo):
+    """Filas de datos del CSV sin el encabezado; None si no se puede saber."""
+    grupo = _niif_query_group_from_s3_key(nombre_archivo)
+    if not _niif_headers_for_group(grupo):
+        return None
+    cuerpo = _niif_add_headers_to_csv_body(cuerpo, nombre_archivo)
+    texto = cuerpo.decode("utf-8-sig", errors="replace")
+    lineas = [x for x in texto.splitlines() if x.strip()]
+    return max(len(lineas) - 1, 0)
 
 def _csv_sin_datos_confirmado(database, query, athena_id, expected_uri):
     import csv
