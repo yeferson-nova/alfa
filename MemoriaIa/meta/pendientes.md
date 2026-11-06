@@ -40,10 +40,10 @@ actualizado: 2026-11-05
 - [ ] Ver las carpetas `lote_cargue_id=` de los 5 segmentos de 202606 en `niif-prd-assets\segmentos\` (qué corridas respaldan los 1.203.789).
 - [ ] Verificar por qué entraron endosos de 202610 con `WHERE PERIODO <= '202606'` (consulta del paso 6 de la sección 7 de `errores.md`).
 - [ ] Agregar `queries.summary` al JSON de prod `primas-arl/primasArl.json` (copiar de QA) y reenviar la notificación cuando Gold esté corregido.
-- [ ] Decidir y aplicar la corrección de diseño: extracción que conserve lotes de respaldo, o SCD que no apague por ausencia en cargas incrementales. Probar primero en DEV con `errores\replicar-fallo-dev.sh`.
-- [ ] Detectar "sin datos" contando filas sin el encabezado del CSV y no enviar el correo de certificación con resumen y totales vacíos.
+- [x] Corrección de diseño aplicada y **validada en DEV 2026-11-06** (extracción con lotes de respaldo + freno del SCD con umbral opcional); detalle en [[inprod-primas-arl-202606]] 3d. [ ] Falta: línea en blanco PEP 8 en el repo, limpiar archivos de prueba `_prueba_freno` en S3 DEV, avisar al equipo (el `scd.py` de DEV es compartido por todas las mallas), congelar con hash y liberar a QA → PRD (respaldar antes el script de cada ambiente).
+- [ ] **Pasó a la tarea de notificaciones (T1), decisión 2026-11-06, no va en el release 1:** detectar "sin datos" contando filas sin el encabezado y no enviar el correo con total y detalle vacíos. Diseño en [[inprod-primas-arl-202606]] 3d. Depende de la respuesta del líder (¿certificar en cero?). Futuro: alarma de fallo hacia soporte.
 - [ ] Revisar si las otras 5 mallas comparten el riesgo (mismos jobs genéricos de extracción y SCD).
-- [ ] **Plan acordado 2026-11-06 (propuesta):** (1) subir el fix de extracción pendiente (cambio local sin commit en `extraccion_estandar_optimized.py`; entregar archivo completo congelado) y (2) auditar la familia de los 12 jobs de las 6 mallas ALFAPRD contra los 9 jobs del diagrama. Detalle en [[familia-mallas-alfaprd]].
+- [ ] **Plan acordado 2026-11-06 (propuesta):** (1) subir el fix de extracción (ya commiteado: `c0682a5`, `f48f8b8`; entregar archivo completo congelado) y (2) auditar la familia de los 12 jobs de las 6 mallas ALFAPRD contra los 9 jobs del diagrama. Detalle en [[familia-mallas-alfaprd]].
 - [ ] Analizar los 1.100.009 registros (91 %) con `per_proceso_point` nulo en `scd_primas_arl`.
 - [ ] **Decidir qué hacer con la evidencia de prod ya subida al repo público** (correos, ids de Cognito y de cuenta): redactar, reescribir historial o repo privado. No subir más sin redactar.
 - [ ] Ejecutar `replicar-fallo-dev.sh` en CloudShell de DEV (hoy solo probado con `aws` simulado) y asignar IDs `ARQ`/`CUM` a INC-1…INC-6 en la matriz de la fase 3.
