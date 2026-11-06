@@ -615,19 +615,6 @@ def combinar_lotes_respaldados(previos, actual, hay_nuevos, tabla):
     return sorted(lotes)
 
 
-def combinar_lotes_respaldados(previos, actual, hay_nuevos, tabla):
-    """Une los lotes de respaldo de las llaves excluidas con el actual."""
-    if not previos:
-        raise ValueError(
-            f"{tabla}: exclusion sin lotes de respaldo validados"
-        )
-    lotes = {int(x) for x in previos}
-    if hay_nuevos:
-        lotes.add(int(actual))
-    return sorted(lotes)
-
-
-
 def aplicar_exclusion_llaves_segmento(
     spark,
     df,
