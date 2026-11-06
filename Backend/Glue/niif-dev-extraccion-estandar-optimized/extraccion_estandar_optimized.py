@@ -603,6 +603,7 @@ def resolver_llaves_reales(df, llaves_segmentacion, tabla_relativa):
 
     return llaves_reales
 
+
 def combinar_lotes_respaldados(previos, actual, hay_nuevos, tabla):
     """Une los lotes de respaldo de las llaves excluidas con el actual."""
     if not previos:
