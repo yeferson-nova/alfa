@@ -4,7 +4,7 @@ actualizado: 2026-11-05
 ---
 # Incidente en prod: certificación Primas ARL periodo 202606 con resumen y totales vacíos
 
-Humano: `errores\` (`errores.md`, `analisis-flujo-primas-arl-202606.md`, `replicar-fallo-en-dev.md`). Relacionado: [[arquitectura-niif17]], [[riesgos-glue-notificacion]], [[inventario-lambdas]], [[hu-trazabilidad]], [[job-notificacion-ses]]. Preguntas y pendientes: [[preguntas-abiertas]], [[pendientes]].
+Humano: `errores\` (`errores.md`, `analisis-flujo-primas-arl-202606.md`, `replicar-fallo-en-dev.md`). Relacionado: [[arquitectura-niif17]], [[riesgos-glue-notificacion]], [[inventario-lambdas]], [[hu-trazabilidad]], [[job-notificacion-ses]]. Preguntas y pendientes: [[preguntas-abiertas]], [[pendientes]]. Familia de mallas a la que pertenece Primas ARL: [[familia-mallas-alfaprd]].
 
 IDs de la matriz (fase 3): **sin asignar**. Usar `INC-1`…`INC-6` de abajo y mapear a `ARQ`/`CUM` cuando exista `matriz-brechas.md`.
 

@@ -27,3 +27,6 @@ dist/
 
 # Evidencia capturada de prod (datos sensibles: correos, ids de cuenta/Cognito); no versionar
 errores/Evidencia/
+
+
+.claude

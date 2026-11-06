@@ -57,6 +57,7 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - [[arquitectura-niif17]] - pasos 1 a 14 del diagrama TOBE (nos competen 2 y 3)
 - [[entorno-local-localstack]] - LocalStack en `Backend\localstack\`: servicios habilitados, límites y qué probar por tarea
 - [[inventario-lambdas]] - 7 lambdas de trabajo (6 `configuration-<malla>` + manager, a consolidar en una general) y 6 Step Functions `niif-dev-<malla>`; el resto movido a `pruebas-*` (humano: `Backend\Lamnbdas\inventario-aws\`)
+- [[familia-mallas-alfaprd]] - las 6 mallas ALFAPRD (incluye Primas ARL), jobs del diagrama (9) vs desplegados (12) y plan: subir el fix y auditar la familia
 - [[marco-normativo]] - Ley 1581, Decreto 1377, circulares básicas de la SFC y lineamientos internos de Alfa
 
 **tareas**
