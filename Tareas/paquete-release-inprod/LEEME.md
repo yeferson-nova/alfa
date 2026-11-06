@@ -12,17 +12,25 @@ En PRD, la malla de Primas ARL del periodo 202606 certificó con resumen y total
 Este paquete corrige las dos primeras causas. **No incluye** el correo con totales vacíos (eso va en la tarea de notificaciones).
 
 ## 2. Qué se entrega (2 archivos, sin infraestructura nueva)
-| Archivo | Job de Glue | Qué cambia |
+| Archivo (carpeta del job) | Job de Glue | Qué cambia |
 |---|---|---|
-| `extraccion_estandar_optimized.py` | `niif-<amb>-extraccion-estandar-optimized` | Cuando excluye llaves ya extraídas, conserva los lotes de respaldo más el actual (`lotes_segmento`). Así Silver lee todo y el SCD no apaga nada. |
-| `scd.py` | `niif-<amb>-scd` | Freno de apagado masivo: si el SCD fuera a apagar más del 20 % de los activos de Gold, el job **falla antes de escribir** y Gold queda intacto. El umbral es opcional. |
+| `niif-dev-extraccion-estandar-optimized\extraccion_estandar_optimized.py` | `niif-<amb>-extraccion-estandar-optimized` | Cuando excluye llaves ya extraídas, conserva los lotes de respaldo más el actual (`lotes_segmento`). Así Silver lee todo y el SCD no apaga nada. |
+| `niif-dev-scd\scd.py` | `niif-<amb>-scd` | Freno de apagado masivo: si el SCD fuera a apagar más del 20 % de los activos de Gold, el job **falla antes de escribir** y Gold queda intacto. El umbral es opcional. |
 
 Hash SHA256 de los archivos entregados (también en `SHA256.txt`):
 ```
-7b26b52891c370c002ea5bedde27db05b17d1076107091f308cde902f724e190  extraccion_estandar_optimized.py
-52a89a987dbcbff721ea589a4cd3eb2dea5de5cc27c4caf512d97db65640a72e  scd.py
+7b26b52891c370c002ea5bedde27db05b17d1076107091f308cde902f724e190  niif-dev-extraccion-estandar-optimized/extraccion_estandar_optimized.py
+52a89a987dbcbff721ea589a4cd3eb2dea5de5cc27c4caf512d97db65640a72e  niif-dev-scd/scd.py
 ```
-Verifica con `Get-FileHash <archivo> -Algorithm SHA256`. Los archivos usan finales de línea CRLF. Si Git los convierte al subirlos, el hash puede variar: en ese caso compara el contenido, no el hash.
+**Verifica los hashes** (desde esta carpeta, en PowerShell). Cada línea debe decir `OK`; si dice `DIFIERE`, el archivo cambió y no se despliega hasta aclararlo:
+```powershell
+Get-Content SHA256.txt | ForEach-Object {
+  $h, $f = $_ -split ' \*', 2
+  $real = (Get-FileHash $f -Algorithm SHA256).Hash.ToLower()
+  '{0}  {1}' -f $(if ($real -eq $h) { 'OK     ' } else { 'DIFIERE' }), $f
+}
+```
+Regla: si cualquier archivo cambia, se recalcula `SHA256.txt` en el mismo commit. Los archivos usan finales de línea CRLF; si Git los convierte en tu máquina y el hash difiere, compara el contenido con `fc.exe` contra una copia recibida directamente.
 
 No cambia: `job.json`, la Step Function, permisos IAM, argumentos del job, configuraciones `config_*.json`. No hay argumentos nuevos obligatorios.
 
@@ -44,15 +52,22 @@ aws glue get-job --job-name niif-AMB-scd --query "Job.Command.ScriptLocation" --
 ```powershell
 aws s3 cp RUTA_EXTRACCION_QA extraccion.qa.original.py
 aws s3 cp RUTA_SCD_QA scd.qa.original.py
-fc.exe extraccion.qa.original.py extraccion_estandar_optimized.py
-fc.exe scd.qa.original.py scd.py
+fc.exe extraccion.qa.original.py niif-dev-extraccion-estandar-optimized\extraccion_estandar_optimized.py
+fc.exe scd.qa.original.py niif-dev-scd\scd.py
 ```
 Conserva `*.qa.original.py`: son la reversa. Si el de extracción ya es igual al entregado, no lo subas.
 
 **4.3 Subir** (solo si hay diferencias esperadas)
 ```powershell
-aws s3 cp extraccion_estandar_optimized.py RUTA_EXTRACCION_QA
-aws s3 cp scd.py RUTA_SCD_QA
+aws s3 cp niif-dev-extraccion-estandar-optimized\extraccion_estandar_optimized.py RUTA_EXTRACCION_QA
+aws s3 cp niif-dev-scd\scd.py RUTA_SCD_QA
+```
+
+**4.3b Verificar lo desplegado** (el hash del script en QA debe ser igual al de `SHA256.txt`)
+```powershell
+aws s3 cp RUTA_EXTRACCION_QA extraccion.qa.desplegado.py
+aws s3 cp RUTA_SCD_QA scd.qa.desplegado.py
+Get-FileHash extraccion.qa.desplegado.py, scd.qa.desplegado.py -Algorithm SHA256 | Format-Table Hash, Path
 ```
 
 **4.4 Probar en QA** (corrida normal de Primas ARL; luego una incremental si hay Gold previo)
@@ -78,12 +93,15 @@ jq '[.estado_gold_scd, .motivo_gold_scd]' params.json
 ## 6. Reversa
 Sube de vuelta `extraccion.qa.original.py` y `scd.qa.original.py` a sus rutas. No hay cambios en datos, permisos ni infraestructura.
 
-## 7. Pruebas unitarias (24)
-En la carpeta `pruebas/` (necesita `pytest`). Desde esta carpeta:
+## 7. Pruebas unitarias (24: 6 + 18)
+Cada job trae su carpeta `tests/` (necesita `pytest`). Desde la carpeta de cada job:
 ```powershell
-python -m pytest pruebas -q
+cd niif-dev-extraccion-estandar-optimized
+python -m pytest tests -q
+cd ..\niif-dev-scd
+python -m pytest tests -q
 ```
-Resultado esperado: `24 passed`. Cubren la combinación de lotes (6) y el freno del SCD (18). Son requisito del estándar (cobertura > 80 % del código nuevo).
+Resultado esperado: `6 passed` (combinación de lotes) y `18 passed` (freno del SCD). Son requisito del estándar (cobertura > 80 % del código nuevo).
 
 ## 8. Evidencia en DEV (2026-11-06)
 - **Extracción:** carga base de 2.045 registros y luego incremental (54 nuevos, 2.045 excluidos). `lotes_segmento` con 2 lotes. Gold quedó en **2.099** activos y **0** apagados por ausencia.
