@@ -1,0 +1,49 @@
+{
+    "RoleName": "niif-dev-remediacion-estandar",
+    "PolicyName": "niif-dev-pcr-vida-remediacion-bronze",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "ListarBronzePcrVida",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:ListBucket"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::alfa-datalake-dev-bronce"
+                ],
+                "Condition": {
+                    "StringLike": {
+                        "s3:prefix": [
+                            "niif/ACSELE/acsele_alfa",
+                            "niif/ACSELE/acsele_alfa/*"
+                        ]
+                    }
+                }
+            },
+            {
+                "Sid": "LeerBronzePcrVida",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::alfa-datalake-dev-bronce/niif/ACSELE/acsele_alfa/*"
+                ]
+            },
+            {
+                "Sid": "DescifrarBronzePcrVida",
+                "Effect": "Allow",
+                "Action": [
+                    "kms:Decrypt",
+                    "kms:DescribeKey"
+                ],
+                "Resource": [
+                    "arn:aws:kms:us-east-1:533267035849:key/c417247b-8e2c-4d21-9b5b-6b6b5c548bea"
+                ]
+            }
+        ]
+    }
+}

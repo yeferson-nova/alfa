@@ -1,0 +1,43 @@
+﻿{
+    "Name":  "niif-dev-certification",
+    "JobMode":  "SCRIPT",
+    "JobRunQueuingEnabled":  false,
+    "Description":  "Glue job for NIIF certification processing",
+    "Role":  "arn:aws:iam::533267035849:role/niif-dev-jobs-niif-certification",
+    "CreatedOn":  "2026-07-01T00:56:45.502000+00:00",
+    "LastModifiedOn":  "2026-10-06T17:05:40.089000+00:00",
+    "ExecutionProperty":  {
+                              "MaxConcurrentRuns":  10
+                          },
+    "Command":  {
+                    "Name":  "glueetl",
+                    "ScriptLocation":  "s3://niif-dev-assets/glue-resources/certification/niif_certification.py",
+                    "PythonVersion":  "3"
+                },
+    "DefaultArguments":  {
+                             "--PERIOD":  "202411",
+                             "--CONFIG_BUCKET":  "niif-dev-assets",
+                             "--ENVIRONMENT":  "dev",
+                             "--enable-glue-datacatalog":  "true",
+                             "--job-bookmark-option":  "job-bookmark-disable",
+                             "--TempDir":  "s3://aws-glue-assets-533267035849-us-east-1/temporary/",
+                             "--GLOBAL_CONFIG_KEY":  "configs/certification/json_global_notif_cert.json",
+                             "--enable-spark-ui":  "true",
+                             "--extra-py-files":  "s3://niif-dev-assets/glue-resources/libraries/commons.zip,s3://niif-dev-assets/glue-resources/wheelhouse/openpyxl-3.0.10-py2.py3-none-any.whl,s3://niif-dev-assets/glue-resources/wheelhouse/pyxlsb-1.0.8-py2.py3-none-any.whl,s3://niif-dev-assets/glue-resources/wheelhouse/et_xmlfile-2.0.0-py3-none-any.whl",
+                             "--enable-metrics":  "true",
+                             "--spark-event-logs-path":  "s3://aws-glue-assets-533267035849-us-east-1/sparkHistoryLogs/",
+                             "--enable-job-insights":  "true",
+                             "--conf":  "spark.eventLog.rolling.enabled=true --conf spark.sql.catalog.glue_catalog.glue.skip-name-validation=true",
+                             "--enable-continuous-cloudwatch-log":  "true",
+                             "--CONFIG_KEY":  "auxilios-funerarios/configs/certification/auxilioFunerario.json",
+                             "--LOG_LEVEL":  "INFO",
+                             "--job-language":  "python"
+                         },
+    "MaxRetries":  0,
+    "AllocatedCapacity":  4,
+    "Timeout":  2880,
+    "MaxCapacity":  4.0,
+    "WorkerType":  "G.1X",
+    "NumberOfWorkers":  4,
+    "GlueVersion":  "4.0"
+}

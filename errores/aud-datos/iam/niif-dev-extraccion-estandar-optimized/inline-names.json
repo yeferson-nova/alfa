@@ -1,0 +1,14 @@
+{
+    "PolicyNames": [
+        "niif-dev-extraccion-estandar-gestor-configuracion",
+        "niif-dev-extraccion-estandar-optimized-inline-policy",
+        "niif-dev-pcr-vida-extractor-completo",
+        "niif-dev-pcr-vida-glue-connection",
+        "niif-dev-pcr-vida-kms-acsele",
+        "niif-dev-pcr-vida-mensual-s3",
+        "niif-dev-pcr-vida-secret-acsele",
+        "niif-dev-pcr-vida-secret-kms",
+        "niif-dev-pcr-vida-secret-sop",
+        "niif-dev-pcr-vida-spark-list-buckets"
+    ]
+}

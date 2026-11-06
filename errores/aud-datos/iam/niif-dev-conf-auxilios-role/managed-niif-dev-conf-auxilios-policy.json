@@ -1,0 +1,129 @@
+{
+    "PolicyVersion": {
+        "Document": {
+            "Statement": [
+                {
+                    "Action": "dynamodb:GetItem",
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-prs-estructuras",
+                    "Sid": "LeerPRS"
+                },
+                {
+                    "Action": "dynamodb:Query",
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-cnf-mallas",
+                    "Sid": "LeerCNF"
+                },
+                {
+                    "Action": "s3:ListBucket",
+                    "Condition": {
+                        "StringLike": {
+                            "s3:prefix": [
+                                "auxilios-funerarios",
+                                "auxilios-funerarios/*",
+                                "primas-arl",
+                                "primas-arl/*",
+                                "primas-endosos",
+                                "primas-endosos/*",
+                                "primas-rentas",
+                                "primas-rentas/*"
+                            ]
+                        }
+                    },
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:s3:::niif-dev-assets",
+                    "Sid": "ListarConfiguracionesNIIF"
+                },
+                {
+                    "Action": [
+                        "s3:PutObject",
+                        "s3:GetObject"
+                    ],
+                    "Effect": "Allow",
+                    "Resource": [
+                        "arn:aws:s3:::niif-dev-assets/reserva-matematica-rvi/*",
+                        "arn:aws:s3:::niif-dev-assets/primas-rentas/*",
+                        "arn:aws:s3:::niif-dev-assets/primas-endosos/*",
+                        "arn:aws:s3:::niif-dev-assets/primas-arl/*",
+                        "arn:aws:s3:::niif-dev-assets/auxilios-funerarios/*"
+                    ],
+                    "Sid": "AdministrarConfiguracionesCasosNIIF"
+                },
+                {
+                    "Action": "states:StartExecution",
+                    "Effect": "Allow",
+                    "Resource": [
+                        "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-reserva-matematica-rvi",
+                        "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-rentas",
+                        "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-endosos",
+                        "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-arl",
+                        "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-auxilios-funerarios"
+                    ],
+                    "Sid": "IniciarMallasConfiguradas"
+                },
+                {
+                    "Action": [
+                        "dynamodb:UpdateItem",
+                        "dynamodb:PutItem"
+                    ],
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-ejc-ejecuciones",
+                    "Sid": "RegistrarEjecucionesEJC"
+                },
+                {
+                    "Action": [
+                        "s3:PutObject",
+                        "s3:GetObject"
+                    ],
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:s3:::niif-dev-assets/reserva-matematica-arp/*",
+                    "Sid": "GestorConfiguracionReservaMatematicaArpS3"
+                },
+                {
+                    "Action": "states:StartExecution",
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-reserva-matematica-arp",
+                    "Sid": "GestorConfiguracionReservaMatematicaArpStep"
+                },
+                {
+                    "Action": "dynamodb:PutItem",
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-ejc-ejecuciones",
+                    "Sid": "GestorConfiguracionReservaMatematicaArpEjc"
+                },
+                {
+                    "Action": "dynamodb:UpdateItem",
+                    "Condition": {
+                        "ForAllValues:StringEquals": {
+                            "dynamodb:LeadingKeys": "MALLA#AUXILIOS_FUNERARIOS"
+                        }
+                    },
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-cnf-mallas",
+                    "Sid": "ActualizarPeriodoCNF"
+                },
+                {
+                    "Action": "dynamodb:GetItem",
+                    "Condition": {
+                        "ForAllValues:StringEquals": {
+                            "dynamodb:LeadingKeys": "PROGRAMACION#AUXILIOS_FUNERARIOS"
+                        }
+                    },
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-prg-programaciones",
+                    "Sid": "LeerPeriodoPRG"
+                },
+                {
+                    "Action": "kms:Decrypt",
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb",
+                    "Sid": "DecryptConfAuxiliosEnvironmentVariables"
+                }
+            ],
+            "Version": "2012-10-17"
+        },
+        "VersionId": "v3",
+        "IsDefaultVersion": true,
+        "CreateDate": "2026-10-16T17:03:28+00:00"
+    }
+}

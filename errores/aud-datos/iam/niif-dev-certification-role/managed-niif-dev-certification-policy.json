@@ -1,0 +1,63 @@
+{
+    "PolicyVersion": {
+        "Document": {
+            "Statement": [
+                {
+                    "Action": "s3:GetObject",
+                    "Effect": "Allow",
+                    "Resource": [
+                        "arn:aws:s3:::niif-dev-assets/reserva-matematica/reservaMatematicaRviArp.json",
+                        "arn:aws:s3:::niif-dev-assets/reserva-matematica-rvi/reservaMatematicaRvi.json",
+                        "arn:aws:s3:::niif-dev-assets/primas-rentas/primasRentasEndosos.json",
+                        "arn:aws:s3:::niif-dev-assets/primas-endosos/primasRentasEndosos.json",
+                        "arn:aws:s3:::niif-dev-assets/primas-arl/primasArl.json",
+                        "arn:aws:s3:::niif-dev-assets/primas-arl/configs/certification/primasArl.json",
+                        "arn:aws:s3:::niif-dev-assets/previsional/previsional.json",
+                        "arn:aws:s3:::niif-dev-assets/previsional/config/json_global_notif_cert.json",
+                        "arn:aws:s3:::niif-dev-assets/configs/certification/json_global_notif_cert.json",
+                        "arn:aws:s3:::niif-dev-assets/auxilios-funerarios/configs/certification/auxilioFunerario.json"
+                    ],
+                    "Sid": "ReadCertificationCallbackConfigurations"
+                },
+                {
+                    "Action": "dynamodb:Query",
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-notification-certification/index/certCode-index",
+                    "Sid": "QueryCertificationNotificationsByCode"
+                },
+                {
+                    "Action": "dynamodb:UpdateItem",
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-notification-certification",
+                    "Sid": "UpdateCertificationDecisions"
+                },
+                {
+                    "Action": [
+                        "dynamodb:UpdateItem",
+                        "dynamodb:PutItem",
+                        "dynamodb:GetItem"
+                    ],
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-approval-audit-log",
+                    "Sid": "ManageCertificationApprovalAudit"
+                },
+                {
+                    "Action": [
+                        "kms:DescribeKey",
+                        "kms:Decrypt"
+                    ],
+                    "Effect": "Allow",
+                    "Resource": [
+                        "arn:aws:kms:us-east-1:533267035849:key/c417247b-8e2c-4d21-9b5b-6b6b5c548bea",
+                        "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb"
+                    ],
+                    "Sid": "DecryptCertificationCallbackKeys"
+                }
+            ],
+            "Version": "2012-10-17"
+        },
+        "VersionId": "v3",
+        "IsDefaultVersion": true,
+        "CreateDate": "2026-10-06T17:05:36+00:00"
+    }
+}

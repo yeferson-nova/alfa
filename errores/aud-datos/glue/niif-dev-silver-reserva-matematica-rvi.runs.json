@@ -1,0 +1,82 @@
+[
+    {
+        "inicio": "2026-11-03T21:03:32.958000+00:00",
+        "estado": "FAILED",
+        "seg": 187,
+        "dpuSeg": 748.0,
+        "workers": 4,
+        "error": "ValueError: Silver preparada RVI termino con 0 registros para PER_CORTE=202609"
+    },
+    {
+        "inicio": "2026-10-26T21:58:02.093000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 234,
+        "dpuSeg": 936.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-23T22:53:39.146000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 239,
+        "dpuSeg": 956.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-23T00:03:59.872000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 309,
+        "dpuSeg": 1236.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-22T21:22:01.900000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 260,
+        "dpuSeg": 1040.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-22T19:30:28.429000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 244,
+        "dpuSeg": 976.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-22T13:44:40.556000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 239,
+        "dpuSeg": 956.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-22T13:43:11.425000+00:00",
+        "estado": "FAILED",
+        "seg": 218,
+        "dpuSeg": 872.0,
+        "workers": 4,
+        "error": "An error occurred while calling o6505.count. File not present on S3"
+    },
+    {
+        "inicio": "2026-10-22T04:45:26.925000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 247,
+        "dpuSeg": 988.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-22T03:44:50.137000+00:00",
+        "estado": "FAILED",
+        "seg": 89,
+        "dpuSeg": 356.0,
+        "workers": 4,
+        "error": "AnalysisException: Path does not exist: s3://alfa-datalake-dev-silver/niif/ALFAPRD/general/alfaprd_general_acu_personas_naturales"
+    }
+]

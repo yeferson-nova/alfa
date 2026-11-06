@@ -1,0 +1,67 @@
+﻿{
+    "Name":  "niif-dev-crawler-gold",
+    "Role":  "niif-dev-crawler",
+    "Targets":  {
+                    "S3Targets":  [
+                                      {
+                                          "Path":  "s3://alfa-datalake-dev-gold/niif/",
+                                          "Exclusions":  [
+
+                                                         ]
+                                      }
+                                  ],
+                    "JdbcTargets":  [
+
+                                    ],
+                    "MongoDBTargets":  [
+
+                                       ],
+                    "DynamoDBTargets":  [
+
+                                        ],
+                    "CatalogTargets":  [
+
+                                       ],
+                    "DeltaTargets":  [
+
+                                     ],
+                    "IcebergTargets":  [
+
+                                       ],
+                    "HudiTargets":  [
+
+                                    ]
+                },
+    "DatabaseName":  "niif-dev-gold-catalog-db",
+    "Description":  "Glue crawler NIIF gold layer",
+    "Classifiers":  [
+
+                    ],
+    "RecrawlPolicy":  {
+                          "RecrawlBehavior":  "CRAWL_EVERYTHING"
+                      },
+    "SchemaChangePolicy":  {
+                               "UpdateBehavior":  "UPDATE_IN_DATABASE",
+                               "DeleteBehavior":  "DEPRECATE_IN_DATABASE"
+                           },
+    "LineageConfiguration":  {
+                                 "CrawlerLineageSettings":  "DISABLE"
+                             },
+    "State":  "READY",
+    "CrawlElapsedTime":  0,
+    "CreationTime":  "2026-07-01T00:54:07+00:00",
+    "LastUpdated":  "2026-07-01T00:54:07+00:00",
+    "LastCrawl":  {
+                      "Status":  "SUCCEEDED",
+                      "LogGroup":  "/aws-glue/crawlers",
+                      "LogStream":  "niif-dev-crawler-gold",
+                      "MessagePrefix":  "b70de323-f296-4b46-988b-2a6bec334671",
+                      "StartTime":  "2026-10-26T22:11:07+00:00"
+                  },
+    "Version":  1,
+    "Configuration":  "{\"Version\":1.0,\"Grouping\":{\"TableGroupingPolicy\":\"CombineCompatibleSchemas\",\"TableLevelConfiguration\":3},\"CreatePartitionIndex\":true}",
+    "LakeFormationConfiguration":  {
+                                       "UseLakeFormationCredentials":  false,
+                                       "AccountId":  ""
+                                   }
+}

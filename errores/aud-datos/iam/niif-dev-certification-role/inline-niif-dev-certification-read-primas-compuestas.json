@@ -1,0 +1,33 @@
+{
+    "RoleName": "niif-dev-certification-role",
+    "PolicyName": "niif-dev-certification-read-primas-compuestas",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "ConsultarBucketAssets",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetBucketLocation",
+                    "s3:ListBucket"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::niif-dev-assets"
+                ]
+            },
+            {
+                "Sid": "LeerConfiguracionesPrimasCompuestas",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::niif-dev-assets/primas-rentas/*",
+                    "arn:aws:s3:::niif-dev-assets/primas-endosos/*",
+                    "arn:aws:s3:::niif-dev-assets/configs/certification/*"
+                ]
+            }
+        ]
+    }
+}

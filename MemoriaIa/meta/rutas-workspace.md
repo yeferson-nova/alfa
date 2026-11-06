@@ -1,6 +1,6 @@
 ---
 tipo: referencia
-actualizado: 2026-11-03
+actualizado: 2026-11-05
 ---
 # Rutas del workspace
 
@@ -42,3 +42,10 @@ Raíz: `C:\Users\rdpuser\Git\`. Mapa humano en `Docs\00-LEEME.md`.
 
 ## MemoriaIa\ (para IA)
 Subcarpetas: `meta\`, `contexto\`, `tareas\`, `estandares\`, `hu\`, `brechas\`. Los nombres de nota son únicos en toda la memoria, así que `[[nota]]` funciona sin importar la subcarpeta.
+
+## errores\ (incidente en prod Primas ARL 202606, 2026-11-05)
+Detalle del incidente en [[inprod-primas-arl-202606]].
+- Documentos: `errores.md`, `analisis-flujo-primas-arl-202606.md`, `replicar-fallo-en-dev.md`.
+- Scripts: `recolectar-evidencia-prd.sh` (CloudShell prod, solo lectura), `replicar-fallo-dev.sh` (solo DEV), `validar-analisis.py`, `validar-athena.py`, `simular-limpieza-segmentos.py`, `ver-logs-evidencia.py`.
+- Evidencia: `evidencia-primas-arl-202606\` (subida por el equipo al repo público; sensible) y `Evidencia\` (ignorada).
+- En la raíz del repo: `.gitignore` (ignora `errores/Evidencia/`) y `.gitattributes` (`*.sh` con LF).

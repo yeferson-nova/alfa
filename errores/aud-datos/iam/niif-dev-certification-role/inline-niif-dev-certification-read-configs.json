@@ -1,0 +1,50 @@
+{
+    "RoleName": "niif-dev-certification-role",
+    "PolicyName": "niif-dev-certification-read-configs",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "ReadCertificationConfigurations",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetObject"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::niif-dev-assets/configs/certification/*",
+                    "arn:aws:s3:::niif-dev-assets/reserva-matematica-rvi/*",
+                    "arn:aws:s3:::niif-dev-assets/reserva-matematica/*"
+                ]
+            },
+            {
+                "Sid": "ListCertificationConfigurationPrefixes",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:ListBucket"
+                ],
+                "Resource": "arn:aws:s3:::niif-dev-assets",
+                "Condition": {
+                    "StringLike": {
+                        "s3:prefix": [
+                            "configs/certification/*",
+                            "reserva-matematica-rvi/*",
+                            "reserva-matematica/*"
+                        ]
+                    }
+                }
+            },
+            {
+                "Sid": "ReadPrevisionalCertificationConfigs",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::niif-dev-assets/previsional/previsional.json",
+                    "arn:aws:s3:::niif-dev-assets/previsional/config/json_global_notif_cert.json"
+                ]
+            }
+        ]
+    }
+}

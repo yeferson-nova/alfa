@@ -1,0 +1,67 @@
+﻿{
+    "Name":  "niif-dev-crawler-silver",
+    "Role":  "niif-dev-crawler",
+    "Targets":  {
+                    "S3Targets":  [
+                                      {
+                                          "Path":  "s3://alfa-datalake-dev-silver/niif/",
+                                          "Exclusions":  [
+
+                                                         ]
+                                      }
+                                  ],
+                    "JdbcTargets":  [
+
+                                    ],
+                    "MongoDBTargets":  [
+
+                                       ],
+                    "DynamoDBTargets":  [
+
+                                        ],
+                    "CatalogTargets":  [
+
+                                       ],
+                    "DeltaTargets":  [
+
+                                     ],
+                    "IcebergTargets":  [
+
+                                       ],
+                    "HudiTargets":  [
+
+                                    ]
+                },
+    "DatabaseName":  "niif-dev-silver-catalog-db",
+    "Description":  "Glue crawler NIIF silver layer",
+    "Classifiers":  [
+
+                    ],
+    "RecrawlPolicy":  {
+                          "RecrawlBehavior":  "CRAWL_EVERYTHING"
+                      },
+    "SchemaChangePolicy":  {
+                               "UpdateBehavior":  "UPDATE_IN_DATABASE",
+                               "DeleteBehavior":  "DEPRECATE_IN_DATABASE"
+                           },
+    "LineageConfiguration":  {
+                                 "CrawlerLineageSettings":  "DISABLE"
+                             },
+    "State":  "READY",
+    "CrawlElapsedTime":  0,
+    "CreationTime":  "2026-07-01T00:54:06+00:00",
+    "LastUpdated":  "2026-07-01T00:54:06+00:00",
+    "LastCrawl":  {
+                      "Status":  "SUCCEEDED",
+                      "LogGroup":  "/aws-glue/crawlers",
+                      "LogStream":  "niif-dev-crawler-silver",
+                      "MessagePrefix":  "4346515f-5177-41a7-ad2f-a0c10a0007e3",
+                      "StartTime":  "2026-10-26T22:03:02+00:00"
+                  },
+    "Version":  1,
+    "Configuration":  "{\"Version\":1.0,\"Grouping\":{\"TableGroupingPolicy\":\"CombineCompatibleSchemas\",\"TableLevelConfiguration\":5},\"CreatePartitionIndex\":true}",
+    "LakeFormationConfiguration":  {
+                                       "UseLakeFormationCredentials":  false,
+                                       "AccountId":  ""
+                                   }
+}

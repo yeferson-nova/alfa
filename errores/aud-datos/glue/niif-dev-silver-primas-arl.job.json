@@ -1,0 +1,40 @@
+{
+    "Job": {
+        "Name": "niif-dev-silver-primas-arl",
+        "JobMode": "SCRIPT",
+        "JobRunQueuingEnabled": false,
+        "Description": "Glue job for silver primas arl processing",
+        "Role": "arn:aws:iam::533267035849:role/niif-dev-jobs-silver-primas-arl",
+        "CreatedOn": "2026-07-01T00:56:45.805000+00:00",
+        "LastModifiedOn": "2026-10-06T17:05:39.764000+00:00",
+        "ExecutionProperty": {
+            "MaxConcurrentRuns": 10
+        },
+        "Command": {
+            "Name": "glueetl",
+            "ScriptLocation": "s3://niif-dev-assets/glue-resources/primas-arl/silver_primas_arl.py",
+            "PythonVersion": "3"
+        },
+        "DefaultArguments": {
+            "--enable-spark-ui": "true",
+            "--enable-metrics": "true",
+            "--spark-event-logs-path": "s3://aws-glue-assets-533267035849-us-east-1/sparkHistoryLogs/",
+            "--enable-job-insights": "true",
+            "--enable-glue-datacatalog": "true",
+            "--conf": "spark.eventLog.rolling.enabled=true",
+            "--S3_SLV_PREP_PATH": "s3://alfa-datalake-dev-silver/niif/t_data_domain/primas_arl/silver_preparado_primas_arl",
+            "--enable-continuous-cloudwatch-log": "true",
+            "--job-bookmark-option": "job-bookmark-disable",
+            "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-dev-assets/primas-arl/parametros_extraccion.json",
+            "--job-language": "python",
+            "--TempDir": "s3://aws-glue-assets-533267035849-us-east-1/temporary/"
+        },
+        "MaxRetries": 0,
+        "AllocatedCapacity": 4,
+        "Timeout": 2880,
+        "MaxCapacity": 4.0,
+        "WorkerType": "G.1X",
+        "NumberOfWorkers": 4,
+        "GlueVersion": "4.0"
+    }
+}

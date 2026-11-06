@@ -1,0 +1,82 @@
+[
+    {
+        "inicio": "2026-11-04T04:40:38.589000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 37,
+        "dpuSeg": 151.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-26T22:12:48.322000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 45,
+        "dpuSeg": 181.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-26T21:08:08.130000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 53,
+        "dpuSeg": 214.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-26T16:05:50.576000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 52,
+        "dpuSeg": 210.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-26T16:05:46.613000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 47,
+        "dpuSeg": 191.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-23T23:08:10.414000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 38,
+        "dpuSeg": 155.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-23T22:12:35.648000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 40,
+        "dpuSeg": 162.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-23T21:27:15.909000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 39,
+        "dpuSeg": 158.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-23T21:21:48.920000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 46,
+        "dpuSeg": 187.0,
+        "workers": 4,
+        "error": null
+    },
+    {
+        "inicio": "2026-10-23T00:19:21.123000+00:00",
+        "estado": "SUCCEEDED",
+        "seg": 57,
+        "dpuSeg": 228.0,
+        "workers": 4,
+        "error": null
+    }
+]

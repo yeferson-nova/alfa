@@ -1,0 +1,27 @@
+{
+    "PolicyVersion": {
+        "Document": {
+            "Statement": [
+                {
+                    "Action": "dynamodb:GetItem",
+                    "Effect": "Allow",
+                    "Resource": "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-short-links",
+                    "Sid": "ReadCertificationShortLinks"
+                },
+                {
+                    "Action": "kms:Decrypt",
+                    "Effect": "Allow",
+                    "Resource": [
+                        "arn:aws:kms:us-east-1:533267035849:key/c417247b-8e2c-4d21-9b5b-6b6b5c548bea",
+                        "arn:aws:kms:us-east-1:533267035849:key/a8eabea1-9561-471d-9cc2-2b96f301d7cb"
+                    ],
+                    "Sid": "DecryptShortLinkEnvironmentVariables"
+                }
+            ],
+            "Version": "2012-10-17"
+        },
+        "VersionId": "v3",
+        "IsDefaultVersion": true,
+        "CreateDate": "2026-10-07T22:11:58+00:00"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "PolicyVersion": {
+        "Document": {
+            "Statement": [
+                {
+                    "Action": [
+                        "logs:PutLogEvents",
+                        "logs:CreateLogStream",
+                        "logs:CreateLogGroup"
+                    ],
+                    "Effect": "Allow",
+                    "Resource": [
+                        "arn:aws:logs:us-east-1:533267035849:log-group:/aws/lambda/niif-dev-certification:*:*",
+                        "arn:aws:logs:us-east-1:533267035849:log-group:/aws/lambda/niif-dev-certification:*"
+                    ]
+                }
+            ],
+            "Version": "2012-10-17"
+        },
+        "VersionId": "v1",
+        "IsDefaultVersion": true,
+        "CreateDate": "2026-07-01T00:56:30+00:00"
+    }
+}

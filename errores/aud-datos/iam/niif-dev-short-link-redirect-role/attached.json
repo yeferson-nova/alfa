@@ -1,0 +1,16 @@
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "niif-dev-short-link-redirect-policy",
+            "PolicyArn": "arn:aws:iam::533267035849:policy/niif-dev-short-link-redirect-policy"
+        },
+        {
+            "PolicyName": "niif-dev-short-link-redirect-policy-logs",
+            "PolicyArn": "arn:aws:iam::533267035849:policy/niif-dev-short-link-redirect-policy-logs"
+        },
+        {
+            "PolicyName": "niif-dev-short-link-redirect-policy-tracing",
+            "PolicyArn": "arn:aws:iam::533267035849:policy/niif-dev-short-link-redirect-policy-tracing"
+        }
+    ]
+}

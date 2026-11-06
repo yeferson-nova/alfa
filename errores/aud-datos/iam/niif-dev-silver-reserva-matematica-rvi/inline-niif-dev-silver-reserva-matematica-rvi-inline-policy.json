@@ -1,0 +1,99 @@
+{
+    "RoleName": "niif-dev-silver-reserva-matematica-rvi",
+    "PolicyName": "niif-dev-silver-reserva-matematica-rvi-inline-policy",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Action": [
+                    "s3:GetObjectVersion",
+                    "s3:GetObject"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::niif-dev-assets/segmentos/niif17_*_alfaprd_*/llaves/*",
+                    "arn:aws:s3:::niif-dev-assets/reserva-matematica-rvi/parametros_extraccion.json",
+                    "arn:aws:s3:::niif-dev-assets/reserva-matematica-rvi/config_extraccion_reserva_matematica_rvi.json",
+                    "arn:aws:s3:::niif-dev-assets/glue-resources/reserva-matematicas-rvi/silver_reserva_matematica_rvi.py"
+                ],
+                "Sid": "ReadSilverRviAssets"
+            },
+            {
+                "Action": "s3:PutObject",
+                "Effect": "Allow",
+                "Resource": "arn:aws:s3:::niif-dev-assets/reserva-matematica-rvi/parametros_extraccion.json",
+                "Sid": "UpdateSilverRviParameters"
+            },
+            {
+                "Action": "s3:GetBucketLocation",
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::niif-dev-assets",
+                    "arn:aws:s3:::alfa-datalake-dev-silver",
+                    "arn:aws:s3:::alfa-datalake-dev-bronce"
+                ],
+                "Sid": "GetSilverRviBucketLocations"
+            },
+            {
+                "Action": "s3:ListBucket",
+                "Condition": {
+                    "StringLike": {
+                        "s3:prefix": [
+                            "reserva-matematica-rvi",
+                            "reserva-matematica-rvi/*",
+                            "segmentos/niif17_*_alfaprd_*/llaves/*",
+                            "glue-resources/reserva-matematicas-rvi/*"
+                        ]
+                    }
+                },
+                "Effect": "Allow",
+                "Resource": "arn:aws:s3:::niif-dev-assets",
+                "Sid": "ListSilverRviAssetsPrefixes"
+            },
+            {
+                "Action": "s3:ListBucket",
+                "Effect": "Allow",
+                "Resource": "arn:aws:s3:::alfa-datalake-dev-bronce",
+                "Sid": "ListSilverRviBronzePrefixes"
+            },
+            {
+                "Action": "s3:ListBucket",
+                "Effect": "Allow",
+                "Resource": "arn:aws:s3:::alfa-datalake-dev-silver",
+                "Sid": "ListSilverRviSilverPrefixes"
+            },
+            {
+                "Action": "s3:GetObject",
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/ALFAPRD/*",
+                    "arn:aws:s3:::alfa-datalake-dev-bronce/niif/ALFAPRD/*"
+                ],
+                "Sid": "ReadRviSourceData"
+            },
+            {
+                "Action": [
+                    "s3:PutObject",
+                    "s3:ListMultipartUploadParts",
+                    "s3:GetObject",
+                    "s3:DeleteObject",
+                    "s3:AbortMultipartUpload"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif_$folder$",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/t_data_domain/reserva_matematica_rvi/tmp_preparacion_reserva_matematica_rvi/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/t_data_domain/reserva_matematica_rvi/silver_preparado_reserva_matematica_rvi/*",
+                    "arn:aws:s3:::alfa-datalake-dev-silver/niif/*"
+                ],
+                "Sid": "ManageRviPreparedSilver"
+            },
+            {
+                "Action": "logs:AssociateKmsKey",
+                "Effect": "Allow",
+                "Resource": "arn:aws:logs:us-east-1:533267035849:log-group:/aws-glue/*",
+                "Sid": "AssociateSilverRviLogsKmsKey"
+            }
+        ]
+    }
+}

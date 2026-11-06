@@ -1,0 +1,25 @@
+{
+    "RoleName": "niif-dev-certification-role",
+    "PolicyName": "niif-dev-certification-dynamodb-access",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "CertificationDynamoDBAccess",
+                "Effect": "Allow",
+                "Action": [
+                    "dynamodb:GetItem",
+                    "dynamodb:PutItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:Query"
+                ],
+                "Resource": [
+                    "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-notification-certification",
+                    "arn:aws:dynamodb:us-east-1:533267035849:table/niif-dev-notification-certification/index/*",
+                    "arn:aws:dynamodb:us-east-1:533267035849:table/datalake-dev-use-case-approvers",
+                    "arn:aws:dynamodb:us-east-1:533267035849:table/datalake-dev-approval-audit-log"
+                ]
+            }
+        ]
+    }
+}

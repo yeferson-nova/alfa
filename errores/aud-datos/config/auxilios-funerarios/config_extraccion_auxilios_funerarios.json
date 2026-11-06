@@ -1,0 +1,238 @@
+{
+  "nombre_caso": "auxilios_funerarios",
+  "periodo_negocio": "202512",
+  "fuente": {
+    "connection_name": "datalake-dev-alfaniif-pre-connection",
+    "tipo": "oracle",
+    "usar_schema_en_dbtable": false,
+    "sistema": "ALFAPRD",
+    "fetchsize": 10000
+  },
+  "rutas": {
+    "s3_bronze_base": "s3://alfa-datalake-dev-bronce/niif/ALFAPRD/",
+    "ruta_segmentos_base": "s3://niif-dev-assets/segmentos/",
+    "ruta_parametros_extraccion": "s3://niif-dev-assets/auxilios-funerarios/parametros_extraccion.json",
+    "s3_silver_base": "s3://alfa-datalake-dev-silver/niif/ALFAPRD/"
+  },
+  "control_extraccion": {
+    "calcular_unidades_extraccion": true,
+    "persistir_dataframe": true,
+    "limite_unidades_extraccion": 1000000,
+    "excluir_llaves_segmento": true,
+    "usar_checkpoints": true,
+    "periodo_negocio": "202512",
+    "modo_ejecucion": "INICIAL",
+    "permitir_reanudacion": true,
+    "contar_registros": true,
+    "accion_si_supera_limite": "ADVERTIR"
+  },
+  "ciclos": [
+    {
+      "orden": 1,
+      "nombre": "ciclo_1_solicitudes_giro",
+      "segmentos": [
+        {
+          "orden": 1,
+          "nombre": "segmento_1_solicitudes_giro",
+          "forma": "CASCADA",
+          "tablas": [
+            {
+              "orden": 1,
+              "schema": "GENERAL",
+              "tabla": "ANP_DETALLE_SOLICITUDES_GIRO",
+              "tabla_relativa": "general/anp_detalle_solicitudes_giro",
+              "tipo_tabla": "PIVOTE",
+              "where": "NID_PERIODO_SOLICITUD_GIRO IN (SELECT pg.NID_PERIODO_SOLICITUD_GIRO FROM ANP_PERIODO_SOLICITUDES_GIRO pg WHERE pg.FEC_ENVIO_TES >= DATE '2025-12-01' AND pg.FEC_ENVIO_TES < DATE '2026-01-01')",
+              "dependencia": null,
+              "segmentacion_horizontal": {
+                "segmento_id": "niif17_202512_alfaprd_general_anp_detalle_solicitudes_giro",
+                "llaves_segmentacion": [
+                  "NID_DETALLE_SOLICITUD_GIRO"
+                ],
+                "id_negocio": "auxilios_funerarios",
+                "habilitada": true,
+                "periodo_negocio": "202512",
+                "requiere_preparacion_con_lotes_segmento": true,
+                "modo": "EXCLUIR_EXTRAIDOS"
+              }
+            },
+            {
+              "orden": 2,
+              "schema": "GENERAL",
+              "tabla": "ANP_PERIODO_SOLICITUDES_GIRO",
+              "tabla_relativa": "general/anp_periodo_solicitudes_giro",
+              "tipo_tabla": "DEPENDENCIA",
+              "where": "FEC_ENVIO_TES >= DATE '2025-12-01' AND FEC_ENVIO_TES < DATE '2026-01-01'",
+              "dependencia": {
+                "llaves": [
+                  "NID_PERIODO_SOLICITUD_GIRO"
+                ],
+                "tabla_origen": "general/anp_detalle_solicitudes_giro"
+              },
+              "segmentacion_horizontal": {
+                "segmento_id": "niif17_202512_alfaprd_general_anp_periodo_solicitudes_giro",
+                "llaves_segmentacion": [
+                  "NID_PERIODO_SOLICITUD_GIRO"
+                ],
+                "id_negocio": "auxilios_funerarios",
+                "periodo_negocio": "202512",
+                "habilitada": true,
+                "requiere_preparacion_con_lotes_segmento": true,
+                "modo": "EXCLUIR_EXTRAIDOS"
+              }
+            }
+          ],
+          "descripcion": "Tablas principales asociadas a solicitudes y periodos de giro"
+        }
+      ],
+      "descripcion": "Extraccion de tablas principales de solicitudes de giro para Auxilios Funerarios"
+    },
+    {
+      "orden": 2,
+      "nombre": "ciclo_2_pensiones_y_novedades",
+      "segmentos": [
+        {
+          "orden": 1,
+          "nombre": "segmento_1_pensiones_y_novedades",
+          "forma": "CASCADA",
+          "tablas": [
+            {
+              "orden": 1,
+              "schema": "GENERAL",
+              "tabla": "ANP_DISTRIBUCION_VIG_PENSION",
+              "tabla_relativa": "general/anp_distribucion_vig_pension",
+              "tipo_tabla": "DEPENDENCIA",
+              "where": null,
+              "dependencia": {
+                "llaves": [
+                  "NID_PENSION"
+                ],
+                "tabla_origen": "general/anp_pensiones"
+              },
+              "segmentacion_horizontal": {
+                "segmento_id": "niif17_202512_alfaprd_general_anp_distribucion_vig_pension",
+                "llaves_segmentacion": [
+                  "NID_DISTRIBUCION_VIGENCIA"
+                ],
+                "id_negocio": "auxilios_funerarios",
+                "habilitada": true,
+                "periodo_negocio": "202512",
+                "requiere_preparacion_con_lotes_segmento": true,
+                "modo": "EXCLUIR_EXTRAIDOS"
+              }
+            },
+            {
+              "orden": 2,
+              "schema": "GENERAL",
+              "tabla": "ANP_PENSIONADO_NOVEDAD",
+              "tabla_relativa": "general/anp_pensionado_novedad",
+              "tipo_tabla": "DEPENDENCIA",
+              "where": null,
+              "dependencia": {
+                "llaves": [
+                  "NID_DISTRIBUCION_VIGENCIA",
+                  "COD_TIPO_IDENTIFICACION",
+                  "NID_NUMERO_IDENTIFICACION"
+                ],
+                "tabla_origen": "general/anp_distribucion_vig_pension"
+              },
+              "segmentacion_horizontal": {
+                "segmento_id": "niif17_202512_alfaprd_general_anp_pensionado_novedad",
+                "llaves_segmentacion": [
+                  "NID_DISTRIBUCION_VIGENCIA",
+                  "COD_TIPO_IDENTIFICACION",
+                  "NID_NUMERO_IDENTIFICACION",
+                  "COD_CONCEPTO",
+                  "FEC_INICIAL"
+                ],
+                "id_negocio": "auxilios_funerarios",
+                "periodo_negocio": "202512",
+                "habilitada": true,
+                "requiere_preparacion_con_lotes_segmento": true,
+                "modo": "EXCLUIR_EXTRAIDOS"
+              }
+            },
+            {
+              "orden": 3,
+              "schema": "GENERAL",
+              "tabla": "ANP_PENSIONES",
+              "tabla_relativa": "general/anp_pensiones",
+              "tipo_tabla": "DEPENDENCIA",
+              "where": null,
+              "dependencia": null,
+              "segmentacion_horizontal": {
+                "segmento_id": "niif17_202512_alfaprd_general_anp_pensiones",
+                "llaves_segmentacion": [
+                  "NID_PENSION"
+                ],
+                "id_negocio": "auxilios_funerarios",
+                "habilitada": true,
+                "periodo_negocio": "202512",
+                "requiere_preparacion_con_lotes_segmento": true,
+                "modo": "EXCLUIR_EXTRAIDOS"
+              }
+            }
+          ],
+          "descripcion": "Tablas relacionadas con distribucion de vigencia, pensionado novedad y pensiones"
+        }
+      ],
+      "descripcion": "Extraccion de tablas de pensiones, vigencias y novedades asociadas"
+    },
+    {
+      "orden": 3,
+      "nombre": "ciclo_3_catalogos",
+      "segmentos": [
+        {
+          "orden": 1,
+          "nombre": "segmento_1_catalogos",
+          "forma": "CASCADA",
+          "tablas": [
+            {
+              "orden": 1,
+              "schema": "GENERAL",
+              "tabla": "CGR_CONCEPTOS",
+              "tabla_relativa": "general/cgr_conceptos",
+              "tipo_tabla": "CATALOGO",
+              "where": null,
+              "dependencia": null,
+              "segmentacion_horizontal": {
+                "habilitada": false,
+                "periodo_negocio": "202512"
+              }
+            },
+            {
+              "orden": 2,
+              "schema": "GENERAL",
+              "tabla": "CGR_ORIGENES",
+              "tabla_relativa": "general/cgr_origenes",
+              "tipo_tabla": "CATALOGO",
+              "where": null,
+              "dependencia": null,
+              "segmentacion_horizontal": {
+                "habilitada": false,
+                "periodo_negocio": "202512"
+              }
+            }
+          ],
+          "descripcion": "Catalogos de conceptos y origenes"
+        }
+      ],
+      "descripcion": "Extraccion de catalogos requeridos para Auxilios Funerarios"
+    }
+  ],
+  "salida_runtime": {
+    "generar_parametros_extraccion": true,
+    "estructura_dataset": {
+      "agregar_nro_registro": true,
+      "compresion": "snappy",
+      "formato": "parquet",
+      "modo_escritura": "overwrite",
+      "agregar_lote_cargue_id": true
+    },
+    "checkpoint_extraccion": {
+      "guardar_checkpoint_inicio_tabla": false,
+      "saltar_tablas_exitosas_en_reanudacion": true,
+      "guardar_detalle_eventos": false
+    }
+  }
+}

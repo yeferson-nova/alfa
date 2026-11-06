@@ -1,0 +1,36 @@
+﻿{
+    "Name":  "niif-dev-val-tecnica",
+    "JobMode":  "SCRIPT",
+    "JobRunQueuingEnabled":  false,
+    "Description":  "Glue job for val tecnica processing",
+    "Role":  "arn:aws:iam::533267035849:role/niif-dev-jobs-val-tecnica",
+    "CreatedOn":  "2026-07-01T00:56:45.477000+00:00",
+    "LastModifiedOn":  "2026-10-06T17:05:40.087000+00:00",
+    "ExecutionProperty":  {
+                              "MaxConcurrentRuns":  10
+                          },
+    "Command":  {
+                    "Name":  "glueetl",
+                    "ScriptLocation":  "s3://niif-dev-assets/glue-resources/auxilios-funerarios/validacion_tecnica.py",
+                    "PythonVersion":  "3"
+                },
+    "DefaultArguments":  {
+                             "--enable-metrics":  "true",
+                             "--enable-spark-ui":  "true",
+                             "--spark-event-logs-path":  "s3://aws-glue-assets-533267035849-us-east-1/sparkHistoryLogs/",
+                             "--enable-job-insights":  "true",
+                             "--enable-glue-datacatalog":  "true",
+                             "--conf":  "spark.eventLog.rolling.enabled=true",
+                             "--enable-continuous-cloudwatch-log":  "true",
+                             "--job-bookmark-option":  "job-bookmark-disable",
+                             "--job-language":  "python",
+                             "--TempDir":  "s3://aws-glue-assets-533267035849-us-east-1/temporary/"
+                         },
+    "MaxRetries":  0,
+    "AllocatedCapacity":  4,
+    "Timeout":  2880,
+    "MaxCapacity":  4.0,
+    "WorkerType":  "G.1X",
+    "NumberOfWorkers":  4,
+    "GlueVersion":  "4.0"
+}

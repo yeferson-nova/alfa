@@ -1,0 +1,42 @@
+{
+    "Name": "niif-dev-notification-certification",
+    "JobMode": "SCRIPT",
+    "JobRunQueuingEnabled": false,
+    "Description": "Envia por SES el correo de certificacion NIIF 17",
+    "Role": "arn:aws:iam::533267035849:role/niif-dev-jobs-notification-certification",
+    "ExecutionProperty": {
+        "MaxConcurrentRuns": 10
+    },
+    "Command": {
+        "Name": "glueetl",
+        "ScriptLocation": "s3://niif-dev-assets/glue-resources/notification/job_notificacion.py",
+        "PythonVersion": "3"
+    },
+    "DefaultArguments": {
+        "--job-language": "python",
+        "--job-bookmark-option": "job-bookmark-disable",
+        "--TempDir": "s3://aws-glue-assets-533267035849-us-east-1/temporary/",
+        "--enable-glue-datacatalog": "true",
+        "--enable-metrics": "true",
+        "--enable-job-insights": "true",
+        "--enable-continuous-cloudwatch-log": "true",
+        "--extra-py-files": "s3://niif-dev-assets/glue-resources/libraries/niif-dev-notification-certification-1.0.0.zip",
+        "--CONFIG_BUCKET": "niif-dev-assets",
+        "--GLOBAL_CONFIG_KEY": "configs/certification/json_global_notif_cert.json",
+        "--SHORT_LINKS_TABLE": "niif-dev-short-links",
+        "--REDIRECT_BASE_URL": "https://hfoy06vw40.execute-api.us-east-1.amazonaws.com/dev/r",
+        "--SES_REMITENTE": "notificaciones@segurosalfa.com.co",
+        "--SES_CONFIGURATION_SET": "niif-dev-notificaciones",
+        "--INDICE_CERT_CODE": "certCode-index",
+        "--ZONA_HORARIA": "America/Bogota",
+        "--DIAS_VIGENCIA_ENLACE": "7",
+        "--LONGITUD_TOKEN_ENLACE": "8",
+        "--SEGUNDOS_ENTRE_CONSULTAS": "1",
+        "--SEGUNDOS_MAXIMOS_CONSULTA": "900"
+    },
+    "MaxRetries": 0,
+    "Timeout": 2880,
+    "WorkerType": "G.1X",
+    "NumberOfWorkers": 2,
+    "GlueVersion": "4.0"
+}

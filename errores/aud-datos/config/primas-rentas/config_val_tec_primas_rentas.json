@@ -1,0 +1,285 @@
+{
+  "nombre_caso": "primas_rentas",
+  "parametros_extraccion": {
+    "ruta": "s3://niif-dev-assets/primas-rentas/parametros_extraccion.json"
+  },
+  "salida": {
+    "ruta_base": "s3://alfa-datalake-dev-silver/niif/t_data_domain/primas_rentas/validacion_tecnica_primas_rentas/"
+  },
+  "datasets": [
+    {
+      "reglas": [
+        {
+          "columna": "PERIODO_PAGO",
+          "tipo": "INTEGER",
+          "nulo": false
+        },
+        {
+          "tipo": "INTEGER",
+          "columna": "NID_DISTRIBUCION_VIGENCIA",
+          "nulo": false
+        },
+        {
+          "nulo": false,
+          "columna": "COD_TIPO_IDENTIFICACION",
+          "tipo": "STRING",
+          "longitud_maxima": 3
+        },
+        {
+          "tipo": "INTEGER",
+          "columna": "NID_NUMERO_IDENTIFICACION",
+          "nulo": false
+        },
+        {
+          "columna": "COD_CONCEPTO",
+          "nulo": false,
+          "tipo": "STRING",
+          "longitud_maxima": 3
+        },
+        {
+          "escala": 2,
+          "tipo": "DECIMAL",
+          "nulo": false,
+          "precision": 14,
+          "columna": "VLR_CONCEPTO"
+        },
+        {
+          "columna": "FEC_INICIAL",
+          "nulo": false,
+          "tipo": "DATE"
+        },
+        {
+          "columna": "FEC_FINAL",
+          "nulo": true,
+          "tipo": "DATE"
+        },
+        {
+          "nulo": false,
+          "tipo": "INTEGER",
+          "columna": "NUM_DIAS_LIQ_CONCEPTO"
+        },
+        {
+          "nulo": false,
+          "longitud_maxima": 1,
+          "tipo": "STRING",
+          "columna": "BLN_VALOR_UPC"
+        }
+      ],
+      "tabla_relativa": "general/anp_movimientos_pago"
+    },
+    {
+      "reglas": [
+        {
+          "nulo": false,
+          "tipo": "INTEGER",
+          "columna": "NID_DISTRIBUCION_VIGENCIA"
+        },
+        {
+          "tipo": "INTEGER",
+          "columna": "NID_VERSION_PENSION",
+          "nulo": false
+        },
+        {
+          "columna": "NID_PENSION",
+          "nulo": false,
+          "tipo": "INTEGER"
+        },
+        {
+          "tipo": "DATE",
+          "columna": "FEC_INICIAL",
+          "nulo": false
+        },
+        {
+          "columna": "FEC_FINAL",
+          "nulo": true,
+          "tipo": "DATE"
+        }
+      ],
+      "tabla_relativa": "general/anp_distribucion_vig_pension"
+    },
+    {
+      "tabla_relativa": "general/anp_pensiones",
+      "reglas": [
+        {
+          "tipo": "INTEGER",
+          "columna": "NID_PENSION",
+          "nulo": false
+        },
+        {
+          "columna": "NID_PROCEDENCIA",
+          "nulo": false,
+          "tipo": "INTEGER"
+        },
+        {
+          "columna": "VLR_PENSION_INICIAL",
+          "tipo": "DECIMAL",
+          "precision": 14,
+          "escala": 2,
+          "nulo": false
+        },
+        {
+          "precision": 14,
+          "tipo": "DECIMAL",
+          "columna": "VLR_PENSION_FINAL",
+          "escala": 2,
+          "nulo": false
+        },
+        {
+          "longitud_maxima": 3,
+          "nulo": false,
+          "columna": "COD_PROCEDENCIA",
+          "tipo": "STRING"
+        },
+        {
+          "nulo": true,
+          "longitud_maxima": 3,
+          "columna": "COD_ORIGEN",
+          "tipo": "STRING"
+        }
+      ]
+    },
+    {
+      "tabla_relativa": "prv/prv_rentas",
+      "reglas": [
+        {
+          "tipo": "INTEGER",
+          "nulo": false,
+          "columna": "NID_RENTAS"
+        },
+        {
+          "tipo": "DATE",
+          "nulo": true,
+          "columna": "FEC_EXPEDICION"
+        },
+        {
+          "nulo": true,
+          "tipo": "DATE",
+          "columna": "FEC_INVALIDACION_REGISTRO"
+        },
+        {
+          "nulo": true,
+          "tipo": "DATE",
+          "columna": "FEC_ENVIO_POINT"
+        },
+        {
+          "columna": "COD_ORIGEN",
+          "longitud_maxima": 3,
+          "tipo": "STRING",
+          "nulo": false
+        },
+        {
+          "precision": 14,
+          "nulo": false,
+          "columna": "VLR_PRIMA_UNICA",
+          "tipo": "DECIMAL",
+          "escala": 2
+        }
+      ]
+    },
+    {
+      "tabla_relativa": "prv/prv_saldos_matematica",
+      "reglas": [
+        {
+          "tipo": "INTEGER",
+          "columna": "NID_RENTAS",
+          "nulo": false
+        },
+        {
+          "nulo": false,
+          "tipo": "INTEGER",
+          "columna": "NID_CALCULO"
+        },
+        {
+          "columna": "PERIODO",
+          "tipo": "STRING",
+          "longitud_maxima": 6,
+          "nulo": false
+        },
+        {
+          "columna": "FEC_CORTE_CALCULO",
+          "nulo": true,
+          "tipo": "DATE"
+        },
+        {
+          "columna": "VLR_RESERVA_CALCULADA",
+          "nulo": true,
+          "tipo": "DECIMAL",
+          "precision": 14,
+          "escala": 2
+        },
+        {
+          "columna": "VLR_RESERVA_CONTABLE",
+          "nulo": true,
+          "escala": 2,
+          "tipo": "DECIMAL",
+          "precision": 14
+        }
+      ]
+    },
+    {
+      "reglas": [
+        {
+          "tipo": "STRING",
+          "longitud_maxima": 3,
+          "columna": "COD_ORIGEN",
+          "nulo": false
+        },
+        {
+          "nulo": true,
+          "tipo": "STRING",
+          "longitud_maxima": 50,
+          "columna": "NOMBRE"
+        }
+      ],
+      "tabla_relativa": "general/cgr_origenes"
+    },
+    {
+      "tabla_relativa": "general/cgr_conceptos",
+      "reglas": [
+        {
+          "nulo": false,
+          "columna": "COD_CONCEPTO",
+          "longitud_maxima": 3,
+          "tipo": "STRING"
+        },
+        {
+          "columna": "NOMBRE_CONCEPTO",
+          "nulo": false,
+          "longitud_maxima": 30,
+          "tipo": "STRING"
+        },
+        {
+          "tipo": "STRING",
+          "nulo": false,
+          "columna": "COD_TIPO_CONCEPTO",
+          "longitud_maxima": 3
+        },
+        {
+          "tipo": "STRING",
+          "nulo": false,
+          "columna": "BLN_PREDETERMINADA",
+          "longitud_maxima": 1
+        },
+        {
+          "longitud_maxima": 1,
+          "nulo": false,
+          "columna": "BLN_INFORMATIVA",
+          "tipo": "STRING"
+        },
+        {
+          "columna": "PCJ_PENSION",
+          "escala": 2,
+          "precision": 5,
+          "nulo": false,
+          "tipo": "DECIMAL"
+        },
+        {
+          "longitud_maxima": 1,
+          "columna": "BLN_AGRUPAR_NIT",
+          "tipo": "STRING",
+          "nulo": false
+        }
+      ]
+    }
+  ]
+}

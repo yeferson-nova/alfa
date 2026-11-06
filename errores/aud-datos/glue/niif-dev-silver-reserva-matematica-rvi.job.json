@@ -1,0 +1,42 @@
+{
+    "Job": {
+        "Name": "niif-dev-silver-reserva-matematica-rvi",
+        "JobMode": "SCRIPT",
+        "JobRunQueuingEnabled": false,
+        "Description": "Glue job for silver-reserva-matematica-rvi processing",
+        "Role": "arn:aws:iam::533267035849:role/niif-dev-silver-reserva-matematica-rvi",
+        "CreatedOn": "2026-07-11T01:44:46.850000+00:00",
+        "LastModifiedOn": "2026-10-06T17:05:39.772000+00:00",
+        "ExecutionProperty": {
+            "MaxConcurrentRuns": 10
+        },
+        "Command": {
+            "Name": "glueetl",
+            "ScriptLocation": "s3://niif-dev-assets/glue-resources/reserva-matematicas-rvi/silver_reserva_matematica_rvi.py",
+            "PythonVersion": "3"
+        },
+        "DefaultArguments": {
+            "--enable-glue-datacatalog": "true",
+            "--S3_SLV_PREP_PATH": "s3://alfa-datalake-dev-silver/niif/t_data_domain/reserva_matematica_arp/silver_preparado_reserva_matematica_arp",
+            "--job-bookmark-option": "job-bookmark-disable",
+            "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-dev-assets/reserva-matematica-arp/config_extraccion_primas_arl.json",
+            "--TempDir": "s3://aws-glue-assets-533267035849-us-east-1/temporary/",
+            "--enable-metrics": "true",
+            "--enable-spark-ui": "true",
+            "--spark-event-logs-path": "s3://aws-glue-assets-533267035849-us-east-1/sparkHistoryLogs/",
+            "--enable-job-insights": "true",
+            "--PER_CORTE": "202604",
+            "--conf": "spark.eventLog.rolling.enabled=true --conf spark.sql.catalog.glue_catalog.glue.skip-name-validation=true",
+            "--enable-continuous-cloudwatch-log": "true",
+            "--S3_TMP_PREP_PATH": "s3://alfa-datalake-dev-silver/niif/t_data_domain/reserva_matematica_arp/tmp_preparacion_reserva_matematica_arp/",
+            "--job-language": "python"
+        },
+        "MaxRetries": 0,
+        "AllocatedCapacity": 4,
+        "Timeout": 2880,
+        "MaxCapacity": 4.0,
+        "WorkerType": "G.1X",
+        "NumberOfWorkers": 4,
+        "GlueVersion": "4.0"
+    }
+}
