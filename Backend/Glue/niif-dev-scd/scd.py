@@ -29,7 +29,8 @@ logger = logging.getLogger(__name__)
 # -------------------------------------------------
 # PARAMETROS
 # -------------------------------------------------
-ARGUMENTOS_OPCIONALES = ("PERMITIR_APAGADO_MASIVO",)
+ARGUMENTOS_OPCIONALES = ("PERMITIR_APAGADO_MASIVO", "UMBRAL_APAGADO_PCT")
+UMBRAL_APAGADO_PCT_DEFECTO = 20.0
 
 args = getResolvedOptions(
     sys.argv,
@@ -37,9 +38,9 @@ args = getResolvedOptions(
         "JOB_NAME",
         "RUTA_CONFIG_SCD",
         "RUTA_PARAMETROS_EXTRACCION",
-        "UMBRAL_APAGADO_PCT"
     ] + [o for o in ARGUMENTOS_OPCIONALES if f"--{o}" in sys.argv]
 )
+
 
 ruta_config_scd = args["RUTA_CONFIG_SCD"]
 ruta_parametros_extraccion = args["RUTA_PARAMETROS_EXTRACCION"]
@@ -160,7 +161,12 @@ cfg = cargar_json_s3(ruta_config_scd)
 parametros_extraccion = cargar_json_s3(ruta_parametros_extraccion)
 
 nombre_caso = cfg["nombre_caso"]
-umbral_apagado_pct = leer_umbral_pct(cfg.get("umbral_apagado_pct", args["UMBRAL_APAGADO_PCT"]))
+umbral_apagado_pct = leer_umbral_pct(
+    cfg.get(
+        "umbral_apagado_pct",
+        args.get("UMBRAL_APAGADO_PCT", UMBRAL_APAGADO_PCT_DEFECTO),
+    )
+)
 permitir_apagado_masivo = str(args.get("PERMITIR_APAGADO_MASIVO", "false")).lower() == "true"
 ruta_gold = ensure_trailing_slash(cfg["salida"]["ruta_gold"])
 

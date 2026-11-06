@@ -64,9 +64,10 @@ def test_umbral_valido(freno, valor, esperado):
     assert freno["leer_umbral_pct"](valor) == esperado
 
 
-def test_el_umbral_es_argumento_obligatorio_del_job():
-    bloque = FUENTE[FUENTE.index("args = getResolvedOptions("):FUENTE.index("ruta_config_scd =")]
-    assert '"UMBRAL_APAGADO_PCT"' in bloque
+def test_el_umbral_es_opcional_y_tiene_defecto():
+    definicion = FUENTE[:FUENTE.index("args = getResolvedOptions(")]
+    assert '"UMBRAL_APAGADO_PCT"' in definicion
+    assert "UMBRAL_APAGADO_PCT_DEFECTO = 20.0" in definicion
 
 
 def test_el_freno_se_evalua_antes_de_escribir_gold_en_el_camino_scd():
