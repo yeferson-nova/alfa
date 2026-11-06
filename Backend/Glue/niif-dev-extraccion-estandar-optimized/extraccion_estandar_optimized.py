@@ -1,13 +1,3 @@
-
-
-def combinar_lotes_respaldados(previos, actual, hay_nuevos):
-    if not previos:
-        raise ValueError("Exclusion sin lotes de respaldo validados")
-    lotes = {int(x) for x in previos}
-    if hay_nuevos:
-        lotes.add(int(actual))
-    return sorted(lotes)
-
 import sys
 import re
 import json
@@ -612,6 +602,19 @@ def resolver_llaves_reales(df, llaves_segmentacion, tabla_relativa):
         llaves_reales.append(columnas_df[llave_upper])
 
     return llaves_reales
+
+
+def combinar_lotes_respaldados(previos, actual, hay_nuevos, tabla):
+    """Une los lotes de respaldo de las llaves excluidas con el actual."""
+    if not previos:
+        raise ValueError(
+            f"{tabla}: exclusion sin lotes de respaldo validados"
+        )
+    lotes = {int(x) for x in previos}
+    if hay_nuevos:
+        lotes.add(int(actual))
+    return sorted(lotes)
+
 
 
 def aplicar_exclusion_llaves_segmento(
@@ -1411,9 +1414,12 @@ try:
                 if metadata_exclusion.get("exclusion_aplicada"):
                     metadata_segmentacion["lotes_segmento"] = (
                         combinar_lotes_respaldados(
-                            metadata_exclusion.get("lotes_respaldo_exclusion"),
+                            metadata_exclusion.get(
+                                "lotes_respaldo_exclusion"
+                            ),
                             timestamp_ingesta,
-                            datos_nuevos
+                            datos_nuevos,
+                            tabla_relativa,
                         )
                     )
                 datos_nuevos_para_flujo = datos_nuevos
@@ -1426,7 +1432,8 @@ try:
                     # Conservar solo los respaldos validados de las llaves excluidas.
                     if not metadata_segmentacion.get("lotes_segmento"):
                         raise ValueError(
-                            tabla_relativa + ": universo reutilizado sin lotes"
+                            f"{tabla_relativa}: universo reutilizado "
+                            "sin lotes"
                         )
 
                     datos_nuevos = False
