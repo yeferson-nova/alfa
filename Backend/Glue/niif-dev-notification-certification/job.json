@@ -16,7 +16,7 @@
                 },
     "DefaultArguments":  {
                              "--SHORT_LINKS_TABLE":  "niif-dev-short-links",
-                             "--SNS_TOPIC_ARN":  "arn:aws:sns:us-east-1:533267035849:niif-dev-certification-email",
+                             "--SES_SENDER":  "notificaciones@segurosalfa.com.co",
                              "--CONFIG_BUCKET":  "niif-dev-assets",
                              "--enable-glue-datacatalog":  "true",
                              "--job-bookmark-option":  "job-bookmark-disable",
