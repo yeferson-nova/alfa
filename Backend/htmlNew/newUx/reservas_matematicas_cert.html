@@ -52,11 +52,11 @@
     <!-- Vista previa en la bandeja (oculta) -->
     <div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden; mso-hide:all;">Certificación pendiente: cifras de $useCaseName listas para su revisión.&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;</div>
 
-    <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#eef2f0" style="border-collapse:collapse; background-color:#eef2f0;">
+    <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#eef2f0" style="table-layout:fixed; border-collapse:collapse; background-color:#eef2f0;">
       <tr>
         <td class="exterior" align="center" style="padding:24px 12px;">
           <!--[if mso]><table role="presentation" width="680" align="center" border="0" cellpadding="0" cellspacing="0"><tr><td><![endif]-->
-          <table role="presentation" class="contenedor" width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="max-width:680px; border-collapse:separate; background-color:#ffffff; border:1px solid #d9e1de; border-radius:10px;">
+          <table role="presentation" class="contenedor" width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="max-width:680px; table-layout:fixed; border-collapse:separate; background-color:#ffffff; border:1px solid #d9e1de; border-radius:10px;">
 
             <!-- Encabezado -->
             <tr>
@@ -78,7 +78,7 @@
             <tr>
               <td class="pad" style="padding:24px 24px 4px 24px;">
                 <h1 class="h1" style="margin:0 0 10px 0; font-family:Arial, Helvetica, sans-serif; font-size:22px; line-height:28px; font-weight:bold; color:#1f2a27;">Certifique las cifras de $useCaseName</h1>
-                <p style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:22px; color:#1f2a27;">La herramienta datalake ha generado los datos para certificar las cifras del caso de uso de <strong>$useCaseName</strong> correspondientes al periodo <strong>$perido_a - $perido_a</strong>. A continuación, un resumen de la información.</p>
+                <p style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:22px; color:#1f2a27;">La herramienta datalake ha generado los datos para certificar las cifras del caso de uso de <strong>$useCaseName</strong> correspondientes al periodo <strong>$periodRange</strong>. A continuación, un resumen de la información.</p>
               </td>
             </tr>
 
@@ -93,10 +93,6 @@
               </td>
             </tr>
 
-            <!-- <p><strong>Primas ARL:</strong></p>
-            <h3>Archivos de resumen</h3>
-            $tableSummary -->
-
             <tr>
               <td class="pad" style="padding:20px 24px 0 24px;">
                 <h2 style="margin:0 0 8px 0; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:22px; font-weight:bold; color:#1f2a27;">Archivos de detalle</h2>
@@ -106,11 +102,6 @@
                 </div>
               </td>
             </tr>
-
-            <!-- <tr><td class="pad" style="padding:20px 24px 0 24px;">
-              <p>Para mayor detalle puede realizar la consulta de los registros en el siguiente enlace:</p>
-              <p><a class="link" href="$redshiftLink">Redshift.</a></p>
-            </td></tr> -->
 
             <tr>
               <td class="pad" style="padding:24px 24px 0 24px;">
@@ -160,7 +151,7 @@
                     <td style="padding:12px 16px;">
                       <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                         <tr><td valign="top" style="padding:3px 12px 3px 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#5b6763; white-space:nowrap;">Caso de uso</td><td style="padding:3px 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#1f2a27;">$useCaseName</td></tr>
-                        <tr><td valign="top" style="padding:3px 12px 3px 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#5b6763; white-space:nowrap;">Periodo</td><td style="padding:3px 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#1f2a27;">$perido_a - $perido_a</td></tr>
+                        <tr><td valign="top" style="padding:3px 12px 3px 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#5b6763; white-space:nowrap;">Periodo</td><td style="padding:3px 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#1f2a27;">$periodRange</td></tr>
                         <tr><td valign="top" style="padding:3px 12px 3px 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#5b6763; white-space:nowrap;">Soporte</td><td style="padding:3px 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#1f2a27;">Mesa de ayuda &middot; Datalake</td></tr>
                       </table>
                     </td>

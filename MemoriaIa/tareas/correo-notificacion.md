@@ -20,7 +20,7 @@ Ejemplo en `Docs\05-arquitectura\ejemplo-correo-certificacion.png`. Es el objeti
 `Backend\htmlNew\` contiene las 5 plantillas reescritas para clientes de correo: tablas, estilos en línea, botones VML para Outlook y `@media` para móvil. Tienen los mismos placeholders (`$useCaseName`, `$periodRange`/`$perido_a`, `$tableTotal`, `$tableSummary`, `$tableDetail`, `$certificarLink`, `$nocertificarLink`). Detalle y pendientes en su `README.md`. Las tablas las inyecta el backend (clase `dataframe`, probablemente pandas); para máxima fidelidad deberían llegar con estilos en línea. Errata en reservas: `$perido_a - $perido_a`.
 
 ## Diseño nuevo, reemplazo directo (2026-11-03)
-- `Backend\htmlNew\newUx\` contiene las mismas 5 plantillas con el diseño del mockup `Backend\htmlNew\propuesta-ux-notificaciones.html`.
+- `Backend\htmlNew\newUx\` contiene las mismas 5 plantillas con el diseño del mockup `Backend\htmlNew\mockup\propuesta-ux-notificaciones.html`.
 - Mismos placeholders y mismo orden; las lambdas no cambian.
 - El usuario pidió explícitamente que sean **las mismas plantillas** con el diseño nuevo, no un sistema de componentes nuevo.
 - Fase 2 (requiere cambios en la lambda): tarjetas de cifras, validaciones, plazo, ID de ejecución y estados adicionales.

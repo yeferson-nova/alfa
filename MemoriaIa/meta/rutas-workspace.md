@@ -15,7 +15,7 @@ Raíz: `C:\Users\rdpuser\Git\`. Mapa humano en `Docs\00-LEEME.md`.
 - `Lamnbdas\inventario-aws\`: `lambdas.md`, `step-functions-niif.md` y `spike-primas-rentas\` (lambda general por capas con pruebas). Movido aquí desde `Docs\05-arquitectura\`; ver [[inventario-lambdas]].
 - `cloudshell-inventario\`: `inventario.sh` (solo lectura) y su zip para repetir la extracción en CloudShell.
 - `localstack\`: entorno AWS local (docker compose), ver [[entorno-local-localstack]]. `.env` con token, excluido de Git; no leerlo.
-- `htmlNew\`: plantillas compatibles con clientes de correo, el mockup UX y `newUx\` con el diseño nuevo.
+- `htmlNew\`: `newUx\` (5 plantillas de producción, diseño nuevo), `anterior\` (diseño previo), `mockup\`, `previews\` (15 correos de ejemplo) y `herramientas\` (generador y validador). Mapa en su `README.md`.
 - `reservas_matematicas_cert\`: 5 plantillas HTML del correo de certificación, ver [[correo-notificacion]].
 
 ## Tareas\ (para humanos, una carpeta por asignación)

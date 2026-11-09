@@ -1,6 +1,6 @@
 # Plantillas de certificación con el diseño nuevo (newUx)
 
-Las mismas cinco plantillas de `Backend\reservas_matematicas_cert\`, con el diseño del mockup `..\propuesta-ux-notificaciones.html`. **Son un reemplazo directo:** mismos nombres de archivo, mismos placeholders y mismo orden de contenido, así que las lambdas actuales las llenan sin cambios.
+Las mismas cinco plantillas de `Backend\reservas_matematicas_cert\`, con el diseño del mockup `..\mockup\propuesta-ux-notificaciones.html`. **Son un reemplazo directo:** mismos nombres de archivo, mismos placeholders y mismo orden de contenido, así que las lambdas actuales las llenan sin cambios.
 
 | Archivo | Secciones |
 |---|---|
@@ -33,11 +33,11 @@ Las mismas cinco plantillas de `Backend\reservas_matematicas_cert\`, con el dise
 - **Tablas anchas:** se desplazan en horizontal dentro de su sección.
 - **Otros ajustes:** modo claro declarado, texto de vista previa oculto y sin detección automática de teléfonos ni fechas en iOS.
 
-## Contrato con la lambda (sin cambios)
-`$useCaseName`, `$periodRange` (o `$perido_a` en reservas), `$tableTotal`, `$tableSummary`, `$tableDetail`, `$certificarLink`, `$nocertificarLink` y `$redshiftLink` (comentado, como en el original).
+## Contrato con el job de notificación
+`$useCaseName`, `$periodRange`, `$tableTotal`, `$tableSummary`, `$tableDetail`, `$certificarLink`, `$nocertificarLink` y `$avisoHtml`. Ver el contrato completo y las reglas de validación en `..\README.md`.
 
 - **Repeticiones nuevas:** `$useCaseName` aparece también en el título, en la vista previa y en la ficha, y el periodo también en la ficha. Los enlaces de los botones aparecen dos veces: versión Outlook y versión resto. Con `string.Template` no hace falta ningún cambio.
-- **Tablas inyectadas (pandas `dataframe`):** el estilo nuevo se aplica desde `<style>`. En clientes que lo eliminan, como la app de Gmail con cuentas que no son de Google, la tabla conserva solo su atributo `border`. Para máxima fidelidad, la lambda debería generar las tablas con estilos en línea.
+- **Tablas inyectadas:** el job las genera con estilos en línea en cada celda, así que no dependen del `<style>` (que algunos clientes eliminan). Las clases `dataframe` y `.tbl-wrap` del `<style>` quedan como respaldo.
 
 ## Validación hecha (estática)
 - **Placeholders:** los mismos que en las originales, ninguno dentro de `<style>` y las tablas sin duplicar.
@@ -55,5 +55,9 @@ Las mismas cinco plantillas de `Backend\reservas_matematicas_cert\`, con el dise
 - Estados adicionales: recordatorio, certificado, no certificado y fallo.
 - Página de confirmación con inicio de sesión para Certificar y No certificar.
 
-## Pendiente heredado
-`reservas_matematicas_cert.html` muestra el periodo como `$perido_a - $perido_a`: la misma variable dos veces y con errata. Se mantuvo para no romper la lambda; conviene corregirlo junto con el backend.
+## Cambios del 2026-11-09 (migración de SNS a SES)
+- **`$avisoHtml`:** nuevo marcador, una sola vez, justo encima de la sección del total. El job coloca ahí el recuadro de avisos (regeneración, sin datos, disponibilidad por miembro). Sin el marcador, el job envía solo texto cuando hay avisos.
+- **`reservas_matematicas_cert.html`:** el periodo pasa de `$perido_a - $perido_a` a `$periodRange`. El job nuevo no entrega `$perido_a`, así que sin este cambio el correo mostraría el marcador literal.
+- **Bloques comentados eliminados:** el enlace de Redshift (`$redshiftLink`) y la sección comentada de resumen. Los comentarios HTML llegan al destinatario y, con `$tableSummary` dentro de un comentario, se insertaba una tabla completa que el cliente nunca muestra.
+- **`table-layout:fixed`** en las dos tablas contenedoras: sin él, una tabla ancha ensanchaba todo el correo en pantallas de 390 px y se cortaban el título y los botones.
+- Se validaron con `..\herramientas\validar_plantillas.py` y se revisaron visualmente a 390 px y a escritorio.
