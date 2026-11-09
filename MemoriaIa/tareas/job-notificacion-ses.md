@@ -1,13 +1,62 @@
 ---
 tipo: diseno
-actualizado: 2026-11-04
+actualizado: 2026-11-09
 ---
 # Job de notificación con SES (T1, punto 1a)
 
 Cambio de SNS a SES en el job de Glue `niif-dev-notification-certification`, que es quien arma y envía el correo de certificación. **La lambda de T2 no envía correos** (solo configura y arranca la malla), y la Step Function tampoco: ver [[tareas-aws]] y [[arquitectura-niif17]].
 
-- **Código:** `Backend\Glue\reposNew\niif-dev-notification-certification\` (carpeta nueva `reposNew`, una por job reescrito). El job anterior sigue intacto en `Backend\Glue\niif-dev-notification-certification\`.
-- **Estado (2026-11-04):** implementado y probado en local; **no desplegado ni probado contra AWS**. 451 pruebas, 99,9 % de cobertura, también desde la raíz del repositorio.
+> **Vigente (2026-11-09):** la entrega de T1a+T1b se hace **sobre el script desplegado** (`Backend\Glue\niif-dev-notification-certification\notification_certification.py`), con cambio mínimo. La reescritura de `reposNew` **no se usa todavía**: es posterior a esta entrega y los cambios van por auditoría. Ver la sección "Entrega T1a+T1b sobre el job desplegado" más abajo.
+
+- **Código reescrito (pospuesto):** `Backend\Glue\reposNew\niif-dev-notification-certification\` (carpeta nueva `reposNew`, una por job reescrito). El job desplegado sigue en `Backend\Glue\niif-dev-notification-certification\`.
+- **Estado de la reescritura (2026-11-04):** implementada y probada en local; **no desplegada**. 451 pruebas, 99,9 % de cobertura. No se usa en la entrega actual.
+
+## Entrega T1a+T1b sobre el job desplegado (2026-11-09)
+**Código y pruebas** (`Backend\Glue\niif-dev-notification-certification\`): `notification_certification.py` (~727 líneas), `job.json` y `tests\` (104 pruebas con `awsglue` y clientes simulados; incluyen el validador de plantillas). Las variables y funciones nuevas van **en inglés** (decisión del usuario).
+
+| Cambio en el script | Detalle |
+|---|---|
+| SES en vez de SNS | SESv2 `send_email` (`send_ses`); argumento `--SES_SENDER` reemplaza `--SNS_TOPIC_ARN`; `--SES_CONFIGURATION_SET` opcional. Se borró `asegurar_filtros_sns_por_recipient` |
+| Tolerancia por destinatario | Falla uno: `[SES] ERROR`, sigue con los demás y marca solo los enviados (`[SES] ENVIO PARCIAL`). Fallan todos: `RuntimeError` y no marca ni cierra el compuesto |
+| Contrato en DynamoDB | `notificationChannel=SES_EMAIL` y `sesMessageId` (tabla de notificaciones y grupo compuesto) |
+| HTML | Usa `email.templatePath` del JSON del caso y lo lee de S3 (`niif-dev-assets`). Valores escapados con `html.escape`. Si no puede leer la plantilla, o hay avisos y falta `$avisoHtml`, envía solo texto y lo deja en el log (`[HTML]`) |
+| Avisos | Un recuadro por aviso: azul (regenerado) y ámbar (sin datos, disponibilidad por miembro) |
+| Athena | `query_athena` devuelve datos estructurados: una sola ejecución por consulta alimenta el texto y el HTML. El texto del correo no cambió |
+| Asunto | Ya no se recorta a 100 caracteres |
+
+**Plantillas** (`Backend\htmlNew\`, detalle en su `README.md`): `newUx\` (6 plantillas de producción; nueva `primas_rentas_cert.html`, compartida por Primas rentas y endosos, con sección de resumen), `anterior\`, `mockup\`, `previews\` (6 escenarios por plantilla) y `herramientas\` (`generar_previews.py`, `validar_plantillas.py`). Correcciones halladas al validar: `$avisoHtml` agregado; `$perido_a` en reservas reemplazado por `$periodRange` (el job nuevo no lo entrega); bloques comentados eliminados (`$redshiftLink`, resumen); `table-layout:fixed` (sin él, una tabla ancha desbordaba el correo a 390 px); banda "Acción requerida · Certificar o no certificar las cifras" con glifo, sin emoji. El mockup quedó con 4 estados (acción requerida, certificado, no certificado, fallo) y variaciones (alertas, recordatorio, regenerado, sin datos), con la regla "un estado distinto solo si cambia lo que la persona debe hacer". Solo normal, regenerado y sin datos existen hoy en el job; los demás dependen de T3, de un plazo con disparador y de T1c.
+
+**S3 DEV:** plantillas en `niif-dev-assets/email-templates/` (plural, 6 archivos); la carpeta singular `email-template/` quedó duplicada y se borra tras la prueba. Los `templatePath` de los 7 JSON de caso tenían tres convenciones (`email-templates/`, `email-template/`, `email_templates/`): se unificaron en plural para Previsional y las dos de reserva matemática (respaldos `.bak` en CloudShell). Primas rentas y endosos apuntan a `primas_rentas_cert.html`. Existe `pruebas/primasArl-prueba.json` (copia de Primas ARL con un único destinatario de prueba). Primas rentas y endosos tienen consultas `summary` y `total`.
+
+**Job DEV:** `--SES_SENDER` aplicado por consola y script subido a `glue-resources/notification/`. Al guardar desde la consola, Glue reescribió `--enable-metrics` y `--enable-glue-datacatalog` de `"true"` a `""` y agregó una opción a `--conf`; son inocuos. Ojo: hay que pulsar **Save** y comprobar con `aws glue get-job`.
+
+**Primera corrida en DEV (2026-11-09, Primas ARL, `certCode` en estado SENT): SUCCEEDED**, con dos fallos de permisos del rol:
+- Un destinatario recibió el correo en solo texto (MessageId devuelto); otro falló con `AccessDeniedException` en `ses:SendEmail`: **en sandbox el rol necesita permiso sobre la identidad de cada destinatario**, no solo del remitente. `TemporarySesTestAccess` no alcanzaba.
+- La plantilla dio `AccessDenied` en `s3:GetObject` sobre `email-templates/*`; el job cayó a solo texto, como está diseñado.
+- Corrección: política inline `niif-dev-notification-ses-templates` (`ses:SendEmail` sobre `identity/*` y `s3:GetObject` sobre `email-templates/*`), creada por CLI **sin IaC**; DevOps debe incorporarla.
+- Hallazgo: el script desplegado **no tiene idempotencia**. Re-ejecutar con un `certCode` en SENT reenvía y reescribe `sentDate`, canal e id; con uno en `TRANSPORT` lo regresaría a SENT. Para pruebas usar solo `certCode` en SENT.
+- Roles: el rol del job tiene 7 políticas inline (compuesto, inline propia, short-links, KMS, SNS, catálogo Gold de QA y `TemporarySesTestAccess`). Las de SNS y la temporal se retiran al cerrar la validación.
+
+**Para QA y PRD (los opera DevOps):** (1) política del rol: `ses:SendEmail` sobre la identidad del remitente (en QA es de dominio) y `s3:GetObject` sobre `<bucket>/email-templates/*`; si la cuenta sigue en sandbox, también sobre los destinatarios; si usa un conjunto de configuración explícito, sobre su ARN; (2) `--SES_SENDER` en el job y retirar `--SNS_TOPIC_ARN`; (3) script con su hash; (4) las 6 plantillas en `email-templates/`; (5) `templatePath` de los JSON; (6) retirar permisos de SNS al validar. Pendiente redactar esta solicitud en `Tareas\T1-notificaciones\`.
+
+### Permisos IAM del rol del job: lo aprendido (2026-11-09)
+Rol `niif-dev-jobs-notification-certification`. Se tropezó con **tres** denegaciones distintas en cuatro corridas; ninguna la anticipaba el diseño del script:
+
+| # | Síntoma en el log o en el estado del run | Causa | Solución |
+|---|---|---|---|
+| 1 | `[SES] ERROR … AccessDeniedException … ses:SendEmail on …identity/<destinatario>` | En **sandbox**, SES evalúa el permiso también sobre la identidad de **cada destinatario**, no solo la del remitente. `TemporarySesTestAccess` solo cubría el remitente y una dirección | `ses:SendEmail` sobre `identity/*` de la cuenta (mientras la cuenta siga en sandbox) |
+| 2 | `[HTML] No se pudo leer la plantilla … AccessDenied s3:GetObject` | El rol no leía `email-templates/*` | `s3:GetObject` sobre `<bucket>/email-templates/*`. El job no falla: cae a solo texto y lo deja en el log |
+| 3 | Run `FAILED` al leer `pruebas/…json` y también `primas-arl/…-prueba.json` | El rol solo puede leer los JSON de caso **concretos** (permisos por objeto o prefijos exactos), no cualquier archivo de esas carpetas. Un JSON de prueba nuevo no se puede leer aunque esté junto a los reales | `s3:GetObject` sobre `<bucket>/pruebas/*` (solo DEV) y usar `--CONFIG_KEY pruebas/…` |
+
+- **Política resultante:** inline `niif-dev-notification-ses-templates` con tres sentencias (`SesSendFromSenderAndToVerifiedRecipients`, `ReadEmailTemplates`, `ReadTestConfigs`). Creada con `aws iam put-role-policy` (CLI, **sin IaC**): DevOps debe llevarla a Terraform para que un despliegue no la borre. `put-role-policy` con el mismo nombre la **reemplaza completa**, así que al ampliarla hay que reenviar todas las sentencias.
+- **Propagación:** los cambios de IAM tardan unos segundos; si el run falla justo después de aplicarla, esperar un minuto y repetir.
+- **Políticas inline del rol (8 en total con la nueva):** `AllowUpdateCompositeNotificationStatus`, `niif-dev-jobs-notification-certification-inline-policy`, `niif-dev-notification-manage-short-links`, `niif-dev-notification-use-certification-kms`, `niif-dev-notification-use-certification-sns`, `ReadNiifQaGoldCatalog`, `TemporarySesTestAccess`, y la nueva. A retirar tras cerrar la validación: la de SNS y la temporal. Si el bucket cifrara con una llave KMS propia, leer plantillas necesitaría `kms:Decrypt` (no hizo falta en DEV).
+- **Para QA y PRD:** en QA la identidad es de dominio (`identity/<dominio>`); si la cuenta ya salió del sandbox basta el remitente y no hace falta `identity/*`; si usa un conjunto de configuración explícito, hay que dar `ses:SendEmail` también sobre su ARN. `pruebas/*` no se lleva a QA ni PRD. Si allí se quiere probar con otra configuración, el rol debe poder leerla.
+- **Diagnóstico útil:** el mensaje de AccessDenied trae el recurso exacto y la acción (`s3:GetObject on …`, `ses:SendEmail on …identity/…`); con eso se arma la sentencia sin adivinar.
+
+**Primera corrida completa con HTML (2026-11-09 23:02 UTC): SUCCEEDED.** Con el JSON de prueba y la política ya aplicada: leyó la plantilla sin `[HTML] No se pudo leer`, envió por SES a la dirección de prueba (MessageId devuelto) y marcó SENT con `sesMessageId`. Que el correo llegue a la bandeja no está confirmado todavía (DMARC `p=reject` y DKIM de DEV sin publicar).
+
+**Pendiente de esta entrega:** revisar el correo recibido en la dirección de prueba; revisarlo en Outlook de escritorio, Gmail y móvil; probar un caso con resumen y uno compuesto; DKIM en DNS y salida del sandbox; retirar `TemporarySesTestAccess` y los permisos de SNS; borrar `email-template/`; solicitud a DevOps; commit de los archivos nuevos (`tests\`, plantillas, `herramientas\`, `previews\`).
 - **Estándar aplicado:** [[est-desarrollo-hexagonal]] (dominio, aplicación, adaptadores de entrada y salida, configuración), sin comentarios ni docstrings, sin valores quemados, funciones de menos de 40 líneas, errores con taxonomía `NTF-<DOM>-<NNN>`, logs JSON con `ejecucion_id`. Humano: `README.md` del propio proyecto.
 
 ## Decisiones

@@ -1,6 +1,6 @@
 ---
 tipo: referencia
-actualizado: 2026-11-03
+actualizado: 2026-11-09
 ---
 # Correo de notificación de certificación
 
@@ -36,3 +36,6 @@ Ejemplo en `Docs\05-arquitectura\ejemplo-correo-certificacion.png`. Es el objeti
 Envío por SES (1a) ya implementado en el job de notificación: [[job-notificacion-ses]]. Falta la plantilla HTML (1b).
 
 Ver [[diseno-propuesto]] y [[preguntas-abiertas]].
+
+## Estructura y uso actual (2026-11-09)
+`Backend\htmlNew\` quedó organizado: `newUx\` (6 plantillas de producción, incluida `primas_rentas_cert.html`), `anterior\`, `mockup\` (4 estados y variaciones), `previews\` (6 escenarios por plantilla) y `herramientas\` (generador y validador contra el estándar de correo). Las plantillas se suben a `niif-dev-assets/email-templates/` y el job las lee con `email.templatePath` del JSON del caso. Detalle de cambios, marcadores (`$avisoHtml` incluido) y pruebas en [[job-notificacion-ses]] y en `htmlNew\README.md`.
