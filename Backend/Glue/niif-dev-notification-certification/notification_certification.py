@@ -89,7 +89,10 @@ STYLE_TH = "background-color:#eef2f0; color:#5b6763; font-size:12px; font-weight
 STYLE_TD = "color:#1f2a27; text-align:left; padding:10px 12px; border:1px solid #d9e1de; white-space:nowrap;"
 STYLE_LINK = "color:#00875f; text-decoration:underline;"
 STYLE_NOTICE_CELL = "padding:20px 24px 0 24px;"
-STYLE_NOTICE = "padding:12px 16px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#7a4b00; background-color:#fff4e0; border:1px solid #f0c987; border-radius:8px;"
+NOTICE_TONES = {
+    "info": ("#174ea6", "#e8f0fe", "#a8c3f5"),
+    "warn": ("#8a4b00", "#fff4e0", "#f1c27d")
+}
 
 
 
@@ -432,21 +435,27 @@ def details_to_html(files):
     )
 
 
+def notice_box(tone, text):
+    color, background, border = NOTICE_TONES[tone]
+    lines = "<br>".join(
+        html.escape(line) for line in text.splitlines() if line.strip()
+    )
+
+    return (
+        '<div style="margin:0 0 8px 0; padding:12px 16px; '
+        "font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; "
+        f"color:{color}; background-color:{background}; border:1px solid {border}; "
+        f'border-radius:8px;">{lines}</div>'
+    )
+
+
 def notices_to_html(notices):
     if not notices:
         return ""
 
-    lines = "<br>".join(
-        html.escape(line)
-        for notice in notices
-        for line in notice.splitlines()
-        if line.strip()
-    )
+    boxes = "".join(notice_box(tone, text) for tone, text in notices)
 
-    return (
-        f'<tr><td class="pad" style="{STYLE_NOTICE_CELL}">'
-        f'<div style="{STYLE_NOTICE}">{lines}</div></td></tr>'
-    )
+    return f'<tr><td class="pad" style="{STYLE_NOTICE_CELL}">{boxes}</td></tr>'
 
 
 def build_html_body(bucket, template_path, variables, fragments, notices):
@@ -652,7 +661,7 @@ def main():
     if aviso_miembros is not None:
         if aviso_miembros:
             mensaje_sns = aviso_miembros + '\n\n' + mensaje_sns
-            avisos.append(aviso_miembros)
+            avisos.append(("warn", aviso_miembros))
     else:
         vacios = [x for x in items if x.get('sinDatosPeriodo') is True]
         if vacios:
@@ -661,11 +670,11 @@ def main():
             else:
                 aviso = 'No se encontraron datos procesados para el periodo ' + str(first['period']) + ' en las consultas: ' + ', '.join((str(x.get('queryName', '')) for x in vacios)) + '. Las demas consultas conservan sus datos.'
             mensaje_sns = aviso + '\n\n' + mensaje_sns
-            avisos.append(aviso)
+            avisos.append(("warn", aviso))
     if REGENERACION_SIN_DATOS_NUEVOS:
         subject_sns = '[REGENERADO] ' + subject_sns
         mensaje_sns = REGENERATION_NOTICE + '\n\n' + mensaje_sns
-        avisos.insert(0, REGENERATION_NOTICE)
+        avisos.insert(0, ("info", REGENERATION_NOTICE))
     body_html = build_html_body(
         assets_bucket,
         email_cfg.get('templatePath'),

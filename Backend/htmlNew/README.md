@@ -24,12 +24,19 @@ Las 5 plantillas, una por caso de uso: `primas_arl_cert`, `auxilio_funerario_cer
 
 Las vistas previas son un apoyo. No reemplazan la prueba en clientes reales (Outlook de escritorio, Gmail web y app, iOS Mail).
 
-## Variantes de cada vista previa
-| Archivo | Qué muestra |
-|---|---|
-| `01-normal.html` | Correo con total, resumen y archivos de detalle |
-| `02-con-aviso.html` | Sin datos más aviso de regeneración (recuadro de avisos, tablas vacías, sin archivos) |
-| `03-estres.html` | 12 columnas, valores largos, caracteres especiales (`& < > ñ á`), nombres de archivo muy largos y avisos largos |
+## Escenarios de cada vista previa
+Cada plantilla se genera en 6 escenarios (30 archivos en total). Corresponden a lo que el job produce hoy:
+
+| Archivo | Escenario | Qué muestra |
+|---|---|---|
+| `01-normal.html` | Normal | Total, resumen y archivos de detalle |
+| `02-regenerado.html` | Regenerado sin datos nuevos | Recuadro **azul** informativo (el caso se rehízo desde Gold existente) |
+| `03-sin-datos.html` | Sin datos del periodo | Recuadro **ámbar** de advertencia, tablas vacías y sin archivos |
+| `04-regenerado-sin-datos.html` | Ambos | Los dos recuadros: primero el azul y luego el ámbar |
+| `05-disponibilidad-parcial.html` | Disponibilidad por miembro (casos compuestos) | Recuadro ámbar con el miembro que no tiene datos y los demás con datos |
+| `06-estres.html` | Estrés | 12 columnas, valores largos, `& < > ñ á`, nombres de archivo muy largos y avisos largos |
+
+Los estados y variaciones del mockup que **no** están aquí (alertas de validación, recordatorio, certificado, no certificado y fallo de proceso) dependen de funciones que todavía no existen en el flujo; ver `mockup\`.
 
 ## Estándar que valida `validar_plantillas.py`
 | Regla | Nivel |
@@ -58,7 +65,7 @@ El job llena estos marcadores (con `string.Template.safe_substitute`):
 | `$tableTotal`, `$tableSummary` | Tablas de las consultas de Athena (`queries.total` y `queries.summary`), con estilos en línea |
 | `$tableDetail` | Enlaces a los archivos de detalle (enlaces cortos) |
 | `$certificarLink`, `$nocertificarLink` | Enlaces cortos de los botones |
-| `$avisoHtml` | Recuadro con los avisos (regeneración, sin datos, disponibilidad por miembro). Vacío si no hay avisos |
+| `$avisoHtml` | Un recuadro por aviso, con su tono: **azul** (informativo) para "regenerado" y **ámbar** (advertencia) para "sin datos" y "disponibilidad por miembro". Vacío si no hay avisos |
 
 Si una plantilla no tiene `$avisoHtml` y hay avisos, el job envía **solo texto** y lo deja en el log, para no ocultar el aviso. Si la plantilla no existe en S3, también envía solo texto.
 

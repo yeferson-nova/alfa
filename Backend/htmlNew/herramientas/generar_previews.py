@@ -36,9 +36,12 @@ CASOS = {
 }
 
 VARIANTES = (
-    ("01-normal", "Correo normal"),
-    ("02-con-aviso", "Con avisos de regeneración y sin datos"),
-    ("03-estres", "Tablas anchas, valores largos y caracteres especiales"),
+    ("01-normal", "Normal"),
+    ("02-regenerado", "Regenerado"),
+    ("03-sin-datos", "Sin datos"),
+    ("04-regenerado-sin-datos", "Regenerado y sin datos"),
+    ("05-disponibilidad-parcial", "Disponibilidad parcial"),
+    ("06-estres", "Estrés"),
 )
 
 
@@ -88,16 +91,38 @@ def datos_normales():
     }
 
 
-def datos_con_aviso():
+def datos_regenerado():
+    datos = datos_normales()
+    datos["avisos"] = [("info", AVISO_REGENERACION)]
+    return datos
+
+
+def datos_sin_datos():
     return {
         "total": tabla(["registros", "valor_total"], []),
         "resumen": tabla(["origen_renta", "registros", "valor"], []),
         "archivos": [],
-        "avisos": [
-            AVISO_REGENERACION,
-            "No se encontraron datos procesados para el periodo seleccionado: 202610.",
-        ],
+        "avisos": [("warn", "No se encontraron datos procesados para el periodo seleccionado: 202610.")],
     }
+
+
+def datos_regenerado_sin_datos():
+    datos = datos_sin_datos()
+    datos["avisos"] = [("info", AVISO_REGENERACION)] + datos["avisos"]
+    return datos
+
+
+def datos_disponibilidad_parcial():
+    datos = datos_normales()
+    datos["avisos"] = [
+        (
+            "warn",
+            "Disponibilidad por caso de uso:\n"
+            "Rentas Vitalicias: no se encontraron datos activos para el periodo 202610.\n"
+            "El archivo y los resumenes incluyen los datos disponibles de los demas casos.",
+        )
+    ]
+    return datos
 
 
 def datos_estres():
@@ -116,11 +141,18 @@ def datos_estres():
         "total": tabla(columnas, filas),
         "resumen": tabla(resumen_columnas, resumen_filas),
         "archivos": archivos,
-        "avisos": [AVISO_REGENERACION, "Línea de aviso muy larga " + "con texto repetido " * 12],
+        "avisos": [("info", AVISO_REGENERACION), ("warn", "Línea de aviso muy larga " + "con texto repetido " * 12)],
     }
 
 
-GENERADORES = {"01-normal": datos_normales, "02-con-aviso": datos_con_aviso, "03-estres": datos_estres}
+GENERADORES = {
+    "01-normal": datos_normales,
+    "02-regenerado": datos_regenerado,
+    "03-sin-datos": datos_sin_datos,
+    "04-regenerado-sin-datos": datos_regenerado_sin_datos,
+    "05-disponibilidad-parcial": datos_disponibilidad_parcial,
+    "06-estres": datos_estres,
+}
 
 
 def construir(job, plantilla, nombre_caso, datos):
@@ -164,7 +196,7 @@ def main():
         for variante, etiqueta in VARIANTES:
             nombre_mostrado = nombre
             datos = GENERADORES[variante]()
-            if variante == "03-estres":
+            if variante == "06-estres":
                 nombre_mostrado = f"{nombre} - Régimen de Prima Media y Ahorro Individual con un nombre excesivamente largo"
             cuerpo = construir(job, plantilla, nombre_mostrado, datos)
             if cuerpo is None:

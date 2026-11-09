@@ -117,7 +117,7 @@ def test_details_to_html_sin_archivos_lo_indica(job):
 
 def test_notices_to_html_sin_avisos_es_vacio_y_con_avisos_usa_saltos_de_linea(job):
     assert job.notices_to_html([]) == ""
-    assert "uno<br>dos<br>tres" in job.notices_to_html(["uno\n\ndos", "tres"])
+    assert "uno<br>dos" in job.notices_to_html([("warn", "uno\n\ndos")])
 
 
 def _construir(job, plantilla=PLANTILLA, notices=(), variables=None):
@@ -146,7 +146,7 @@ def test_build_html_body_sustituye_variables_escapadas_y_fragmentos(job):
 
 
 def test_build_html_body_incluye_el_recuadro_de_avisos(job):
-    cuerpo = _construir(job, notices=["CASO DE USO REEJECUTADO"])
+    cuerpo = _construir(job, notices=[("info", "CASO DE USO REEJECUTADO")])
 
     assert "CASO DE USO REEJECUTADO" in cuerpo
     assert "$avisoHtml" not in cuerpo
@@ -157,7 +157,7 @@ def test_build_html_body_sin_avisos_deja_el_marcador_vacio(job):
 
 
 def test_build_html_body_no_oculta_avisos_cuando_la_plantilla_no_tiene_marcador(job):
-    assert _construir(job, plantilla="<p>$tableTotal</p>", notices=["aviso"]) is None
+    assert _construir(job, plantilla="<p>$tableTotal</p>", notices=[("warn", "aviso")]) is None
 
 
 def test_build_html_body_sin_avisos_acepta_una_plantilla_sin_marcador(job):
@@ -192,7 +192,7 @@ def test_las_plantillas_nuevas_tienen_un_solo_marcador_de_avisos_antes_del_total
 def test_las_plantillas_nuevas_se_llenan_sin_dejar_marcadores_pendientes(job, archivo):
     plantilla = archivo.read_text(encoding="utf-8")
 
-    cuerpo = _construir(job, plantilla=plantilla, notices=["aviso de prueba"], variables={"useCaseName": "Caso", "periodRange": "01/10/2026 - 31/10/2026"})
+    cuerpo = _construir(job, plantilla=plantilla, notices=[("warn", "aviso de prueba")], variables={"useCaseName": "Caso", "periodRange": "01/10/2026 - 31/10/2026"})
 
     assert "$tableTotal" not in cuerpo
     assert "$certificarLink" not in cuerpo
@@ -446,3 +446,34 @@ def test_main_con_un_useCaseId_distinto_falla(job):
 
     with pytest.raises(RuntimeError, match="useCaseId"):
         job.main()
+
+
+def test_notices_to_html_usa_un_recuadro_por_aviso_con_el_color_de_su_tono(job):
+    html = job.notices_to_html([("info", "Regenerado"), ("warn", "Sin datos")])
+
+    assert html.count("<div style=") == 2
+    assert "#e8f0fe" in html and "#fff4e0" in html
+    assert html.index("Regenerado") < html.index("Sin datos")
+
+
+def test_notices_to_html_escapa_el_texto_de_los_avisos(job):
+    html = job.notices_to_html([("warn", "<b>x</b> & y")])
+
+    assert "<b>" not in html
+    assert "&lt;b&gt;x&lt;/b&gt; &amp; y" in html
+
+
+def test_main_marca_la_regeneracion_como_informativa_y_el_sin_datos_como_advertencia(job):
+    capturado = {}
+
+    def construir(bucket, plantilla, variables, fragmentos, notices):
+        capturado["notices"] = notices
+
+    job.build_html_body = construir
+    Escenario(job, _config_caso(), enviar=lambda *argumentos: "id-1")
+    job.REGENERACION_SIN_DATOS_NUEVOS = True
+    job.aviso_sin_datos_por_miembro = lambda *argumentos: "Disponibilidad por caso de uso:\nM1: sin datos"
+
+    job.main()
+
+    assert [tono for tono, _ in capturado["notices"]] == ["info", "warn"]

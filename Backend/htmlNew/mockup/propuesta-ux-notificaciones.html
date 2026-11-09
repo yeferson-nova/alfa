@@ -41,6 +41,10 @@
   .seg button { font: inherit; font-size: 14px; color: var(--text); background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
   .seg button[aria-pressed="true"] { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); font-weight: 600; }
   .seg button:focus-visible, select:focus-visible, .theme:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+  .chk { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .chk label { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 14px; font-weight: 400; color: var(--text); text-transform: none; letter-spacing: 0; cursor: pointer; }
+  .chk label.off { color: var(--muted); cursor: not-allowed; opacity: .55; }
+  .chk input { width: 16px; height: 16px; accent-color: var(--brand); }
   .theme { font: inherit; font-size: 13px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
 
   /* Vista previa */
@@ -93,6 +97,10 @@
       <label id="estadoLbl">Estado de la notificación</label>
       <div class="seg" id="estado" role="group" aria-labelledby="estadoLbl"></div>
     </div>
+    <div class="ctl">
+      <label id="varLbl">Variaciones (solo en Acción requerida)</label>
+      <div class="chk" id="variaciones" role="group" aria-labelledby="varLbl"></div>
+    </div>
   </section>
 
   <section class="preview">
@@ -111,6 +119,32 @@
     </div>
   </section>
 
+  <h2>Cómo se definen los estados</h2>
+  <p class="sub">Regla: un estado distinto existe solo si cambia <strong>lo que la persona debe hacer</strong>. Si la acción es la misma, es el mismo estado con más información. Cada estado se distingue por tres señales a la vez: el verbo de la banda, el color y el glifo.</p>
+  <div class="panel scroll">
+    <table class="cmp">
+      <thead><tr><th>Estado</th><th>¿Qué debe hacer quien lo recibe?</th><th>Banda</th><th>Quién lo recibe</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Acción requerida</strong></td><td>Decidir: certificar o no certificar.</td><td>Ámbar · glifo <strong>!</strong></td><td>Quienes certifican</td></tr>
+        <tr><td><strong>Certificado</strong></td><td>Nada. Confirma que el proceso continúa.</td><td>Verde · glifo <strong>&#10003;</strong></td><td>Quienes certifican y observadores</td></tr>
+        <tr><td><strong>No certificado</strong></td><td>Nada. Informa que el proceso se detuvo y el motivo.</td><td>Rojo · glifo <strong>&#10005;</strong></td><td>Quienes certifican y observadores</td></tr>
+        <tr><td><strong>Fallo de proceso</strong></td><td>Nada para el negocio. Soporte ya fue alertado.</td><td>Rojo · glifo <strong>&#10005;</strong></td><td>Soporte y responsables del proceso</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="sub" style="margin-top:18px;">Las <strong>variaciones</strong> no son estados porque no cambian la acción: se activan en <em>Acción requerida</em> con las casillas de arriba.</p>
+  <div class="panel scroll">
+    <table class="cmp">
+      <thead><tr><th>Variación</th><th>Qué cambia en el correo</th><th>Depende de</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Con alertas de validación</strong></td><td>Se agrega el bloque de validaciones con las advertencias y el asunto indica el número de alertas. Mismos botones.</td><td>Validaciones de la tarea T3</td></tr>
+        <tr><td><strong>Recordatorio</strong></td><td>La banda y el asunto indican que vence hoy. Mismo contenido y mismos botones.</td><td>Un plazo de vencimiento y un disparador</td></tr>
+        <tr><td><strong>Regenerado sin datos nuevos</strong></td><td>Recuadro informativo azul y prefijo <em>[REGENERADO]</em> en el asunto.</td><td>Ya existe en el job</td></tr>
+        <tr><td><strong>Sin datos del periodo</strong></td><td>Recuadro de advertencia ámbar; no se muestran cifras ni tabla.</td><td>Ya existe en el job</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <h2>Principios de la propuesta</h2>
   <p class="sub">Qué mejora para quien recibe el correo y para la operación.</p>
   <div class="grid">
@@ -126,7 +160,7 @@
   <p class="sub">Cada correo se arma con estos bloques, en este orden. Los opcionales se omiten si el caso no los necesita.</p>
   <div class="grid">
     <div class="panel card"><h3><span class="num">1</span>Encabezado</h3><p>Marca, sistema origen (NIIF 17, Nuevos Cargues…) y ambiente si no es producción.</p></div>
-    <div class="panel card"><h3><span class="num">2</span>Banda de estado</h3><p>Pendiente, certificado, no certificado, alerta, fallo o recordatorio, con color, ícono y texto.</p></div>
+    <div class="panel card"><h3><span class="num">2</span>Banda de estado</h3><p>Acción requerida, certificado, no certificado o fallo. Cada una combina un verbo, un color y un glifo; no se apoya solo en el color.</p></div>
     <div class="panel card"><h3><span class="num">3</span>Título y contexto</h3><p>Qué se pide, de qué caso, de qué periodo y hasta cuándo. Una o dos frases.</p></div>
     <div class="panel card"><h3><span class="num">4</span>Tarjetas de cifras</h3><p>De 2 a 3 indicadores clave, con la variación frente al periodo anterior. Se apilan en móvil.</p></div>
     <div class="panel card"><h3><span class="num">5</span>Validaciones <em>(opcional)</em></h3><p>Resultado de cada regla de consistencia (tarea T3): aprobada, advertencia o rechazo, con el conteo.</p></div>
@@ -149,7 +183,7 @@
         <tr><td>Cifras</td><td>Totales del periodo.</td><td>Totales, variación frente al periodo anterior y resultado de las validaciones.</td></tr>
         <tr><td>Plazo</td><td>No se informa.</td><td>Fecha límite de respuesta y vencimiento del enlace.</td></tr>
         <tr><td>Acciones</td><td>Dos enlaces directos con emoji, del mismo peso visual.</td><td>Acción principal y secundaria diferenciadas, con página de confirmación e inicio de sesión.</td></tr>
-        <tr><td>Estados</td><td>Un solo correo (solicitud).</td><td>Seis estados con el mismo diseño: pendiente, con alertas, recordatorio, certificado, no certificado y fallo de proceso.</td></tr>
+        <tr><td>Estados</td><td>Un solo correo (solicitud) con avisos en texto.</td><td>Cuatro estados con el mismo diseño (acción requerida, certificado, no certificado y fallo de proceso) y variaciones dentro de la acción requerida (alertas, recordatorio, regenerado y sin datos).</td></tr>
         <tr><td>Reutilización</td><td>Cinco plantillas casi idénticas, una por caso.</td><td>Una plantilla y un contrato de datos para todas las fuentes.</td></tr>
         <tr><td>Soporte</td><td>Sin referencia técnica.</td><td>ID de ejecución, fecha de generación y canal de mesa de ayuda.</td></tr>
       </tbody>
@@ -219,39 +253,75 @@ const VALIDACIONES_ALERTA = [
   { regla: "Duplicados sobre la llave", estado: "ok", detalle: "0 registros" }
 ];
 
-/* ---------- Estados ---------- */
+/* ---------- Estados y variaciones ---------- */
+/* Regla: un estado distinto existe solo si cambia lo que la persona debe hacer.
+   Las variaciones (alertas, recordatorio, regenerado, sin datos) no cambian la acción: viven dentro del mismo estado. */
+const PLAZO = "07/03/2025 a las 6:00 p. m.";
+
 const ESTADOS = {
-  pendiente:   { nombre: "Pendiente", tono: "warn", icono: "&#9203;", banda: "Acción requerida · Pendiente de certificación",
+  accion:      { nombre: "Acción requerida", tono: "warn", glifo: "!", banda: "Acción requerida · Certificar o no certificar las cifras",
                  asunto: (f) => `[Acción requerida] Certificar ${f.caso} · ${f.periodoCorto} · ${f.sistema}`,
                  titulo: (f) => `Certifique las cifras de ${f.caso}`,
-                 texto: (f) => `Las cifras de <strong>${f.periodo}</strong> (${f.rango}) están listas y pasaron todas las validaciones. Revíselas y confirme si las certifica <strong>antes del 07/03/2025 a las 6:00 p. m.</strong>`,
+                 texto: (f) => `Las cifras de <strong>${f.periodo}</strong> (${f.rango}) están listas y pasaron todas las validaciones. Revíselas y confirme si las certifica <strong>antes del ${PLAZO}</strong>`,
                  validaciones: VALIDACIONES_OK, acciones: true },
-  alertas:     { nombre: "Con alertas", tono: "warn", icono: "&#9888;&#65039;", banda: "Acción requerida · Revisar alertas antes de certificar",
-                 asunto: (f) => `[Revisar alertas] Certificar ${f.caso} · ${f.periodoCorto} · ${f.sistema}`,
-                 titulo: (f) => `${f.caso}: hay 2 alertas para revisar`,
-                 texto: (f) => `Las cifras de <strong>${f.periodo}</strong> están listas, pero dos validaciones generaron advertencias. Revise el detalle antes de decidir. Plazo: <strong>07/03/2025, 6:00 p. m.</strong>`,
-                 validaciones: VALIDACIONES_ALERTA, acciones: true },
-  recordatorio:{ nombre: "Recordatorio", tono: "info", icono: "&#128276;", banda: "Recordatorio · Vence hoy a las 6:00 p. m.",
-                 asunto: (f) => `[Vence hoy] Certificar ${f.caso} · ${f.periodoCorto} · ${f.sistema}`,
-                 titulo: (f) => `La certificación de ${f.caso} vence hoy`,
-                 texto: (f) => `Aún no se ha registrado una decisión para <strong>${f.periodo}</strong>. Si no se certifica a tiempo, el proceso no continúa hacia ${f.destino || "las herramientas actuariales"}.`,
-                 validaciones: VALIDACIONES_OK, acciones: true },
-  certificado: { nombre: "Certificado", tono: "ok", icono: "&#9989;", banda: "Certificado",
+  certificado: { nombre: "Certificado", tono: "ok", glifo: "&#10003;", banda: "Certificado · No requiere acción",
                  asunto: (f) => `[Certificado] ${f.caso} · ${f.periodoCorto} · ${f.sistema}`,
                  titulo: (f) => `${f.caso} quedó certificado`,
                  texto: (f) => `<strong>María Pérez</strong> certificó las cifras de <strong>${f.periodo}</strong> el 06/03/2025 a las 10:42 a. m. El proceso continúa hacia ${f.destino || "las herramientas actuariales"}. No se requiere ninguna acción.`,
                  validaciones: null, acciones: false },
-  rechazado:   { nombre: "No certificado", tono: "error", icono: "&#10060;", banda: "No certificado · Proceso detenido",
+  rechazado:   { nombre: "No certificado", tono: "error", glifo: "&#10005;", banda: "No certificado · Proceso detenido",
                  asunto: (f) => `[No certificado] ${f.caso} · ${f.periodoCorto} · ${f.sistema}`,
                  titulo: (f) => `${f.caso} no fue certificado`,
                  texto: (f) => `<strong>María Pérez</strong> marcó las cifras de <strong>${f.periodo}</strong> como no certificadas el 06/03/2025 a las 10:42 a. m. Motivo registrado: <em>“Diferencia en ramo Independientes frente al cierre contable”</em>. Se abrió el caso <strong>MDA-48213</strong> en la mesa de ayuda.`,
                  validaciones: null, acciones: false },
-  fallo:       { nombre: "Fallo de proceso", tono: "error", icono: "&#9940;", banda: "Fallo de proceso · No hay cifras para certificar",
+  fallo:       { nombre: "Fallo de proceso", tono: "error", glifo: "&#10005;", banda: "Fallo de proceso · No hay cifras para certificar",
                  asunto: (f) => `[Fallo] ${f.caso} · ${f.periodoCorto} · ${f.sistema} · Consolidación`,
                  titulo: (f) => `No se pudieron generar las cifras de ${f.caso}`,
                  texto: (f) => `El proceso de <strong>${f.periodo}</strong> se detuvo en la etapa de <strong>Consolidación</strong>. Soporte ya fue alertado y está atendiendo el caso. Le avisaremos cuando las cifras estén listas; no tiene que hacer nada.`,
                  validaciones: null, acciones: false, fallo: true }
 };
+
+const VARIACIONES = {
+  alertas: "Con alertas de validación",
+  recordatorio: "Recordatorio (vence hoy)",
+  regenerado: "Regenerado sin datos nuevos",
+  sin_datos: "Sin datos del periodo"
+};
+
+function asuntoAccion(f, v) {
+  const regenerado = v.has("regenerado") ? "[REGENERADO] " : "";
+  const prefijo = v.has("recordatorio") ? "[Recordatorio]" : "[Acción requerida]";
+  const alertas = v.has("alertas") ? " · 2 alertas" : "";
+  return `${regenerado}${prefijo} Certificar ${f.caso} · ${f.periodoCorto} · ${f.sistema}${alertas}`;
+}
+
+function textoAccion(f, v) {
+  const inicio = v.has("recordatorio") ? "Aún no se ha registrado una decisión. " : "";
+  let cifras = "están listas y pasaron todas las validaciones";
+  if (v.has("alertas")) cifras = "están listas, pero 2 validaciones generaron advertencias";
+  if (v.has("sin_datos")) cifras = "no tienen datos procesados";
+  return `${inicio}Las cifras de <strong>${f.periodo}</strong> (${f.rango}) ${cifras}. Revíselas y confirme si las certifica <strong>antes del ${PLAZO}</strong>`;
+}
+
+function resolver(f) {
+  const base = ESTADOS[estadoActual.estado];
+  const e = { ...base, avisos: [], sinDatos: false };
+  if (estadoActual.estado !== "accion") return e;
+  const v = estadoActual.variaciones;
+  e.asunto = (g) => asuntoAccion(g, v);
+  e.texto = (g) => textoAccion(g, v);
+  if (v.has("recordatorio")) e.banda = "Acción requerida · Vence hoy a las 6:00 p. m.";
+  if (v.has("alertas")) e.validaciones = VALIDACIONES_ALERTA;
+  if (v.has("sin_datos")) {
+    e.sinDatos = true;
+    e.validaciones = null;
+    e.avisos.push({ tono: "warn", texto: `No se encontraron datos procesados para el periodo seleccionado: ${f.periodoCorto}.` });
+  }
+  if (v.has("regenerado")) {
+    e.avisos.unshift({ tono: "info", texto: "Caso de uso reejecutado sin registros nuevos. Archivos regenerados desde Gold existente del período; Silver y Gold no se ejecutaron nuevamente." });
+  }
+  return e;
+}
 
 const TONOS = {
   ok:    { fg: "#1e6b34", bg: "#e6f4ea", bd: "#9fd3ae" },
@@ -275,8 +345,18 @@ function encabezado(f) {
 
 function bandaEstado(e) {
   const t = TONOS[e.tono];
+  const glifo = `<span style="display:inline-block; width:20px; height:20px; line-height:20px; border-radius:10px; text-align:center; background:${t.fg}; color:${t.bg}; ${F} font-size:12px; font-weight:bold;">${e.glifo}</span>`;
   return `<tr><td style="background:${t.bg}; border-bottom:1px solid ${t.bd}; padding:12px 24px; ${F} font-size:14px; font-weight:bold; color:${t.fg};">
-    <span style="font-size:16px;">${e.icono}</span>&nbsp; ${esc(e.banda)}</td></tr>`;
+    ${glifo}&nbsp; ${esc(e.banda)}</td></tr>`;
+}
+
+function avisosCorreo(lista) {
+  if (!lista.length) return "";
+  const cajas = lista.map((a) => {
+    const t = TONOS[a.tono];
+    return `<div style="margin:0 0 8px 0; padding:12px 16px; background:${t.bg}; border:1px solid ${t.bd}; border-radius:8px; ${F} font-size:14px; line-height:20px; color:${t.fg};">${esc(a.texto)}</div>`;
+  }).join("");
+  return `<tr><td class="pad" style="padding:16px 24px 0 24px;">${cajas}</td></tr>`;
 }
 
 function tituloContexto(f, e) {
@@ -383,10 +463,10 @@ function pie() {
 }
 
 function construirCorreo(f, e) {
-  const cuerpo = [encabezado(f), bandaEstado(e), tituloContexto(f, e),
-    e.fallo ? bloqueFallo(e) : tarjetas(f),
+  const cuerpo = [encabezado(f), bandaEstado(e), tituloContexto(f, e), avisosCorreo(e.avisos),
+    e.fallo ? bloqueFallo(e) : (e.sinDatos ? "" : tarjetas(f)),
     validaciones(e.validaciones),
-    e.fallo ? "" : tablaResumen(f.tabla),
+    e.fallo || e.sinDatos ? "" : tablaResumen(f.tabla),
     acciones(e), fichaTecnica(f), pie()].join("");
   return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light">
   <style>
@@ -400,13 +480,13 @@ function construirCorreo(f, e) {
       .outer{padding:0!important;}
     }
   </style></head>
-  <body><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eef2f0;"><tr><td class="outer" align="center" style="padding:24px 12px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:640px; background:#ffffff; border:1px solid ${LINEA}; border-radius:10px; overflow:hidden;">${cuerpo}</table>
+  <body><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="table-layout:fixed; background:#eef2f0;"><tr><td class="outer" align="center" style="padding:24px 12px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="table-layout:fixed; max-width:640px; background:#ffffff; border:1px solid ${LINEA}; border-radius:10px; overflow:hidden;">${cuerpo}</table>
   </td></tr></table></body></html>`;
 }
 
 /* ---------- Mockup ---------- */
-const estadoActual = { fuente: "primas_arl", estado: "pendiente" };
+const estadoActual = { fuente: "primas_arl", estado: "accion", variaciones: new Set() };
 const $ = (id) => document.getElementById(id);
 
 function ajustarAlto(iframe) {
@@ -414,7 +494,7 @@ function ajustarAlto(iframe) {
 }
 
 function render() {
-  const f = FUENTES[estadoActual.fuente], e = ESTADOS[estadoActual.estado];
+  const f = FUENTES[estadoActual.fuente], e = resolver(f);
   const html = construirCorreo(f, e);
   const desk = $("desk"), mob = $("mob");
   desk.onload = () => ajustarAlto(desk);
@@ -427,11 +507,12 @@ function render() {
   $("contrato").textContent = JSON.stringify({
     plantilla: "notificacion-datalake-v1",
     estado: estadoActual.estado,
+    variaciones: [...estadoActual.variaciones],
     sistema: f.sistema, caso_uso: f.caso, periodo: f.periodo, rango: f.rango,
     fecha_limite: e.acciones ? "2025-03-07T18:00:00-05:00" : null,
-    kpis: e.fallo ? [] : f.kpis,
+    kpis: e.fallo || e.sinDatos ? [] : f.kpis,
     validaciones: e.validaciones || [],
-    resumen: e.fallo ? null : f.tabla,
+    resumen: e.fallo || e.sinDatos ? null : f.tabla,
     acciones: e.acciones ? { url_revisar: "https://…/certificacion/confirmar?token=…", url_no_certificar: "https://…/certificacion/rechazar?token=…", vence: "2025-03-07T18:00:00-05:00" } : null,
     url_detalle_csv: e.fallo ? null : { url: "https://…/prefirmada", vence_horas: 24 },
     ejecucion_id: "exe-20250306-0412-7f3a",
@@ -444,16 +525,37 @@ function init() {
   Object.entries(FUENTES).forEach(([k, f]) => sel.add(new Option(`${f.sistema} · ${f.caso}`, k)));
   sel.addEventListener("change", () => { estadoActual.fuente = sel.value; render(); });
   const seg = $("estado");
+  const chk = $("variaciones");
+  const actualizarVariaciones = () => {
+    const activo = estadoActual.estado === "accion";
+    chk.querySelectorAll("label").forEach((l) => {
+      l.classList.toggle("off", !activo);
+      l.querySelector("input").disabled = !activo;
+    });
+  };
+  Object.entries(VARIACIONES).forEach(([k, nombre]) => {
+    const l = document.createElement("label");
+    const i = document.createElement("input");
+    i.type = "checkbox";
+    i.addEventListener("change", () => {
+      if (i.checked) estadoActual.variaciones.add(k); else estadoActual.variaciones.delete(k);
+      render();
+    });
+    l.append(i, document.createTextNode(nombre));
+    chk.appendChild(l);
+  });
   Object.entries(ESTADOS).forEach(([k, e]) => {
     const b = document.createElement("button");
     b.type = "button"; b.textContent = e.nombre; b.setAttribute("aria-pressed", String(k === estadoActual.estado));
     b.addEventListener("click", () => {
       estadoActual.estado = k;
       seg.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      actualizarVariaciones();
       render();
     });
     seg.appendChild(b);
   });
+  actualizarVariaciones();
   $("themeBtn").addEventListener("click", () => {
     const root = document.documentElement;
     const oscuro = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;

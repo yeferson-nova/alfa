@@ -61,7 +61,7 @@ El correo de certificación es la puerta de control antes de que las cifras pase
 
 ## Avance
 - **2026-11-03:** las 5 plantillas actuales se reescribieron con estándar de correo compatible con Outlook, Gmail y móvil, con el mismo diseño y los mismos placeholders. Están en `Backend\htmlNew\`; ver su `README.md`.
-- **2026-11-03:** mockup de propuesta UX/CX en `Backend\htmlNew\mockup\propuesta-ux-notificaciones.html`. Una sola plantilla para todas las fuentes, con 6 estados (pendiente, con alertas, recordatorio, certificado, no certificado, fallo), validaciones de T3 en el correo, plazo y vencimiento visibles, y página de confirmación con inicio de sesión. Pendiente de validar con negocio.
+- **2026-11-03:** mockup de propuesta UX/CX en `Backend\htmlNew\mockup\propuesta-ux-notificaciones.html`. Una sola plantilla para todas las fuentes, con 4 estados (acción requerida, certificado, no certificado y fallo de proceso) y variaciones dentro de la acción requerida (alertas, recordatorio, regenerado y sin datos), ajustado el 2026-11-09 con la regla "un estado distinto solo si cambia lo que la persona debe hacer"; validaciones de T3 en el correo, plazo y vencimiento visibles, y página de confirmación con inicio de sesión. Pendiente de validar con negocio.
 - **2026-11-03:** las 5 plantillas actuales tienen ya el diseño nuevo en `Backend\htmlNew\newUx\`, como reemplazo directo con los mismos placeholders y sin cambios en las lambdas. Las mejoras que requieren datos nuevos (cifras con variación, validaciones, plazo, estados) quedan para una fase 2.
 
 ## Lo que se puede adelantar sin acceso

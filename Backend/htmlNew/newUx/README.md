@@ -12,7 +12,7 @@ Las mismas cinco plantillas de `Backend\reservas_matematicas_cert\`, con el dise
 
 ## Qué cambia frente a la versión actual
 - **Encabezado de marca:** "seguros alfa" con la etiqueta *Datalake · NIIF 17*.
-- **Banda de estado:** "Acción requerida · Pendiente de certificación".
+- **Banda de estado:** "Acción requerida · Certificar o no certificar las cifras", con un glifo `!` en un círculo (sin emoji).
 - **Título directo:** "Certifique las cifras de `$useCaseName`".
 - **Tablas en secciones con título:** la tabla del Total General se resalta con letra más grande y en negrita.
 - **Botones diferenciados:** **Certificar** sólido en verde y **No certificar** con contorno rojo, sin emojis.
@@ -60,4 +60,6 @@ Las mismas cinco plantillas de `Backend\reservas_matematicas_cert\`, con el dise
 - **`reservas_matematicas_cert.html`:** el periodo pasa de `$perido_a - $perido_a` a `$periodRange`. El job nuevo no entrega `$perido_a`, así que sin este cambio el correo mostraría el marcador literal.
 - **Bloques comentados eliminados:** el enlace de Redshift (`$redshiftLink`) y la sección comentada de resumen. Los comentarios HTML llegan al destinatario y, con `$tableSummary` dentro de un comentario, se insertaba una tabla completa que el cliente nunca muestra.
 - **`table-layout:fixed`** en las dos tablas contenedoras: sin él, una tabla ancha ensanchaba todo el correo en pantallas de 390 px y se cortaban el título y los botones.
+- **Banda:** se cambió el texto "Pendiente de certificación" por "Certificar o no certificar las cifras" (dice qué hacer) y el emoji de reloj de arena por un glifo, según la regla del mockup (un estado distinto solo si cambia la acción).
+- **Avisos por tono:** el job pone un recuadro por aviso: azul para "regenerado" y ámbar para "sin datos" y "disponibilidad por miembro".
 - Se validaron con `..\herramientas\validar_plantillas.py` y se revisaron visualmente a 390 px y a escritorio.

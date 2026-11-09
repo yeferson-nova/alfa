@@ -41,6 +41,9 @@ MARCADORES_PERMITIDOS = {
 }
 MARCADORES_OBLIGATORIOS = {"useCaseName", "tableTotal", "tableDetail", "certificarLink", "nocertificarLink"}
 
+EMOJIS = re.compile(
+    "[\U0001F300-\U0001FAFF\u2600-\u27BF\u23E9-\u23F3]|&#(?:9203|9888|9989|10060|9940|128\\d{3}|129\\d{3});",
+)
 LIMITE_GMAIL = 102_000
 AVISO_TAMANO = 90_000
 ANCHO_MAXIMO = 700
@@ -259,6 +262,9 @@ def validar(ruta, conjunto):
         if razon < 4.5:
             hallazgos.advertencia(f"Contraste bajo {razon:.1f}:1 ({texto} sobre {fondo}); WCAG pide 4.5:1")
 
+    if EMOJIS.search(visible):
+        hallazgos.advertencia("Contiene emojis: se dibujan distinto en Outlook, Gmail y movil; usar glifos o texto")
+
     tamano = len(contenido.encode("utf-8"))
     if tamano >= LIMITE_GMAIL:
         hallazgos.error(f"Pesa {tamano / 1024:.0f} KB: Gmail recorta el mensaje desde ~102 KB")
@@ -305,7 +311,8 @@ def main(argumentos):
         for ruta in archivos:
             hallazgos, tamano = validar(ruta, conjunto)
             estado = "OK " if not hallazgos.errores else "ERR"
-            nombre = ruta.relative_to(RAIZ) if RAIZ in ruta.resolve().parents else ruta
+            resuelta = ruta.resolve()
+            nombre = resuelta.relative_to(RAIZ) if RAIZ in resuelta.parents else ruta
             print(f"[{estado}] {nombre} ({tamano / 1024:.1f} KB) errores={len(hallazgos.errores)} avisos={len(hallazgos.advertencias)}")
             for mensaje in hallazgos.errores:
                 print(f"       ERROR: {mensaje}")
