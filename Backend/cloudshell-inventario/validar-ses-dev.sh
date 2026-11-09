@@ -147,7 +147,7 @@ run s3/configs-certification.txt aws s3 ls "s3://$BUCKET/configs/certification/"
 aws s3 cp "s3://$BUCKET/configs/certification/json_global_notif_cert.json" "$OUT/s3/json_global_notif_cert.json" >/dev/null 2>"$OUT/s3/global.err" \
   || revisar "No se pudo descargar json_global_notif_cert.json: $(tr '\n' ' ' <"$OUT/s3/global.err" | cut -c1-200)"
 mkdir -p "$OUT/s3/casos"
-for k in $(awk '{print $4}' "$OUT/s3/configs-certification.txt" 2>/dev/null | grep -E '\.json$' | grep -v json_global | head -30); do
+for k in primas-arl/primasArl.json primas-endosos/primasRentasEndosos.json primas-rentas/primasRentasEndosos.json auxilios-funerarios/auxilioFunerario.json reserva-matematica-rvi/reservaMatematicaRvi.json reserva-matematica/reservaMatematicaRviArp.json previsional/previsional.json; do
   aws s3 cp "s3://$BUCKET/$k" "$OUT/s3/casos/$(echo "$k" | tr '/' '_')" >/dev/null 2>&1
 done
 echo "-- Destinatarios por caso (email.destinations) frente a identidades verificadas en SES"

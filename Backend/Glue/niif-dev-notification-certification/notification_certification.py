@@ -11,6 +11,7 @@ from string import Template
 from zoneinfo import ZoneInfo
 
 import boto3
+from botocore.exceptions import BotoCoreError, ClientError
 from boto3.dynamodb.conditions import Key
 from awsglue.utils import getResolvedOptions
 
@@ -39,7 +40,7 @@ args = getResolvedOptions(sys.argv, [
     "CONFIG_BUCKET",
     "CONFIG_KEY",
     "GLOBAL_CONFIG_KEY",
-    "SNS_TOPIC_ARN",
+    "SES_SENDER",
     "REDIRECT_BASE_URL",
     "SHORT_LINKS_TABLE"
 ])
@@ -52,7 +53,7 @@ CONFIG_BUCKET = args["CONFIG_BUCKET"]
 CONFIG_KEY = args["CONFIG_KEY"]
 GLOBAL_CONFIG_KEY = args["GLOBAL_CONFIG_KEY"]
 
-SNS_TOPIC_ARN = args["SNS_TOPIC_ARN"]
+SES_SENDER = args["SES_SENDER"]
 REDIRECT_BASE_URL = args["REDIRECT_BASE_URL"]
 SHORT_LINKS_TABLE = args["SHORT_LINKS_TABLE"]
 
@@ -66,6 +67,30 @@ if "--REGENERACION_SIN_DATOS_NUEVOS" in sys.argv:
         raise ValueError("Marca de regeneracion invalida")
     REGENERACION_SIN_DATOS_NUEVOS = _marca == "true"
 
+# Opcional: conjunto de configuracion de SES (rebotes y quejas).
+SES_CONFIGURATION_SET = None
+if "--SES_CONFIGURATION_SET" in sys.argv:
+    SES_CONFIGURATION_SET = getResolvedOptions(
+        sys.argv, ["SES_CONFIGURATION_SET"]
+    )["SES_CONFIGURATION_SET"].strip() or None
+
+
+REGENERATION_NOTICE = (
+    "CASO DE USO REEJECUTADO SIN REGISTROS NUEVOS\n"
+    "Archivos regenerados desde Gold existente del período.\n"
+    "Silver y Gold no se ejecutaron nuevamente.\n"
+    "No se verificaron cambios en registros ya procesados."
+)
+
+NOTICE_MARKER = "$avisoHtml"
+STYLE_TEXT = "margin:0 0 8px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#1f2a27;"
+STYLE_TABLE = "border-collapse:collapse; border:1px solid #d9e1de; font-family:Arial, Helvetica, sans-serif; font-size:14px;"
+STYLE_TH = "background-color:#eef2f0; color:#5b6763; font-size:12px; font-weight:bold; text-transform:uppercase; text-align:left; padding:10px 12px; border:1px solid #d9e1de; white-space:nowrap;"
+STYLE_TD = "color:#1f2a27; text-align:left; padding:10px 12px; border:1px solid #d9e1de; white-space:nowrap;"
+STYLE_LINK = "color:#00875f; text-decoration:underline;"
+STYLE_NOTICE_CELL = "padding:20px 24px 0 24px;"
+STYLE_NOTICE = "padding:12px 16px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#7a4b00; background-color:#fff4e0; border:1px solid #f0c987; border-radius:8px;"
+
 
 
 # ============================================================
@@ -73,87 +98,35 @@ if "--REGENERACION_SIN_DATOS_NUEVOS" in sys.argv:
 # ============================================================
 
 s3 = boto3.client("s3")
-sns = boto3.client("sns")
+sesv2 = boto3.client("sesv2")
 
-def asegurar_filtros_sns_por_recipient(topic_arn):
-    """
-    Asegura que cada suscripción email confirmada del topic tenga FilterPolicy:
-    {"recipient": ["endpoint_email"]}
+ENCODING = "UTF-8"
 
-    Esto permite que el JSON controle destinatarios:
-    - El script publica mensajes con MessageAttributes.recipient
-    - SNS entrega solo a la suscripción cuyo filtro coincide.
-    """
-    import json
 
-    log("[SNS] Validando/configurando FilterPolicy por recipient en suscripciones confirmadas")
+def send_ses(recipient, subject, text_body, html_body=None):
+    body = {"Text": {"Data": text_body, "Charset": ENCODING}}
+    if html_body:
+        body["Html"] = {"Data": html_body, "Charset": ENCODING}
 
-    next_token = None
-    total = 0
-    actualizadas = 0
-    omitidas = 0
+    request = {
+        "FromEmailAddress": SES_SENDER,
+        "Destination": {"ToAddresses": [recipient]},
+        "Content": {
+            "Simple": {
+                "Subject": {"Data": subject, "Charset": ENCODING},
+                "Body": body
+            }
+        },
+        "EmailTags": [
+            {"Name": "useCaseId", "Value": str(useCaseId)},
+            {"Name": "emailType", "Value": str(emailType)}
+        ]
+    }
 
-    while True:
-        kwargs = {"TopicArn": topic_arn}
-        if next_token:
-            kwargs["NextToken"] = next_token
+    if SES_CONFIGURATION_SET:
+        request["ConfigurationSetName"] = SES_CONFIGURATION_SET
 
-        resp = sns.list_subscriptions_by_topic(**kwargs)
-
-        for sub in resp.get("Subscriptions", []):
-            protocol = (sub.get("Protocol") or "").lower()
-            endpoint = (sub.get("Endpoint") or "").strip().lower()
-            sub_arn = sub.get("SubscriptionArn")
-
-            if protocol != "email":
-                omitidas += 1
-                continue
-
-            if not endpoint:
-                omitidas += 1
-                continue
-
-            if not sub_arn or sub_arn == "PendingConfirmation":
-                log(f"[SNS] Suscripción pendiente/no confirmada, se omite endpoint={endpoint}")
-                omitidas += 1
-                continue
-
-            total += 1
-
-            desired_policy_obj = {"recipient": [endpoint]}
-            desired_policy = json.dumps(desired_policy_obj, separators=(",", ":"))
-
-            try:
-                attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn).get("Attributes", {})
-                current_policy_raw = attrs.get("FilterPolicy")
-
-                same_policy = False
-                if current_policy_raw:
-                    try:
-                        same_policy = json.loads(current_policy_raw) == desired_policy_obj
-                    except Exception:
-                        same_policy = False
-
-                if not same_policy:
-                    sns.set_subscription_attributes(
-                        SubscriptionArn=sub_arn,
-                        AttributeName="FilterPolicy",
-                        AttributeValue=desired_policy
-                    )
-                    actualizadas += 1
-                    log(f"[SNS] FilterPolicy configurado endpoint={endpoint}")
-                else:
-                    log(f"[SNS] FilterPolicy OK endpoint={endpoint}")
-
-            except Exception as e:
-                log(f"[SNS] ERROR configurando FilterPolicy endpoint={endpoint}: {e}")
-                raise
-
-        next_token = resp.get("NextToken")
-        if not next_token:
-            break
-
-    log(f"[SNS] FilterPolicy validado. confirmadas={total}, actualizadas={actualizadas}, omitidas={omitidas}")
+    return sesv2.send_email(**request).get("MessageId", "")
 
 
 athena = boto3.client("athena")
@@ -189,6 +162,15 @@ def cargar_json(bucket, key):
 
     obj = s3.get_object(Bucket=bucket, Key=key)
     return json.loads(obj["Body"].read().decode("utf-8"))
+
+
+def load_text(bucket, key):
+    key = normalizar_s3_key(bucket, key)
+
+    log(f"[CONFIG] Leyendo plantilla desde s3://{bucket}/{key}")
+
+    obj = s3.get_object(Bucket=bucket, Key=key)
+    return obj["Body"].read().decode("utf-8")
 
 
 def limpiar_url(url):
@@ -291,7 +273,7 @@ def marcar_sent(table_name, items, sent_status, response, destinations):
                 "SET #st = :s, "
                 "sentDate = :d, "
                 "notificationChannel = :ch, "
-                "snsMessageId = :mid, "
+                "sesMessageId = :mid, "
                 "emailDestination = :dest"
             ),
             ExpressionAttributeNames={
@@ -300,7 +282,7 @@ def marcar_sent(table_name, items, sent_status, response, destinations):
             ExpressionAttributeValues={
                 ":s": sent_status,
                 ":d": now,
-                ":ch": "SNS_EMAIL",
+                ":ch": "SES_EMAIL",
                 ":mid": message_id,
                 ":dest": destinations
             }
@@ -310,7 +292,7 @@ def marcar_sent(table_name, items, sent_status, response, destinations):
             f"[DYNAMO] Registro marcado como {sent_status}. "
             f"useCaseId={item['useCaseId']}, "
             f"executionId={item['executionId']}, "
-            f"snsMessageId={message_id}"
+            f"sesMessageId={message_id}"
         )
 
 
@@ -318,7 +300,7 @@ def marcar_sent(table_name, items, sent_status, response, destinations):
 # ATHENA
 # ============================================================
 
-def ejecutar_athena(database, query, variables, athena_output, catalog):
+def query_athena(database, query, variables, athena_output, catalog):
     db = parametrizar(database, variables, unescape=True)
     q = parametrizar(query, variables, unescape=True)
 
@@ -350,57 +332,144 @@ def ejecutar_athena(database, query, variables, athena_output, catalog):
         if status in ["FAILED", "CANCELLED"]:
             reason = execution["QueryExecution"]["Status"].get("StateChangeReason", "")
             log(f"[ATHENA] Query {status}: {qid}. Reason={reason}")
-            return "Error ejecutando consulta"
+            return {"error": True, "headers": [], "rows": []}
 
         time.sleep(1)
 
     rows = athena.get_query_results(QueryExecutionId=qid)["ResultSet"]["Rows"]
 
-    if len(rows) <= 1:
-        return "No hay datos"
+    if not rows:
+        return {"error": False, "headers": [], "rows": []}
 
-    headers = [
-        col.get("VarCharValue", "")
-        for col in rows[0]["Data"]
+    headers = [col.get("VarCharValue", "") for col in rows[0]["Data"]]
+    data = [
+        [col.get("VarCharValue", "") for col in row.get("Data", [])]
+        for row in rows[1:]
     ]
 
-    lines = []
+    return {"error": False, "headers": headers, "rows": data}
 
-    for row in rows[1:]:
-        values = [
-            col.get("VarCharValue", "")
-            for col in row.get("Data", [])
-        ]
 
-        line = " | ".join(
-            f"{headers[i]}: {values[i] if i < len(values) else ''}"
+def result_to_text(result):
+    if result["error"]:
+        return "Error ejecutando consulta"
+
+    if not result["rows"]:
+        return "No hay datos"
+
+    headers = result["headers"]
+
+    return "\n".join(
+        " | ".join(
+            f"{headers[i]}: {row[i] if i < len(row) else ''}"
             for i in range(len(headers))
         )
+        for row in result["rows"]
+    )
 
-        lines.append(line)
 
-    return "\n".join(lines)
+def html_paragraph(text):
+    return f'<p style="{STYLE_TEXT}">{html.escape(text)}</p>'
+
+
+def result_to_html(result):
+    if result["error"]:
+        return html_paragraph("Error ejecutando consulta")
+
+    if not result["rows"]:
+        return html_paragraph("No hay datos")
+
+    headers = result["headers"]
+    header_cells = "".join(
+        f'<th style="{STYLE_TH}">{html.escape(h)}</th>' for h in headers
+    )
+    body_rows = "".join(
+        "<tr>" + "".join(
+            f'<td style="{STYLE_TD}">{html.escape(row[i] if i < len(row) else "")}</td>'
+            for i in range(len(headers))
+        ) + "</tr>"
+        for row in result["rows"]
+    )
+
+    return (
+        '<table role="presentation" border="0" cellpadding="0" cellspacing="0" '
+        f'style="{STYLE_TABLE}"><tr>{header_cells}</tr>{body_rows}</table>'
+    )
+
+
+def ejecutar_athena(database, query, variables, athena_output, catalog):
+    return result_to_text(
+        query_athena(database, query, variables, athena_output, catalog)
+    )
 
 
 def generar_tablas(config, tipo, base_vars, athena_output, catalog):
-    salida = ""
+    text_output = ""
+    html_output = ""
     queries = config.get("queries", {}).get(tipo, [])
 
     log(f"[TABLES] tipo={tipo}, queries={len(queries)}")
 
     for q in sorted(queries, key=lambda x: x.get("queryName", "")):
-        resultado = ejecutar_athena(
-            q["database"],
-            q["query"],
-            base_vars,
-            athena_output,
-            catalog
+        result = query_athena(
+            q["database"], q["query"], base_vars, athena_output, catalog
         )
 
-        salida += resultado
-        salida += "\n\n"
+        text_output += result_to_text(result) + "\n\n"
+        html_output += f'<div style="margin:0 0 12px 0;">{result_to_html(result)}</div>'
 
-    return salida.strip()
+    return text_output.strip(), html_output
+
+
+def details_to_html(files):
+    if not files:
+        return html_paragraph("No se encontraron archivos detalle.")
+
+    return "".join(
+        f'<p style="{STYLE_TEXT}"><a href="{html.escape(url)}" target="_blank" '
+        f'style="{STYLE_LINK}">{html.escape(name)}</a></p>'
+        for name, url in files
+    )
+
+
+def notices_to_html(notices):
+    if not notices:
+        return ""
+
+    lines = "<br>".join(
+        html.escape(line)
+        for notice in notices
+        for line in notice.splitlines()
+        if line.strip()
+    )
+
+    return (
+        f'<tr><td class="pad" style="{STYLE_NOTICE_CELL}">'
+        f'<div style="{STYLE_NOTICE}">{lines}</div></td></tr>'
+    )
+
+
+def build_html_body(bucket, template_path, variables, fragments, notices):
+    if not template_path:
+        return None
+
+    try:
+        template = load_text(bucket, template_path)
+    except (ClientError, BotoCoreError) as error:
+        log(f"[HTML] No se pudo leer la plantilla {template_path}: {error}. Se envia solo texto")
+        return None
+
+    if notices and NOTICE_MARKER not in template:
+        log("[HTML] La plantilla no tiene $avisoHtml; se envia solo texto para no ocultar avisos")
+        return None
+
+    safe_variables = {key: html.escape(str(value)) for key, value in variables.items()}
+
+    return Template(template).safe_substitute({
+        **safe_variables,
+        **fragments,
+        "avisoHtml": notices_to_html(notices)
+    })
 
 
 # ============================================================
@@ -409,7 +478,7 @@ def generar_tablas(config, tipo, base_vars, athena_output, catalog):
 
 def aviso_sin_datos_por_miembro(case_cfg, base, athena_output, catalog):
     """Consulta Gold por miembro; un fallo tecnico nunca se interpreta como cero.
-    Se ejecuta antes de crear enlaces o enviar SNS. No modifica certificacion.
+    Se ejecuta antes de crear enlaces o enviar SES. No modifica certificacion.
     Los conteos reflejan Gold al preparar el correo, no una instantanea del CSV.
     """
     import re
@@ -480,14 +549,14 @@ def preparar_cierre_compuesto(case_cfg, period, cert_code, regeneracion=False):
 
 
 def cerrar_compuesto_consumed(snapshot, sns_response):
-    """Solo despues de SNS y marcar_sent. Transaccion condicional todo o nada.
-    SNS aceptado no demuestra entrega en bandeja. Si falla este cierre tras SNS,
+    """Solo despues de SES y marcar_sent. Transaccion condicional todo o nada.
+    SES aceptado no demuestra entrega en bandeja. Si falla este cierre tras SES,
     NO reenviar automaticamente: recuperar solo el cierre con los MessageId.
     """
     if not snapshot or snapshot.get('alreadyCompleted'):
         return
     if not sns_response.get('MessageId'):
-        raise RuntimeError('SNS no devolvio MessageId; no se consume')
+        raise RuntimeError('SES no devolvio MessageId; no se consume')
     from boto3.dynamodb.types import TypeSerializer
     from datetime import timezone
     serializer = TypeSerializer()
@@ -500,7 +569,7 @@ def cerrar_compuesto_consumed(snapshot, sns_response):
         transactions.append({'Update': {
             'TableName': table_name,
             'Key': encode({'compositeId': cid, 'memberId': member['memberId']}),
-            'UpdateExpression': 'SET #st = :consumed, notificationReleased = :yes, completedAt = :now, updatedAt = :now, certCode = :cert, snsMessageId = :mid',
+            'UpdateExpression': 'SET #st = :consumed, notificationReleased = :yes, completedAt = :now, updatedAt = :now, certCode = :cert, sesMessageId = :mid',
             'ConditionExpression': '#st = :ready AND sourceExecutionId = :exec AND loteCargueId = :lot AND updatedAt = :previous',
             'ExpressionAttributeNames': {'#st': 'status'},
             'ExpressionAttributeValues': encode({
@@ -513,7 +582,7 @@ def cerrar_compuesto_consumed(snapshot, sns_response):
     transactions.append({'Update': {
         'TableName': table_name,
         'Key': encode({'compositeId': cid, 'memberId': control['memberId']}),
-        'UpdateExpression': 'SET #st = :done, completedAt = :now, updatedAt = :now, certCode = :cert, snsMessageId = :mid',
+        'UpdateExpression': 'SET #st = :done, completedAt = :now, updatedAt = :now, certCode = :cert, sesMessageId = :mid',
         'ConditionExpression': '#st = :progress AND updatedAt = :previous',
         'ExpressionAttributeNames': {'#st': 'status'},
         'ExpressionAttributeValues': encode({':done': 'NOTIFICATION_COMPLETED',
@@ -532,7 +601,7 @@ def main():
     log(f'[ARGS] CONFIG_BUCKET={CONFIG_BUCKET}')
     log(f'[ARGS] CONFIG_KEY={CONFIG_KEY}')
     log(f'[ARGS] GLOBAL_CONFIG_KEY={GLOBAL_CONFIG_KEY}')
-    log(f'[ARGS] SNS_TOPIC_ARN={SNS_TOPIC_ARN}')
+    log(f'[ARGS] SES_SENDER={SES_SENDER}')
     log(f'[ARGS] REDIRECT_BASE_URL={REDIRECT_BASE_URL}')
     log(f'[ARGS] SHORT_LINKS_TABLE={SHORT_LINKS_TABLE}')
     log('============================================================')
@@ -560,25 +629,30 @@ def main():
     string_vars = {key: parametrizar(value, base, unescape=False) for key, value in email_cfg.get('stringVars', {}).items()}
     final_vars = {**base, **string_vars}
     subject = Template(email_cfg['subject']).safe_substitute(final_vars)
-    subject_sns = subject.replace('\n', ' ').replace('\r', ' ')[:100]
-    table_summary = generar_tablas(case_cfg, 'summary', base, athena_output, catalog)
-    table_total = generar_tablas(case_cfg, 'total', base, athena_output, catalog)
+    subject_sns = subject.replace('\n', ' ').replace('\r', ' ')
+    table_summary, table_summary_html = generar_tablas(case_cfg, 'summary', base, athena_output, catalog)
+    table_total, table_total_html = generar_tablas(case_cfg, 'total', base, athena_output, catalog)
     aviso_miembros = aviso_sin_datos_por_miembro(case_cfg, base, athena_output, catalog)
     certificar_link_largo = limpiar_url(final_vars.get('certificarLink', ''))
     nocertificar_link_largo = limpiar_url(final_vars.get('nocertificarLink', ''))
     certificar_link = crear_short_link('CERTIFICATE', certificar_link_largo)
     nocertificar_link = crear_short_link('NO_CERTIFICATE', nocertificar_link_largo)
     archivos = []
+    archivos_html = []
     for item in sorted(items, key=lambda x: x.get('queryName', '')):
         if item.get('queryName', '').startswith('detail#'):
             s3_url_larga = limpiar_url(item.get('s3_url', ''))
             s3_url_corta = crear_short_link('DOWNLOAD', s3_url_larga)
-            archivos.append(f"- {item.get('nameFile', 'Archivo CSV')}\n  {s3_url_corta}")
+            file_name = item.get('nameFile', 'Archivo CSV')
+            archivos.append(f"- {file_name}\n  {s3_url_corta}")
+            archivos_html.append((file_name, s3_url_corta))
     archivos_txt = '\n'.join(archivos) if archivos else 'No se encontraron archivos detalle.'
     mensaje_sns = f"\nSolicitud de certificación NIIF 17\n\nCaso de uso:\n{final_vars.get('useCaseName', useCaseId)}\n\nResumen:\n{(table_summary if table_summary else 'No hay resumen configurado.')}\n\nTotales:\n{(table_total if table_total else 'No hay totales configurados.')}\n\nArchivos generados:\n{archivos_txt}\n\nCertificar:\n{certificar_link}\n\nNo certificar:\n{nocertificar_link}\n\nEste mensaje fue generado automáticamente por el flujo NIIF 17.\n"
+    avisos = []
     if aviso_miembros is not None:
         if aviso_miembros:
             mensaje_sns = aviso_miembros + '\n\n' + mensaje_sns
+            avisos.append(aviso_miembros)
     else:
         vacios = [x for x in items if x.get('sinDatosPeriodo') is True]
         if vacios:
@@ -587,30 +661,54 @@ def main():
             else:
                 aviso = 'No se encontraron datos procesados para el periodo ' + str(first['period']) + ' en las consultas: ' + ', '.join((str(x.get('queryName', '')) for x in vacios)) + '. Las demas consultas conservan sus datos.'
             mensaje_sns = aviso + '\n\n' + mensaje_sns
+            avisos.append(aviso)
     if REGENERACION_SIN_DATOS_NUEVOS:
-        subject_sns = ('[REGENERADO] ' + subject_sns)[:100]
-        mensaje_sns = 'CASO DE USO REEJECUTADO SIN REGISTROS NUEVOS\nArchivos regenerados desde Gold existente del período.\nSilver y Gold no se ejecutaron nuevamente.\nNo se verificaron cambios en registros ya procesados.\n\n' + mensaje_sns
-    log('==== INICIO ENVIO SNS ====')
-    log(f'[SNS] TopicArn={SNS_TOPIC_ARN}')
-    log(f'[SNS] Subject={subject_sns}')
-    log(f'[SNS] Certificar corto={certificar_link}')
-    log(f'[SNS] No certificar corto={nocertificar_link}')
+        subject_sns = '[REGENERADO] ' + subject_sns
+        mensaje_sns = REGENERATION_NOTICE + '\n\n' + mensaje_sns
+        avisos.insert(0, REGENERATION_NOTICE)
+    body_html = build_html_body(
+        assets_bucket,
+        email_cfg.get('templatePath'),
+        final_vars,
+        {
+            'tableTotal': table_total_html,
+            'tableSummary': table_summary_html,
+            'tableDetail': details_to_html(archivos_html),
+            'certificarLink': html.escape(certificar_link),
+            'nocertificarLink': html.escape(nocertificar_link)
+        },
+        avisos
+    )
+    log('==== INICIO ENVIO SES ====')
+    log(f'[SES] Subject={subject_sns}')
+    log(f'[SES] Certificar corto={certificar_link}')
+    log(f'[SES] No certificar corto={nocertificar_link}')
     destinations = [str(d).strip().lower() for d in email_cfg.get('destinations', []) if str(d).strip()]
     if not destinations:
         raise ValueError('No hay destinatarios configurados en email.destinations')
-    asegurar_filtros_sns_por_recipient(SNS_TOPIC_ARN)
     responses = []
+    failed = 0
     for dest in destinations:
-        log(f'[SNS] Enviando mensaje filtrado para recipient={dest}')
-        resp = sns.publish(TopicArn=SNS_TOPIC_ARN, Subject=subject_sns, Message=mensaje_sns, MessageAttributes={'recipient': {'DataType': 'String', 'StringValue': dest}, 'useCaseId': {'DataType': 'String', 'StringValue': str(useCaseId)}, 'emailType': {'DataType': 'String', 'StringValue': str(emailType)}})
-        if not resp.get('MessageId'):
-            raise RuntimeError('SNS no confirmo MessageId; no se consumen miembros')
-        responses.append({'destination': dest, 'messageId': resp.get('MessageId')})
-        log(f"[SNS] MessageId={resp.get('MessageId')} recipient={dest}")
-    response = {'MessageId': ','.join([r.get('messageId', '') for r in responses]), 'Responses': responses}
-    log('==== FIN ENVIO SNS ====')
-    marcar_sent(notification_table, items, sent_status, response, destinations)
-    log('[END] MENSAJE SNS ENVIADO Y REGISTROS MARCADOS COMO SENT')
+        log(f'[SES] Enviando a recipient={dest}')
+        try:
+            message_id = send_ses(dest, subject_sns, mensaje_sns, body_html)
+            if not message_id:
+                raise RuntimeError('SES no confirmo MessageId')
+        except (ClientError, BotoCoreError, RuntimeError) as error:
+            failed += 1
+            log(f'[SES] ERROR recipient={dest}: {error}')
+            continue
+        responses.append({'destination': dest, 'messageId': message_id})
+        log(f'[SES] MessageId={message_id} recipient={dest}')
+    if not responses:
+        raise RuntimeError('SES no envio el correo a ningun destinatario')
+    if failed:
+        log(f'[SES] ENVIO PARCIAL. enviados={len(responses)}, fallidos={failed}')
+    response = {'MessageId': ','.join([r['messageId'] for r in responses]), 'Responses': responses}
+    log('==== FIN ENVIO SES ====')
+    sent_to = [r['destination'] for r in responses]
+    marcar_sent(notification_table, items, sent_status, response, sent_to)
+    log('[END] MENSAJE SES ENVIADO Y REGISTROS MARCADOS COMO SENT')
     cerrar_compuesto_consumed(cierre_snapshot, response)
     log('============================================================')
 
