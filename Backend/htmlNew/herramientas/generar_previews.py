@@ -29,6 +29,7 @@ AVISO_REGENERACION = (
 
 CASOS = {
     "primas_arl_cert": "Primas ARL",
+    "primas_rentas_cert": "Primas Rentas y Endosos",
     "auxilio_funerario_cert": "Auxilios Funerarios",
     "previsional": "Previsional",
     "rentas_vitalicias_cert": "Rentas Vitalicias",
