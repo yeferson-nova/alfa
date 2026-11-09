@@ -28,7 +28,27 @@ Hallado en el repo (`errores\aud-datos\`, `Backend\Glue\pruebas-glue\jobs.json`)
 - El rol `niif-dev-jobs-notification-certification` tiene la política `TemporarySesTestAccess`: `ses:SendEmail` solo sobre 2 identidades de correo (enmascaradas) y el conjunto `default`. **No** cubre el remitente ni el conjunto `niif-dev-notificaciones` de `job.dev.json`.
 - El job desplegado sigue en SNS (`SNS_TOPIC_ARN`, `commons.zip`).
 - **1b:** el job nuevo arma solo texto plano (`PLANTILLA_CUERPO`, tablas como `col: valor`); `Mensaje.html` existe pero nadie lo llena. Las plantillas (`Backend\htmlNew\newUx\`) usan `$tableSummary` y `$tableTotal` como HTML y hoy el job entrega texto. Sin decidir: seguridad de los botones.
-- Script de solo lectura para traer lo que falta: `Backend\cloudshell-inventario\validar-ses-dev.sh` (SES, DNS, IAM, Glue, S3, lambdas que lean `snsMessageId`, DynamoDB). Resultado pendiente de correr.
+- Script de solo lectura para traer lo que falta: `Backend\cloudshell-inventario\validar-ses-dev.sh` (SES, DNS, IAM, Glue, S3, lambdas que lean `snsMessageId`, DynamoDB). Corrido en CloudShell DEV el 2026-11-09 (el zip trae correos, no está en el repo). Resultado:
+
+| Punto | Resultado | Lectura |
+|---|---|---|
+| Modo SES | **Sandbox**, cuota 24 h = 200 | Solo envía a destinatarios verificados; pedir salida a producción |
+| Identidad `notificaciones@segurosalfa.com.co` | Existe, `verificada=true`, pero **DKIM=FAILED** y **MAIL FROM=FAILED** | Verificada como correo, no como dominio autenticado: riesgo de spam/rechazo; DNS pendiente |
+| Conjunto `niif-dev-notificaciones` | **No existe** | Crearlo (con destino de rebotes y quejas) o cambiar `--SES_CONFIGURATION_SET` |
+| SPF / DMARC | Sin dato (CloudShell no tiene `dig`) | Pedirlo a quien administra el DNS |
+| Permiso `ses:SendEmail` del rol | La simulación devolvió `implicitDeny`, pero sobre un recurso con variables sin resolver (`${Region}...`) | **No concluyente**: el script simuló mal los ARN. Lo cierto: la política `TemporarySesTestAccess` no cubre remitente ni conjunto nuevos |
+| Job `ses-test` | Al menos una ejecución **SUCCEEDED** | SES ya envió desde DEV (a verificados); falta ver cuál y con qué destinatarios |
+| Librería `...-1.0.0.zip` y `job_notificacion.py` | **No están** en S3 | Subirlos |
+| Script de prueba SES de S3 | No se pudo descargar | Pendiente (¿permiso del usuario de CloudShell?) |
+| Plantillas HTML en `niif-dev-assets` | Hay `.html` | Ver cuáles en `s3/html-en-bucket.txt` del zip |
+| Lectores de `snsMessageId` / `SNS_EMAIL` | 41 lambdas `niif/datalake-dev` revisadas, **sin hallazgos** | Riesgo de cambio de contrato bajo (el aviso "OK" del script es incondicional; vale por la ausencia de `FALTA`) |
+| Índice `certCode-index` en DynamoDB | Existe | Sin acción |
+
+**Destinatarios dinámicos (2026-11-09, verificado en código):** salen de `email.destinations` del JSON del caso en S3 (`configs/certification/<caso>.json`) y se leen en **cada ejecución**, sin caché: cambiar la lista no exige desplegar. Hueco: `_enviar` no maneja error por destinatario; en sandbox, uno sin verificar hace que SES rechace el envío, aborta el bucle, los anteriores ya recibieron y nada se marca como enviado (un reintento duplica). Propuesta: tolerar el fallo por destinatario (registrar y seguir) y reportar quién falló. Alternativa a evaluar: lista en DynamoDB si se quiere cambiarla sin tocar S3.
+**SPF/DMARC/DKIM:** son registros DNS públicos del dominio; se pueden leer sin ser dueños del DNS (el script ahora usa `dig`, `nslookup` o DNS sobre HTTPS). Crearlos o corregirlos sí es de quien administra el DNS. Para pruebas en DEV hacia destinatarios verificados no bloquea; afecta entregabilidad (spam) y producción.
+`validar-ses-dev.sh` corregido el 2026-11-09 (permiso SES por análisis estático de políticas, DNS sin `dig`, destinatarios de los casos frente a identidades verificadas); pendiente volver a correrlo.
+
+Cerrados: lectores del campo viejo e índice. Abiertos: salida de sandbox, DKIM y MAIL FROM, conjunto de configuración, política IAM, subir artefactos, SPF/DMARC.
 
 ## Falta
 - Verificar la identidad del remitente en SES (el de `job.dev.json` es la propuesta de T1) y salir del modo *sandbox*; conjunto de configuración para rebotes y quejas.

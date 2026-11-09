@@ -72,14 +72,19 @@ run ses/supresion.json aws sesv2 get-account --query SuppressionAttributes
 run ses/plantillas.json aws sesv2 list-email-templates
 
 echo "== 4. DNS del dominio (SPF, DMARC)"
-if command -v dig >/dev/null; then
-  dig +short TXT "$DOMINIO" >"$OUT/dns/spf.txt" 2>&1
-  dig +short TXT "_dmarc.$DOMINIO" >"$OUT/dns/dmarc.txt" 2>&1
-  grep -qi "v=spf1" "$OUT/dns/spf.txt" && ok "SPF publicado" || falta "No se ve registro SPF en $DOMINIO"
-  grep -qi "v=DMARC1" "$OUT/dns/dmarc.txt" && ok "DMARC publicado" || falta "No se ve registro DMARC en _dmarc.$DOMINIO"
-else
-  revisar "dig no esta instalado: pedir a quien administra el DNS que confirme SPF, DKIM y DMARC"
-fi
+dns_txt() {
+  if command -v dig >/dev/null; then dig +short TXT "$1"
+  elif command -v nslookup >/dev/null; then nslookup -type=TXT "$1" 2>/dev/null | grep -i "text ="
+  else curl -s -H 'accept: application/dns-json' "https://dns.google/resolve?name=$1&type=TXT" | jq -r '.Answer[]?.data'; fi
+}
+dns_txt "$DOMINIO" >"$OUT/dns/spf.txt" 2>&1
+dns_txt "_dmarc.$DOMINIO" >"$OUT/dns/dmarc.txt" 2>&1
+grep -qi "v=spf1" "$OUT/dns/spf.txt" && ok "SPF publicado: $(grep -i 'v=spf1' "$OUT/dns/spf.txt" | head -1)" || falta "No se ve registro SPF en $DOMINIO (ver dns/spf.txt)"
+grep -qi "v=DMARC1" "$OUT/dns/dmarc.txt" && ok "DMARC publicado: $(grep -i 'v=DMARC1' "$OUT/dns/dmarc.txt" | head -1)" || falta "No se ve registro DMARC en _dmarc.$DOMINIO (ver dns/dmarc.txt)"
+for t in $(jq -r '.DkimAttributes.Tokens[]?' "$OUT/ses/identidad-${REMITENTE//[^A-Za-z0-9._-]/_}.json" "$OUT/ses/identidad-${DOMINIO//[^A-Za-z0-9._-]/_}.json" 2>/dev/null); do
+  r="$(curl -s -H 'accept: application/dns-json' "https://dns.google/resolve?name=${t}._domainkey.${DOMINIO}&type=CNAME" | jq -r '.Answer[]?.data')"
+  [ -n "$r" ] && ok "CNAME DKIM ${t}._domainkey publicado" || falta "CNAME DKIM ${t}._domainkey.${DOMINIO} NO publicado (pedirlo a DNS)"
+done
 
 echo "== 5. IAM del rol del job"
 run iam/rol.json aws iam get-role --role-name "$ROL"
@@ -95,15 +100,27 @@ done
 ROL_ARN="arn:aws:iam::$ACCOUNT_DEV:role/$ROL"
 ID_ARN="arn:aws:ses:$REGION:$ACCOUNT_DEV:identity/$REMITENTE"
 CS_ARN="arn:aws:ses:$REGION:$ACCOUNT_DEV:configuration-set/$CONJUNTO"
-run iam/simulacion-ses.json aws iam simulate-principal-policy --policy-source-arn "$ROL_ARN" \
-  --action-names ses:SendEmail --resource-arns "$ID_ARN" "$CS_ARN"
-if [ -s "$OUT/iam/simulacion-ses.json" ]; then
-  jq -r '.EvaluationResults[]? | "\(.EvalResourceName) -> \(.EvalDecision)"' "$OUT/iam/simulacion-ses.json" | while read -r l; do
-    case "$l" in *allowed) ok "ses:SendEmail: $l";; *) falta "ses:SendEmail: $l";; esac
-  done
+SES_ALLOW="$OUT/iam/ses-allow.tsv"; : > "$SES_ALLOW"
+for f in "$OUT"/iam/inline-*.json "$OUT"/iam/adjunta-*.json; do
+  [ -s "$f" ] || continue
+  jq -r --arg f "$(basename "$f")" '
+    (.PolicyDocument // .PolicyVersion.Document // {}) | (.Statement // []) | (if type=="array" then . else [.] end)[]
+    | select(.Effect=="Allow")
+    | select([.Action // []] | flatten | map(test("^([*]|ses:([*]|[Ss]end[*]|[Ss]end[Ee]mail))$")) | any)
+    | [.Resource // "*"] | flatten | .[] | "\($f)\t\(.)"' "$f" >>"$SES_ALLOW" 2>/dev/null
+done
+echo "Permisos ses:SendEmail que concede el rol (archivo -> recurso):"; sed 's/\t/ -> /' "$SES_ALLOW" | sed 's/^/   /'
+if awk -F'\t' '$2=="*" || index($2,"identity/*") || index($2,"identity/'"$REMITENTE"'")' "$SES_ALLOW" | grep -q .; then
+  ok "El rol puede enviar con la identidad $REMITENTE"
 else
-  revisar "No se pudo simular el permiso ses:SendEmail (falta iam:SimulatePrincipalPolicy): revisar a mano las politicas guardadas en iam/"
+  falta "El rol NO tiene ses:SendEmail sobre la identidad $REMITENTE (hay que agregarlo)"
 fi
+if awk -F'\t' '$2=="*" || index($2,"configuration-set/*") || index($2,"configuration-set/'"$CONJUNTO"'")' "$SES_ALLOW" | grep -q .; then
+  ok "El rol puede usar el conjunto de configuracion $CONJUNTO"
+else
+  falta "El rol NO tiene ses:SendEmail sobre el conjunto $CONJUNTO (hay que agregarlo)"
+fi
+revisar "Revision estatica de las politicas del rol: no evalua Deny, limites de permisos ni politicas de la organizacion"
 
 echo "== 6. Glue: job actual, job de prueba SES y ejecuciones"
 run glue/job-actual.json aws glue get-job --job-name "$JOB"
@@ -123,16 +140,34 @@ grep -q "niif-dev-notification-certification-1.0.0.zip" "$OUT/s3/glue-resources-
   && ok "La libreria nueva ya esta en S3" || falta "Falta subir niif-dev-notification-certification-1.0.0.zip a glue-resources/libraries/"
 grep -q "job_notificacion.py" "$OUT/s3/glue-resources-notification.txt" \
   && ok "job_notificacion.py ya esta en S3" || falta "Falta subir job_notificacion.py a glue-resources/notification/"
-aws s3 cp "s3://$BUCKET/glue-resources/notification/test/notification_certification_ses.py" "$OUT/s3/notification_certification_ses.py" >/dev/null 2>&1 \
-  && ok "Descargado el script de la prueba SES existente (s3/notification_certification_ses.py)" || revisar "No se pudo descargar el script de prueba SES"
+aws s3 cp "s3://$BUCKET/glue-resources/notification/test/notification_certification_ses.py" "$OUT/s3/notification_certification_ses.py" >/dev/null 2>"$OUT/s3/notification_certification_ses.err" \
+  && ok "Descargado el script de la prueba SES existente (s3/notification_certification_ses.py)" \
+  || revisar "No se pudo descargar el script de prueba SES: $(tr '\n' ' ' <"$OUT/s3/notification_certification_ses.err" | cut -c1-200)"
 run s3/configs-certification.txt aws s3 ls "s3://$BUCKET/configs/certification/" --recursive
-aws s3 cp "s3://$BUCKET/configs/certification/json_global_notif_cert.json" "$OUT/s3/json_global_notif_cert.json" >/dev/null 2>&1 \
-  || revisar "No se pudo descargar json_global_notif_cert.json"
-for k in $(awk '{print $4}' "$OUT/s3/configs-certification.txt" 2>/dev/null | grep -E '\.json$' | head -20); do
-  aws s3 cp "s3://$BUCKET/$k" "$OUT/s3/$(echo "$k" | tr '/' '_')" >/dev/null 2>&1
+aws s3 cp "s3://$BUCKET/configs/certification/json_global_notif_cert.json" "$OUT/s3/json_global_notif_cert.json" >/dev/null 2>"$OUT/s3/global.err" \
+  || revisar "No se pudo descargar json_global_notif_cert.json: $(tr '\n' ' ' <"$OUT/s3/global.err" | cut -c1-200)"
+mkdir -p "$OUT/s3/casos"
+for k in $(awk '{print $4}' "$OUT/s3/configs-certification.txt" 2>/dev/null | grep -E '\.json$' | grep -v json_global | head -30); do
+  aws s3 cp "s3://$BUCKET/$k" "$OUT/s3/casos/$(echo "$k" | tr '/' '_')" >/dev/null 2>&1
 done
+echo "-- Destinatarios por caso (email.destinations) frente a identidades verificadas en SES"
+jq -r '.EmailIdentities[]? | select(.SendingEnabled==true) | .IdentityName | ascii_downcase' "$OUT/ses/identidades.json" 2>/dev/null | sort -u >"$OUT/ses/verificadas.txt"
+: >"$OUT/ses/destinatarios-sin-verificar.txt"
+for f in "$OUT"/s3/casos/*.json; do
+  [ -s "$f" ] || continue
+  for d in $(jq -r '.. | objects | select(has("destinations")) | .destinations[]?' "$f" 2>/dev/null | tr 'A-Z' 'a-z' | sort -u); do
+    dom="${d#*@}"
+    if grep -qxF "$d" "$OUT/ses/verificadas.txt" || grep -qxF "$dom" "$OUT/ses/verificadas.txt"; then :
+    else echo "$(basename "$f")	$d" >>"$OUT/ses/destinatarios-sin-verificar.txt"; fi
+  done
+done
+if [ -s "$OUT/ses/destinatarios-sin-verificar.txt" ]; then
+  falta "$(wc -l <"$OUT/ses/destinatarios-sin-verificar.txt") destinatario(s) de los casos NO estan verificados en SES (en sandbox, el envio falla): ses/destinatarios-sin-verificar.txt"
+else
+  ok "Todos los destinatarios de los casos estan verificados en SES (o no hay casos leidos)"
+fi
 run s3/html-en-bucket.txt bash -c "aws s3 ls s3://$BUCKET/ --recursive | grep -Ei '\.(html|htm)$' | head -50"
-[ -s "$OUT/s3/html-en-bucket.txt" ] && ok "Hay plantillas HTML en $BUCKET (s3/html-en-bucket.txt)" \
+[ -s "$OUT/s3/html-en-bucket.txt" ] && ok "Hay $(wc -l <"$OUT/s3/html-en-bucket.txt") archivo(s) HTML en $BUCKET (s3/html-en-bucket.txt)" \
   || revisar "No hay .html en $BUCKET: las plantillas de 1b hay que subirlas (origen: Backend/htmlNew/newUx)"
 
 echo "== 8. Quien lee snsMessageId o SNS_EMAIL (lambdas de la cadena final)"
@@ -147,7 +182,11 @@ while read -r fn; do
   grep -rIn "snsMessageId\|SNS_EMAIL\|notificationChannel" "$d" 2>/dev/null | head -5 >"$d.hallazgos.txt"
   [ -s "$d.hallazgos.txt" ] && falta "La lambda $fn referencia snsMessageId/SNS_EMAIL/notificationChannel: revisar $fn.hallazgos.txt" || rm -f "$d.hallazgos.txt"
 done <"$OUT/lambdas/lista.txt"
-ok "Revisadas $(wc -l <"$OUT/lambdas/lista.txt") lambdas niif/datalake-dev en busca de snsMessageId (si no hay FALTA arriba, nadie lo lee)"
+REVISADAS="$(find "$OUT/lambdas" -mindepth 1 -maxdepth 1 -type d | wc -l)"
+CON_HALLAZGO="$(find "$OUT/lambdas" -maxdepth 1 -name '*.hallazgos.txt' | wc -l)"
+if [ "$REVISADAS" -eq 0 ]; then revisar "No se pudo descargar el codigo de ninguna lambda (ver lambdas/lista.txt)"
+elif [ "$CON_HALLAZGO" -eq 0 ]; then ok "Codigo de $REVISADAS lambdas descargado y revisado: ninguna referencia snsMessageId/SNS_EMAIL"
+else revisar "$CON_HALLAZGO de $REVISADAS lambdas referencian el campo viejo (ver *.hallazgos.txt)"; fi
 
 echo "== 9. DynamoDB de notificaciones"
 run dynamo/tabla.json aws dynamodb describe-table --table-name "$TABLA"
