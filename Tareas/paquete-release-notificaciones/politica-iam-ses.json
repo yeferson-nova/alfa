@@ -13,7 +13,7 @@
       "Sid": "ReadEmailTemplates",
       "Effect": "Allow",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::<BUCKET_ASSETS_QA>/email-templates/*"
+      "Resource": "arn:aws:s3:::<BUCKET_ASSETS_QA>/email-template/*"
     }
   ]
 }

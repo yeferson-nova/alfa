@@ -124,7 +124,7 @@ def _construir(job, plantilla=PLANTILLA, notices=(), variables=None):
     job.load_text = lambda bucket, key: plantilla
     return job.build_html_body(
         "bucket",
-        "email-templates/caso.html",
+        "email-template/caso.html",
         variables or {"useCaseName": "Caso <A>", "certificarLink": "https://largo.example"},
         {"tableTotal": "<b>T</b>", "tableSummary": "", "tableDetail": "<i>D</i>", "certificarLink": "https://c.example/?t=1&amp;x=2", "nocertificarLink": "https://n.example"},
         list(notices),
@@ -170,14 +170,14 @@ def test_build_html_body_si_no_puede_leer_la_plantilla_devuelve_none(job):
 
     job.load_text = fallar
 
-    assert job.build_html_body("bucket", "email-templates/x.html", {}, {}, []) is None
+    assert job.build_html_body("bucket", "email-template/x.html", {}, {}, []) is None
 
 
 def test_load_text_lee_la_clave_normalizada(job):
     job.s3.get_object.return_value = {"Body": type("Cuerpo", (), {"read": lambda self: "<p>ñ</p>".encode("utf-8")})()}
 
-    assert job.load_text("bucket", "s3://bucket/email-templates/a.html") == "<p>ñ</p>"
-    job.s3.get_object.assert_called_once_with(Bucket="bucket", Key="email-templates/a.html")
+    assert job.load_text("bucket", "s3://bucket/email-template/a.html") == "<p>ñ</p>"
+    job.s3.get_object.assert_called_once_with(Bucket="bucket", Key="email-template/a.html")
 
 
 @pytest.mark.parametrize("archivo", sorted(DIRECTORIO_PLANTILLAS.glob("*.html")), ids=lambda ruta: ruta.name)
@@ -284,7 +284,7 @@ CONFIG_GLOBAL = {
 }
 
 
-def _config_caso(plantilla="email-templates/caso.html"):
+def _config_caso(plantilla="email-template/caso.html"):
     correo = {
         "subject": "NIIF 17 - Certificacion ${useCaseName}",
         "stringVars": {"useCaseName": "Caso A", "certificarLink": "https://a.example/c", "nocertificarLink": "https://a.example/n"},

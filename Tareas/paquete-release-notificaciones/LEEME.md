@@ -16,7 +16,7 @@ Cambios de comportamiento a conocer:
 | Archivo | Destino |
 |---|---|
 | `niif-dev-notification-certification\notification_certification.py` | Ruta que indique `Command.ScriptLocation` del job en QA (en DEV: `s3://niif-dev-assets/glue-resources/notification/notification_certification.py`) |
-| `email-templates\*.html` (6) | `s3://<bucket-assets-qa>/email-templates/` (plural) |
+| `email-template\*.html` (6) | `s3://<bucket-assets-qa>/email-template/` (singular) |
 | `politica-iam-ses.json` | Política del rol del job (completar los `<...>`; ver paso 4.4) |
 
 Hash SHA256 (también en `SHA256.txt`). Desde esta carpeta, en PowerShell; cada línea debe decir `OK`:
@@ -52,12 +52,12 @@ aws glue get-job --job-name niif-AMB-notification-certification --query "Job.Def
 aws s3 cp RUTA_SCRIPT_QA notification_certification.qa.original.py
 fc.exe notification_certification.qa.original.py niif-dev-notification-certification\notification_certification.py
 ```
-Conserva `notification_certification.qa.original.py`: es la reversa. Respalda también `aws s3 sync s3://<bucket-assets-qa>/email-templates/ respaldo-plantillas\` si ya existen plantillas.
+Conserva `notification_certification.qa.original.py`: es la reversa. Respalda también `aws s3 sync s3://<bucket-assets-qa>/email-template/ respaldo-plantillas\` si ya existen plantillas.
 
 **4.3 Subir el script y las plantillas, y verificar**
 ```powershell
 aws s3 cp niif-dev-notification-certification\notification_certification.py RUTA_SCRIPT_QA
-aws s3 cp email-templates\ s3://<bucket-assets-qa>/email-templates/ --recursive
+aws s3 cp email-template\ s3://<bucket-assets-qa>/email-template/ --recursive
 aws s3 cp RUTA_SCRIPT_QA notification_certification.qa.desplegado.py
 Get-FileHash notification_certification.qa.desplegado.py -Algorithm SHA256
 ```
@@ -67,14 +67,14 @@ El hash debe coincidir con el de `SHA256.txt`.
 - `ses:SendEmail` sobre la identidad del remitente (en QA es de dominio: `identity/<dominio>`).
 - Si la cuenta sigue en sandbox: también sobre la identidad de cada destinatario.
 - Si se usa un conjunto de configuración (`--SES_CONFIGURATION_SET`, opcional): también sobre su ARN.
-- `s3:GetObject` sobre `<bucket-assets-qa>/email-templates/*`.
+- `s3:GetObject` sobre `<bucket-assets-qa>/email-template/*`.
 - La plantilla `politica-iam-ses.json` cubre lo básico. **No** dar acceso a `pruebas/*`.
 
 **4.5 Argumentos del job**
 Agregar a los argumentos por defecto: `--SES_SENDER` = remitente verificado (obligatorio). Opcional: `--SES_CONFIGURATION_SET`. Guardar y comprobar con `get-job` que quedó (en la consola hay que pulsar Save). El argumento `--SNS_TOPIC_ARN` puede quedarse sin efecto.
 
 **4.6 Rutas de plantilla en los JSON de caso**
-Cada JSON de caso debe tener `email.templatePath` en `email-templates/<plantilla>.html` (plural). Comprobar:
+Cada JSON de caso debe tener `email.templatePath` en `email-template/<plantilla>.html` (singular). Comprobar:
 ```powershell
 aws s3 ls s3://<bucket-assets-qa>/ --recursive | findstr /i "primas-arl primas-rentas primas-endosos auxilios previsional rentas-vitalicias reserva"
 ```
@@ -108,7 +108,7 @@ Si el correo no llega a pesar del `MessageId`: revisar el rastreo de mensajes de
 104 pruebas (flujo completo, envío parcial, HTML por tonos, validación de las plantillas contra el estándar de correo). Viven en el repo, no en este paquete (dependen de `Backend\htmlNew`). Desde `Backend\Glue\niif-dev-notification-certification`: `python -m pytest tests -q` → `104 passed`.
 
 ## 8. Evidencia en DEV
-- 4 corridas: dos fallaron por permisos y se corrigieron (SES sobre cada destinatario en sandbox; lectura de `email-templates/*`; lectura del JSON de prueba); la última terminó `SUCCEEDED` con la plantilla leída y SES devolvió el `MessageId`.
+- 4 corridas: dos fallaron por permisos y se corrigieron (SES sobre cada destinatario en sandbox; lectura de la carpeta de plantillas (en DEV era `email-templates/*`); lectura del JSON de prueba); la última terminó `SUCCEEDED` con la plantilla leída y SES devolvió el `MessageId`.
 - No hay evidencia de llegada a la bandeja en DEV: la identidad de DEV es de correo, con DKIM sin publicar, y el dominio tiene DMARC `p=reject`. Se valida en QA.
 
 ## 9. Fuera de este paquete
