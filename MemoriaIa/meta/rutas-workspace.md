@@ -1,6 +1,6 @@
 ---
 tipo: referencia
-actualizado: 2026-11-05
+actualizado: 2026-11-09
 ---
 # Rutas del workspace
 
@@ -12,6 +12,7 @@ Raíz: `C:\Users\rdpuser\Git\`. Mapa humano en `Docs\00-LEEME.md`.
 - `Lamnbdas\<nombre-lambda>\`: carpeta de trabajo de las 7 lambdas de la tarea con su `.py` (auxilios real; 5 copias de la `configurador` con `ORIGEN.md`; manager sin código, `PENDIENTE.md`).
 - `Glue\<job>\`: 11 jobs de Glue de trabajo (los que invocan las 6 Step Functions) con su `.py` y `job.json`; `Glue\pruebas-glue\` con los otros 358 jobs y sus scripts. `Glue\reposNew\<job>\`: jobs reescritos con el estándar hexagonal; hoy `niif-dev-notification-certification` (SES), ver [[job-notificacion-ses]]. También `Glue\crawlers\` (3 de la SF) y `Glue\catalogo\` (3 bases `niif-dev` con sus tablas). Movido desde `inventario\glue\`, que quedó vacío. Ver `Glue\LEEME.md`.
 - `Eventos\`: 4 reglas de EventBridge que tocan nuestras SF, jobs y lambdas (finalizador ARL y las 3 `ALFA-DEV-DATALAKE-*` hacia `PipelineObserver`); `Eventos\pruebas-eventos\` con las otras 18. Movido desde `inventario\eventos\` (ya no existe ahí). Ver `Eventos\LEEME.md`.
+- `Lamnbdas\niif-dev-notification-certification-trigger\`, `niif-dev-move-s3-certification\`, `niif-dev-copy-s3-cert\`, `niif-dev-composite-notification-evaluator\`: código DEV del flujo de certificación (descargado 2026-11-10, solo lectura, con `ORIGEN.md`).
 - `Lamnbdas\inventario-aws\`: `lambdas.md`, `step-functions-niif.md` y `spike-primas-rentas\` (lambda general por capas con pruebas). Movido aquí desde `Docs\05-arquitectura\`; ver [[inventario-lambdas]].
 - `cloudshell-inventario\`: `inventario.sh` (solo lectura) y su zip para repetir la extracción en CloudShell.
 - `localstack\`: entorno AWS local (docker compose), ver [[entorno-local-localstack]]. `.env` con token, excluido de Git; no leerlo.
@@ -47,5 +48,5 @@ Subcarpetas: `meta\`, `contexto\`, `tareas\`, `estandares\`, `hu\`, `brechas\`. 
 Detalle del incidente en [[inprod-primas-arl-202606]].
 - Documentos: `errores.md`, `analisis-flujo-primas-arl-202606.md`, `replicar-fallo-en-dev.md`.
 - Scripts: `recolectar-evidencia-prd.sh` (CloudShell prod, solo lectura), `replicar-fallo-dev.sh` (solo DEV), `validar-analisis.py`, `validar-athena.py`, `simular-limpieza-segmentos.py`, `ver-logs-evidencia.py`.
-- Evidencia: `evidencia-primas-arl-202606\` (subida por el equipo al repo público; sensible) y `Evidencia\` (ignorada).
+- Evidencia: `evidencia-primas-arl-202606\` (subida por el equipo cuando el repo era público, hoy privado; sensible) y `Evidencia\` (ignorada).
 - En la raíz del repo: `.gitignore` (ignora `errores/Evidencia/`) y `.gitattributes` (`*.sh` con LF).

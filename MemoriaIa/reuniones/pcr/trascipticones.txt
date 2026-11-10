@@ -1,0 +1,570 @@
+Sí.
+Nosotros, a nivel de los bloques principales, tenemos la bodega de NIP 17, que está en AWS, que tú ya la conoces, una parte de certificación de cifras, que es toda esa solución de notificación. Este bloque es la parte actual, aquí es donde ya la parte actuaria.
+Retoma todas esas datos o esa información que nosotros armamos en el data Lake y entonces tiene unos modelos actuariales de cálculo y eso lo aplican en el MFIS. Listo. Hay unas herramientas que también apoyan esos cálculos. Sí.
+Yeferson Nova Almanza
+09:12 a.m.
+Ajá.
+Victor Daniel Cortes Restrepo
+09:12 a.m.
+Y esto viene acá con una herramienta contable que es la que es la contintool que va a armar MS, que también tiene pues un apoyo de reportería para cumplirle al negocio y esto debe ser retomado por el data stage, que el data stage es el que hace la homologación de todas esas cuentas contables en asientos contables para que los libros contables sean.
+Directamente diligenciados en SAT. Listo, entonces ese es como el flujo total. ¿Dónde trabajas o dónde entras tú? Entras tú en la bodega nif y en la certificación de cifras. Listo, estas 2 bloques soluciones donde entras tú a participar.
+Yeferson Nova Almanza
+09:12 a.m.
+Hey.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:12 a.m.
+¿Listo? ¿Cuál es el objetivo de este bloque? Este bloque lo que prepara es información para el negocio. ¿Para qué es esa información para realizar los cálculos actuariales? Listo.
+Entonces nosotros tenemos ese alcance. ¿Cuál es la diferencia entre el bloque de la bodega y el bloque de la certificación de cifras? Bueno, que el bloque de la bodega es donde está toda la arquitectura medallón y el bloque de la certificación de cifras es donde está ese proceso de notificación y certificación.
+¿Sí, por parte de los usuarios, para qué? Para hacer esa validación de cifras antes de que llegue a las herramientas contables de cálculo actuarial, y pues digamos que ellos no tengan ningún inconveniente a la hora de tomar una que ya digamos que a nivel de negocio está certificada como con un nivel de veracidad, cierto?
+Yeferson Nova Almanza
+09:13 a.m.
+Okay.
+Victor Daniel Cortes Restrepo
+09:13 a.m.
+Entonces eso también es una gestión de un gobierno de información listo.
+Yeferson Nova Almanza
+09:13 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:13 a.m.
+¿Hasta ahí preguntas que deja reclamos o todo bien?
+Yeferson Nova Almanza
+09:14 a.m.
+Pues no, por ahora no. Víctor, ese ya más o menos conocía como el ese flujito. Lo único ahí es más como a la hora de certificar, pero más como el flujo de del usuario, más que.
+¿Cuando certificaba si rechazaba qué pasaba con el proceso?
+Victor Daniel Cortes Restrepo
+09:14 a.m.
+Ah eso ya lo ya lo vemos y sí no te preocupes listo Entonces qué pasa con la solución la solución tiene varias partes primero es el programador sí la parte de programación que tiene que hacer esto pues este es el que gobierna realmente las mallas de ejecución listo aquí tengo un error Creo que este va a
+Yeferson Nova Almanza
+09:14 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:14 a.m.
+Bueno, ya lo arreglé.
+¿Qué es lo que debe suceder con el programador? El programador es esa capa que tú ves que genera a mano. No sé si él te lo ha mostrado, que tiene allá en Dynamo y que hay un modelo programático para cada una de las mallas. Cierto, entonces ese modelo programático lo que tiene es una.
+Yeferson Nova Almanza
+09:15 a.m.
+Say.
+Victor Daniel Cortes Restrepo
+09:15 a.m.
+Una configuración de cómo deberían ser programadas las mallas de ejecución durante el tiempo. Esa programación se hizo a nivel de rango. Sí, entonces el las personas pueden utilizar, pueden decir, venga, yo quiero un que la malla no se, primas PCR, se ejecute mensualmente.
+Durante los próximos 2 años. Sí, entonces, ¿qué es lo que hace el programador cuando crean una programación? Es lo que dice es, bueno, ¿y qué días quiere ejecutarla y a qué horas? Entonces le dicen los el primero de cada mes, cierto, a las 3:00 de la mañana. Entonces él lo que va a hacer es que durante 12 meses va a crear la programación para que se ejecute la.
+malla listo eso es lo que debía hacer este para crear esas tipos de programaciones listo ahí tienes el diagrama de integración y demás y aquí ya tienes entonces la arquitectura medallón listo qué pasa con esta arquitectura medallón es la que tú conoces
+Yeferson Nova Almanza
+09:16 a.m.
+Any.
+Victor Daniel Cortes Restrepo
+09:16 a.m.
+Ella en PCR recibe 2 cambios. ¿Cuál? ¿Qué cambios recibe? Primero, que no existía la el bucket de la zona de aterrizaje. La zona de aterrizaje era otro bucket que se estaba utilizando como una zona drop, pero el arquitecto de datos nos pide el favor que por favor nos pidió el favor de que separáramos esas esas esas 2 zonas.
+Que la zona de aterrizaje la dejáramos para las crudas y que la zona Droppola o la o la o la zona de mejor dicho, esta esta sería una zona de aterrizaje y traslado y la otra zona se llama solamente zona de ingreso de ingreso. Entonces esa dropción de que es de ingreso.
+Y es donde colocarán, por ejemplo, los usuarios, todo lo que tiene que ver con los archivos y demás que van a ser cargadas. Listo, y la zona de aterrizaje se convierte en parte de la arquitectura medallón para las crudas. Entonces, por eso tú ves que el job de extracción que tiene sus configuraciones vivas, o sea, las de ejecución.
+Yeferson Nova Almanza
+09:17 a.m.
+Okay.
+Victor Daniel Cortes Restrepo
+09:17 a.m.
+En la zona de recursos la retoma y viene acá y deja los datos en la zona de aterrizaje, sí.
+Yeferson Nova Almanza
+09:17 a.m.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:17 a.m.
+Y de esas crudas que solamente deberían tener el número de lote de cargue ya para hacerles trazabilidad y el número de lotes de de el número de fila para mirar el registro, cierto para hacer un identificador del registro en la extracción, pues entonces bien y se consolida ya en la zona bronce y ahí en esa consolidación ya tienen unos atributos administrativos.
+Es con un componente que nosotros le llamamos consolidación. Ese componente lo que hace es generar una un versionamiento a nivel. Él tiene una lógica que es una lógica que va por universos, que es para el manejo de grandes volúmenes y esa lógica lo que hace es administrar la y el inicio de la vigencia del.
+Del registro de la el la fecha fin de la vigencia, una versión y si el registro está activo o no está activo, cierto, entonces genera como que es el linaje del registro.
+Sí, no el linaje de un dato, sino el linaje del registro. Listo, y es el linaje del registro, pues viene acá y se crea en la zona bronce, y eso tiene que empezar a sincronizarse por medio de los rastreadores o de los crawlers en los catálogos de la zona bronce. Cierto, y después viene la zona plata. La zona plata se divide en 3 puntos.
+Victor Daniel Cortes Restrepo
+09:18 a.m.
+La parte de validación, la parte remediación y la parte de consolidación. Pero además de eso, tiene un sub punto y son todas las transformaciones. Todas esas se hacen en la zona plata. ¿Por qué se maneja así? La validación es de acuerdo que nosotros tenemos unas reglas. Esas reglas pueden ser orientadas a calidad o.
+Orientadas a remediación, que un ejemplo, pues completitud es calidad, cierto, entonces él mira que no, cuántos, cuántos nulos hay y si ese atributo es nulo y si no es nulo, entonces él tiene como unas reglas, una manera de customizar esas reglas y la y las y las de remediación son reglas que utilizas, por ejemplo, que obligatoriamente tú tengas que cambiar las.
+A con tilde por anomales, cierto, por X o Y motivo se se solicitó a nivel de negocio ese cambio, esa remediación en capa media y entonces esa regla tiene que existir para X momento para X caso de uso, cierto.
+Entonces, todas esas reglas es lo que hace es generar una tabla de validación, una tabla de diagnóstico donde por el número del registro, por el lote de cargue, por el atributo, se dice si se aplicó o no aplicó esa regla para el retomar después.
+En la parte de remediación y hacer como tal ya la aplicación, cierto, o sea, validación, diagnostica, saca, tiene la el diagnóstico y remediación, retoma ese diagnóstico y aplica las solicitudes que le hagan, cierto, ya sea en remediación o ya sea en calidad, listo.
+Yeferson Nova Almanza
+09:20 a.m.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:20 a.m.
+Nosotros la parte de calidad es una parte que tiene que engrosar la parte analítica. Nosotros como somos nip 17, nosotros tenemos un pool muy pequeñito de reglas de remediación. Listo, ya ellos mirarán si evolucionan o no evolucionan el componente. Listo. ¿La idea cuál es? El componente es agnóstico, no utiliza librerías.
+Yeferson Nova Almanza
+09:20 a.m.
+Thank you.
+Sí.
+Victor Daniel Cortes Restrepo
+09:21 a.m.
+Son lenguajes que todo el tiempo están impactando los servicios, pero que si yo quiero ver ese lenguaje y lo quiero homologar, no sé a un data brix, posiblemente si lo voy a poder hacer, sí o no, y me lo miro a Asure y ya está listo. Entonces eso tenlo muy en cuenta porque nosotros acá en Alfa no nos apoyamos en los servicios.
+Yeferson Nova Almanza
+09:21 a.m.
+Yeah.
+Victor Daniel Cortes Restrepo
+09:21 a.m.
+Tratamos de no ser dependientes de un servicio listo.
+Yeferson Nova Almanza
+09:21 a.m.
+Okay.
+Victor Daniel Cortes Restrepo
+09:21 a.m.
+¿Cuál es el otro punto? Pues ya en la parte de consolidación es que una vez termina la remediación y demás, entonces ya entran los registros, ya como en su versión información, cierto, u orquestados ya para esos datos, ya para empezar las preparaciones en información.
+De los datos en información, entonces ya se consolidan esos registros y se consolían en 2 partes, una la parte de auditoría y otra en la parte de registro como tal de la tabla. La parte de auditoría es para que, un ejemplo, nos vienen a hacer contraloría, nos dice, venga, yo necesito verificar que no sé que.
+Que era Núñez con Ñ y usted me tiene nunes con n. Entonces, ¿dónde está la evalidación que me dice que esa integridad del dato se mantiene? Pues en la zona plata, en la parte de trazabilidad, cierto del dato, entonces ahí vas a encontrar que el día.
+Yeferson Nova Almanza
+09:22 a.m.
+O.
+Victor Daniel Cortes Restrepo
+09:22 a.m.
+Tal fulanito de tal o en el proceso tal se hizo el cambio para esa remediación en capa media y quedó ese esa parte de remediar. Sí, y que lo que tú muestras en la parte de consolidación es el dato ya remediado, es otra cosa, pero tu trazabilidad no se no se ha perdido. Listo.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:22 a.m.
+Eso es lo que pasa en la zona de consolidación de la zona plata y también entonces ya hay una vez se consolidan los 2 lados, ya se hace el rastreo y demás, y viene y se transforma. Listo esta parte de consolidación de la parte de trazabilidad, creo que Manu la manejó más en remediación de una vez.
+O sea, maneja los bloques de remediación de una vez y esta solamente lo que hace es consolidar a nivel histórico ya la salida, que sería el dato final, ya me he remediado. Listo, así creo que Manu lo manejo porque yo le dije, decide tú dónde te quede más fresco para la lógica. Listo, entonces de acuerdo a la comodidad del desarrollador, entonces él decidió que creo que era más fácil acá en remediación que aquí en consolidación.
+Yeferson Nova Almanza
+09:23 a.m.
+Okay.
+Victor Daniel Cortes Restrepo
+09:23 a.m.
+Ya sincronizan otra vez los catálogos con los medios de los del crawler y en la parte de transformación, este job es el único que no es estándar, pero ese maneja un framework. ¿Cuál es el framework? Es un framework de manejo de preparación de información, o sea, inteligencia de negocios, en donde se manejan los cruces de información. Primero se sacan los atributos.
+Ese framework que está optimizado es para operar. Un ejemplo cuando tú operas en atributos, entonces no sé, necesitas. Yo siempre coloco el ejemplo del del promedio del average. ¿Por qué? Porque en el average tú tienes que hacer 2 operaciones, entonces en la primera operación.
+Tú tienes que contar y sumar y en la segunda operación tú tienes que hacer la división, cierto, para sacar ese promedio. Entonces, ¿qué es lo que pasa? Él debe respetar esos círculos de cálculo, sí o de operación de los atributos, porque se deben respetar por tiempos y por optimización.
+Entonces, cada vez que tú tengas que operar datos, sí, para volverlos en al cifras o operar atributos o hacer alguna cosa, tienes que tener en cuenta los ciclos de variables. Sí, donde tú no estés todo el tiempo operándolo sin control, sino que al contrario tengas.
+Yeferson Nova Almanza
+09:24 a.m.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:24 a.m.
+Todo el control de esa operación de los ciclos de variables, entonces, y eso también se traduce en que en algunos momentos, dependiendo de cómo se vea el sistema, pues el operador diga un ejemplo para PCR, pues ya no me sirve con 2. con esta infraestructura, con este grupo de recursos, el servicio me tocaba subirlo.
+Yeferson Nova Almanza
+09:24 a.m.
+Bing.
+Victor Daniel Cortes Restrepo
+09:25 a.m.
+Y ya ellos se lo suben y todo va a estar bien. Listo. Entonces eso también es un diagnóstico y por eso se separa toda esa parte de transformación y preparación de los datos en la información en la capa plata, en un glues, en un job solito para poderle dar manejo a todo ese ejercicio. Listo.
+Yeferson Nova Almanza
+09:25 a.m.
+Keep.
+Victor Daniel Cortes Restrepo
+09:25 a.m.
+Yeah.
+Y posteriormente se utiliza el mismo modelo de consolidación, sino que ya esta vez es para la para el bloque oro. Lo único que aquí ya no se toma como atributo administrativo, pues es el número de registro, porque ya el número de registro es para un dato, cierto para estimar un registro y poder hacer el diagnóstico entre los datos, pero ya en la consolidación no se necesita porque ya los registros van por información, entonces se mantiene solamente el número de lote de cargue para las.
+habilidades de las cargas cierto por si hay algún reproceso Porque si hay que eliminar alguno etcétera etcétera listo y y tengamos Entonces el lote de cargue como ese punto de de control a nivel de la arquitectura de datos para que nosotros podamos hacer todo ese manejo administrativo y Esto va al bloque al a la bucket de oro
+Y también viene, se sincroniza en el catálogo y lo que hace es que genera un evento al modelo de notificaciones para avisar que ese ejercicio debe liberar esa notificación y esa certificación, que era lo que tú preguntabas, cierto.
+¿Qué está por acá, señor?
+Yeferson Nova Almanza
+09:26 a.m.
+YouTube.
+en cuando mencionabas lo del framework esa partecita sabes cuál es o es que no lo ese no lo tenía mapeado en lo que en lo que he hecho aquí como como spy no tenía mapeado que hubiera un framework ahí
+Victor Daniel Cortes Restrepo
+09:26 a.m.
+Sí, eso está en la documentación, es más, yo creo que lo estoy. Ahorita lo estaba mirando, creo, me falta actualizar algo de la documentación. Si quieren estos días la actualizo y ya te lo paso más descripto porque ese yo no sé si te pasaron. Yo hice unos videos de ejercicios con Manuel para que él me entendiera cómo funcionaba el prego.
+Entonces, si quieres, déjame, yo lo refino.
+Yeferson Nova Almanza
+09:27 a.m.
+¿Pero es un framework que pero es un framework de qué de código, o sea, que utiliza Manuel o es un framework de qué?
+Victor Daniel Cortes Restrepo
+09:27 a.m.
+Es un.
+No es un framegro de modelo.
+Yeferson Nova Almanza
+09:27 a.m.
+Okay, okay, okay.
+O sea, no es no es un framework de aplicativo, o sea, implementado en aplicativo, no es una manera o el o es un modelo de preparación. Sí, y se debe respetar. Sí, claro, porque viene el ingeniero de datos o el líder técnico y debe saber que el framework cómo funciona y si tú no tienes esos pasos en las preparaciones.
+Pues te los devuelve porque no está siendo optimizado. Si me hago entender, como todas las preparaciones son distintas, yo no te puedo pasar algo que él me vaya a armar algo estándar porque no hay nada estándar en información. Pero yo sí te puedo decir, oiga, usted cada vez que me prepare, primero me va a hacer los cruces, por ejemplo, el Johnny.
+Yeferson Nova Almanza
+09:27 a.m.
+Okay now.
+Yeah, thank you.
+Victor Daniel Cortes Restrepo
+09:28 a.m.
+De Liner Joint, sí, usted después me tiene que hacer los left. A mí no me interesa si usted tiene que sacar, no, primero sáqueme todos los atributos, ármele me la saban. Sí, ahora márqueme los atributos. ¿Cuáles atributos son los que van hasta la salida final y cuáles son operados? Ahora dígame.
+Sí.
+Victor Daniel Cortes Restrepo
+09:28 a.m.
+¿Con estas granularidades, cuáles son los preparados? Cada granularidad se tiene que formar de esta manera. Sí, me hago entender, entonces es un modelo de preparación. Listo, entonces ese modelo de preparación es el que debe revisar el líder técnico que sí se cumplan cada una de las transformaciones. Listo, porque es la manera más óptima.
+Yeferson Nova Almanza
+09:28 a.m.
+He said.
+Victor Daniel Cortes Restrepo
+09:28 a.m.
+Para hacer costo eficiente al proceso listo para que tú sepas más o menos cuál es el asunto con GFT nosotros teníamos en PCR una primera versión de preparación. Esa primera versión para sacar un mes se demoraba 3 días ejecutando.
+Yeferson Nova Almanza
+09:28 a.m.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:29 a.m.
+Sí.
+Yeferson Nova Almanza
+09:29 a.m.
+Team.
+Victor Daniel Cortes Restrepo
+09:29 a.m.
+Hoy en día, la versión que tiene Manuel se demora como 3 horas.
+Sí.
+Entonces, ese es el nivel de entendimiento de la ingeniería del dato a nivel de ese frame.
+No es porque Excelli funcione así, no es porque Ziprem funcione así. No es algo que se llama teoría de conjuntos en el manejo de grandes volúmenes de la información y se basó en eso.
+Yeferson Nova Almanza
+09:29 a.m.
+Mhm.
+Estoy poniendo el modelo.
+Victor Daniel Cortes Restrepo
+09:29 a.m.
+Exactamente, entonces digamos que ahí te toca es aprender más o menos cómo es el paso para poder diagnosticar cuando te llegue una preparación, dónde debería ir, cuándo debería ser el cruce y demás. Sí, para que tú puedas ir corrigiendo e ir optimizando listo.
+Y al fin y al cabo, lo que a nosotros nos interesa en arquitectura serverless, menos tiempo, menos costo
+Sí, infra, si yo llego y hay otro que es el punto de equilibrio o el breakpoint del del grupo de recursos. Entonces, un ejemplo, si yo tengo que subir aún el grupo de recursos, pero el grupo de recursos así lo suba y así ese costo de subirlo me dé más bajito que si dejo el grupo, el grupo de recursos menor, pero se me demora mucho más tiempo, pues entonces yo subo el grupo de recursos. ¿Qué es lo que debe?
+Yeferson Nova Almanza
+09:29 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:30 a.m.
+el framework el framework lo que te dice es no es que la infraestructura la tengas que mover de primera mano porque hoy en día qué es lo que yo he notado los ingenieros lo primero que levantan la mano es necesito más recursos pero yo hoy miro la parte de ingeniería del dato y me la tienen perversa
+Sí.
+¿Por qué no han hecho ejercicios de ingeniería del dato sí o de ingeniería de la información?
+Entonces lo que el framework lo que exige es primero moldear la capa de ingeniería del dato y la capa de ingeniería de la información.
+Victor Daniel Cortes Restrepo
+09:30 a.m.
+Y después ya cuando tú dices no es que ya, por ejemplo, un ejemplo, el PCR va a manejar 14000 millones de registros. Eso es lo que va a procesar en un mes. Eso es lo que él tiene que revisar por las explotaciones de las granularidades y demás. ¿Pues entonces dígame por qué se me le está demorando 3 horas?
+Y no 3 días, sí, pues porque es ingeniería el dato, porque está utilizando los mismos recursos que utilizaba el otro equipo.
+No ha aumentado la infraestructura. Entonces Alfa lo que empezó a exigir es eso. No me generen sobrecostos cuando no está bien estructurado algo. Sí.
+Yeferson Nova Almanza
+09:31 a.m.
+Sí, primero ataquen el dato antes de subir infra.
+Victor Daniel Cortes Restrepo
+09:31 a.m.
+Exacto, esa es esa es la exigencia del frame.
+Listo.
+Después, si quieres, vemos cuando ya llegues de pronto al punto, de pronto vemos cómo se maneja ese framework y demás y qué ventas tiene y miramos la teoría de conjuntos, lo que vos quieras y que yo tenga el tiempo. Yo con mucho gusto te comparto pues el conocimiento.
+Yeferson Nova Almanza
+09:32 a.m.
+Claro que sí, gracias.
+Victor Daniel Cortes Restrepo
+09:32 a.m.
+E.
+¿Y esto?
+Ya nos bota la parte de notificaciones, que es este pedacito en donde nosotros aquí tenemos, pues la malla de ejecución. Aquí está la parte que yo te decía que inicia, que es con este action del modelo de notificaciones y aquí entra la Lambda de notificaciones, esta Lambda de notificación que tiene ahí.
+Yeferson Nova Almanza
+09:32 a.m.
+No.
+Victor Daniel Cortes Restrepo
+09:32 a.m.
+Tiene unas estructuras que lo que hacen es manejar 3 tipos de mensajes, tienen los mensajes de totales, los mensajes de resúmenes y los mensajes de detalle.
+Listo esos 3 mensajes, tú puedes utilizar o puedes manejar la cantidad que tú quieras de cualquiera de los 3 tipos de mensaje. Sí, y ellos vienen por unos queries. Entonces tú configuras en Dynamo, tú tienes que configurar todo eso es todos esos mensajes que viene para el modelo de notificaciones. Sí.
+¿Y qué es lo que hace que el mensaje de detalle, el mensaje de resúmenes son mensajes que se aplican directamente después de que consulta a Tina?
+Por el job de notificación, él devuelve solamente los valores. Sí, y tú lo estructuras en un HTML 5, pero en el de detalle, porque se supone que es una sábana grande de datos. Entonces lo que él hace es que el job de notificación consulta a Tina y deja el archivo que él genera para certificar en la zona de certificación.
+Yeferson Nova Almanza
+09:33 a.m.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:33 a.m.
+Y vuelve y le dice al al de notificación que terminó para que cree que el bosquejo del mensaje cierto del email en HTML 5 lo estructure y ese HTML 5 vaya por medio del CES al usuario, listo.
+Yeferson Nova Almanza
+09:33 a.m.
+Okay.
+Victor Daniel Cortes Restrepo
+09:33 a.m.
+Y es Y el usuario es el que lo toma. ¿Ese usuario cómo ingresa a ese a ese mensaje? Pues ingresa por el director activo de la organización. Cierto, entonces se sabe que es un usuario del negocio y el usuario del negocio tiene ahí en ese mensaje. No sé si lo has visto con Julito, él tiene 22 botoncitos.
+Yeferson Nova Almanza
+09:34 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:34 a.m.
+Él tiene certificar o no certificar. Y además de eso, el detalle en los templates viene con un link de ingreso. Sí, ese link de ingreso es el que entra por acá al Api Gateway y él te lleva a la zona de certificación. Sí.
+Esa zona de certificación ahí es donde tú llegas, ingresas y le dices yo necesito este archivo, entonces le doy descargar sí o no y él descarga ese archivo.
+Yeferson Nova Almanza
+09:34 a.m.
+Victor Daniel Cortes Restrepo
+09:34 a.m.
+Y ese archivo lo que hace el usuario es revisarlo y el mensaje, generalmente de notificación, tiene 2 botoncitos, uno de certifico, no certifico y una vez que el reviso, pues el ya de si certifica o no certifica. Sí, entonces si no certifica, pues lo que debe ir es directamente al modelo de configuración.
+Cierto, y lo que debe decir es bueno, yo necesito volver a programarlo. Entonces deja la tarea como pendiente, esperando que esperando que el negocio le avise al operador que por favor active la tarea programada para poder volver a ejecutarse o no. Eso es lo que debe hacer, pues porque negocio vio que algo estaba mal, entonces tiene que volver a que a corregir y tiene que volver a programar todo el proceso de ejecución.
+Yeferson Nova Almanza
+09:35 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:35 a.m.
+Para ese caso de uso.
+Corrigen las fuentes.
+Victor Daniel Cortes Restrepo
+09:35 a.m.
+¿Corrigen las fuentes? Sí, porque como el negocio nosotros no corregimos nada en capa intermedia a menos de que sea un proceso de remediación intermedia que nos hayan dicho descrito. Generalmente ese proceso, cuando tú de alguna de alguna manera ellos lo llaman tipificados en los sistemas. Sí, esa remediación es capa media. ¿Por qué los llaman tipificados? Porque son errores comunes.
+Sí, entonces lo que quisieron fue trasladar un proceso que ya conocen en los otros core, trasladarlo aquí a nivel de gobierno de Lata Lake, sí.
+Entonces aquí también ese proceso de remediación es algo parecido a lo que pronto en algún momento tú vayas a escuchar que dicen es tipificados de ciprén. Son unos errores conocidos que requieren como una remediación allá en capa media y lo que hacen es dejar una trazabilidad y demás. O sea, funciona igualito, sino que funciona en donde los.
+Victor Daniel Cortes Restrepo
+09:36 a.m.
+Y si tú le das certificar, entonces él lo que le va a hacer es que él viene, toma la Lambda y lo que va a hacer es que.
+Toma el archivo de la zona de certificación y se lo lleva a la zona de transporte. Esa zona de transporte tiene una Lambda, tiene una un evento que cada vez que yo coloco algo ahí, la Lambda va, llama un put del SPTP de fees y lo que debe hacer es refrescar esa talla en el en el servidor del SPTP de fees. Entonces él empuja todo lo que llegue ahí, él lo empuja de una.
+Shh.
+¿Para que y para que los modelos de cálculo actorial puedan tomar la data del caso de uso que ya fue certificado, cierto?
+Eso sería el proceso que debería retomar el asunto.
+Vale.
+Yeferson Nova Almanza
+09:37 a.m.
+Listo.
+Victor Daniel Cortes Restrepo
+09:37 a.m.
+Listo, entonces esa es como la arquitectura de NIF 17. Yo ya estoy evolucionándola, pues les estoy dando muchos más detalles. Espero la otra semana tener todo ya mucho más detalle, porque pues yo la he ido armando también con el ejercicio que hemos visto con la ingeniería. Listo.
+Yeferson Nova Almanza
+09:37 a.m.
+Okay, see.
+Victor Daniel Cortes Restrepo
+09:37 a.m.
+Yo generalmente qué hago es que como arquitectura hay veces arquitectura muy rígidas, yo no soy un arquitecto rígido.
+Yo les digo, miren, mi objetivo y mi lineamiento es eso, ustedes muchachos definan a ver qué propuestas me traen o si quieren sigan. Esta es mi recomendación, pero no sea que solamente con la recomendación, sino miren a ver ustedes si sirve o no sirve, porque al fin y al cabo el equipo de ingeniería tiene más ejercicio que yo en el desarrollo.
+Yo ya no hago tanto ejercicio de desarrollo, entonces ustedes pueden ver cosas que yo no vea. Sí me hago entender. Entonces ponerme de rígido con un servicio, ponerme de rígido con una manera de administrar o de generar el código de desarrollar, pues no existen mis lineamientos son estos, mientras lo respeten, todo está bien listo porque son lineamientos de alfa realmente.
+Listo.
+Yeferson Nova Almanza
+09:38 a.m.
+Listo.
+Victor Daniel Cortes Restrepo
+09:38 a.m.
+¿Listo, bueno, ahora viene lo contento, entonces tú qué tú qué estás desarrollando?
+Yeferson Nova Almanza
+09:38 a.m.
+Ahorita estoy viendo las notificaciones, pues primero entendí este proceso que tú me acabas de explicarlo antes yo como que había ahí en el AWS trayendo pues los jobs, los blues y todo este tipo de cosas, las mallas como que entendiendo cómo funcionaba el flujo, entiendo lo general porque sé que hay primas y todo este tipo de cosas
+Victor Daniel Cortes Restrepo
+09:38 a.m.
+Chipi.
+Yeferson Nova Almanza
+09:38 a.m.
+Entonces empiezo como el flujo, así como me lo explicas a nivel de general. Ahí aprovecho para preguntarte sobre la las optimizaciones de.
+de atenea o o Los costos o las optimizaciones por el globo que su factura por hora Existe algún lineamiento o queda del lado de desarrollo establecer el lineamiento de de eso
+Victor Daniel Cortes Restrepo
+09:39 a.m.
+Que a nivel de desarrollo, digamos que las optimizaciones, bueno, es que hay 3 tipos de optimizaciones, no realmente en AWS o que se pueden realizar, no es porque AWS, sino por la naturaleza del ejercicio.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:39 a.m.
+Una es la optimización del servicio. Las optimizaciones del servicio las define, digamos, ingeniería. Sí, ellos deben tener su modelo de desarrollo y los servicios se van afinando con el equipo de infraestructura, o sea, con el equipo divo. Cierto, si ustedes ven que la infraestructura está pedaleando, pues se define con el ingeniero divox.
+Yeferson Nova Almanza
+09:40 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:40 a.m.
+¿Qué es lo que me tiene que decir a mí el líder técnico? Pues justificarme, por ejemplo, si aumentaron o no aumentaron la infraestructura o si cambiaron el balance, sí o no.
+Yeferson Nova Almanza
+09:40 a.m.
+Okay.
+OK, yeah.
+Victor Daniel Cortes Restrepo
+09:40 a.m.
+Eso lo tiene que justificar, pero quién el líder técnico listo, o sea, ustedes, ustedes ya lo van, ya lo van haciendo. Segundo, la optimización, lo que te decía, por ejemplo, en la parte de transformación, el framework es el que te dice a ti cómo debes optimizar datos para.
+Yeferson Nova Almanza
+09:40 a.m.
+OK, yeah.
+Victor Daniel Cortes Restrepo
+09:40 a.m.
+¿Para que van a ser usados en la preparación de información, cierto? O sea, ¿cómo se debe optimizar esos procesos? Ese framework te dice eso y la otra parte es la extracción. La extracción tiene muchas complejidades. Sí, porque la extracción no es solamente un servicio. La extracción fue pensada porque aquí en Alfa no hay o Ds.
+Yeferson Nova Almanza
+09:40 a.m.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:40 a.m.
+Nosotros no le pegamos a la infraestructura de contingencia, sino que nosotros le pegamos en producción a las a la a los a los core.
+¿Qué estaba sucediendo, que se los tiraba?
+O sea, habían procesos de extracción que llegaban y tiraban el pollo o lo ralentizaban tanto que la operación no podía continuar.
+Yeferson Nova Almanza
+09:41 a.m.
+Okay.
+Victor Daniel Cortes Restrepo
+09:41 a.m.
+Listo.
+¿Entonces yo por aquí voy a colocar una hojita, entonces qué era lo que sucedía? Hay 2 naturalezas.
+Yeferson Nova Almanza
+09:41 a.m.
+Okay.
+¿Cuáles son las 2:00 naturalezas?
+Haz de cuenta que yo tengo el Core acá y aquí tengo un integrador.
+Las herramientas de integración, como lo son Glue, lo son Data Stage, lo son, ellas tienen algo que es natural y es que arrebatan recursos.
+Sí.
+¿Y el core?
+
+Dependiendo el administra.
+¿Las solicitudes, sí o no?
+Yeferson Nova Almanza
+09:42 a.m.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:42 a.m.
+¿Pero no tiene algo que contenga la infraestructura de la solicitud?
+¿Qué quiere decir esto? Que yo en un integrador, si yo desbalanceo un integrador, ¿qué quiere decir desbalanceo? Pues que primero la banda que yo estoy usando no me contiene los recursos del integrador. Entonces, si la banda es muy ancha, yo le tengo al integrador que usted me puede paralelizar 6060 procesos.
+Lo que él va a hacer es que cuando le llegue la solicitud, entonces el core va administrando 6060 procesos, pero como él no tiene un balancín en esos 60 procesos, algo que lo balancee. Entonces, ¿qué es lo que va a pasar? ¿Va a empezar a robarle los recursos de la operación o del o de la situación por la solicitud que le entró, cierto?
+Yeferson Nova Almanza
+09:43 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:43 a.m.
+Pues empieza a bajar todo ese rendimiento.
+Yeferson Nova Almanza
+09:43 a.m.
+Era lo que les pasaba.
+Victor Daniel Cortes Restrepo
+09:43 a.m.
+Eso era lo que pasaba. Entonces, claro, la banda se anchó. En un momento dijeron, no vamos a aumentar la banda, pum, la aumentan y después todo embalados porque entonces le empezó a arrebatar.
+Yeferson Nova Almanza
+09:43 a.m.
+Se la aumentan de un lado, pero del otro lado quedó colgado.
+Victor Daniel Cortes Restrepo
+09:43 a.m.
+Exacto. ¿Por qué? Porque el integrador empezó a pasarle demasiadas solicitudes. O sea, no hubo un buen criterio de balanceo. Entonces se le empieza a robar esto. Entonces, ¿qué es lo que hace realmente la extracción? La extracción tiene varios conceptos.
+Yeferson Nova Almanza
+09:43 a.m.
+Hmm.
+Victor Daniel Cortes Restrepo
+09:43 a.m.
+La extracción tiene el concepto de ciclo.
+Sí, tiene otro concepto que es el conjunto.
+Tiene otro concepto que es la forma.
+Tiene otro concepto que son las unidades de costo.
+¿De dónde salen estos conceptos? Estos conceptos hacen parte de la vieja guardia y me los enseñó una persona que se certificó por allá en los años 90 en SAP Business Intelligence. O sea, estos conceptos son re viejos, sí.
+Yeferson Nova Almanza
+09:44 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:44 a.m.
+¿Pero es como se manejaba antiguamente cuando uno tenía, pues precariedad en la infraestructura, cuando uno, cuando no teníamos esa libertad que hoy tenemos de vaya y préndalo con un botón y auméntele 16000 gigas de RAM, no?
+Yeferson Nova Almanza
+09:44 a.m.
+Con la novia no voy.
+Victor Daniel Cortes Restrepo
+09:44 a.m.
+Cuando no teníamos exacto, cuando todo era un premis y mejor dicho, para armar un datasetter de esos me tocaba primero cavar un hueco para poder meter las máquinas listo.
+
+Victor Daniel Cortes Restrepo
+09:44 a.m.
+Entonces, ¿qué es el ciclo? El ciclo realmente son conjuntos.
+Sí, administrados.
+Con la infraestructura.
+¿Entonces, qué es eso?
+Pues yo tengo una serie de conjuntos que cada vez que termine el ciclo yo tengo que soltar la infraestructura, la dejo descansar. Haz de cuenta que entro como en un en un tiempo de reposo antes de volver a ejecutar otro ciclo de extracción. ¿Sí, esto para qué se hace? Pues para que la base empiece a que hacer balanceo de sus recursos.
+Vale, las fuentes empiezan a hacer balanceo de sus recursos. Entonces, cada cierto tiempo o cada cierto situaciones de contexto que ya vamos viendo, entonces lo que debe hacer el job de Glue es soltar la conexión. Sí, no dejármela ahí, sino suéltela para que la base descanse, espere 5 minutos y vuelva a enviar la siguiente petición.
+Yeferson Nova Almanza
+09:45 a.m.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:45 a.m.
+Listo, eso es un ciclo.
+Yeferson Nova Almanza
+09:45 a.m.
+Sí, camisa como el pool.
+Victor Daniel Cortes Restrepo
+09:45 a.m.
+Como el exacto, que es un conjunto, realmente es un grupo de tablas.
+Con una forma de extracción.
+Definir.
+Sí, entonces yo tengo el ciclo puede tener varios grupos. Sí, claro, yo puedo tener varios grupos. Yo tengo el grupo uno y me tiene 6 tablas, y el grupo 2 me tiene 3 tablas, y el grupo 3 me tiene 2 una tabla, y el grupo cuatro me tiene una tabla.
+Sí, entonces él va ejecutando esos grupos y esos ciclos de acuerdo a lo que yo le vaya diciendo. Sí, me hago entender esos conjuntos. ¿Y cuál es la forma? La forma es como yo voy a trabajar la infraestructura, es paralela, es en cascada.
+O segmentar.
+Entonces, cuando yo te decía, yo tengo 3 conjuntos, el primer conjunto me maneja las paralelas, entonces tiene 6 tablas que yo puedo extraer paralelamente, cierto, el segundo conjunto tiene 3 tablas, esas 3 tablas vienen en cascada, entonces primero ejecuto la uno, después ejecuto la 2 y después ejecuto la 3 y el el tercer conjunto trae una tabla.
+Y el cuarto conjunto trae la misma tabla. ¿Por qué? Porque está segmentada. ¿Qué quiere decir eso? Que de pronto yo tuve que dividirla en 2 conjuntos para poder hacer una extracción, cierto, pero cuando se utiliza generalmente la segmentada se mete el conjunto con esa forma segmentada.
+Yeferson Nova Almanza
+09:47 a.m.
+Mhm.
+Victor Daniel Cortes Restrepo
+09:47 a.m.
+De a unito. ¿Por qué quiere decir esto? Por las unidades de costo. ¿Qué es una unidad de costo? ¿Es realmente las filas por las columnas?
+Por las columnas de una tabla.
+Sí, entonces que yo tengo 1010 filas por 10 columnas, pues su costo de extracción de esa tabla es 100.
+Sí, y estas unidades de costo son las que me dicen el límite del ciclo. O sea, si un ciclo me dice usted, yo no usted para pegarle a Axel y no puede extraer sino 12000 millones de unidades de costos. ¿Quiere decir que si en los conjuntos que yo estoy armando en cada ciclo superan eso?
+Yeferson Nova Almanza
+09:48 a.m.
+Sí, perfeccional.
+Victor Daniel Cortes Restrepo
+09:48 a.m.
+Sí.
+Entonces, esta es la manera en que a la vieja guardia, la vieja usanza, hacia esa administración para que no les tumbaran los sistemas y hoy en día funciona igual.
+Listo.
+Victor Daniel Cortes Restrepo
+09:48 a.m.
+Y optimizarlo es bastante difícil. Sí, porque como nunca no. Hoy modernamente no se trabaja con eso. Entonces, mientras uno le coge la comba al palo.
+Demora un poquito. ¿Por qué? Porque aquí vienen términos, por ejemplo, como algo que nosotros llamamos pivot.
+Yeferson Nova Almanza
+09:49 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:49 a.m.
+Sí.
+Entonces el pivote es la tabla madre del sistema.
+Del sistema para la información.
+Entonces, preparación, preparación o transformaciones es, va, va muy, va muy de la mano. Sí, van muy de la mano porque el framework está basado en esto.
+Sí, está basado en cómo tú debes extraer óptimamente. Sí, entonces la tabla pivote, generalmente, por ejemplo, en el sistema Axel y que de pronto es el que tú toques.
+Es algo que se llama context operation operation.
+Y esa context operation es la que tiene todas las emisiones de las pólizas. Sí, pero cuando tú empieces a armar, no sé, por ejemplo, las emisiones de la compañía vida, cierto, entonces resulta que esa context operation genera un ID que es la dependencia.
+Es el otro concepto y la dependencia son los atributos clave que sirven de insumo para otras tablas. Sí, entonces habla de su dependencia.
+Que es el ID de esa tabla y con ese ID no solamente alimentará a una, sino que puede alimentar a n tablas. Sí me hago entender.
+Y esas n tablas van a retomar esos IDs que tú le colocaste y ya. Entonces esas dependencias deben ser creadas durante el proceso. ¿Y entonces qué va a pasar con esas dependencias? Pues ella lo que realmente tiene es un grupo que debería decir mientras usted le pegue, yo que sea la.
+Dirty party, yo no sé qué. Entonces usted con ese ID me tiene que sacar solamente esos registros, con ese ID me tiene que sacar solamente los registros que yo requiero. Si me hago entender y en va el tiene que haber un análisis del entendimiento de cómo se extrae la información y cómo se arma, cómo se extraen los datos y cómo se arma la información.
+Yeferson Nova Almanza
+09:51 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:51 a.m.
+Para que tú puedas armar los modelos óptimos de los conjuntos, de las formas, de las unidades de costo con sus dependencias, con sus pivotes. Posteriormente lo puedas usar. Sí, entonces va todo de la mano. Si tú no conoces, si tú no haces ejercicios, que era lo que yo le decía, mano, si tú no te metes ahí en Axel y empiezas a hacer los ejercicios para entender las tablas, pues difícilmente vas a poder entender estos modelos.
+Sí.
+Porque requiere o te exige a ti que conozcas un poquito de información, sí.
+Yeferson Nova Almanza
+09:51 a.m.
+Sí es cierto.
+Victor Daniel Cortes Restrepo
+09:51 a.m.
+De la información que estás trayendo y así sucesivamente. Este puede generar dependencias, este puede generar dependencias, este puede generar dependencias o no necesitan ninguna. Entonces el modelo de entendimiento de cuando tú sueltas un conjunto o cuando sueltas un ciclo, él debe retomar que las dependencias, cierto, entonces las dependencias que tú le digas que retoma seguramente son las dependencias mismas que tú vas a sacar extrayendo.
+Entonces el proceso que se les demoraba a ellos, que yo te decía 14000 millones de registros que se les demoraba 3 3 días.
+Pues hoy en día lo máximo que está sacando por sus dependencias es alrededor de son 20 tablas de esas 20 tablas, por ejemplo, para compañía viva, el promedio es de 4000000, sí.
+Sea 4000000 colócale por 18 y solamente hay 2 tablas que tienen 20000000.
+Sí.
+Por 2, entonces realmente tú tienes cuántos cuántos registros en la extracción hoy en día, como se está viviendo PCR que pasó de esos 14000 millones, pues tú estás viviendo que tienes 4000000 * 18 tablas y alrededor de 20000000 * 2 tablas.
+Sí, entonces.
+72000000 de registros y aquí son 40000000 de registros.
+Pues tú estás procesando en este momento alrededor de 120000000 de registros, sino 14000 millones, por eso la reducción del tiempo.
+Yeferson Nova Almanza
+09:53 a.m.
+Sí, claro, lo fraccionó.
+Victor Daniel Cortes Restrepo
+09:53 a.m.
+Sí, entonces ese este es esto es lo que deberíamos realizar nosotros tanto en extracción como en preparación, y por eso es que bajan los tiempos de esa manera tan abrumadora, ¿cierto?
+Entonces este es el modelo que tú tienes que decirle a mano. Venga, mano, explíqueme usted cómo configuró esas entrañas allá en esos servicios, porque Víctor ya me explicó el concepto, pero usted dígame qué es lo que ha desarrollado y cómo lo está manejando y cuáles son los pasos de desarrollo para poderlo administrar, cierto.
+Pa poder configurarlo, pa poder gestionar todo eso.
+Listo.
+Es esta, este es este es el bosquejo de esos 2 componentes, esos bosquejos desde a nivel de arquitectura, yo ya los estoy, digamos, trabajando de manera específica.
+Para tenerlos ahí documentados, pero entonces falta que la parte de documentación que queda, que es la parte del desarrollo, pues ellos te expliquen cómo maneja Manuel cierto ese proceso de desarrollo.
+Listo.
+Para que ustedes 2 como que vayan trabajando de la misma manera, vale, y si tú tienes aportes que todo el mundo tiene aportes, pues se los digas a mano en la parte de ingeniería. Si hay maneras más fáciles de hacer, no más fáciles de hacer listo y si tienen impactos en lo ya que se haya desplegado, porque algo que tienes que tener en cuenta es que ya hay versiones desplegadas en producción listo.
+Yeferson Nova Almanza
+09:55 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:55 a.m.
+Entonces eso, ese es el tema, parce, hasta aquí bien.
+Todo más claro.
+Yeferson Nova Almanza
+09:55 a.m.
+Lo oyen.
+Sí hay un escritor más claro en Víctor, sí.
+Victor Daniel Cortes Restrepo
+09:55 a.m.
+List.
+Preguntas que hace y reclamos o su merced ya con esto puede ir allá a tocarle la puerta a los a los dolientes siguientes.
+Yeferson Nova Almanza
+09:55 a.m.
+No, yo ya le puedo tocar la puerta a los dolor, a los dolientes.
+Victor Daniel Cortes Restrepo
+09:55 a.m.
+Esto maestro.
+Yeferson Nova Almanza
+09:55 a.m.
+Si es más meditas como lo como lo como lo había revisado bien el a WC de desarrollo lo que había.
+Victor Daniel Cortes Restrepo
+09:55 a.m.
+Listo, ahí creo que te pasé el linkcito para si tienes problemas, le avisas a Zulmi, le dices Zulmi, yo no puedo acceder hasta ese diagramita que yo tengo ahí es el que yo publiqué listo y ahí en esa carpetica vas a ir viendo las publicaciones de las siguientes 2 semanas, que ya es el detalle técnico listo de la arquitectura.
+Mhm.
+So, they mismo, choose.
+Victor Daniel Cortes Restrepo
+09:56 a.m.
+Sí, van a aparecer más archivos porque ahí va a aparecer el c cuatro y demás que ya son de arquitecturas puras, pero pues vas a tener más detalle de pronto de los conceptos y de los ciclos y de los procesos. Listo, porque yo ya estoy detallando todo eso, vale por si tienes preguntas o por si alguna cosa, pues las siguientes 2 semanas vas chequeando ahí que yo voy a ir liberando, listo.
+Yeferson Nova Almanza
+09:56 a.m.
+No man.
+Y soy una.
+Victor Daniel Cortes Restrepo
+09:56 a.m.
+Listo, parce.
+Yeferson Nova Almanza
+09:56 a.m.
+De una copa Victor.

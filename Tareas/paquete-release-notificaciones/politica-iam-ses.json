@@ -1,0 +1,19 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "SesSendFromSender",
+      "Effect": "Allow",
+      "Action": ["ses:SendEmail", "ses:SendRawEmail"],
+      "Resource": [
+        "arn:aws:ses:us-east-1:<CUENTA_QA>:identity/<DOMINIO_O_REMITENTE>"
+      ]
+    },
+    {
+      "Sid": "ReadEmailTemplates",
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::<BUCKET_ASSETS_QA>/email-templates/*"
+    }
+  ]
+}

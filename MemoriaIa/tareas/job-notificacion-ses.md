@@ -136,3 +136,28 @@ Cerrados: lectores del campo viejo e índice. Abiertos: salida de sandbox, DKIM 
 - Evaluar pasar el job a Python (shell) o lambda: ya no usa Spark.
 
 Pendientes generales en [[pendientes]].
+
+## Flujo de certificación desplegado en DEV (verificado 2026-11-10)
+Fuente: CloudShell de solo lectura + código descargado en `Backend\Lamnbdas\<lambda>\` (cada carpeta con `ORIGEN.md`). Estado de DynamoDB `niif-dev-notification-certification` con stream `NEW_IMAGE` y 3 consumidores activos:
+
+| Transición | Lambda | Efecto |
+|---|---|---|
+| `PENDING` (solo `queryName=detail#1`, sin `sendLock`) | `niif-dev-notification-certification-trigger` | Lanza el job de Glue de notificación |
+| `CERTIFICATE` | `niif-dev-copy-s3-cert` | Copia a `export/<carpeta>/` de `niif-dev-transport` y marca `TRANSPORT` |
+| `export/` en `niif-dev-transport` | `datalake-dev-niif-send-via-sftp` (imagen de contenedor, código no descargable) | SFTP a FIS |
+| `NO_CERTIFICATE` | `niif-dev-move-s3-certification` | Mueve a `<carpeta>/NO-CERTIFICADOS/`, borra el origen, marca `NO_TRANSPORT` |
+
+- `EnvioSftpFis` NO es del flujo NIIF: lo dispara `alfa-datalake-dev-landing-prophet/landing/` (última modificación 2025-09-30). Las `datalake-dev-niif-*` (move, copy, notification) tienen los mappings en Disabled (versión antigua).
+- **No certificar no reprograma nada** (ni programador ni Step Functions): ninguna lambda lo hace y no hay reglas de EventBridge sobre ese estado. Contradice lo dicho por Víctor ([[reunion-diseno-pcr]]); pendiente confirmar con él si es lo esperado.
+- **Dependencia del release de SES:** el trigger pasa `--SNS_TOPIC_ARN` al job y NO `--SES_SENDER`; el evaluador compuesto no pasa ninguno. El job funciona porque `--SES_SENDER` está en sus argumentos por defecto: **el job de QA debe llevarlo**. El trigger y el evaluador leen `SNS_TOPIC_ARN` con `os.environ[...]`: no quitar esa variable ni borrar el tema SNS hasta modificarlos (limpieza posterior).
+- Hipótesis por verificar: `composite_notification_evaluator.py` pasa `"--ENVIRONMENT": '{env}'` (texto literal, no f-string); ver si el job usa ese argumento.
+- Seguridad: el trigger registra el evento completo de DynamoDB; `certification.py` (repo) registra el evento completo con el token (`[EVENT]`).
+- Botones (revisado en `pruebas-lambda\codigo\postLogin` y `niif-dev-certification`): short link → Cognito/AzureAD (`response_type=TOKEN`) → página `/post_login` → `fetch` a `/certify` o `/not_certify` con el id_token; el `state` sin firma define método y ruta. No cambia con la migración a SES. Pendiente verificar en DEV: callback de Cognito, flujo implícito permitido y rutas con autorizador (comandos dados al usuario).
+- Pruebas de aceptación de la entrega: en QA, no en DEV (decisión del usuario 2026-11-10).
+- Pendientes de verificación: ImageUri y logs de `send-via-sftp`, `scheduler list`, bloque de login/API Gateway.
+
+### Botones: cadena de login verificada en DEV (2026-11-10)
+- API del flujo: `hfoy06vw40` (`datalake-dev-niif-api-gtw`), stage `dev` (desplegado 2026-10-09), con `/r`, `/redirect`, `/post_login`, `/certify` y `/not_certify` (POST, autorizador `is5r2o` = `CognitoAuthorizerDev`, pool `us-east-1_7B1QUgeNT` con proveedor AzureAD tipo OIDC) → lambda `niif-dev-certification`.
+- `REDIRECT_BASE_URL` del trigger y del evaluador compuesto apunta a ese API (`.../dev/r`). El cliente de Cognito `datalake-dev-niif-api` tiene callbacks `/post_login` de los dos APIs, flujo `implicit` y scopes email/openid/profile.
+- Limpieza (no bloquea): el autorizador `fmywcu` (`CognitoAuthorizer`) apunta al pool `gg6kZ9C4O`, que no existe; el API `53x06brwqh` ("Certificación API", sin `/certify`) tiene un autorizador al pool real `7B1QUgeNT` y otro al inexistente `NICsMpHz8`, y no lo usa ninguna lambda; parece resto de una versión anterior.
+- Para QA: DevOps debe confirmar que callback, autorizador y `REDIRECT_BASE_URL` apuntan a QA. Falta la prueba funcional con clic real (en QA).

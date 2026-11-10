@@ -1,6 +1,6 @@
 ---
 tipo: preferencia
-actualizado: 2026-11-05
+actualizado: 2026-11-09
 ---
 # Preferencias del usuario
 
@@ -27,5 +27,5 @@ actualizado: 2026-11-05
 - **Commits sin línea de coautor** y **push directo a `main`** (sin ramas ni PR) cuando lo pide ("sube a git"). Los pedidos de push suelen venir al final de cada tarea.
 - **Nombres de archivo fijos**, sin fecha ni hora (ejemplo: `evidencia-primas-arl-202606.zip`). Los `.gitignore` y `.gitattributes` van en la **raíz** del repo, no en subcarpetas.
 - Entregables del incidente en `errores\` (md + scripts); la evidencia de prod llega en `errores\` por `git pull`.
-- El repo es **público**: no subir datos sensibles de prod (correos, ids). Preguntar antes de subir evidencia.
+- El repo pasó a **privado** el 2026-11-09 (antes fue público). Aun así, no subir credenciales ni datos personales innecesarios de prod (correos, ids) y preguntar antes de subir evidencia.
 - Se hace `git pull` cuando el usuario dice que subió archivos ("baja la carpeta").

@@ -1,6 +1,6 @@
 ---
 tipo: brecha
-actualizado: 2026-11-06
+actualizado: 2026-11-09
 ---
 # Incidente en prod: certificación Primas ARL periodo 202606 con resumen y totales vacíos
 
@@ -86,7 +86,7 @@ Dónde verlo en AWS: Glue → ETL jobs → `niif-prd-extraccion-estandar-optimiz
 
 ## 8. Cautelas
 - **Sin acceso directo a prod** desde este entorno. El usuario opera la consola y CloudShell de prod y trae capturas o archivos. Todo comando contra prod es de solo lectura.
-- El repo `yeferson-nova/alfa` es **público**. El equipo subió la evidencia de prod (commit `inprod1`), que contiene correos de personas, identificadores de Cognito y de cuentas. Decisión pendiente (redactar, reescribir historial o pasar el repo a privado). No subir más evidencia sin redactar.
+- El repo `yeferson-nova/alfa` **era público** y el equipo subió la evidencia de prod (commit `inprod1`), que contiene correos de personas, identificadores de Cognito y de cuentas. **Pasó a privado el 2026-11-09.** Queda valorar si lo expuesto durante el periodo público requiere acciones adicionales (clones o forks, rotar identificadores) y si se reescribe el historial.
 - La Step Function de DEV tiene **fijas** la ruta de la config de extracción y la del caso: la entrada `rutaConfigExtraccion` se ignora. Para cambiar el `WHERE` en pruebas hay que modificar y restaurar ese archivo.
 - Distinguir **corrida** (5 oct) de **periodo** (202610): los 1.203.789 son de muchos periodos, cargados en una corrida anterior.
 

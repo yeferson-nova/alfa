@@ -65,7 +65,7 @@ Antes de migrar necesitamos saber exactamente qué hay. Hoy parte del código no
 | A5 | Medir una ejecución real: tiempo por etapa, costo de Glue y bytes que escanea Athena | 4 días | Línea base de tiempo y costo |
 | A6 | Línea base de SonarQube del código actual | 4 días | Reporte inicial |
 | A7 | Pruebas que describen cómo se comporta hoy cada job, para poder refactorizar sin romper | 13 días | Pruebas verdes sobre el código actual |
-| A8 | Decidir qué hacemos con la evidencia de prod que ya está en el repositorio público (correos, IDs de Cognito) | 2,5 días | Decisión tomada y ejecutada |
+| A8 | Decidir qué hacemos con la evidencia de prod que estuvo en el repositorio público (correos, IDs de Cognito); el repo ya es privado desde 2026-11-09, falta valorar acciones por lo expuesto antes | 2,5 días | Decisión tomada y ejecutada |
 
 **Importante:** A1, A2 y A4 alimentan la migración. A8 va primero porque es un riesgo de seguridad abierto.
 

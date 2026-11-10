@@ -1,6 +1,6 @@
 ---
 tipo: pendiente
-actualizado: 2026-11-05
+actualizado: 2026-11-09
 ---
 # Preguntas abiertas
 
@@ -51,5 +51,7 @@ Al resolver una, moverla a la nota correspondiente y borrarla de aquí.
 - ¿Por qué entraron registros de 202610 con `WHERE PERIODO <= '202606'`? ¿`PERIODO` y `FEC_PROCESO_POINT` difieren?
 - ¿Por qué el 91 % de Gold (1.100.009) tiene `per_proceso_point` nulo? ¿Es esperado?
 - ¿El SCD debe apagar por ausencia en cargas incrementales, o la extracción debe entregar siempre la foto completa? (decisión de diseño)
-- ¿Qué se hace con la evidencia de prod ya subida al repo público (correos, ids de Cognito y de cuenta)? ¿Se reescribe el historial o se pasa el repo a privado?
+- ~~¿Qué se hace con la evidencia de prod subida al repo público?~~ El repo pasó a privado el 2026-11-09. Abierto: si lo que estuvo expuesto antes (correos, ids de Cognito y de cuenta) requiere más acciones (clones o forks, rotar identificadores) y si se reescribe el historial.
 - ¿Por qué la notificación sale aunque el resumen y los totales estén vacíos? ¿Se acepta bloquear el envío en ese caso?
+- ¿No certificar debe reprogramar la malla (modelo de configuración/programador) como dijo Víctor? En DEV solo archiva a `NO-CERTIFICADOS` y marca `NO_TRANSPORT` (verificado 2026-11-10, [[job-notificacion-ses]]).
+- ¿`--ENVIRONMENT: '{env}'` literal en `composite_notification_evaluator.py` es un error? ¿El job de notificación usa ese argumento?

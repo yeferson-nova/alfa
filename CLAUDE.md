@@ -66,6 +66,7 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - [[correo-notificacion]] - formato del correo de certificación
 - [[job-notificacion-ses]] - job de Glue de notificación reescrito para enviar por SES (T1a), en `Backend\Glue\reposNew\`; implementado, no desplegado
 - [[estructura-repos-propuesta]] - estructura de repos y de archivos (lambdas, jobs de Glue, config, librería), decisiones del usuario, plantilla de DevOps y tablas por malla; propuesta en iteración
+- [[reunion-diseno-pcr]] - notas de la reunión de explicación del diseño PCR (2026-11-10), en curso
 - [[monitoreo-grafana]] - monitoreo y propuesta de dos planos (técnico/negocio, SNS, EventBridge, ServiceNow), pendiente de validar (humano: `Tareas\T1-notificaciones\propuesta-observabilidad-eventos.md`)
 
 **estandares** (lineamientos y manuales de Alfa)
