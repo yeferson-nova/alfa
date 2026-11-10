@@ -91,6 +91,7 @@ class Analizador(HTMLParser):
         self.tablas = []
         self.pila_tablas = []
         self.enlaces = []
+        self.enlaces_blank_sin_rel = 0
         self.etiquetas_prohibidas = []
         self.comentarios = []
         self.tiene_img_sin_alt = False
@@ -122,6 +123,9 @@ class Analizador(HTMLParser):
             self.tiene_img_sin_alt = True
         if etiqueta == "a":
             self.enlaces.append(attrs.get("href"))
+            rel = (attrs.get("rel") or "").lower().split()
+            if attrs.get("target") == "_blank" and not {"noopener", "noreferrer"} <= set(rel):
+                self.enlaces_blank_sin_rel += 1
         if "style" in attrs:
             self.estilos_en_linea.append(attrs["style"])
             self._registrar_color(attrs["style"])
@@ -241,6 +245,9 @@ def validar(ruta, conjunto):
             continue
         elif not href.lower().startswith(ESQUEMAS_PERMITIDOS) and not href.startswith("#"):
             hallazgos.error(f"Enlace con esquema no permitido: {href[:40]}")
+
+    if analizador.enlaces_blank_sin_rel:
+        hallazgos.error(f"{analizador.enlaces_blank_sin_rel} enlace(s) con target=\"_blank\" sin rel=\"noopener noreferrer\" (hotspot de SonarQube)")
 
     comentarios = " ".join(analizador.comentarios)
     if "[if mso" not in comentarios:

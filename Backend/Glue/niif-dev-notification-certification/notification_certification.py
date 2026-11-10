@@ -429,7 +429,7 @@ def details_to_html(files):
         return html_paragraph("No se encontraron archivos detalle.")
 
     return "".join(
-        f'<p style="{STYLE_TEXT} word-break:break-all;"><a href="{html.escape(url)}" target="_blank" '
+        f'<p style="{STYLE_TEXT} word-break:break-all;"><a href="{html.escape(url)}" target="_blank" rel="noopener noreferrer" '
         f'style="{STYLE_LINK}">{html.escape(name)}</a></p>'
         for name, url in files
     )

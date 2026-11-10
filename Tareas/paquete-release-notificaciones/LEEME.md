@@ -10,6 +10,7 @@ Cambios de comportamiento a conocer:
 - Un correo por destinatario. Si uno falla, sigue con los demás y marca solo los enviados; si fallan todos, el job falla y no marca nada.
 - En DynamoDB: `notificationChannel` pasa de `SNS_EMAIL` a `SES_EMAIL` y `snsMessageId` a `sesMessageId`. Ninguna de las lambdas de la cadena (trigger, evaluador compuesto, copy, move) lee esos campos (revisado en el código de DEV).
 - El asunto ya no se recorta a 100 caracteres.
+- Los enlaces `target="_blank"` llevan `rel="noopener noreferrer"` (hotspot de SonarQube). No cambia la visual del correo.
 
 ## 2. Qué se entrega
 | Archivo | Destino |
