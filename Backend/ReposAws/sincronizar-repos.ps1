@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory = $true)][string]$Origen
+    [string]$Origen = (Join-Path $PSScriptRoot '_clones')
 )
 $ErrorActionPreference = 'Stop'
 
@@ -8,23 +8,24 @@ $alfa = (Resolve-Path (Join-Path $destino '..\..')).Path
 $origenFull = (Resolve-Path $Origen).Path
 $tipos = @{ 'sc-' = 'lambdas'; 'data-' = 'glue'; 'cfg-' = 's3'; 'tpl-' = 's3' }
 
-if ($origenFull.StartsWith($alfa, [StringComparison]::OrdinalIgnoreCase)) {
-    throw "El origen esta dentro de alfa ($origenFull). Clona los repos fuera de alfa (por ejemplo C:\Users\<usuario>\Git\ReposAws)."
-}
-
-$anidados = Get-ChildItem $destino -Directory | Where-Object { Test-Path (Join-Path $_.FullName '.git') }
-if ($anidados) {
-    $nombres = ($anidados | ForEach-Object Name) -join ', '
-    throw "Hay clones con .git dentro de alfa: $nombres. Muevelos a $origenFull (o borralos si ya estan alli) y vuelve a correr."
-}
-
 Push-Location $alfa
 try {
+    git check-ignore -q $origenFull
+    if ($LASTEXITCODE -ne 0 -and $origenFull.StartsWith($alfa, [StringComparison]::OrdinalIgnoreCase)) {
+        throw "El origen $origenFull esta dentro de alfa y Git no lo ignora. Agrega la carpeta a .gitignore."
+    }
+
+    $anidados = Get-ChildItem $destino -Directory |
+        Where-Object { $_.FullName -ne $origenFull -and (Test-Path (Join-Path $_.FullName '.git')) }
+    if ($anidados) {
+        $nombres = ($anidados | ForEach-Object Name) -join ', '
+        throw "Hay clones con .git fuera de ${origenFull}: $nombres. Muevelos a esa carpeta y vuelve a correr."
+    }
+
     $enlaces = git ls-files -s Backend/ReposAws | Where-Object { $_ -match '^160000' }
     foreach ($linea in $enlaces) {
         $ruta = ($linea -split "`t", 2)[1]
         git rm --cached --quiet $ruta
-        if (Test-Path $ruta) { Remove-Item $ruta -Recurse -Force }
         "Enlace quitado: $ruta"
     }
 

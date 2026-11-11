@@ -28,3 +28,6 @@ dist/
 .claude
 # Evidencia sacada de AWS, dev y prod (ARN, cuenta, correos, ids de Cognito): no versionar; solo el LEEME
 EvidenciasAws/
+
+# Clones de los repos de Alfa (con .git); se versiona solo la copia sin .git
+Backend/ReposAws/_clones/
