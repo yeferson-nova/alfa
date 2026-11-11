@@ -1,0 +1,61 @@
+== 1. Dominio y pool
+~ $ POOL=$(aws cognito-idp describe-user-pool-domain --domain $DOM --query "DomainDescription.UserPoolId" --output text); echo "POOL=$POOL"
+POOL=us-east-1_HiPkWmAUu
+~ $ aws cognito-idp describe-user-pool-domain --domain $DOM --query "DomainDescription.{Dominio:Domain,Estado:Status,Pool:UserPoolId}"
+{
+    "Dominio": "datalake-prd-niif",
+    "Estado": "ACTIVE",
+    "Pool": "us-east-1_HiPkWmAUu"
+}
+~ $ 
+~ $ echo "== 2. Proveedores del pool"
+== 2. Proveedores del pool
+~ $ aws cognito-idp list-identity-providers --user-pool-id $POOL --query "Providers[].[ProviderName,ProviderType,LastModifiedDate]" --output table
+---------------------------------------------------------
+|                 ListIdentityProviders                 |
++---------+-------+-------------------------------------+
+|  AzureAD|  OIDC |  2025-07-18T13:21:53.644000+00:00   |
++---------+-------+-------------------------------------+
+~ $ 
+~ $ echo "== 3. Detalle de AzureAD (sin secreto)"
+== 3. Detalle de AzureAD (sin secreto)
+~ $ aws cognito-idp describe-identity-provider --user-pool-id $POOL --provider-name AzureAD --query "IdentityProvider.{Tipo:ProviderType,Modificado:LastModifiedDate,client_id:ProviderDetails.client_id,oidc_issuer:ProviderDetails.oidc_issuer,MetadataURL:ProviderDetails.MetadataURL,Mapeo:AttributeMapping}"
+{
+    "Tipo": "OIDC",
+    "Modificado": "2025-07-18T13:21:53.644000+00:00",
+    "client_id": "11f535b2-62fe-407e-8eb7-640fd20558bf",
+    "oidc_issuer": "https://login.microsoftonline.com/10a76712-94f6-46a2-9155-31bd8b76f937/v2.0",
+    "MetadataURL": null,
+    "Mapeo": {
+        "email": "email",
+        "name": "name",
+        "username": "sub"
+    }
+}
+~ $ 
+~ $ echo "== 4. Cliente de la aplicación"
+== 4. Cliente de la aplicación
+~ $ aws cognito-idp describe-user-pool-client --user-pool-id $POOL --client-id $CLIENT --query "UserPoolClient.{Proveedores:SupportedIdentityProviders,Flujos:AllowedOAuthFlows,Scopes:AllowedOAuthScopes,Callbacks:CallbackURLs}"
+{
+    "Proveedores": [
+        "AzureAD",
+        "COGNITO"
+    ],
+    "Flujos": [
+        "implicit"
+    ],
+    "Scopes": [
+        "email",
+        "openid",
+        "profile"
+    ],
+    "Callbacks": [
+        "https://localhost/post_login"
+    ]
+}
+~ $ 
+~ $ echo "== 5. Azure responde desde AWS?"
+== 5. Azure responde desde AWS?
+~ $ ISSUER=$(aws cognito-idp describe-identity-provider --user-pool-id $POOL --provider-name AzureAD --query "IdentityProvider.ProviderDetails.oidc_issuer" --output text); echo "$ISSUER"; curl -s -o /dev/null -w "HTTP %{http_code}\n" "${ISSUER%/}/.well-known/openid-configuration"
+https://login.microsoftonline.com/10a76712-94f6-46a2-9155-31bd8b76f937/v2.0
+HTTP 200
