@@ -1,0 +1,227 @@
+{
+  "Comment": "Silver Layer - Sequential + Parallel jobs + crawler",
+  "StartAt": "SetupSilverVariables",
+  "States": {
+    "SetupSilverVariables": {
+      "Type": "Pass",
+      "Comment": "Setup shared variables for Silver processing",
+      "Parameters": {
+        "job_process_id.$": "$$.Execution.Name",
+        "silver_config": {
+          "BUCKET_BRONZE": "alfa-datalake-dev-bronce",
+          "BUCKET_SILVER": "alfa-datalake-dev-silver",
+          "CLIENTS_SILVER_JSON_PATH": "s3://alfa-datalake-dev-clientes-assets/phase_silver/definitions/silver_clients.json",
+          "S3_HOMOLOGATION_PATH": "s3://alfa-datalake-dev-clientes-assets/phase_silver/definitions/homologaciones_clientes_fuente.xlsx",
+          "S3_STATUS_CONFIG_PATH": "s3://alfa-datalake-dev-clientes-assets/phase_silver/config/status_config.json",
+          "S3_PATH_PRIORITY_SOURCES": "s3://alfa-datalake-dev-clientes-assets/phase_silver/definitions/clientes-fuentes-priorizacion.xlsx",
+          "DELTA_SPARK_CONF": "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog --conf spark.delta.logStore.class=org.apache.spark.sql.delta.storage.S3SingleDriverLogStore",
+          "DATALAKE_FORMATS": "delta"
+        }
+      },
+      "Next": "DatalakeClientsSilver"
+    },
+    "DatalakeClientsSilver": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Comment": "Execute main Silver processing job",
+      "Parameters": {
+        "JobName": "datalake-dev-clientes-silver",
+        "Arguments": {
+          "--JOB_PROCESS_ID.$": "$.job_process_id",
+          "--BUCKET_BRONZE.$": "$.silver_config.BUCKET_BRONZE",
+          "--BUCKET_SILVER.$": "$.silver_config.BUCKET_SILVER",
+          "--CLIENTS_SILVER_JSON_PATH.$": "$.silver_config.CLIENTS_SILVER_JSON_PATH",
+          "--LOAD_ORIGIN_TABLE": "true",
+          "--LOAD_STG_SILVER": "true",
+          "--S3_HOMOLOGATION_PATH.$": "$.silver_config.S3_HOMOLOGATION_PATH",
+          "--S3_STATUS_CONFIG_PATH.$": "$.silver_config.S3_STATUS_CONFIG_PATH",
+          "--conf.$": "$.silver_config.DELTA_SPARK_CONF",
+          "--datalake-formats.$": "$.silver_config.DATALAKE_FORMATS"
+        }
+      },
+      "ResultPath": "$.glue_job_result",
+      "Next": "ParallelBestRecordJobs"
+    },
+    "ParallelBestRecordJobs": {
+      "Type": "Parallel",
+      "Comment": "Execute 3 Best Record jobs in parallel",
+      "Branches": [
+        {
+          "StartAt": "BestRecordDemograficosJob",
+          "States": {
+            "BestRecordDemograficosJob": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Comment": "Process demographic data best records",
+              "Parameters": {
+                "JobName": "datalake-dev-clientes-best-record-ddemograficos",
+                "Arguments": {
+                  "--JOB_PROCESS_ID.$": "$.job_process_id",
+                  "--BUCKET_SILVER.$": "$.silver_config.BUCKET_SILVER",
+                  "--PREFIX_BUCKET": "DATOS_SOCIODEMOGRAFICOS",
+                  "--S3_PATH_INPUT": "s3://alfa-datalake-dev-silver/CLIENTES/DATOS_SOCIODEMOGRAFICOS/CLIENTES_DATOS_SOCIODEMOGRAFICOS_SILVER/",
+                  "--S3_PATH_PRIORITY_SOURCES.$": "$.silver_config.S3_PATH_PRIORITY_SOURCES",
+                  "--SELECTED_COLUMNS": "fecha_nacimiento,ciudad_nacimiento,departamento_nacimiento,pais_nacimiento,nacionalidad,genero,cod_estado_civil,nivel_estudios,profesion,ocupacion,cod_actividad_economica,numero_hijos,cod_tipo_sociedad,tipo_id_empresa,nit_empresa,cod_cargo_empresa,fecha_ingreso_empresa",
+                  "--conf.$": "$.silver_config.DELTA_SPARK_CONF",
+                  "--datalake-formats.$": "$.silver_config.DATALAKE_FORMATS"
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "BestRecordContactabilidadJob",
+          "States": {
+            "BestRecordContactabilidadJob": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Comment": "Process contact data best records",
+              "Parameters": {
+                "JobName": "datalake-dev-clientes-best-record-dcontactabilidad",
+                "Arguments": {
+                  "--JOB_PROCESS_ID.$": "$.job_process_id",
+                  "--BUCKET_SILVER.$": "$.silver_config.BUCKET_SILVER",
+                  "--PREFIX_BUCKET": "DATOS_UBICACION_Y_CONTACTABILIDAD",
+                  "--S3_PATH_INPUT": "s3://alfa-datalake-dev-silver/CLIENTES/DATOS_UBICACION_Y_CONTACTABILIDAD/CLIENTES_DATOS_UBICACION_Y_CONTACTABILIDAD_SILVER/",
+                  "--S3_PATH_PRIORITY_SOURCES.$": "$.silver_config.S3_PATH_PRIORITY_SOURCES",
+                  "--SELECTED_COLUMNS": "correo_electronico,tipo_direccion,direccion,barrio,ciudad,departamento,pais,tipo_telefono,indicativo,extension,numero_telefono",
+                  "--conf.$": "$.silver_config.DELTA_SPARK_CONF",
+                  "--datalake-formats.$": "$.silver_config.DATALAKE_FORMATS"
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "BestRecordBasicosJob",
+          "States": {
+            "BestRecordBasicosJob": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Comment": "Process basic data best records",
+              "Parameters": {
+                "JobName": "datalake-dev-clientes-best-record-dbasicos",
+                "Arguments": {
+                  "--JOB_PROCESS_ID.$": "$.job_process_id",
+                  "--BUCKET_SILVER.$": "$.silver_config.BUCKET_SILVER",
+                  "--PREFIX_BUCKET": "DATOS_BASICOS",
+                  "--S3_PATH_INPUT": "s3://alfa-datalake-dev-silver/CLIENTES/DATOS_BASICOS/CLIENTES_DATOS_BASICOS_SILVER/",
+                  "--S3_PATH_PRIORITY_SOURCES.$": "$.silver_config.S3_PATH_PRIORITY_SOURCES",
+                  "--SELECTED_COLUMNS": "primer_nombre,segundo_nombre,primer_apellido,segundo_apellido,nombre_completo,fecha_expedicion_documento,ciudad_expedicion_documento,cod_tipo_empresa,numero_documento,cod_tipo_identificacion,cod_tipo_persona",
+                  "--conf.$": "$.silver_config.DELTA_SPARK_CONF",
+                  "--datalake-formats.$": "$.silver_config.DATALAKE_FORMATS"
+                }
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "Next": "ProcessSilverResults"
+    },
+    "ProcessSilverResults": {
+      "Type": "Pass",
+      "Comment": "Process results from all Silver jobs",
+      "Parameters": {
+        "initial_job_result": "Initial Silver job completed",
+        "best_record_results": {
+          "demograficos_result.$": "$[0]",
+          "contactabilidad_result.$": "$[1]",
+          "basicos_result.$": "$[2]"
+        },
+        "execution_summary": {
+          "jobs_completed": 4,
+          "completion_time.$": "$$.State.EnteredTime"
+        }
+      },
+      "Next": "ExecuteSilverCrawler"
+    },
+    "ExecuteSilverCrawler": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Comment": "Execute Silver crawler to update catalog",
+      "Parameters": {
+        "Name": "datalake-dev-clientes-silver"
+      },
+      "Next": "WaitForSilverCrawler"
+    },
+    "WaitForSilverCrawler": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Comment": "Check Silver crawler status",
+      "Parameters": {
+        "Name": "datalake-dev-clientes-silver"
+      },
+      "Next": "CheckSilverCrawlerStatus"
+    },
+    "CheckSilverCrawlerStatus": {
+      "Type": "Choice",
+      "Comment": "Check if Silver crawler finished",
+      "Choices": [
+        {
+          "Variable": "$.Crawler.State",
+          "StringEquals": "READY",
+          "Next": "SilverCrawlerSuccess"
+        },
+        {
+          "Variable": "$.Crawler.State",
+          "StringEquals": "STOPPING",
+          "Next": "SilverCrawlerSuccess"
+        },
+        {
+          "Variable": "$.Crawler.State",
+          "StringEquals": "RUNNING",
+          "Next": "WaitForSilverCrawlerCompletion"
+        }
+      ],
+      "Default": "SilverCrawlerFailed"
+    },
+    "WaitForSilverCrawlerCompletion": {
+      "Type": "Wait",
+      "Comment": "Wait 30 seconds before checking crawler again",
+      "Seconds": 30,
+      "Next": "WaitForSilverCrawler"
+    },
+    "SilverCrawlerSuccess": {
+      "Type": "Pass",
+      "Comment": "Silver crawler completed successfully",
+      "Parameters": {
+        "final_status": "SUCCESS",
+        "message": "Silver processing pipeline completed successfully",
+        "crawler_info": {
+          "name": "datalake-dev-clientes-silver",
+          "status": "COMPLETED",
+          "completion_time.$": "$$.State.EnteredTime"
+        }
+      },
+      "Next": "Success"
+    },
+    "SilverCrawlerFailed": {
+      "Type": "Fail",
+      "Comment": "Silver crawler execution failed",
+      "Cause": "Silver crawler did not complete successfully"
+    },
+    "Success": {
+      "Type": "Pass",
+      "Comment": "Complete Silver workflow finished successfully",
+      "Next": "Gold_step_function"
+    },
+    "Gold_step_function": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::states:startExecution",
+      "Parameters": {
+        "StateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-clientes-gold-sf",
+        "Input": {
+          "test_id": "Automatic execution ",
+          "environment": "dev",
+          "description": "Gold Layer Execution ",
+          "executed_by": "datalake-dev-clientes-silver-sf"
+        }
+      },
+      "End": true
+    }
+  }
+}
+

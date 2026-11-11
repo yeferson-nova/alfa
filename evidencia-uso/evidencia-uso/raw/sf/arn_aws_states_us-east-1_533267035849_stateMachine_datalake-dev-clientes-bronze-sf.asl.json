@@ -1,0 +1,638 @@
+{
+  "Comment": "Bronze Layer - Configuración Dinámica SMB + Extracción + Jobs Glue Paralelos con Delta Lake",
+  "StartAt": "SetupStaticVariables",
+  "States": {
+    "SetupStaticVariables": {
+      "Type": "Pass",
+      "Comment": "Variables compartidas entre todos los jobs",
+      "Parameters": {
+        "job_process_id.$": "$$.Execution.Name",
+        "test_id.$": "$.test_id",
+        "environment.$": "$.environment",
+        "description.$": "$.description",
+        "executed_by.$": "$.executed_by",
+        "smb_config_params.$": "$.smb_config_params",
+        "shared_config": {
+          "BUCKET_ASSETS": "alfa-datalake-dev-clientes-assets",
+          "BUCKET_TARGET": "alfa-datalake-dev-bronce",
+          "CARDIFF_COLUMNS": "CUSTOMER_NO|PARTNER|CREATION_DATE|CREATION_CHANNEL|CUSTOMER_TYPE|ID_CO|ID_TYPE|ID_TYPE_NAME|FIRST_NAME|MIDDLE_NAME|FIRST_SURNAME|SECOND_SURNAME|FULLNAME|GENDER|GENDER_TYPE|BIRTH_DATE|BIRTH_YEARS_OLD|BIRTH_STATE|BIRTH_STATE_NAME|BIRTH_CITY_CODE|BIRTH_CITY_NAME|BIRTH_COUNTRY_CODE|BIRTH_COUNTRY_NAME|NATIONALITY|ADULT|MILITARY|SHARE_INFORMATION|CELLPHONE1|CELLPHONE2|PHONE_CODE_1|PHONE_NUMBER_1|PHONE_EXT_1|PHONE_CODE_2|PHONE_NUMBER_2|PHONE_EXT_2|PHONE_CODE_3|PHONE_NUMBER_3|PHONE_EXT_3|ADDRESS_NAME|ADDRESS_STATE_CODE|ADDRESS_STATE_NAME|ADDRESS_CITY_CODE|ADDRESS_CITY_NAME|ADDRESS_NEIHBORHOOD|ADDRESS_COUNTRY_CODE|ADDRESS_COUNTRY_NAME|ADDRESS_TYPE|MAIL|MARITAL_STATUS|OCCUPATION_CODE|OCCUPATION_NAME|ADDRESS_WORK|ADDRESS_WORK_CITY_CODE|ADDRESS_WORK_CITY_NAME|SPOUSE_NAME|SPOUSE_ID_TYPE_CODE|SPOUSE_ID|NUM_CHILDS|MARKET_SEGMENT|MONTHLY_INCOME|MONTHLY_EXPENSES|ECON_CONDITION|PETS|ID_PIMS|ID_TMK|LAST_EXECUTION_DATE",
+          "S3_PATH_PROCESS_TABLE_DEFINITIONS": "s3://alfa-datalake-dev-clientes-assets/phase_bronze/config/table_definition_extraction_clients.xlsx",
+          "S3_PATH_SAVE_JSON_TABLE_DEFINITIONS": "s3://alfa-datalake-dev-clientes-assets/phase_bronze/definitions/clients_table_definitions",
+          "S3_PATH_STAGING_TABLES": "s3://alfa-datalake-dev-clientes-assets/phase_silver/staging_definitions/",
+          "DELTA_SPARK_CONF": "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog --conf spark.delta.logStore.class=org.apache.spark.sql.delta.storage.S3SingleDriverLogStore",
+          "DATALAKE_FORMATS": "delta"
+        }
+      },
+      "Next": "GetSMBConfiguration"
+    },
+    "GetSMBConfiguration": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Comment": "Invocar lambda para generar configuración SMB dinámica",
+      "Parameters": {
+        "FunctionName": "datalake-dev-clientes-smb-params-handler",
+        "Payload": {
+          "bucket.$": "$.smb_config_params.bucket",
+          "key.$": "$.smb_config_params.key",
+          "file.$": "$.smb_config_params.file"
+        }
+      },
+      "ResultSelector": {
+        "statusCode.$": "$.Payload.statusCode",
+        "smb_extraction_config.$": "$.Payload.body.smb_extraction_config"
+      },
+      "ResultPath": "$.lambda_config_result",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException"
+          ],
+          "IntervalSeconds": 60,
+          "MaxAttempts": 3,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.lambda_error",
+          "Next": "HandleConfigurationError"
+        }
+      ],
+      "Next": "ValidateLambdaResponse"
+    },
+    "ValidateLambdaResponse": {
+      "Type": "Choice",
+      "Comment": "Verificar si la configuración lambda fue exitosa",
+      "Choices": [
+        {
+          "Variable": "$.lambda_config_result.statusCode",
+          "NumericEquals": 200,
+          "Next": "MergeConfiguration"
+        }
+      ],
+      "Default": "HandleConfigurationError"
+    },
+    "MergeConfiguration": {
+      "Type": "Pass",
+      "Comment": "Combinar configuración SMB de lambda con variables estáticas",
+      "Parameters": {
+        "job_process_id.$": "$.job_process_id",
+        "test_id.$": "$.test_id",
+        "environment.$": "$.environment",
+        "description.$": "$.description",
+        "executed_by.$": "$.executed_by",
+        "smb_extraction_config.$": "$.lambda_config_result.smb_extraction_config",
+        "shared_config.$": "$.shared_config",
+        "smb_extraction_results": []
+      },
+      "Next": "ShouldExecuteSMBExtraction"
+    },
+    "HandleConfigurationError": {
+      "Type": "Pass",
+      "Comment": "Configuración lambda falló - deshabilitar extracción SMB",
+      "Parameters": {
+        "job_process_id.$": "$.job_process_id",
+        "test_id.$": "$.test_id",
+        "environment.$": "$.environment",
+        "description.$": "$.description",
+        "executed_by.$": "$.executed_by",
+        "smb_extraction_config": {
+          "enabled": false
+        },
+        "shared_config.$": "$.shared_config",
+        "configuration_error": {
+          "message": "Falló la generación de configuración SMB - continuando sin extracción SMB",
+          "details.$": "$.lambda_error",
+          "timestamp.$": "$$.State.EnteredTime"
+        },
+        "smb_extraction_results": []
+      },
+      "Next": "ShouldExecuteSMBExtraction"
+    },
+    "ShouldExecuteSMBExtraction": {
+      "Type": "Choice",
+      "Comment": "Verificar si debe ejecutarse la extracción SMB",
+      "Choices": [
+        {
+          "Variable": "$.smb_extraction_config.enabled",
+          "BooleanEquals": true,
+          "Next": "SMBFileExtraction"
+        }
+      ],
+      "Default": "ParallelGlueExecution"
+    },
+    "SMBFileExtraction": {
+      "Type": "Map",
+      "Comment": "Extraer archivos desde SMB en paralelo",
+      "ItemsPath": "$.smb_extraction_config.files",
+      "MaxConcurrency": 10,
+      "ResultPath": "$.smb_extraction_results",
+      "Iterator": {
+        "StartAt": "InvokeSMBLambda",
+        "States": {
+          "InvokeSMBLambda": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "Comment": "Invocar lambda de extracción SMB para cada archivo",
+            "Parameters": {
+              "FunctionName": "datalake-dev-clientes-smb",
+              "Payload.$": "$"
+            },
+            "Retry": [
+              {
+                "ErrorEquals": [
+                  "Lambda.ServiceException",
+                  "Lambda.AWSLambdaException",
+                  "Lambda.SdkClientException",
+                  "Lambda.TooManyRequestsException"
+                ],
+                "IntervalSeconds": 60,
+                "MaxAttempts": 3,
+                "BackoffRate": 2,
+                "JitterStrategy": "FULL"
+              }
+            ],
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.ALL"
+                ],
+                "ResultPath": "$.smb_error",
+                "Next": "LogSMBExtractionError"
+              }
+            ],
+            "OutputPath": "$.Payload",
+            "End": true
+          },
+          "LogSMBExtractionError": {
+            "Type": "Pass",
+            "Comment": "Registrar error de extracción SMB para este archivo",
+            "Parameters": {
+              "status": "ERROR",
+              "file_config.$": "$",
+              "error_details.$": "$.smb_error",
+              "message": "Extracción SMB falló para este archivo",
+              "timestamp.$": "$$.State.EnteredTime"
+            },
+            "End": true
+          }
+        }
+      },
+      "Next": "ParallelGlueExecution"
+    },
+    "ParallelGlueExecution": {
+      "Type": "Parallel",
+      "Comment": "Ejecutar 5 jobs en paralelo con configuración Delta Lake",
+      "ResultPath": "$.parallel_results",
+      "Branches": [
+        {
+          "StartAt": "ServiAlfaJob",
+          "States": {
+            "ServiAlfaJob": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "datalake-dev-clientes-bronze-servialfa",
+                "Arguments": {
+                  "--JOB_PROCESS_ID.$": "$.job_process_id",
+                  "--BUCKET_ASSETS.$": "$.shared_config.BUCKET_ASSETS",
+                  "--BUCKET_TARGET.$": "$.shared_config.BUCKET_TARGET",
+                  "--CARDIFF_COLUMNS.$": "$.shared_config.CARDIFF_COLUMNS",
+                  "--S3_PATH_PROCESS_TABLE_DEFINITIONS.$": "$.shared_config.S3_PATH_PROCESS_TABLE_DEFINITIONS",
+                  "--S3_PATH_SAVE_JSON_TABLE_DEFINITIONS.$": "$.shared_config.S3_PATH_SAVE_JSON_TABLE_DEFINITIONS",
+                  "--CONNECTION_NAME": "test",
+                  "--DB_NAME": "SERVIALFA",
+                  "--DB_SCHEMA": "FILES",
+                  "--S3_PATH_FILES": "s3://alfa-datalake-dev-clientes-assets/phase_bronze/SERVIALFA/",
+                  "--S3_PATH_STAGING_TABLES.$": "$.shared_config.S3_PATH_STAGING_TABLES",
+                  "--conf.$": "$.shared_config.DELTA_SPARK_CONF",
+                  "--datalake-formats.$": "$.shared_config.DATALAKE_FORMATS"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 1.5
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error_info",
+                  "Next": "ServiAlfaJobFailed"
+                }
+              ],
+              "End": true
+            },
+            "ServiAlfaJobFailed": {
+              "Type": "Pass",
+              "Comment": "Job ServiAlfa falló",
+              "Parameters": {
+                "job_name": "datalake-dev-clientes-bronze-servialfa",
+                "status": "FAILED",
+                "error.$": "$.error_info",
+                "timestamp.$": "$$.State.EnteredTime"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "AcseleJob",
+          "States": {
+            "AcseleJob": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "datalake-dev-clientes-bronze-acsele",
+                "Arguments": {
+                  "--JOB_PROCESS_ID.$": "$.job_process_id",
+                  "--BUCKET_ASSETS.$": "$.shared_config.BUCKET_ASSETS",
+                  "--BUCKET_TARGET.$": "$.shared_config.BUCKET_TARGET",
+                  "--CARDIFF_COLUMNS.$": "$.shared_config.CARDIFF_COLUMNS",
+                  "--S3_PATH_PROCESS_TABLE_DEFINITIONS.$": "$.shared_config.S3_PATH_PROCESS_TABLE_DEFINITIONS",
+                  "--S3_PATH_SAVE_JSON_TABLE_DEFINITIONS.$": "$.shared_config.S3_PATH_SAVE_JSON_TABLE_DEFINITIONS",
+                  "--CONNECTION_NAME": "datalake-dev-acsele-dev-connection",
+                  "--DB_NAME": "ACSQEV",
+                  "--DB_SCHEMA": "ACSELE_ALFA",
+                  "--S3_PATH_FILES": "test",
+                  "--S3_PATH_STAGING_TABLES.$": "$.shared_config.S3_PATH_STAGING_TABLES",
+                  "--conf.$": "$.shared_config.DELTA_SPARK_CONF",
+                  "--datalake-formats.$": "$.shared_config.DATALAKE_FORMATS"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 1.5
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error_info",
+                  "Next": "AcseleJobFailed"
+                }
+              ],
+              "End": true
+            },
+            "AcseleJobFailed": {
+              "Type": "Pass",
+              "Comment": "Job Acsele falló",
+              "Parameters": {
+                "job_name": "datalake-dev-clientes-bronze-acsele",
+                "status": "FAILED",
+                "error.$": "$.error_info",
+                "timestamp.$": "$$.State.EnteredTime"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+        "StartAt": "AlfprdJob",
+          "States": {
+            "AlfprdJob": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "datalake-dev-clientes-bronze-alfprd",
+                "Arguments": {
+                  "--JOB_PROCESS_ID.$": "$.job_process_id",
+                  "--BUCKET_ASSETS.$": "$.shared_config.BUCKET_ASSETS",
+                  "--BUCKET_TARGET.$": "$.shared_config.BUCKET_TARGET",
+                  "--CARDIFF_COLUMNS.$": "$.shared_config.CARDIFF_COLUMNS",
+                  "--S3_PATH_PROCESS_TABLE_DEFINITIONS.$": "$.shared_config.S3_PATH_PROCESS_TABLE_DEFINITIONS",
+                  "--S3_PATH_SAVE_JSON_TABLE_DEFINITIONS.$": "$.shared_config.S3_PATH_SAVE_JSON_TABLE_DEFINITIONS",
+                  "--CONNECTION_NAME": "datalake-dev-alfaprd-dev-connection",
+                  "--DB_NAME": "ALFAPROD",
+                  "--DB_SCHEMA": "GENERAL,PRU,PRV,ARPPROD,CLIENTE_UNICO,SINIESTROS",
+                  "--S3_PATH_FILES": "test",
+                  "--S3_PATH_STAGING_TABLES.$": "$.shared_config.S3_PATH_STAGING_TABLES",
+                  "--conf.$": "$.shared_config.DELTA_SPARK_CONF",
+                  "--datalake-formats.$": "$.shared_config.DATALAKE_FORMATS"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 1.5
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error_info",
+                  "Next": "AlfprdJobFailed"
+                }
+              ],
+              "End": true
+            },
+            "AlfprdJobFailed": {
+              "Type": "Pass",
+              "Comment": "Job Alfaprd falló",
+              "Parameters": {
+                "job_name": "datalake-dev-clientes-bronze-alfprd",
+                "status": "FAILED",
+                "error.$": "$.error_info",
+                "timestamp.$": "$$.State.EnteredTime"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "CardiffJob",
+          "States": {
+            "CardiffJob": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "datalake-dev-clientes-bronze-cardiff",
+                "Arguments": {
+                  "--ASSET_PREFIX": "phase_bronze/CARDIFF/",
+                  "--BRONCE_BUCKET.$": "$.shared_config.BUCKET_TARGET",
+                  "--BRONCE_PREFIX": "CARDIFF",
+                  "--BUCKET_SOURCE": "alfa-datalake-dev-clientes-assets",
+                  "--CONTROL_BUCKET.$": "$.shared_config.BUCKET_ASSETS",
+                  "--CONTROL_PREFIX": "CARDIFF/CONTROL",
+                  "--CONNECTION_NAME": "test",
+                  "--SCHEMA_CONFIG_PATH": "s3://alfa-datalake-dev-clientes-assets/phase_bronze/config/bronce_control_cardiff.json",
+                  "--TARGET_DATABASE": "datalake-dev-bronce-catalog-db",
+                  "--conf.$": "$.shared_config.DELTA_SPARK_CONF",
+                  "--datalake-formats.$": "$.shared_config.DATALAKE_FORMATS"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 1.5
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error_info",
+                  "Next": "CardiffJobFailed"
+                }
+              ],
+              "End": true
+            },
+            "CardiffJobFailed": {
+              "Type": "Pass",
+              "Comment": "Job Cardiff falló",
+              "Parameters": {
+                "job_name": "datalake-dev-clientes-bronze-cardiff",
+                "status": "FAILED",
+                "error.$": "$.error_info",
+                "timestamp.$": "$$.State.EnteredTime"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "DimensionsJob",
+          "States": {
+            "DimensionsJob": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "datalake-dev-clientes-bronze-dimensions",
+                "Arguments": {
+                  "--JOB_PROCESS_ID.$": "$.job_process_id",
+                  "--BUCKET_ASSETS.$": "$.shared_config.BUCKET_ASSETS",
+                  "--BUCKET_TARGET.$": "$.shared_config.BUCKET_TARGET",
+                  "--CARDIFF_COLUMNS.$": "$.shared_config.CARDIFF_COLUMNS",
+                  "--S3_PATH_PROCESS_TABLE_DEFINITIONS.$": "$.shared_config.S3_PATH_PROCESS_TABLE_DEFINITIONS",
+                  "--S3_PATH_SAVE_JSON_TABLE_DEFINITIONS.$": "$.shared_config.S3_PATH_SAVE_JSON_TABLE_DEFINITIONS",
+                  "--CONNECTION_NAME": "test",
+                  "--DB_NAME": "FILES",
+                  "--DB_SCHEMA": "FILES",
+                  "--S3_PATH_FILES": "s3://alfa-datalake-dev-clientes-assets/phase_bronze/DIM_FILES/",
+                  "--conf.$": "$.shared_config.DELTA_SPARK_CONF",
+                  "--datalake-formats.$": "$.shared_config.DATALAKE_FORMATS"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 1.5
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error_info",
+                  "Next": "DimensionsJobFailed"
+                }
+              ],
+              "End": true
+            },
+            "DimensionsJobFailed": {
+              "Type": "Pass",
+              "Comment": "Job Dimensions falló",
+              "Parameters": {
+                "job_name": "datalake-dev-clientes-bronze-dimensions",
+                "status": "FAILED",
+                "error.$": "$.error_info",
+                "timestamp.$": "$$.State.EnteredTime"
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "Next": "ProcessResults"
+    },
+    "ProcessResults": {
+      "Type": "Pass",
+      "Comment": "Procesar resultados de todos los jobs",
+      "Parameters": {
+        "test_id.$": "$.test_id",
+        "environment.$": "$.environment",
+        "description.$": "$.description",
+        "executed_by.$": "$.executed_by",
+        "smb_extraction_summary": {
+          "enabled.$": "$.smb_extraction_config.enabled",
+          "results.$": "$.smb_extraction_results"
+        },
+        "glue_jobs_results": {
+          "servialfa_result.$": "$.parallel_results[0]",
+          "acsele_result.$": "$.parallel_results[1]",
+          "alfprd_result.$": "$.parallel_results[2]",
+          "cardiff_result.$": "$.parallel_results[3]",
+          "dimensions_result.$": "$.parallel_results[4]"
+        },
+        "completion_time.$": "$$.State.EnteredTime"
+      },
+      "Next": "ExecuteBronzeCrawler"
+    },
+    "ExecuteBronzeCrawler": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Comment": "Ejecutar crawler Bronze después de completar todos los jobs",
+      "Parameters": {
+        "Name": "datalake-dev-clientes-bronze"
+      },
+      "ResultPath": "$.crawler_start_result",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.CrawlerRunningException"
+          ],
+          "IntervalSeconds": 60,
+          "MaxAttempts": 3,
+          "BackoffRate": 1.5
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.crawler_error",
+          "Next": "BronzeCrawlerStartFailed"
+        }
+      ],
+      "Next": "WaitForBronzeCrawler"
+    },
+    "WaitForBronzeCrawler": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Comment": "Verificar estado del crawler Bronze",
+      "Parameters": {
+        "Name": "datalake-dev-clientes-bronze"
+      },
+      "ResultPath": "$.crawler_status",
+      "Next": "CheckBronzeCrawlerStatus"
+    },
+    "CheckBronzeCrawlerStatus": {
+      "Type": "Choice",
+      "Comment": "Verificar si el crawler Bronze terminó",
+      "Choices": [
+        {
+          "Variable": "$.crawler_status.Crawler.State",
+          "StringEquals": "READY",
+          "Next": "BronzeCrawlerSuccess"
+        },
+        {
+          "Variable": "$.crawler_status.Crawler.State",
+          "StringEquals": "STOPPING",
+          "Next": "BronzeCrawlerSuccess"
+        },
+        {
+          "Variable": "$.crawler_status.Crawler.State",
+          "StringEquals": "RUNNING",
+          "Next": "WaitForBronzeCrawlerCompletion"
+        }
+      ],
+      "Default": "BronzeCrawlerFailed"
+    },
+    "WaitForBronzeCrawlerCompletion": {
+      "Type": "Wait",
+      "Comment": "Esperar 30 segundos antes de verificar el crawler nuevamente",
+      "Seconds": 30,
+      "Next": "WaitForBronzeCrawler"
+    },
+    "BronzeCrawlerSuccess": {
+      "Type": "Pass",
+      "Comment": "Crawler Bronze completado exitosamente",
+      "Parameters": {
+        "final_status": "SUCCESS",
+        "test_id.$": "$.test_id",
+        "environment.$": "$.environment",
+        "executed_by.$": "$.executed_by",
+        "message": "Todos los jobs Glue con Delta Lake y crawler Bronze completados exitosamente",
+        "smb_extraction_summary.$": "$.smb_extraction_summary",
+        "glue_jobs_results.$": "$.glue_jobs_results",
+        "crawler_info": {
+          "name": "datalake-dev-clientes-bronze",
+          "status.$": "$.crawler_status.Crawler.State",
+          "last_crawl.$": "$.crawler_status.Crawler.LastCrawl",
+          "completion_time.$": "$$.State.EnteredTime"
+        }
+      },
+      "Next": "Success"
+    },
+    "BronzeCrawlerStartFailed": {
+      "Type": "Pass",
+      "Comment": "Falló el inicio del crawler Bronze",
+      "Parameters": {
+        "final_status": "PARTIAL_SUCCESS",
+        "test_id.$": "$.test_id",
+        "environment.$": "$.environment",
+        "executed_by.$": "$.executed_by",
+        "message": "Jobs Glue completados pero falló el inicio del crawler Bronze",
+        "smb_extraction_summary.$": "$.smb_extraction_summary",
+        "glue_jobs_results.$": "$.glue_jobs_results",
+        "crawler_error": {
+          "message": "No se pudo iniciar el crawler Bronze",
+          "details.$": "$.crawler_error",
+          "timestamp.$": "$$.State.EnteredTime"
+        }
+      },
+      "Next": "Success"
+    },
+    "BronzeCrawlerFailed": {
+      "Type": "Pass",
+      "Comment": "Crawler Bronze en estado inesperado",
+      "Parameters": {
+        "final_status": "PARTIAL_SUCCESS",
+        "test_id.$": "$.test_id",
+        "environment.$": "$.environment",
+        "executed_by.$": "$.executed_by",
+        "message": "Jobs Glue completados pero crawler Bronze en estado inesperado",
+        "smb_extraction_summary.$": "$.smb_extraction_summary",
+        "glue_jobs_results.$": "$.glue_jobs_results",
+        "crawler_info": {
+          "name": "datalake-dev-clientes-bronze",
+          "status.$": "$.crawler_status.Crawler.State",
+          "message": "Estado inesperado del crawler",
+          "timestamp.$": "$$.State.EnteredTime"
+        }
+      },
+      "Next": "Success"
+    },
+    "Success": {
+      "Type": "Succeed",
+      "Comment": "Flujo de trabajo Bronze completo con Delta Lake finalizado"
+    }
+  }
+}

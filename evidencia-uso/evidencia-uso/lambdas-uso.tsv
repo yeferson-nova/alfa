@@ -1,0 +1,69 @@
+lambda	runtime	ultimo_cambio	invocaciones_90d	errores_90d	mappings	reglas	schedules	api	s3	step_functions	origenes_politica	tags
+niif-dev-finalizador-ejecucion	python3.12	2026-09-16	53.0	39.0	-	niif-dev-finalizar-ejecucion-primas-arl	-	-	-	-	events.amazonaws.com	Ambiente,Componente,Proyecto
+niif-post-login	python3.12	2026-10-09	13.0	0.0	-	-	-	datalake-dev-niif-api-gtw GET /post_login	-	-	apigateway.amazonaws.com	-
+niif-dev-configurador-auxilios-funerarios	python3.13	2026-10-13	21.0	4.0	-	-	niif-dev-prueba-auxilios-f7429360(DISABLED)	-	-	-	-	Ambiente,CasoUso,Componente,Proyecto
+niif-dev-configuration-auxilios-funerarios	python3.12	2026-10-20	8.0	0.0	-	-	-	-	-	-	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+niif-dev-configurador-reserva-matematica-rvi	python3.13	2026-10-13	15.0	4.0	-	-	-	-	-	-	-	-
+niif-dev-configurador-reserva-matematica-arp	python3.13	2026-10-21	18.0	5.0	-	-	-	-	-	-	-	-
+lmb-read-params	python3.12	2025-12-23	0	0	-	-	-	-	-	arn:aws:states:us-east-1:533267035849:stateMachine:smb-config-params-sf-bronze-clients	-	-
+niif-dev-configurador-primas-endosos	python3.13	2026-10-13	12.0	0.0	-	-	-	-	-	-	-	-
+niif-dev-short-link-redirect	python3.12	2026-08-27	164.0	3.0	-	-	-	datalake-dev-niif-api-gtw GET /r,datalake-dev-niif-api-gtw GET /redirect	-	-	apigateway.amazonaws.com	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+aws-controltower-NotificationForwarder	python3.13	2026-02-10	5888.0	0.0	-	-	-	-	-	-	sns.amazonaws.com	aws:cloudformation:logical-id,aws:cloudformation:stack-id,aws:cloudformation:stack-name
+datalake-dev-smb-lambda	Image		36.0	0.0	-	-	-	-	-	arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-smb-client-sf,arn:aws:states:us-east-1:533267035849:stateMachine:test-invoke-lambdas	-	Environment,Layer,ManagedBy,Owner,Project,terraform-aws-modules
+niif-dev-programacion-cargues-target	python3.12	2026-09-15	1.0	0.0	-	-	-	-	-	-	-	Ambiente,Componente,Proyecto
+niif-dev-certification	python3.12	2026-09-04	45.0	0.0	-	-	-	datalake-dev-niif-api-gtw POST /certify,datalake-dev-niif-api-gtw POST /not_certify	-	-	apigateway.amazonaws.com	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+niif-dev-configurador-primas-rentas	python3.13	2026-10-13	10.0	0.0	-	-	-	-	-	-	-	-
+niif-dev-configurador-pcr-vida	python3.13	2026-11-03	9.0	2.0	-	-	-	-	-	-	-	-
+niif-dev-iniciador-ejecucion	python3.12	2026-09-18	36.0	4.0	-	-	-	-	-	-	-	Ambiente,Componente,Proyecto
+niif-dev-configurador-mallas	python3.12	2026-11-05	0	0	-	-	-	-	-	-	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+EnvioSftpFis	python3.13	2025-09-30	0	0	-	-	-	-	alfa-datalake-dev-landing-prophet	-	s3.amazonaws.com	-
+niif-dev-configuration-reserva-matematica-arp	python3.12	2026-10-22	30.0	0.0	-	-	-	-	-	-	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+Prueba_MC_1	python3.14	2026-02-12	0	0	-	-	-	-	-	arn:aws:states:us-east-1:533267035849:stateMachine:Prueba_MC	-	-
+certification	python3.12	2025-05-13	0	0	-	-	-	-	-	-	apigateway.amazonaws.com	-
+niif-dev-manager-configuration	python3.12	2026-11-07	74.0	7.0	niif-dev-prg-programaciones=Enabled	-	-	-	-	-	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+CloudGuardDotnetCodeAnalysisV33	dotnet10	2026-09-15	0	0	-	-	-	-	-	-	-	Owner,aws:cloudformation:logical-id,aws:cloudformation:stack-id,aws:cloudformation:stack-name
+niif-dev-programador-configuraciones	python3.13	2026-09-25	184.0	9.0	niif-dev-prg-programaciones=Disabled,niif-dev-prg-programaciones=Disabled	-	-	-	-	-	-	-
+datalake-dev-niif-notification-certification	python3.14	2026-05-22	0	0	datalake-dev-notification-certification=Disabled	-	-	-	-	-	-	-
+CloudGuardFSPInjectorV33	python3.11	2026-07-20	0	0	-	-	-	-	-	-	-	Owner,aws:cloudformation:logical-id,aws:cloudformation:stack-id,aws:cloudformation:stack-name
+datalake-dev-clientes-smb	Image		0	0	-	-	-	-	-	arn:aws:states:us-east-1:533267035849:stateMachine:calidad-datalake-sp,arn:aws:states:us-east-1:533267035849:stateMachine:calidad-dev-bronce-sf,arn:aws:states:us-east-1:533267035849:stateMachine:CalidadStateMachine,arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-clientes-bronze-mvp2,arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-clientes-bronze-sf,arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-clientes-bronze-sf-copy_jqpm,arn:aws:states:us-east-1:533267035849:stateMachine:peps_sp,arn:aws:states:us-east-1:533267035849:stateMachine:pruenbapm	-	Environment,Layer,ManagedBy,Owner,Project,terraform-aws-modules
+niif-dev-move-s3-certification	python3.12	2026-10-16	1.0	0.0	niif-dev-notification-certification=Enabled	-	-	-	-	-	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+niif-dev-configuration-reserva-matematica-rvi	python3.12	2026-10-20	26.0	2.0	-	-	-	-	-	-	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+testNotifications	python3.13	2025-06-11	0	0	-	-	-	-	-	-	-	-
+files-struct-quality	python3.14	2026-07-27	0	0	-	-	-	-	-	-	-	-
+niif-dev-copy-s3-cert	python3.12	2026-10-08	18.0	0.0	niif-dev-notification-certification=Enabled	-	-	-	-	-	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+niif-dev-configuration-primas-arl	python3.12	2026-10-20	8.0	0.0	-	-	-	-	-	-	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+deleteModel	python3.13	2025-06-10	0	0	-	-	-	-	-	-	-	Project
+rollback-bronce	python3.13	2025-08-01	0	0	-	-	-	-	-	-	-	-
+datalake-dev-niif-move-s3	python3.14	2026-05-25	0	0	datalake-dev-notification-certification=Disabled	-	-	-	-	-	-	-
+datalake-dev-niif-certification	python3.14	2026-05-25	0	0	-	-	-	Certificación API POST /certificar,Certificación API POST /no_certificar	-	-	apigateway.amazonaws.com	-
+niif-dev-composite-notification-evaluator	python3.12	2026-10-14	213.0	1.0	niif-dev-composite-notification-status=Enabled	-	-	-	-	arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-auxilios-funerarios,arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-generales,arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-pcr-vida,arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-arl,arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-arl-continuacion-019,arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-endosos,arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-previsional,arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-primas-rentas,arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-reserva-matematica-arp,arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-reserva-matematica-rvi,arn:aws:states:us-east-1:533267035849:stateMachine:niif-dev-satelites	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+test-lambda	python3.12	2025-12-23	0	0	-	-	-	-	-	-	-	-
+CloudGuardPythonCodeAnalysisV33	python3.11	2026-07-20	438.0	219.0	-	-	-	-	-	-	-	Owner,aws:cloudformation:logical-id,aws:cloudformation:stack-id,aws:cloudformation:stack-name
+ReProcessLambda	python3.12	2024-10-02	0	0	-	-	-	-	-	-	-	-
+niif-dev-notification-certification-trigger	python3.12	2026-10-14	94.0	15.0	niif-dev-notification-certification=Enabled	-	-	-	-	-	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+ALFA-DEV-DATALAKE-PipelineObserver	python3.12	2026-10-20	1180.0	0.0	-	ALFA-DEV-DATALAKE-GlueCrawlerEvents,ALFA-DEV-DATALAKE-GlueJobEvents,ALFA-DEV-DATALAKE-SfnEvents	-	-	-	-	events.amazonaws.com	aws:cloudformation:logical-id,aws:cloudformation:stack-id,aws:cloudformation:stack-name
+testMapFunction	python3.13	2025-01-10	0	0	-	-	-	-	-	-	-	-
+datalake-dev-niif-send-via-sftp	Image		0	0	-	-	-	-	niif-dev-transport	-	s3.amazonaws.com	Environment,Layer,ManagedBy,Owner,Project,terraform-aws-modules
+PRUEBA_JQ	python3.14	2026-02-12	0	0	-	-	-	-	-	arn:aws:states:us-east-1:533267035849:stateMachine:PRUEBA_JQ	-	-
+datalake-dev-smb-clientes	Image		0	0	-	-	-	-	-	arn:aws:states:us-east-1:533267035849:stateMachine:sf-flow-clients-bronze	-	-
+datalake-dev-rollback-bronce	Image		3.0	0.0	-	-	-	-	-	arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-bronce-sf	-	Environment,Layer,ManagedBy,Owner,Project,terraform-aws-modules
+aws-quicksetup-lifecycle-LA-xmkb1	python3.11	2025-08-21	0	0	-	-	-	-	-	-	-	QuickSetupDefinitionID,QuickSetupDocument,QuickSetupDocumentVersionName,QuickSetupManagerAccount,QuickSetupManagerArn,QuickSetupManagerID,QuickSetupManagerRegion,aws:cloudformation:logical-id,aws:cloudformation:stack-id,aws:cloudformation:stack-name
+niif-dev-programador-cargues	python3.12	2026-09-15	79.0	18.0	niif-dev-programacion-cargues=Enabled	-	-	-	-	-	-	Ambiente,Componente,Proyecto
+CloudGuardJavaCodeAnalysisV33	java25	2026-10-22	0	0	-	-	-	-	-	-	-	Owner,aws:cloudformation:logical-id,aws:cloudformation:stack-id,aws:cloudformation:stack-name
+niif-dev-configurador-primas-arl	python3.13	2026-10-13	17.0	6.0	-	-	-	-	-	-	-	-
+CloudGuardOnboardingOrchestrator-Helper	nodejs22.x	2025-10-02	0	0	-	-	-	-	-	-	sns.amazonaws.com	aws:cloudformation:logical-id,aws:cloudformation:stack-id,aws:cloudformation:stack-name
+CheckValidation	python3.12	2025-08-20	0	0	-	-	-	-	-	-	-	-
+Prueba_MC	python3.14	2026-02-12	0	0	-	-	-	-	-	arn:aws:states:us-east-1:533267035849:stateMachine:Prueba_MC	-	Description
+datalake-dev-contingency-lambda	Image		3.0	0.0	-	-	-	-	-	arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-bronce-sf	-	Environment,Layer,ManagedBy,Owner,Project,terraform-aws-modules
+datalake-dev-niif-short-link-redirect	python3.14	2026-05-27	0	0	-	-	-	Certificación API GET /redirect,Certificación API GET /r	-	-	apigateway.amazonaws.com	-
+test	python3.13	2025-10-12	0	0	-	-	-	-	-	-	-	-
+postLogin	python3.12	2025-04-21	46.0	0.0	-	-	-	Certificación API GET /post_login	-	-	apigateway.amazonaws.com	-
+niif-dev-configuration-primas-rentas	python3.12	2026-10-20	20.0	0.0	-	-	-	-	-	-	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+niif-dev-configuration-primas-endosos	python3.12	2026-10-20	19.0	0.0	-	-	-	-	-	-	-	Architecture,Environment,Layer,ManagedBy,Operation,Owner,Project,Solution,terraform-aws-modules
+datalake-dev-niif-copy-s3	python3.14	2026-04-08	0	0	datalake-dev-notification-certification=Disabled	-	-	-	-	-	-	-
+niif-dev-configurador-extraccion	python3.12	2026-09-18	30.0	2.0	-	-	-	-	-	-	-	Ambiente,Componente,Proyecto
+niif-dev-accountingtool	Image		9.0	0.0	-	-	-	-	-	-	-	Environment,Layer,ManagedBy,Owner,Project,terraform-aws-modules
+niif-dev-configuration-general	python3.12	2026-11-07	82.0	27.0	-	-	-	-	-	-	-	Ambiente,Componente,Proyecto
+datalake-dev-clientes-smb-params-handler	Image		2.0	0.0	-	-	-	-	-	arn:aws:states:us-east-1:533267035849:stateMachine:calidad-datalake-sp,arn:aws:states:us-east-1:533267035849:stateMachine:calidad-dev-bronce-sf,arn:aws:states:us-east-1:533267035849:stateMachine:calidad-dev-catalog-sf,arn:aws:states:us-east-1:533267035849:stateMachine:CalidadStateMachine,arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-calidad-bronze-sf,arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-clientes-bronze-mvp2,arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-clientes-bronze-sf,arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-clientes-bronze-sf-copy_jqpm,arn:aws:states:us-east-1:533267035849:stateMachine:peps_sp,arn:aws:states:us-east-1:533267035849:stateMachine:pruenbapm	-	Environment,Layer,ManagedBy,Owner,Project,terraform-aws-modules
+CloudGuardNodeCodeAnalysisV33	nodejs24.x	2026-09-15	0	0	-	-	-	-	-	-	-	Owner,aws:cloudformation:logical-id,aws:cloudformation:stack-id,aws:cloudformation:stack-name
+alfaproject-dev-smbclient	python3.12	2025-10-12	0	0	-	-	-	-	-	-	-	STAGE,aws:cloudformation:logical-id,aws:cloudformation:stack-id,aws:cloudformation:stack-name

@@ -1,0 +1,3 @@
+default	stack-cf-scheduler-Stop-EC2	ENABLED	cron(0 19 ? * MON-FRI *)	arn:aws:scheduler:::aws-sdk:ec2:stopInstances
+default	stack-cf-scheduler-Start-EC2	ENABLED	cron(0 7 ? * MON-FRI *)	arn:aws:scheduler:::aws-sdk:ec2:startInstances
+niif-dev-programacion-configuradores	niif-dev-prueba-auxilios-f7429360	DISABLED	rate(1 day)	arn:aws:lambda:us-east-1:533267035849:function:niif-dev-configurador-auxilios-funerarios

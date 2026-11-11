@@ -1,0 +1,255 @@
+{
+  "Comment": "Catalog",
+  "StartAt": "SetupStaticVariables",
+  "States": {
+    "SetupStaticVariables": {
+      "Type": "Pass",
+      "Comment": "Variables compartidas entre todos los jobs",
+      "Parameters": {
+        "environment.$": "$.environment",
+        "description.$": "$.description",
+        "executed_by.$": "$.executed_by",
+        "smb_config_params.$": "$.smb_config_params"
+      },
+      "Next": "GetSMBConfiguration"
+    },
+    "GetSMBConfiguration": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Comment": "Invocar lambda para generar configuración SMB dinámica",
+      "Parameters": {
+        "FunctionName": "datalake-dev-clientes-smb-params-handler",
+        "Payload": {
+          "bucket.$": "$.smb_config_params.bucket",
+          "key.$": "$.smb_config_params.key",
+          "file.$": "$.smb_config_params.file"
+        }
+      },
+      "ResultSelector": {
+        "statusCode.$": "$.Payload.statusCode",
+        "smb_extraction_config.$": "$.Payload.body.smb_extraction_config"
+      },
+      "ResultPath": "$.lambda_config_result",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException"
+          ],
+          "IntervalSeconds": 60,
+          "MaxAttempts": 3,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.errorDetail",
+          "Next": "ErrorHandling"
+        }
+      ],
+      "Next": "ValidateLambdaResponse"
+    },
+    "ValidateLambdaResponse": {
+      "Type": "Choice",
+      "Comment": "Verificar resultado de la lambda",
+      "Choices": [
+        {
+          "Variable": "$.lambda_config_result.statusCode",
+          "NumericEquals": 200,
+          "Next": "MergeConfiguration"
+        }
+      ],
+      "Default": "LambdaResponseInvalid"
+    },
+    "LambdaResponseInvalid": {
+      "Type": "Pass",
+      "Parameters": {
+        "Error": "LambdaBusinessError",
+        "Cause.$": "States.Format('La Lambda retorno status {}. Body: {}', $.lambda_config_result.statusCode, $.lambda_config_result.body)"
+      },
+      "ResultPath": "$.errorDetalle",
+      "Next": "ErrorHandling"
+    },
+    "MergeConfiguration": {
+      "Type": "Pass",
+      "Comment": "Combinar configuración SMB de lambda con variables estáticas",
+      "Parameters": {
+        "environment.$": "$.environment",
+        "description.$": "$.description",
+        "executed_by.$": "$.executed_by",
+        "smb_extraction_config.$": "$.lambda_config_result.smb_extraction_config",
+        "smb_extraction_results": []
+      },
+      "Next": "SMBFileExtraction"
+    },
+    "SMBFileExtraction": {
+      "Type": "Map",
+      "Comment": "Extraer archivos desde SMB en paralelo",
+      "ItemsPath": "$.smb_extraction_config.files",
+      "MaxConcurrency": 10,
+      "ResultPath": "$.smb_extraction_results",
+      "Iterator": {
+        "StartAt": "InvokeSMBLambda",
+        "States": {
+          "InvokeSMBLambda": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "Comment": "Invocar lambda de extracción SMB para cada archivo",
+            "Parameters": {
+              "FunctionName": "",
+              "Payload.$": "$"
+            },
+            "Retry": [
+              {
+                "ErrorEquals": [
+                  "Lambda.ServiceException",
+                  "Lambda.AWSLambdaException",
+                  "Lambda.SdkClientException",
+                  "Lambda.TooManyRequestsException"
+                ],
+                "IntervalSeconds": 60,
+                "MaxAttempts": 3,
+                "BackoffRate": 2,
+                "JitterStrategy": "FULL"
+              }
+            ],
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.ALL"
+                ],
+                "ResultPath": "$.smb_error",
+                "Next": "LogSMBExtractionError"
+              }
+            ],
+            "OutputPath": "$.Payload",
+            "End": true
+          },
+          "LogSMBExtractionError": {
+            "Type": "Pass",
+            "Comment": "Registrar error de extracción SMB para este archivo",
+            "Parameters": {
+              "status": "ERROR",
+              "file_config.$": "$",
+              "error_details.$": "$.smb_error",
+              "message": "Extracción SMB falló para este archivo",
+              "timestamp.$": "$$.State.EnteredTime"
+            },
+            "End": true
+          }
+        }
+      },
+      "Next": "ExecuteCatalogJob"
+    },
+    "ExecuteCatalogJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "calidad-dev-catalog-job",
+        "Arguments": {}
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.TaskFailed"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 1.5
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.errorDetail",
+          "Next": "ErrorHandling"
+        }
+      ],
+      "Next": "ExecuteCatalogCrawler"
+    },
+    "ExecuteCatalogCrawler": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Comment": "Ejecutar crawler catalog",
+      "Parameters": {
+        "Name": "calidad-dev-catalog-crwl"
+      },
+      "ResultPath": "$.crawler_start_result",
+      "Retry": [
+        {
+          "ErrorEquals": ["Glue.CrawlerRunningException"],
+          "IntervalSeconds": 60,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.errorDetail",
+          "Next": "ErrorHandling"
+        }
+      ],
+      "Next": "WaitForCatalogCrawlerIsFinished"
+    },
+    "WaitForCatalogCrawlerIsFinished": {
+      "Type": "Wait",
+      "Seconds": 30,
+      "Next": "GetCatalogCrawlerStatus"
+    },
+    "GetCatalogCrawlerStatus": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Comment": "Obtener estado del crawler Catalog",
+      "Parameters": {
+        "Name": "calidad-dev-catalog-crwl"
+      },
+      "ResultPath": "$.crawler_status",
+      "Next": "CheckCatalogCrawlerStatus"
+    },
+    "CheckCatalogCrawlerStatus": {
+      "Type": "Choice",
+      "Comment": "Verificar estatus del crawler catalog",
+      "Choices": [
+        {
+          "Variable": "$.crawler_status.Crawler.State",
+          "StringEquals": "RUNNING",
+          "Next": "WaitForCatalogCrawlerIsFinished"
+        },
+        {
+          "Variable": "$.crawler_status.Crawler.State",
+          "StringEquals": "FAILED",
+          "Next": "ErrorCatalogCrawler"
+        }
+      ],
+      "Default": "Success"
+    },
+    "ErrorCatalogCrawler": {
+      "Type": "Pass",
+      "Parameters": {
+        "Error": "CrawlerFailedError",
+        "Cause": "El crawler terminó con estado FAILED en Glue."
+      },
+      "ResultPath": "$.errorDetalle",
+      "Next": "ErrorHandling"
+    },
+    "ErrorHandling": {
+      "Type": "Fail",
+      "CausePath": "$.errorDetail.Error",
+      "ErrorPath": "$.errorDetail.Cause"
+    },
+    "Success": {
+      "Type": "Succeed",
+      "Comment": "Flujo finalizado correctamente"
+    }
+  }
+}

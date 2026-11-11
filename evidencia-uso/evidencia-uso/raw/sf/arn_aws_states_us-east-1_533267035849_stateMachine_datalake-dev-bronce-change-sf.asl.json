@@ -1,0 +1,92 @@
+{
+    "Comment": "A description of my state machine",
+    "StartAt": "Glue ExtractBronceJob",
+    "States": {
+      "Glue ExtractBronceJob": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::glue:startJobRun",
+        "Parameters": {
+          "JobName": "datalake-dev-change-job",
+          "Arguments": {
+            "--BUCKET_NAME_ASSETS": "alfa-datalake-dev-assets",
+            "--BUCKET_NAME_BRONCE": "alfa-datalake-dev-bronce",
+            "--BUCKET_NAME_SILVER": "alfa-datalake-dev-silver",
+            "--BUCKET_NAME_GOLD": "alfa-datalake-dev-gold",
+            "--FUNCTIONALITY": "ORACLE",
+            "--STEP": "1"            
+          }
+        },
+        "ResultSelector": {
+          "JobName.$": "$.JobName",
+          "JobRunId.$": "$.JobRunId"
+        },
+        "Next": "WaitJobRunBronce",
+        "ResultPath": "$.result"
+      },
+      "WaitJobRunBronce": {
+        "Type": "Wait",
+        "Seconds": 60,
+        "Next": "GetJobRun"
+      },
+      "GetJobRun": {
+        "Type": "Task",
+        "Parameters": {
+          "JobName.$": "$.result.JobName",
+          "RunId.$": "$.result.JobRunId"
+        },
+        "ResultSelector": {
+          "JobName.$": "$.JobRun.JobName",
+          "JobRunId.$": "$.JobRun.Id",
+          "JobRunState.$": "$.JobRun.JobRunState"
+        },
+        "Resource": "arn:aws:states:::aws-sdk:glue:getJobRun",
+        "Next": "JobFinish?",
+        "ResultPath": "$.result"
+      },
+      "JobFinish?": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.result.JobRunState",
+            "StringEquals": "SUCCEEDED",
+            "Next": "StartCrawler"
+          },
+          {
+            "Variable": "$.result.JobRunState ",
+            "StringEquals": "FAILED",
+            "Next": "FinishWithErros"
+          }
+        ],
+        "Default": "WaitJobRunBronce"
+      },
+      "StartCrawler": {
+        "Type": "Task",
+        "Parameters": {
+          "Name": "datalake-dev-bronce-crawler"
+        },
+        "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+        "Next": "WaitRunSilverSF"
+      },
+      "WaitRunSilverSF": {
+        "Type": "Wait",
+        "Seconds": 60,
+        "Next": "StepFunctionSilver"
+      },
+      "StepFunctionSilver": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::states:startExecution.sync:2",
+        "Parameters": {
+          "StateMachineArn": "arn:aws:states:us-east-1:533267035849:stateMachine:datalake-dev-silver-change-sf",
+          "Input": {
+            "StatePayload": "Hello from Step Functions!",
+            "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+          }
+        },
+        "End": true
+      },
+      "FinishWithErros": {
+        "Type": "Pass",
+        "End": true
+      }
+    }
+  }

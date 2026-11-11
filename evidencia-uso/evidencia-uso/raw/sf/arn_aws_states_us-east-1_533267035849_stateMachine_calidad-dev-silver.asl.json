@@ -1,0 +1,111 @@
+{
+  "Comment": "Silver",
+  "StartAt": "ExecuteBronzeQualityJob",
+  "States": {
+    "ExecuteBronzeQualityJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "",
+        "Arguments": {}
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.TaskFailed"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 1.5
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.errorDetail",
+          "Next": "ErrorHandling"
+        }
+      ],
+      "Next": "ExecuteSilverCrawler"
+    },
+    "ExecuteSilverCrawler": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Comment": "Ejecutar crawler silver",
+      "Parameters": {
+        "Name": "calidad-dev-silver-crwl"
+      },
+      "ResultPath": "$.crawler_start_result",
+      "Retry": [
+        {
+          "ErrorEquals": ["Glue.CrawlerRunningException"],
+          "IntervalSeconds": 60,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.errorDetail",
+          "Next": "ErrorHandling"
+        }
+      ],
+      "Next": "WaitForSilverCrawlerIsFinished"
+    },
+    "WaitForSilverCrawlerIsFinished": {
+      "Type": "Wait",
+      "Seconds": 30,
+      "Next": "GetSilverCrawlerStatus"
+    },
+    "GetSilverCrawlerStatus": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Comment": "Obtener estado del crawler Silver",
+      "Parameters": {
+        "Name": "calidad-dev-silver-crwl"
+      },
+      "ResultPath": "$.crawler_status",
+      "Next": "CheckSilverCrawlerStatus"
+    },
+    "CheckSilverCrawlerStatus": {
+      "Type": "Choice",
+      "Comment": "Verificar estatus del crawler Silver",
+      "Choices": [
+        {
+          "Variable": "$.crawler_status.Crawler.State",
+          "StringEquals": "RUNNING",
+          "Next": "WaitForSilverCrawlerIsFinished"
+        },
+        {
+          "Variable": "$.crawler_status.Crawler.State",
+          "StringEquals": "FAILED",
+          "Next": "ErrorSilverCrawler"
+        }
+      ],
+      "Default": "Success"
+    },
+    "ErrorSilverCrawler": {
+      "Type": "Pass",
+      "Parameters": {
+        "Error": "CrawlerFailedError",
+        "Cause": "El crawler terminó con estado FAILED en Glue."
+      },
+      "ResultPath": "$.errorDetalle",
+      "Next": "ErrorHandling"
+    },
+    "ErrorHandling": {
+      "Type": "Fail",
+      "CausePath": "$.errorDetail.Error",
+      "ErrorPath": "$.errorDetail.Cause"
+    },
+    "Success": {
+      "Type": "Succeed",
+      "Comment": "Flujo finalizado correctamente"
+    }
+  }
+}

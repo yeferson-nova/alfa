@@ -1,0 +1,1303 @@
+{
+  "Comment": "Orquestacion NIIF17 - Primas Endosos (Extraccion Estandar -> Decision datos nuevos -> Crawler Bronze -> Validacion Tecnica -> Remediacion -> Silver -> Gold SCD)",
+  "StartAt": "ExtraccionEstandar",
+  "States": {
+    "CrawlerBronze": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "Glue.CrawlerRunningException"
+          ],
+          "ResultPath": "$.crawler_start_warning",
+          "Next": "EsperarCrawlerBronze"
+        },
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.crawler_start_error",
+          "Next": "RegistrarFallo_CrawlerBronze"
+        }
+      ],
+      "Next": "EsperarCrawlerBronze",
+      "Parameters": {
+        "Name": "niif-dev-crawler-bronze"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "CrawlerGold": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "Glue.CrawlerRunningException"
+          ],
+          "ResultPath": "$.crawler_start_warning",
+          "Next": "EsperarCrawlerGold"
+        },
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.crawler_start_error",
+          "Next": "RegistrarFallo_CrawlerGold"
+        }
+      ],
+      "Next": "EsperarCrawlerGold",
+      "Parameters": {
+        "Name": "niif-dev-crawler-gold"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "CrawlerSilver": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "Glue.CrawlerRunningException"
+          ],
+          "ResultPath": "$.crawler_start_warning",
+          "Next": "EsperarCrawlerSilver"
+        },
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.crawler_start_error",
+          "Next": "RegistrarFallo_CrawlerSilver"
+        }
+      ],
+      "Next": "EsperarCrawlerSilver",
+      "Parameters": {
+        "Name": "niif-dev-crawler-silver"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "DispararNotificacionCertificacion": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_notificacion_certificacion"
+        }
+      ],
+      "Parameters": {
+        "Arguments": {
+          "--CONFIG_BUCKET.$": "$.resolver_notificacion.Payload.configBucket",
+          "--CONFIG_KEY.$": "$.resolver_notificacion.Payload.configKey",
+          "--ENVIRONMENT": "dev",
+          "--GLOBAL_CONFIG_KEY": "configs/certification/json_global_notif_cert.json",
+          "--LOG_LEVEL": "INFO",
+          "--LOTE_CARGUE_ID.$": "$.resolver_notificacion.Payload.loteCargueId",
+          "--PERIOD.$": "$.resolver_notificacion.Payload.period"
+        },
+        "JobName": "niif-dev-certification"
+      },
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "ResultPath": "$.resultado_notificacion_certificacion",
+      "Retry": [
+        {
+          "BackoffRate": 2,
+          "ErrorEquals": [
+            "Glue.AWSGlueException",
+            "Glue.ConcurrentRunsExceededException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2
+        }
+      ],
+      "Type": "Task",
+      "Next": "RegistrarEJCSucceeded"
+    },
+    "EvaluarDatosNuevos": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "And": [
+            {
+              "Variable": "$.parametros_extraccion.parametros.requiere_procesamiento_caso",
+              "IsPresent": true
+            },
+            {
+              "Variable": "$.parametros_extraccion.parametros.requiere_procesamiento_caso",
+              "BooleanEquals": false
+            }
+          ],
+          "Next": "SuccessSinDatosNuevos"
+        }
+      ],
+      "Default": "CrawlerBronze"
+    },
+    "EvaluarModoNotificacion": {
+      "Choices": [
+        {
+          "BooleanEquals": true,
+          "Next": "DispararNotificacionCertificacion",
+          "Variable": "$.resolver_notificacion.Payload.shouldStartCertification"
+        }
+      ],
+      "Default": "SuccessEsperandoComposite",
+      "Type": "Choice"
+    },
+    "ExtraccionEstandar": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_extraccion"
+        }
+      ],
+      "Next": "LeerParametrosExtraccion",
+      "Parameters": {
+        "Arguments": {
+          "--RUTA_CONFIG_EXTRACCION": "s3://niif-dev-assets/primas-endosos/config_extraccion_primas_endosos.json"
+        },
+        "JobName": "niif-dev-extraccion-estandar-optimized"
+      },
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "ResultPath": null,
+      "Retry": [
+        {
+          "BackoffRate": 2,
+          "ErrorEquals": [
+            "Glue.AWSGlueException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2
+        }
+      ],
+      "Type": "Task"
+    },
+    "FailState": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "Parameters": {
+        "TableName": "niif-dev-ejc-ejecuciones",
+        "Key": {
+          "PK": {
+            "S.$": "$.ejcPK"
+          },
+          "SK": {
+            "S.$": "$.ejcSK"
+          }
+        },
+        "UpdateExpression": "SET #estado = :estado, fechaFin = :fechaFin, executionArn = :executionArn",
+        "ExpressionAttributeNames": {
+          "#estado": "estado"
+        },
+        "ExpressionAttributeValues": {
+          ":estado": {
+            "S": "FAILED"
+          },
+          ":fechaFin": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":executionArn": {
+            "S.$": "$$.Execution.Id"
+          }
+        }
+      },
+      "ResultPath": null,
+      "Next": "EJCFailState"
+    },
+    "GoldSCD": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "RegistrarFallo_GoldSCD",
+          "ResultPath": "$.error_gold_scd"
+        }
+      ],
+      "Next": "CrawlerGold",
+      "Parameters": {
+        "Arguments": {
+          "--RUTA_CONFIG_SCD": "s3://niif-dev-assets/primas-endosos/config_scd_primas_endosos.json",
+          "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-dev-assets/primas-endosos/parametros_extraccion.json"
+        },
+        "JobName": "niif-dev-scd"
+      },
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "ResultPath": null,
+      "Retry": [
+        {
+          "BackoffRate": 2,
+          "ErrorEquals": [
+            "Glue.AWSGlueException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2
+        }
+      ],
+      "Type": "Task"
+    },
+    "LeerParametrosExtraccion": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_lectura_parametros"
+        }
+      ],
+      "Next": "ParsearParametrosExtraccion",
+      "Parameters": {
+        "Bucket": "niif-dev-assets",
+        "Key": "primas-endosos/parametros_extraccion.json"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:s3:getObject",
+      "ResultPath": "$.parametros_raw",
+      "Type": "Task"
+    },
+    "ParsearParametrosExtraccion": {
+      "Next": "EvaluarModoEjecucion",
+      "Parameters": {
+        "parametros.$": "States.StringToJson($.parametros_raw.Body)"
+      },
+      "ResultPath": "$.parametros_extraccion",
+      "Type": "Pass"
+    },
+    "RegistrarFallo_CrawlerBronze": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_crawler_gold"
+        }
+      ],
+      "Next": "FailState",
+      "Parameters": {
+        "ExpressionAttributeValues": {
+          ":amb": {
+            "S": "dev"
+          },
+          ":component_failed": {
+            "S": "FAILED"
+          },
+          ":err": {
+            "S.$": "States.JsonToString($.error_crawler_bronze)"
+          },
+          ":estado": {
+            "S": "FAILED"
+          },
+          ":exec": {
+            "S.$": "$$.Execution.Id"
+          },
+          ":fallido": {
+            "S": "CrawlerBronze"
+          },
+          ":nombre": {
+            "S.$": "$.parametros_extraccion.parametros.nombre_caso"
+          },
+          ":now": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":obs": {
+            "S": "Falla registrada automáticamente en CrawlerBronze. Reanudar desde CrawlerBronze."
+          },
+          ":periodo": {
+            "S.$": "$.parametros_extraccion.parametros.periodo_negocio"
+          },
+          ":reanudar": {
+            "S": "CrawlerBronze"
+          },
+          ":ultimo": {
+            "S": "ExtraccionEstandar"
+          }
+        },
+        "Key": {
+          "pipeline_id": {
+            "S.$": "States.Format('dev#{}#{}', $.parametros_extraccion.parametros.nombre_caso, $.parametros_extraccion.parametros.periodo_negocio)"
+          }
+        },
+        "TableName": "niif-dev-pipeline-estado",
+        "UpdateExpression": "SET ambiente = :amb, nombre_caso = :nombre, periodo_negocio = :periodo, estado_pipeline = :estado, ultimo_paso_exitoso = :ultimo, paso_fallido = :fallido, reanudar_desde = :reanudar, observacion = :obs, execution_arn = :exec, fecha_actualizacion = :now, error_message = :err, estado_crawler_bronze = :component_failed"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "RegistrarFallo_CrawlerGold": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_registro_estado_pipeline"
+        }
+      ],
+      "Next": "FailState",
+      "Parameters": {
+        "ExpressionAttributeValues": {
+          ":amb": {
+            "S": "dev"
+          },
+          ":component_failed": {
+            "S": "FAILED"
+          },
+          ":err": {
+            "S.$": "States.JsonToString($.error_crawler_gold)"
+          },
+          ":estado": {
+            "S": "FAILED"
+          },
+          ":exec": {
+            "S.$": "$$.Execution.Id"
+          },
+          ":fallido": {
+            "S": "CrawlerGold"
+          },
+          ":nombre": {
+            "S.$": "$.parametros_extraccion.parametros.nombre_caso"
+          },
+          ":now": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":obs": {
+            "S": "Falla registrada automáticamente en CrawlerGold. Reanudar desde CrawlerGold."
+          },
+          ":periodo": {
+            "S.$": "$.parametros_extraccion.parametros.periodo_negocio"
+          },
+          ":reanudar": {
+            "S": "CrawlerGold"
+          },
+          ":ultimo": {
+            "S": "GoldSCD"
+          }
+        },
+        "Key": {
+          "pipeline_id": {
+            "S.$": "States.Format('dev#{}#{}', $.parametros_extraccion.parametros.nombre_caso, $.parametros_extraccion.parametros.periodo_negocio)"
+          }
+        },
+        "TableName": "niif-dev-pipeline-estado",
+        "UpdateExpression": "SET ambiente = :amb, nombre_caso = :nombre, periodo_negocio = :periodo, estado_pipeline = :estado, ultimo_paso_exitoso = :ultimo, paso_fallido = :fallido, reanudar_desde = :reanudar, observacion = :obs, execution_arn = :exec, fecha_actualizacion = :now, error_message = :err, estado_crawler_gold = :component_failed"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "RegistrarFallo_CrawlerSilver": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_registro_estado_pipeline"
+        }
+      ],
+      "Next": "FailState",
+      "Parameters": {
+        "ExpressionAttributeValues": {
+          ":amb": {
+            "S": "dev"
+          },
+          ":component_failed": {
+            "S": "FAILED"
+          },
+          ":err": {
+            "S.$": "States.JsonToString($.error_crawler_silver)"
+          },
+          ":estado": {
+            "S": "FAILED"
+          },
+          ":exec": {
+            "S.$": "$$.Execution.Id"
+          },
+          ":fallido": {
+            "S": "CrawlerSilver"
+          },
+          ":nombre": {
+            "S.$": "$.parametros_extraccion.parametros.nombre_caso"
+          },
+          ":now": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":obs": {
+            "S": "Falla registrada automáticamente en CrawlerSilver. Reanudar desde CrawlerSilver."
+          },
+          ":periodo": {
+            "S.$": "$.parametros_extraccion.parametros.periodo_negocio"
+          },
+          ":reanudar": {
+            "S": "CrawlerSilver"
+          },
+          ":ultimo": {
+            "S": "SilverJob"
+          }
+        },
+        "Key": {
+          "pipeline_id": {
+            "S.$": "States.Format('dev#{}#{}', $.parametros_extraccion.parametros.nombre_caso, $.parametros_extraccion.parametros.periodo_negocio)"
+          }
+        },
+        "TableName": "niif-dev-pipeline-estado",
+        "UpdateExpression": "SET ambiente = :amb, nombre_caso = :nombre, periodo_negocio = :periodo, estado_pipeline = :estado, ultimo_paso_exitoso = :ultimo, paso_fallido = :fallido, reanudar_desde = :reanudar, observacion = :obs, execution_arn = :exec, fecha_actualizacion = :now, error_message = :err, estado_crawler_silver = :component_failed"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "RegistrarFallo_GoldSCD": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_registro_estado_pipeline"
+        }
+      ],
+      "Next": "FailState",
+      "Parameters": {
+        "ExpressionAttributeValues": {
+          ":amb": {
+            "S": "dev"
+          },
+          ":component_failed": {
+            "S": "FAILED"
+          },
+          ":err": {
+            "S.$": "States.JsonToString($.error_gold_scd)"
+          },
+          ":estado": {
+            "S": "FAILED"
+          },
+          ":exec": {
+            "S.$": "$$.Execution.Id"
+          },
+          ":fallido": {
+            "S": "GoldSCD"
+          },
+          ":nombre": {
+            "S.$": "$.parametros_extraccion.parametros.nombre_caso"
+          },
+          ":now": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":obs": {
+            "S": "Falla registrada automáticamente en GoldSCD. Reanudar desde GoldSCD."
+          },
+          ":periodo": {
+            "S.$": "$.parametros_extraccion.parametros.periodo_negocio"
+          },
+          ":reanudar": {
+            "S": "GoldSCD"
+          },
+          ":ultimo": {
+            "S": "CrawlerSilver"
+          }
+        },
+        "Key": {
+          "pipeline_id": {
+            "S.$": "States.Format('dev#{}#{}', $.parametros_extraccion.parametros.nombre_caso, $.parametros_extraccion.parametros.periodo_negocio)"
+          }
+        },
+        "TableName": "niif-dev-pipeline-estado",
+        "UpdateExpression": "SET ambiente = :amb, nombre_caso = :nombre, periodo_negocio = :periodo, estado_pipeline = :estado, ultimo_paso_exitoso = :ultimo, paso_fallido = :fallido, reanudar_desde = :reanudar, observacion = :obs, execution_arn = :exec, fecha_actualizacion = :now, error_message = :err, estado_gold = :component_failed"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "RegistrarFallo_Remediacion": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_registro_estado_pipeline"
+        }
+      ],
+      "Next": "FailState",
+      "Parameters": {
+        "ExpressionAttributeValues": {
+          ":amb": {
+            "S": "dev"
+          },
+          ":component_failed": {
+            "S": "FAILED"
+          },
+          ":err": {
+            "S.$": "States.JsonToString($.error_remediacion)"
+          },
+          ":estado": {
+            "S": "FAILED"
+          },
+          ":exec": {
+            "S.$": "$$.Execution.Id"
+          },
+          ":fallido": {
+            "S": "Remediacion"
+          },
+          ":nombre": {
+            "S.$": "$.parametros_extraccion.parametros.nombre_caso"
+          },
+          ":now": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":obs": {
+            "S": "Falla registrada automáticamente en Remediacion. Reanudar desde Remediacion."
+          },
+          ":periodo": {
+            "S.$": "$.parametros_extraccion.parametros.periodo_negocio"
+          },
+          ":reanudar": {
+            "S": "Remediacion"
+          },
+          ":ultimo": {
+            "S": "ValidacionTecnica"
+          }
+        },
+        "Key": {
+          "pipeline_id": {
+            "S.$": "States.Format('dev#{}#{}', $.parametros_extraccion.parametros.nombre_caso, $.parametros_extraccion.parametros.periodo_negocio)"
+          }
+        },
+        "TableName": "niif-dev-pipeline-estado",
+        "UpdateExpression": "SET ambiente = :amb, nombre_caso = :nombre, periodo_negocio = :periodo, estado_pipeline = :estado, ultimo_paso_exitoso = :ultimo, paso_fallido = :fallido, reanudar_desde = :reanudar, observacion = :obs, execution_arn = :exec, fecha_actualizacion = :now, error_message = :err, estado_remediacion = :component_failed"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "RegistrarFallo_SilverJob": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_registro_estado_pipeline"
+        }
+      ],
+      "Next": "FailState",
+      "Parameters": {
+        "ExpressionAttributeValues": {
+          ":amb": {
+            "S": "dev"
+          },
+          ":component_failed": {
+            "S": "FAILED"
+          },
+          ":err": {
+            "S.$": "States.JsonToString($.error_silver)"
+          },
+          ":estado": {
+            "S": "FAILED"
+          },
+          ":exec": {
+            "S.$": "$$.Execution.Id"
+          },
+          ":fallido": {
+            "S": "SilverJob"
+          },
+          ":nombre": {
+            "S.$": "$.parametros_extraccion.parametros.nombre_caso"
+          },
+          ":now": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":obs": {
+            "S": "Falla registrada automáticamente en SilverJob. Reanudar desde SilverJob."
+          },
+          ":periodo": {
+            "S.$": "$.parametros_extraccion.parametros.periodo_negocio"
+          },
+          ":reanudar": {
+            "S": "SilverJob"
+          },
+          ":ultimo": {
+            "S": "Remediacion"
+          }
+        },
+        "Key": {
+          "pipeline_id": {
+            "S.$": "States.Format('dev#{}#{}', $.parametros_extraccion.parametros.nombre_caso, $.parametros_extraccion.parametros.periodo_negocio)"
+          }
+        },
+        "TableName": "niif-dev-pipeline-estado",
+        "UpdateExpression": "SET ambiente = :amb, nombre_caso = :nombre, periodo_negocio = :periodo, estado_pipeline = :estado, ultimo_paso_exitoso = :ultimo, paso_fallido = :fallido, reanudar_desde = :reanudar, observacion = :obs, execution_arn = :exec, fecha_actualizacion = :now, error_message = :err, estado_silver = :component_failed"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "RegistrarFallo_ValidacionTecnica": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_registro_estado_pipeline"
+        }
+      ],
+      "Next": "FailState",
+      "Parameters": {
+        "ExpressionAttributeValues": {
+          ":amb": {
+            "S": "dev"
+          },
+          ":component_failed": {
+            "S": "FAILED"
+          },
+          ":err": {
+            "S.$": "States.JsonToString($.error_validacion_tecnica)"
+          },
+          ":estado": {
+            "S": "FAILED"
+          },
+          ":exec": {
+            "S.$": "$$.Execution.Id"
+          },
+          ":fallido": {
+            "S": "ValidacionTecnica"
+          },
+          ":nombre": {
+            "S.$": "$.parametros_extraccion.parametros.nombre_caso"
+          },
+          ":now": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":obs": {
+            "S": "Falla registrada automáticamente en ValidacionTecnica. Reanudar desde ValidacionTecnica."
+          },
+          ":periodo": {
+            "S.$": "$.parametros_extraccion.parametros.periodo_negocio"
+          },
+          ":reanudar": {
+            "S": "ValidacionTecnica"
+          },
+          ":ultimo": {
+            "S": "CrawlerBronze"
+          }
+        },
+        "Key": {
+          "pipeline_id": {
+            "S.$": "States.Format('dev#{}#{}', $.parametros_extraccion.parametros.nombre_caso, $.parametros_extraccion.parametros.periodo_negocio)"
+          }
+        },
+        "TableName": "niif-dev-pipeline-estado",
+        "UpdateExpression": "SET ambiente = :amb, nombre_caso = :nombre, periodo_negocio = :periodo, estado_pipeline = :estado, ultimo_paso_exitoso = :ultimo, paso_fallido = :fallido, reanudar_desde = :reanudar, observacion = :obs, execution_arn = :exec, fecha_actualizacion = :now, error_message = :err, estado_validacion = :component_failed"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "RegistrarPipelineCompleto": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "ResolverNotificacion",
+          "ResultPath": "$.error_registro_estado_pipeline"
+        }
+      ],
+      "Next": "ResolverNotificacion",
+      "Parameters": {
+        "ExpressionAttributeValues": {
+          ":amb": {
+            "S": "dev"
+          },
+          ":crawler_gold_success": {
+            "S": "SUCCESS"
+          },
+          ":estado": {
+            "S": "PIPELINE_COMPLETO"
+          },
+          ":exec": {
+            "S.$": "$$.Execution.Id"
+          },
+          ":fallido": {
+            "S": "NONE"
+          },
+          ":nombre": {
+            "S.$": "$.parametros_extraccion.parametros.nombre_caso"
+          },
+          ":now": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":obs": {
+            "S": "Pipeline técnico completado hasta Gold y CrawlerGold."
+          },
+          ":periodo": {
+            "S.$": "$.parametros_extraccion.parametros.periodo_negocio"
+          },
+          ":reanudar": {
+            "S": "NONE"
+          },
+          ":ultimo": {
+            "S": "CrawlerGold"
+          }
+        },
+        "Key": {
+          "pipeline_id": {
+            "S.$": "States.Format('dev#{}#{}', $.parametros_extraccion.parametros.nombre_caso, $.parametros_extraccion.parametros.periodo_negocio)"
+          }
+        },
+        "TableName": "niif-dev-pipeline-estado",
+        "UpdateExpression": "SET ambiente = :amb, nombre_caso = :nombre, periodo_negocio = :periodo, estado_pipeline = :estado, ultimo_paso_exitoso = :ultimo, paso_fallido = :fallido, reanudar_desde = :reanudar, observacion = :obs, execution_arn = :exec, fecha_actualizacion = :now, estado_crawler_gold = :crawler_gold_success"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "Remediacion": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "RegistrarFallo_Remediacion",
+          "ResultPath": "$.error_remediacion"
+        }
+      ],
+      "Next": "SilverJob",
+      "Parameters": {
+        "Arguments": {
+          "--RUTA_DESTINO_REMEDIACION": "s3://alfa-datalake-dev-silver/niif/remediacion/primas_endosos/",
+          "--RUTA_ORIGEN_REMEDIACION": "s3://alfa-datalake-dev-silver/niif/t_data_domain/primas_endosos/validacion_tecnica_primas_endosos/",
+          "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-dev-assets/primas-endosos/parametros_extraccion.json"
+        },
+        "JobName": "niif-dev-remediacion-estandar"
+      },
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "ResultPath": null,
+      "Retry": [
+        {
+          "BackoffRate": 2,
+          "ErrorEquals": [
+            "Glue.AWSGlueException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2
+        }
+      ],
+      "Type": "Task"
+    },
+    "ResolverNotificacion": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_resolver_notificacion"
+        }
+      ],
+      "Next": "EvaluarModoNotificacion",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-composite-notification-evaluator",
+        "Payload": {
+          "configBucket": "niif-dev-assets",
+          "configKey": "primas-rentas/primasRentasEndosos.json",
+          "loteCargueId.$": "States.Format('{}', $.parametros_extraccion.parametros.lote_cargue_id)",
+          "mode": "RESOLVE_NOTIFICATION",
+          "period.$": "$.parametros_extraccion.parametros.periodo_negocio",
+          "sourceExecutionId.$": "$$.Execution.Id",
+          "useCaseId": "primasEndosos"
+        }
+      },
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "ResultPath": "$.resolver_notificacion",
+      "Retry": [
+        {
+          "BackoffRate": 2,
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 10,
+          "MaxAttempts": 2
+        }
+      ],
+      "Type": "Task"
+    },
+    "SilverJob": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "RegistrarFallo_SilverJob",
+          "ResultPath": "$.error_silver"
+        }
+      ],
+      "Next": "CrawlerSilver",
+      "Parameters": {
+        "Arguments": {
+          "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-dev-assets/primas-endosos/parametros_extraccion.json",
+          "--S3_SLV_PREP_PATH": "s3://alfa-datalake-dev-silver/niif/t_data_domain/primas_endosos/silver_preparado_primas_endosos/"
+        },
+        "JobName": "niif-dev-silver-primas-endosos"
+      },
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "ResultPath": null,
+      "Retry": [
+        {
+          "BackoffRate": 2,
+          "ErrorEquals": [
+            "Glue.AWSGlueException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2
+        }
+      ],
+      "Type": "Task"
+    },
+    "SuccessEsperandoComposite": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "Parameters": {
+        "TableName": "niif-dev-ejc-ejecuciones",
+        "Key": {
+          "PK": {
+            "S.$": "$.ejcPK"
+          },
+          "SK": {
+            "S.$": "$.ejcSK"
+          }
+        },
+        "UpdateExpression": "SET #estado = :estado, fechaFin = :fechaFin, executionArn = :executionArn",
+        "ExpressionAttributeNames": {
+          "#estado": "estado"
+        },
+        "ExpressionAttributeValues": {
+          ":estado": {
+            "S": "SUCCEEDED"
+          },
+          ":fechaFin": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":executionArn": {
+            "S.$": "$$.Execution.Id"
+          }
+        }
+      },
+      "ResultPath": null,
+      "Next": "EJCFinEsperandoComposite"
+    },
+    "SuccessSinDatosNuevos": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_registro_estado_pipeline"
+        }
+      ],
+      "Next": "ResolverRegeneracion",
+      "Parameters": {
+        "ExpressionAttributeValues": {
+          ":amb": {
+            "S": "dev"
+          },
+          ":estado": {
+            "S": "SUCCESS_SIN_DATOS_NUEVOS"
+          },
+          ":exec": {
+            "S.$": "$$.Execution.Id"
+          },
+          ":fallido": {
+            "S": "NONE"
+          },
+          ":nombre": {
+            "S.$": "$.parametros_extraccion.parametros.nombre_caso"
+          },
+          ":now": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":obs": {
+            "S": "Sin llaves nuevas. Se regenera desde Gold del periodo sin ejecutar Silver/Gold ni esperar miembros composite."
+          },
+          ":periodo": {
+            "S.$": "$.parametros_extraccion.parametros.periodo_negocio"
+          },
+          ":reanudar": {
+            "S": "NONE"
+          },
+          ":ultimo": {
+            "S": "ExtraccionEstandar"
+          }
+        },
+        "Key": {
+          "pipeline_id": {
+            "S.$": "States.Format('dev#{}#{}', $.parametros_extraccion.parametros.nombre_caso, $.parametros_extraccion.parametros.periodo_negocio)"
+          }
+        },
+        "TableName": "niif-dev-pipeline-estado",
+        "UpdateExpression": "SET ambiente = :amb, nombre_caso = :nombre, periodo_negocio = :periodo, estado_pipeline = :estado, ultimo_paso_exitoso = :ultimo, paso_fallido = :fallido, reanudar_desde = :reanudar, observacion = :obs, execution_arn = :exec, fecha_actualizacion = :now"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "ResultPath": null,
+      "Type": "Task"
+    },
+    "ValidacionTecnica": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "RegistrarFallo_ValidacionTecnica",
+          "ResultPath": "$.error_validacion_tecnica"
+        }
+      ],
+      "Next": "Remediacion",
+      "Parameters": {
+        "Arguments": {
+          "--RUTA_CONFIG_VALIDACION": "s3://niif-dev-assets/primas-endosos/config_val_tec_primas_endosos.json"
+        },
+        "JobName": "niif-dev-val-tecnica"
+      },
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "ResultPath": null,
+      "Retry": [
+        {
+          "BackoffRate": 2,
+          "ErrorEquals": [
+            "Glue.AWSGlueException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2
+        }
+      ],
+      "Type": "Task"
+    },
+    "EsperarCrawlerBronze": {
+      "Type": "Wait",
+      "Seconds": 20,
+      "Next": "ConsultarCrawlerBronze"
+    },
+    "ConsultarCrawlerBronze": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Parameters": {
+        "Name": "niif-dev-crawler-bronze"
+      },
+      "ResultPath": "$.crawler_bronze",
+      "Next": "EvaluarCrawlerBronze",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.crawler_bronze_error",
+          "Next": "RegistrarFallo_CrawlerBronze"
+        }
+      ]
+    },
+    "EvaluarCrawlerBronze": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.crawler_bronze.Crawler.State",
+          "StringEquals": "RUNNING",
+          "Next": "EsperarCrawlerBronze"
+        },
+        {
+          "Variable": "$.crawler_bronze.Crawler.State",
+          "StringEquals": "STOPPING",
+          "Next": "EsperarCrawlerBronze"
+        },
+        {
+          "Variable": "$.crawler_bronze.Crawler.LastCrawl",
+          "IsPresent": false,
+          "Next": "EsperarCrawlerBronze"
+        },
+        {
+          "Variable": "$.crawler_bronze.Crawler.LastCrawl.Status",
+          "StringEquals": "SUCCEEDED",
+          "Next": "ValidacionTecnica"
+        },
+        {
+          "Variable": "$.crawler_bronze.Crawler.LastCrawl.Status",
+          "StringEquals": "FAILED",
+          "Next": "RegistrarFallo_CrawlerBronze"
+        },
+        {
+          "Variable": "$.crawler_bronze.Crawler.LastCrawl.Status",
+          "StringEquals": "CANCELLED",
+          "Next": "RegistrarFallo_CrawlerBronze"
+        }
+      ],
+      "Default": "EsperarCrawlerBronze"
+    },
+    "EsperarCrawlerSilver": {
+      "Type": "Wait",
+      "Seconds": 20,
+      "Next": "ConsultarCrawlerSilver"
+    },
+    "ConsultarCrawlerSilver": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Parameters": {
+        "Name": "niif-dev-crawler-silver"
+      },
+      "ResultPath": "$.crawler_silver",
+      "Next": "EvaluarCrawlerSilver",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.crawler_silver_error",
+          "Next": "RegistrarFallo_CrawlerSilver"
+        }
+      ]
+    },
+    "EvaluarCrawlerSilver": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.crawler_silver.Crawler.State",
+          "StringEquals": "RUNNING",
+          "Next": "EsperarCrawlerSilver"
+        },
+        {
+          "Variable": "$.crawler_silver.Crawler.State",
+          "StringEquals": "STOPPING",
+          "Next": "EsperarCrawlerSilver"
+        },
+        {
+          "Variable": "$.crawler_silver.Crawler.LastCrawl",
+          "IsPresent": false,
+          "Next": "EsperarCrawlerSilver"
+        },
+        {
+          "Variable": "$.crawler_silver.Crawler.LastCrawl.Status",
+          "StringEquals": "SUCCEEDED",
+          "Next": "GoldSCD"
+        },
+        {
+          "Variable": "$.crawler_silver.Crawler.LastCrawl.Status",
+          "StringEquals": "FAILED",
+          "Next": "RegistrarFallo_CrawlerSilver"
+        },
+        {
+          "Variable": "$.crawler_silver.Crawler.LastCrawl.Status",
+          "StringEquals": "CANCELLED",
+          "Next": "RegistrarFallo_CrawlerSilver"
+        }
+      ],
+      "Default": "EsperarCrawlerSilver"
+    },
+    "EsperarCrawlerGold": {
+      "Type": "Wait",
+      "Seconds": 20,
+      "Next": "ConsultarCrawlerGold"
+    },
+    "ConsultarCrawlerGold": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Parameters": {
+        "Name": "niif-dev-crawler-gold"
+      },
+      "ResultPath": "$.crawler_gold",
+      "Next": "EvaluarCrawlerGold",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.crawler_gold_error",
+          "Next": "RegistrarFallo_CrawlerGold"
+        }
+      ]
+    },
+    "EvaluarCrawlerGold": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.crawler_gold.Crawler.State",
+          "StringEquals": "RUNNING",
+          "Next": "EsperarCrawlerGold"
+        },
+        {
+          "Variable": "$.crawler_gold.Crawler.State",
+          "StringEquals": "STOPPING",
+          "Next": "EsperarCrawlerGold"
+        },
+        {
+          "Variable": "$.crawler_gold.Crawler.LastCrawl",
+          "IsPresent": false,
+          "Next": "EsperarCrawlerGold"
+        },
+        {
+          "Variable": "$.crawler_gold.Crawler.LastCrawl.Status",
+          "StringEquals": "SUCCEEDED",
+          "Next": "RegistrarPipelineCompleto"
+        },
+        {
+          "Variable": "$.crawler_gold.Crawler.LastCrawl.Status",
+          "StringEquals": "FAILED",
+          "Next": "RegistrarFallo_CrawlerGold"
+        },
+        {
+          "Variable": "$.crawler_gold.Crawler.LastCrawl.Status",
+          "StringEquals": "CANCELLED",
+          "Next": "RegistrarFallo_CrawlerGold"
+        }
+      ],
+      "Default": "EsperarCrawlerGold"
+    },
+    "EvaluarModoEjecucion": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "And": [
+            {
+              "Variable": "$.modoEjecucion",
+              "IsPresent": true
+            },
+            {
+              "Variable": "$.modoEjecucion",
+              "StringEquals": "REPROCESO_COMPLETO"
+            }
+          ],
+          "Next": "CrawlerBronze"
+        }
+      ],
+      "Default": "EvaluarDatosNuevos"
+    },
+    "EJCFailState": {
+      "Type": "Fail",
+      "Error": "NIIF17PipelineFailed",
+      "Cause": "Error en la ejecucion del pipeline Reserva Matematica ARP"
+    },
+    "EJCFinEsperandoComposite": {
+      "Type": "Succeed"
+    },
+    "RegistrarEJCSucceeded": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "Parameters": {
+        "TableName": "niif-dev-ejc-ejecuciones",
+        "Key": {
+          "PK": {
+            "S.$": "$.ejcPK"
+          },
+          "SK": {
+            "S.$": "$.ejcSK"
+          }
+        },
+        "UpdateExpression": "SET #estado = :estado, fechaFin = :fechaFin, executionArn = :executionArn",
+        "ExpressionAttributeNames": {
+          "#estado": "estado"
+        },
+        "ExpressionAttributeValues": {
+          ":estado": {
+            "S": "SUCCEEDED"
+          },
+          ":fechaFin": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":executionArn": {
+            "S.$": "$$.Execution.Id"
+          }
+        }
+      },
+      "ResultPath": null,
+      "End": true
+    },
+    "ResolverRegeneracion": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_resolver_notificacion"
+        }
+      ],
+      "Next": "CertificarRegeneracion",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-composite-notification-evaluator",
+        "Payload": {
+          "configBucket": "niif-dev-assets",
+          "configKey": "primas-rentas/primasRentasEndosos.json",
+          "loteCargueId.$": "States.Format('{}', $.parametros_extraccion.parametros.lote_cargue_id)",
+          "mode": "RESOLVE_NOTIFICATION",
+          "period.$": "$.parametros_extraccion.parametros.periodo_negocio",
+          "sourceExecutionId.$": "$$.Execution.Id",
+          "useCaseId": "primasEndosos",
+          "regeneracionSinDatosNuevos": true
+        }
+      },
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "ResultPath": "$.resolver_notificacion",
+      "Retry": [
+        {
+          "BackoffRate": 2,
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 10,
+          "MaxAttempts": 2
+        }
+      ],
+      "Type": "Task"
+    },
+    "CertificarRegeneracion": {
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState",
+          "ResultPath": "$.error_notificacion_certificacion"
+        }
+      ],
+      "Parameters": {
+        "Arguments": {
+          "--CONFIG_BUCKET.$": "$.resolver_notificacion.Payload.configBucket",
+          "--CONFIG_KEY.$": "$.resolver_notificacion.Payload.configKey",
+          "--ENVIRONMENT": "dev",
+          "--GLOBAL_CONFIG_KEY": "configs/certification/json_global_notif_cert.json",
+          "--LOG_LEVEL": "INFO",
+          "--LOTE_CARGUE_ID.$": "$.resolver_notificacion.Payload.loteCargueId",
+          "--PERIOD.$": "$.resolver_notificacion.Payload.period",
+          "--REGENERACION_SIN_DATOS_NUEVOS": "true"
+        },
+        "JobName": "niif-dev-certification"
+      },
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "ResultPath": "$.resultado_notificacion_certificacion",
+      "Retry": [
+        {
+          "BackoffRate": 2,
+          "ErrorEquals": [
+            "Glue.AWSGlueException",
+            "Glue.ConcurrentRunsExceededException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2
+        }
+      ],
+      "Type": "Task",
+      "Next": "RegistrarEJCSucceeded"
+    }
+  }
+}
+

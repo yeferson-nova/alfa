@@ -1,0 +1,14 @@
+53x06brwqh	Certificación API	/post_login	GET	arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:533267035849:function:postLogin/invocations
+53x06brwqh	Certificación API	/certificar	OPTIONS	-
+53x06brwqh	Certificación API	/certificar	POST	arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-certification/invocations
+53x06brwqh	Certificación API	/no_certificar	OPTIONS	-
+53x06brwqh	Certificación API	/no_certificar	POST	arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-certification/invocations
+53x06brwqh	Certificación API	/redirect	GET	arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-short-link-redirect/invocations
+53x06brwqh	Certificación API	/r	GET	arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:533267035849:function:datalake-dev-niif-short-link-redirect/invocations
+hfoy06vw40	datalake-dev-niif-api-gtw	/r	GET	arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:533267035849:function:niif-dev-short-link-redirect/invocations
+hfoy06vw40	datalake-dev-niif-api-gtw	/certify	OPTIONS	-
+hfoy06vw40	datalake-dev-niif-api-gtw	/certify	POST	arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:533267035849:function:niif-dev-certification/invocations
+hfoy06vw40	datalake-dev-niif-api-gtw	/redirect	GET	arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:533267035849:function:niif-dev-short-link-redirect/invocations
+hfoy06vw40	datalake-dev-niif-api-gtw	/post_login	GET	arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:533267035849:function:niif-post-login/invocations
+hfoy06vw40	datalake-dev-niif-api-gtw	/not_certify	OPTIONS	-
+hfoy06vw40	datalake-dev-niif-api-gtw	/not_certify	POST	arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:533267035849:function:niif-dev-certification/invocations

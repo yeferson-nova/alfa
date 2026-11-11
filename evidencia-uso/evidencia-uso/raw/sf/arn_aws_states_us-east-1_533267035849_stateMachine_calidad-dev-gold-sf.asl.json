@@ -1,0 +1,167 @@
+{
+  "Comment": "Gold",
+  "StartAt": "ExecuteDimQualityJob",
+  "States": {
+    "ExecuteDimQualityJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "calidad-dev-dim-quality-job",
+        "Arguments": {}
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.TaskFailed"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 1.5
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.errorDetail",
+          "Next": "ErrorHandling"
+        }
+      ],
+      "Next": "ExecuteGoldQualityJob"
+    },
+    "ExecuteGoldQualityJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "calidad-dev-gold-job",
+        "Arguments": {}
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.TaskFailed"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 1.5
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.errorDetail",
+          "Next": "ErrorHandling"
+        }
+      ],
+      "Next": "ExecuteGoldPerfilamientoJob"
+    },
+    "ExecuteGoldPerfilamientoJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "calidad-dev-gold-perfilamiento-job",
+        "Arguments": {}
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.TaskFailed"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 1.5
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.errorDetail",
+          "Next": "ErrorHandling"
+        }
+      ],
+      "Next": "ExecuteGoldCrawler"
+    },
+    "ExecuteGoldCrawler": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Comment": "Ejecutar crawler Gold",
+      "Parameters": {
+        "Name": "calidad-dev-gold-crwl"
+      },
+      "ResultPath": "$.crawler_start_result",
+      "Retry": [
+        {
+          "ErrorEquals": ["Glue.CrawlerRunningException"],
+          "IntervalSeconds": 60,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.errorDetail",
+          "Next": "ErrorHandling"
+        }
+      ],
+      "Next": "WaitForGoldCrawlerIsFinished"
+    },
+    "WaitForGoldCrawlerIsFinished": {
+      "Type": "Wait",
+      "Seconds": 30,
+      "Next": "GetGoldCrawlerStatus"
+    },
+    "GetGoldCrawlerStatus": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Comment": "Obtener estado del crawler Gold",
+      "Parameters": {
+        "Name": "calidad-dev-gold-crwl"
+      },
+      "ResultPath": "$.crawler_status",
+      "Next": "CheckGoldCrawlerStatus"
+    },
+    "CheckGoldCrawlerStatus": {
+      "Type": "Choice",
+      "Comment": "Verificar estatus del crawler Gold",
+      "Choices": [
+        {
+          "Variable": "$.crawler_status.Crawler.State",
+          "StringEquals": "RUNNING",
+          "Next": "WaitForGoldCrawlerIsFinished"
+        },
+        {
+          "Variable": "$.crawler_status.Crawler.State",
+          "StringEquals": "FAILED",
+          "Next": "ErrorGoldCrawler"
+        }
+      ],
+      "Default": "Success"
+    },
+    "ErrorGoldCrawler": {
+      "Type": "Pass",
+      "Parameters": {
+        "Error": "CrawlerFailedError",
+        "Cause": "El crawler terminó con estado FAILED en Glue."
+      },
+      "ResultPath": "$.errorDetalle",
+      "Next": "ErrorHandling"
+    },
+    "ErrorHandling": {
+      "Type": "Fail",
+      "CausePath": "$.errorDetail.Error",
+      "ErrorPath": "$.errorDetail.Cause"
+    },
+    "Success": {
+      "Type": "Succeed",
+      "Comment": "Flujo finalizado correctamente"
+    }
+  }
+}

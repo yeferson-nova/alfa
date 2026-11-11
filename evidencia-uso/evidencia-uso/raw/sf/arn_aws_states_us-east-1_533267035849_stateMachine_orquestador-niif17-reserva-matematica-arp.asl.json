@@ -1,0 +1,269 @@
+{
+  "Comment": "Orquestacion NIIF17 - Reserva Matematica ARP (Extraccion Estandar -> Decision datos nuevos -> Crawler Bronze -> Validacion Tecnica -> Remediacion -> Silver -> Gold SCD)",
+  "StartAt": "ExtraccionEstandar",
+  "States": {
+    "ExtraccionEstandar": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "datalake-dev-niif-extraccion-estandar-optimizado",
+        "Arguments": {
+          "--RUTA_CONFIG_EXTRACCION": "s3://niif-dev-assets/reserva-matematica-arp/config_extraccion_reserva_matematica_arp.json"
+        }
+      },
+      "ResultPath": null,
+      "Next": "LeerParametrosExtraccion",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.AWSGlueException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_extraccion",
+          "Next": "FailState"
+        }
+      ]
+    },
+    "LeerParametrosExtraccion": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:s3:getObject",
+      "Parameters": {
+        "Bucket": "niif-dev-assets",
+        "Key": "reserva-matematica-arp/parametros_extraccion.json"
+      },
+      "ResultPath": "$.parametros_raw",
+      "Next": "ParsearParametrosExtraccion",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_lectura_parametros",
+          "Next": "FailState"
+        }
+      ]
+    },
+    "ParsearParametrosExtraccion": {
+      "Type": "Pass",
+      "Parameters": {
+        "parametros.$": "States.StringToJson($.parametros_raw.Body)"
+      },
+      "ResultPath": "$.parametros_extraccion",
+      "Next": "EvaluarDatosNuevos"
+    },
+    "EvaluarDatosNuevos": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.parametros_extraccion.parametros.hay_datos_nuevos",
+          "BooleanEquals": false,
+          "Next": "SuccessSinDatosNuevos"
+        }
+      ],
+      "Default": "CrawlerBronze"
+    },
+    "SuccessSinDatosNuevos": {
+      "Type": "Succeed",
+      "Comment": "Extraccion finalizada correctamente sin datos nuevos. Se omite validacion, remediacion, silver y gold."
+    },
+    "CrawlerBronze": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Parameters": {
+        "Name": "crawler-niif-Bronze"
+      },
+      "ResultPath": null,
+      "Next": "ValidacionTecnica",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_crawler_bronze",
+          "Next": "FailState"
+        }
+      ]
+    },
+    "ValidacionTecnica": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "datalake-dev-niif-val-tecnica",
+        "Arguments": {
+          "--RUTA_CONFIG_VALIDACION": "s3://niif-dev-assets/reserva-matematica-arp/config_val_tec_reserva_matematica_arp.json"
+        }
+      },
+      "ResultPath": null,
+      "Next": "Remediacion",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.AWSGlueException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_validacion_tecnica",
+          "Next": "FailState"
+        }
+      ]
+    },
+    "Remediacion": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "datalake-dev-niif-remediacion-estandar",
+        "Arguments": {
+          "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-dev-assets/reserva-matematica-arp/parametros_extraccion.json",
+          "--RUTA_ORIGEN_REMEDIACION": "s3://alfa-datalake-dev-silver/niif/t_data_domain/reserva_matematica_arp/validacion_tecnica_reserva_matematica_arp/",
+          "--RUTA_DESTINO_REMEDIACION": "s3://alfa-datalake-dev-silver/niif/remediacion/reserva_matematica_arp/",
+          "--RUTA_CONFIG_REMEDIACION": "s3://niif-dev-assets/reserva-matematica-arp/config_remediacion_reserva_matematica_arp.json"
+        }
+      },
+      "ResultPath": null,
+      "Next": "SilverJob",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.AWSGlueException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_remediacion",
+          "Next": "FailState"
+        }
+      ]
+    },
+    "SilverJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "niif-dev-silver-reserva-matematica-arp",
+        "Arguments": {
+          "--S3_SLV_PREP_PATH": "s3://alfa-datalake-dev-silver/niif/t_data_domain/reserva_matematica_arp/silver_preparado_reserva_matematica_arp/",
+          "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-dev-assets/reserva-matematica-arp/parametros_extraccion.json",
+          "--S3_TMP_PREP_PATH": "s3://alfa-datalake-dev-silver/niif/t_data_domain/reserva_matematica_arp/tmp_preparacion_reserva_matematica_arp/",
+          "--PER_CORTE.$": "$.parametros_extraccion.parametros.periodo_negocio"
+        }
+      },
+      "ResultPath": null,
+      "Next": "CrawlerSilver",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.AWSGlueException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_silver",
+          "Next": "FailState"
+        }
+      ]
+    },
+    "CrawlerSilver": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Parameters": {
+        "Name": "crawler-niif-silver"
+      },
+      "ResultPath": null,
+      "Next": "GoldSCD",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_crawler_silver",
+          "Next": "FailState"
+        }
+      ]
+    },
+    "GoldSCD": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "datalake-dev-niif-scd",
+        "Arguments": {
+          "--RUTA_CONFIG_SCD": "s3://niif-dev-assets/reserva-matematica-arp/config_scd_reserva_matematica_arp.json",
+          "--RUTA_PARAMETROS_EXTRACCION": "s3://niif-dev-assets/reserva-matematica-arp/parametros_extraccion.json"
+        }
+      },
+      "ResultPath": null,
+      "Next": "CrawlerGold",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.AWSGlueException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_gold_scd",
+          "Next": "FailState"
+        }
+      ]
+    },
+    "CrawlerGold": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Parameters": {
+        "Name": "crawler-niif-gold"
+      },
+      "ResultPath": null,
+      "End": true,
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_crawler_gold",
+          "Next": "FailState"
+        }
+      ]
+    },
+    "FailState": {
+      "Type": "Fail",
+      "Error": "NIIF17PipelineFailed",
+      "Cause": "Error en la ejecucion del pipeline Reserva Matematica ARP"
+    }
+  }
+}

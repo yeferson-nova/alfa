@@ -1,0 +1,71 @@
+{
+  "Comment": "PCR Vida POC directa por cuatro ramas",
+  "StartAt": "PrepararRamas",
+  "States": {
+    "PrepararRamas": {
+      "Type": "Pass",
+      "Parameters": {
+        "ramas": [
+          {
+            "nombre": "RIESGO_OBJETO",
+            "jobName": "niif-dev-pcr-vida-riesgo-objeto-poc"
+          },
+          {
+            "nombre": "POLIZA",
+            "jobName": "niif-dev-pcr-vida-poliza-poc"
+          },
+          {
+            "nombre": "MOVIMIENTOS",
+            "jobName": "niif-dev-pcr-vida-movimientos-poc"
+          },
+          {
+            "nombre": "TERCEROS",
+            "jobName": "niif-dev-pcr-vida-terceros-poc"
+          }
+        ]
+      },
+      "Next": "EjecutarRamas"
+    },
+    "EjecutarRamas": {
+      "Type": "Map",
+      "ItemsPath": "$.ramas",
+      "MaxConcurrency": 4,
+      "ItemSelector": {
+        "nombre.$": "$$.Map.Item.Value.nombre",
+        "jobName.$": "$$.Map.Item.Value.jobName"
+      },
+      "ItemProcessor": {
+        "ProcessorConfig": {
+          "Mode": "INLINE"
+        },
+        "StartAt": "EjecutarRama",
+        "States": {
+          "EjecutarRama": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::glue:startJobRun.sync",
+            "Parameters": {
+              "JobName.$": "$.jobName"
+            },
+            "ResultPath": "$.resultado",
+            "End": true
+          }
+        }
+      },
+      "ResultPath": "$.resultadosRamas",
+      "Next": "ConsolidarParametrosExtraccion"
+    },
+    "FinPOC": {
+      "Type": "Succeed"
+    },
+    "ConsolidarParametrosExtraccion": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "niif-dev-pcr-vida-consolidar-parametros-poc"
+      },
+      "ResultPath": "$.resultadoConsolidacion",
+      "Next": "FinPOC"
+    }
+  }
+}
+

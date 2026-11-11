@@ -1,0 +1,659 @@
+{
+  "Comment": "Orquestacion NIIF17 Primas Previsional: Gestor JSON -> Bronze -> Gold SCD -> Certificacion opcional",
+  "StartAt": "ValidarEntrada",
+  "States": {
+    "ValidarEntrada": {
+      "Type": "Pass",
+      "Next": "PrepararFechaCarga",
+      "Parameters": {
+        "notificar": true
+      }
+    },
+    "EjecutarGestorJSON": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "niif-dev-gestor-archivos",
+        "Arguments": {
+          "--USE_JSON_CONFIG": "true",
+          "--CONFIG_BUCKET": "niif-dev-assets",
+          "--CONFIG_KEY": "previsional/niif17_primas_previsional.json",
+          "--FECHA_CARGA.$": "$.fecha_carga",
+          "--PERIOD": "AUTO"
+        }
+      },
+      "ResultPath": "$.resultado_gestor",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.AWSGlueException",
+            "Glue.ConcurrentRunsExceededException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_gestor",
+          "Next": "RegistrarFalloGestor"
+        }
+      ],
+      "Next": "ValidarSalidaOUT"
+    },
+    "ValidarSalidaOUT": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:s3:headObject",
+      "Parameters": {
+        "Bucket": "niif-dev-landing",
+        "Key.$": "States.Format('NIIF17_PRIMAS_PREVISIONAL/OUT/ARCHIVO_CESION_PREVISIONALES/fecha_carga={}/ARCHIVO_CESION_PREVISIONALES.xlsx', $.fecha_carga)"
+      },
+      "ResultPath": "$.resultado_out",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_salida_out",
+          "Next": "RegistrarFalloSalidaOUT"
+        }
+      ],
+      "Next": "LeerMetadataEjecucion"
+    },
+    "IniciarCrawlerBronze": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Parameters": {
+        "Name": "niif-dev-crawler-previsional-bronze"
+      },
+      "ResultPath": null,
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "Glue.CrawlerRunningException"
+          ],
+          "ResultPath": "$.crawler_bronze_running",
+          "Next": "EsperarCrawlerBronze"
+        },
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_crawler_bronze",
+          "Next": "RegistrarFalloCrawlerBronze"
+        }
+      ],
+      "Next": "EsperarCrawlerBronze"
+    },
+    "EsperarCrawlerBronze": {
+      "Type": "Wait",
+      "Seconds": 20,
+      "Next": "ConsultarCrawlerBronze"
+    },
+    "ConsultarCrawlerBronze": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Parameters": {
+        "Name": "niif-dev-crawler-previsional-bronze"
+      },
+      "ResultPath": "$.crawler_bronze",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_crawler_bronze",
+          "Next": "RegistrarFalloCrawlerBronze"
+        }
+      ],
+      "Next": "EvaluarCrawlerBronze"
+    },
+    "EvaluarCrawlerBronze": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.crawler_bronze.Crawler.State",
+          "StringEquals": "RUNNING",
+          "Next": "EsperarCrawlerBronze"
+        },
+        {
+          "Variable": "$.crawler_bronze.Crawler.State",
+          "StringEquals": "STOPPING",
+          "Next": "EsperarCrawlerBronze"
+        },
+        {
+          "And": [
+            {
+              "Variable": "$.crawler_bronze.Crawler.State",
+              "StringEquals": "READY"
+            },
+            {
+              "Variable": "$.crawler_bronze.Crawler.LastCrawl.Status",
+              "IsPresent": true
+            },
+            {
+              "Variable": "$.crawler_bronze.Crawler.LastCrawl.Status",
+              "StringEquals": "SUCCEEDED"
+            }
+          ],
+          "Next": "EjecutarGoldPrevisional"
+        }
+      ],
+      "Default": "RegistrarFalloCrawlerBronze"
+    },
+    "EjecutarGoldPrevisional": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "niif-dev-gold-scd",
+        "Arguments": {
+          "--RUTA_CONFIG_SCD": "s3://niif-dev-assets/previsional/niif17_primas_previsional_gold.json",
+          "--FECHA_CARGA.$": "$.fecha_carga",
+          "--LOTE_CARGUE_ID.$": "States.Format('{}', $.lote_cargue_id)"
+        }
+      },
+      "ResultPath": "$.resultado_gold",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.AWSGlueException",
+            "Glue.ConcurrentRunsExceededException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_gold",
+          "Next": "RegistrarFalloGold"
+        }
+      ],
+      "Next": "IniciarCrawlerGold"
+    },
+    "IniciarCrawlerGold": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Parameters": {
+        "Name": "niif-dev-crawler-previsional-gold"
+      },
+      "ResultPath": null,
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "Glue.CrawlerRunningException"
+          ],
+          "ResultPath": "$.crawler_gold_running",
+          "Next": "EsperarCrawlerGold"
+        },
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_crawler_gold",
+          "Next": "RegistrarFalloCrawlerGold"
+        }
+      ],
+      "Next": "EsperarCrawlerGold"
+    },
+    "EsperarCrawlerGold": {
+      "Type": "Wait",
+      "Seconds": 20,
+      "Next": "ConsultarCrawlerGold"
+    },
+    "ConsultarCrawlerGold": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Parameters": {
+        "Name": "niif-dev-crawler-previsional-gold"
+      },
+      "ResultPath": "$.crawler_gold",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_crawler_gold",
+          "Next": "RegistrarFalloCrawlerGold"
+        }
+      ],
+      "Next": "EvaluarCrawlerGold"
+    },
+    "EvaluarCrawlerGold": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.crawler_gold.Crawler.State",
+          "StringEquals": "RUNNING",
+          "Next": "EsperarCrawlerGold"
+        },
+        {
+          "Variable": "$.crawler_gold.Crawler.State",
+          "StringEquals": "STOPPING",
+          "Next": "EsperarCrawlerGold"
+        },
+        {
+          "And": [
+            {
+              "Variable": "$.crawler_gold.Crawler.State",
+              "StringEquals": "READY"
+            },
+            {
+              "Variable": "$.crawler_gold.Crawler.LastCrawl.Status",
+              "IsPresent": true
+            },
+            {
+              "Variable": "$.crawler_gold.Crawler.LastCrawl.Status",
+              "StringEquals": "SUCCEEDED"
+            }
+          ],
+          "Next": "RegistrarPipelineCompleto"
+        }
+      ],
+      "Default": "RegistrarFalloCrawlerGold"
+    },
+    "RegistrarPipelineCompleto": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "Parameters": {
+        "TableName": "niif-dev-pipeline-estado",
+        "Key": {
+          "pipeline_id": {
+            "S.$": "States.Format('dev#primas_previsional#{}', $.periodo)"
+          }
+        },
+        "UpdateExpression": "SET ambiente = :amb, nombre_caso = :nombre, periodo_negocio = :periodo, estado_pipeline = :estado, ultimo_paso_exitoso = :ultimo, paso_fallido = :fallido, reanudar_desde = :reanudar, observacion = :obs, execution_arn = :exec, fecha_actualizacion = :now, estado_crawler_gold = :crawler REMOVE error_message",
+        "ExpressionAttributeValues": {
+          ":amb": {
+            "S": "dev"
+          },
+          ":nombre": {
+            "S": "primas_previsional"
+          },
+          ":periodo": {
+            "S.$": "$.periodo"
+          },
+          ":estado": {
+            "S": "PIPELINE_COMPLETO"
+          },
+          ":ultimo": {
+            "S": "CrawlerGold"
+          },
+          ":fallido": {
+            "S": "NONE"
+          },
+          ":reanudar": {
+            "S": "NONE"
+          },
+          ":obs": {
+            "S": "Pipeline Primas Previsional completado hasta Gold."
+          },
+          ":exec": {
+            "S.$": "$$.Execution.Id"
+          },
+          ":now": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":crawler": {
+            "S": "SUCCESS"
+          }
+        }
+      },
+      "ResultPath": null,
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_registro_pipeline",
+          "Next": "RegistrarFalloEstadoPipeline"
+        }
+      ],
+      "Next": "EvaluarNotificar"
+    },
+    "EvaluarNotificar": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.notificar",
+          "BooleanEquals": true,
+          "Next": "ResolverNotificacion"
+        }
+      ],
+      "Default": "FinalizarSinCertificacion"
+    },
+    "ResolverNotificacion": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:533267035849:function:niif-dev-composite-notification-evaluator",
+        "Payload": {
+          "mode": "RESOLVE_NOTIFICATION",
+          "useCaseId": "Previsional",
+          "period.$": "$.periodo",
+          "loteCargueId.$": "States.Format('{}', $.lote_cargue_id)",
+          "configBucket": "niif-dev-assets",
+          "configKey": "previsional/previsional.json",
+          "sourceExecutionId.$": "$$.Execution.Id"
+        }
+      },
+      "ResultPath": "$.resolver_notificacion",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 10,
+          "MaxAttempts": 2,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_notificacion",
+          "Next": "FailState"
+        }
+      ],
+      "Next": "EvaluarResolverNotificacion"
+    },
+    "EvaluarResolverNotificacion": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.resolver_notificacion.Payload.shouldStartCertification",
+          "BooleanEquals": true,
+          "Next": "EjecutarCertificacion"
+        }
+      ],
+      "Default": "FinalizarSinCertificacion"
+    },
+    "EjecutarCertificacion": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "niif-dev-certification",
+        "Arguments": {
+          "--CONFIG_BUCKET.$": "$.resolver_notificacion.Payload.configBucket",
+          "--CONFIG_KEY.$": "$.resolver_notificacion.Payload.configKey",
+          "--GLOBAL_CONFIG_KEY": "previsional/config/json_global_notif_cert.json",
+          "--PERIOD.$": "$.resolver_notificacion.Payload.period",
+          "--ENVIRONMENT": "dev",
+          "--LOG_LEVEL": "INFO",
+          "--LOTE_CARGUE_ID.$": "$.resolver_notificacion.Payload.loteCargueId"
+        }
+      },
+      "ResultPath": "$.resultado_certificacion",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.AWSGlueException",
+            "Glue.ConcurrentRunsExceededException"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_certificacion",
+          "Next": "FailState"
+        }
+      ],
+      "End": true
+    },
+    "RegistrarFalloGestor": {
+      "Type": "Pass",
+      "Parameters": {
+        "paso_fallido": "EjecutarGestorJSON",
+        "detalle.$": "$.error_gestor"
+      },
+      "ResultPath": "$.fallo",
+      "Next": "RegistrarFalloPipeline"
+    },
+    "RegistrarFalloSalidaOUT": {
+      "Type": "Pass",
+      "Parameters": {
+        "paso_fallido": "ValidarSalidaOUT",
+        "detalle.$": "$.error_salida_out"
+      },
+      "ResultPath": "$.fallo",
+      "Next": "RegistrarFalloPipeline"
+    },
+    "RegistrarFalloCrawlerBronze": {
+      "Type": "Pass",
+      "Parameters": {
+        "paso_fallido": "CrawlerBronze",
+        "detalle.$": "$.error_crawler_bronze"
+      },
+      "ResultPath": "$.fallo",
+      "Next": "RegistrarFalloPipeline"
+    },
+    "RegistrarFalloGold": {
+      "Type": "Pass",
+      "Parameters": {
+        "paso_fallido": "GoldPrevisional",
+        "detalle.$": "$.error_gold"
+      },
+      "ResultPath": "$.fallo",
+      "Next": "RegistrarFalloPipeline"
+    },
+    "RegistrarFalloCrawlerGold": {
+      "Type": "Pass",
+      "Parameters": {
+        "paso_fallido": "CrawlerGold",
+        "detalle.$": "$.error_crawler_gold"
+      },
+      "ResultPath": "$.fallo",
+      "Next": "RegistrarFalloPipeline"
+    },
+    "RegistrarFalloPipeline": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "Parameters": {
+        "TableName": "niif-dev-pipeline-estado",
+        "Key": {
+          "pipeline_id": {
+            "S.$": "States.Format('dev#primas_previsional#{}', $.periodo)"
+          }
+        },
+        "UpdateExpression": "SET ambiente = :amb, nombre_caso = :nombre, periodo_negocio = :periodo, estado_pipeline = :estado, paso_fallido = :fallido, reanudar_desde = :reanudar, observacion = :obs, execution_arn = :exec, fecha_actualizacion = :now, error_message = :err REMOVE ultimo_paso_exitoso, estado_crawler_gold",
+        "ExpressionAttributeValues": {
+          ":amb": {
+            "S": "dev"
+          },
+          ":nombre": {
+            "S": "primas_previsional"
+          },
+          ":periodo": {
+            "S.$": "$.periodo"
+          },
+          ":estado": {
+            "S": "FAILED"
+          },
+          ":fallido": {
+            "S.$": "$.fallo.paso_fallido"
+          },
+          ":reanudar": {
+            "S.$": "$.fallo.paso_fallido"
+          },
+          ":obs": {
+            "S": "Falla registrada automáticamente en Primas Previsional."
+          },
+          ":exec": {
+            "S.$": "$$.Execution.Id"
+          },
+          ":now": {
+            "S.$": "$$.State.EnteredTime"
+          },
+          ":err": {
+            "S.$": "States.JsonToString($.fallo.detalle)"
+          }
+        }
+      },
+      "ResultPath": null,
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_registrar_fallo",
+          "Next": "FailState"
+        }
+      ],
+      "Next": "FailState"
+    },
+    "FailState": {
+      "Type": "Fail",
+      "Error": "NIIF17PrimasPrevisionalPipelineFailed",
+      "Cause": "Error en pipeline Primas Previsional."
+    },
+    "PrepararFechaCarga": {
+      "Type": "Pass",
+      "Parameters": {
+        "periodo": "PENDIENTE",
+        "notificar": true,
+        "fecha_carga.$": "States.Format('{} {}', States.ArrayGetItem(States.StringSplit($$.Execution.StartTime, 'T'), 0), States.ArrayGetItem(States.StringSplit(States.ArrayGetItem(States.StringSplit($$.Execution.StartTime, 'T'), 1), '.'), 0))"
+      },
+      "ResultPath": "$",
+      "Next": "GenerarLoteCargue"
+    },
+    "GenerarLoteCargue": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+      "Parameters": {
+        "TableName": "niif-dev-pipeline-estado",
+        "Key": {
+          "pipeline_id": {
+            "S": "counter#primas_previsional"
+          }
+        },
+        "UpdateExpression": "ADD ultimo_lote :incremento SET nombre_caso = :caso, ambiente = :ambiente, fecha_actualizacion = :fecha",
+        "ExpressionAttributeValues": {
+          ":incremento": {
+            "N": "1"
+          },
+          ":caso": {
+            "S": "primas_previsional"
+          },
+          ":ambiente": {
+            "S": "dev"
+          },
+          ":fecha": {
+            "S.$": "$$.State.EnteredTime"
+          }
+        },
+        "ReturnValues": "UPDATED_NEW"
+      },
+      "ResultSelector": {
+        "lote_cargue_id.$": "$.Attributes.ultimo_lote.N"
+      },
+      "ResultPath": "$.contador_lote",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_generar_lote",
+          "Next": "FalloGeneracionLote"
+        }
+      ],
+      "Next": "PrepararParametrosEjecucion"
+    },
+    "PrepararParametrosEjecucion": {
+      "Type": "Pass",
+      "Parameters": {
+        "periodo": "PENDIENTE",
+        "fecha_carga.$": "$.fecha_carga",
+        "lote_cargue_id.$": "$.contador_lote.lote_cargue_id",
+        "notificar": true
+      },
+      "ResultPath": "$",
+      "Next": "EjecutarGestorJSON"
+    },
+    "FalloGeneracionLote": {
+      "Type": "Fail",
+      "Error": "ErrorGeneracionLote",
+      "Cause": "No fue posible generar automáticamente el lote de carga en DynamoDB."
+    },
+    "LeerMetadataEjecucion": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:s3:getObject",
+      "Parameters": {
+        "Bucket": "niif-dev-landing",
+        "Key.$": "States.Format('NIIF17_PRIMAS_PREVISIONAL/METADATA/fecha_carga={}/execution.json', $.fecha_carga)"
+      },
+      "ResultPath": "$.metadata_raw",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error_metadata",
+          "Next": "RegistrarFalloMetadata"
+        }
+      ],
+      "Next": "ParsearMetadataEjecucion"
+    },
+    "ParsearMetadataEjecucion": {
+      "Type": "Pass",
+      "Parameters": {
+        "metadata.$": "States.StringToJson($.metadata_raw.Body)"
+      },
+      "ResultPath": "$.metadata_parseada",
+      "Next": "ConsolidarPeriodoArchivo"
+    },
+    "ConsolidarPeriodoArchivo": {
+      "Type": "Pass",
+      "Parameters": {
+        "periodo.$": "$.metadata_parseada.metadata.periodo",
+        "fecha_carga.$": "$.fecha_carga",
+        "lote_cargue_id.$": "$.lote_cargue_id",
+        "notificar": true,
+        "resultado_gestor.$": "$.resultado_gestor",
+        "resultado_out.$": "$.resultado_out"
+      },
+      "ResultPath": "$",
+      "Next": "IniciarCrawlerBronze"
+    },
+    "RegistrarFalloMetadata": {
+      "Type": "Pass",
+      "Parameters": {
+        "paso_fallido": "LeerMetadataEjecucion",
+        "detalle.$": "$.error_metadata"
+      },
+      "ResultPath": "$.fallo",
+      "Next": "RegistrarFalloPipeline"
+    },
+    "RegistrarFalloEstadoPipeline": {
+      "Type": "Pass",
+      "Parameters": {
+        "paso_fallido": "RegistrarPipelineCompleto",
+        "detalle.$": "$.error_registro_pipeline"
+      },
+      "ResultPath": "$.fallo",
+      "Next": "RegistrarFalloPipeline"
+    },
+    "FinalizarSinCertificacion": {
+      "Type": "Succeed",
+      "Comment": "Pipeline técnico completado. No se inició certificación en esta ejecución."
+    }
+  }
+}
+
