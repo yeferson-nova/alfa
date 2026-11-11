@@ -530,7 +530,15 @@ for dataset_cfg in datasets_cfg:
     # ---------------------------------------------
     
     try:
-        df = spark.read.parquet(ruta_dataset)
+        # LECTURA_RECURSIVA_SOLO_PARQUET
+        # Soporta datasets planos y particionados por fecha.
+        # Evita intentar leer _DONE.json como Parquet.
+        df = (
+            spark.read
+            .option("recursiveFileLookup", "true")
+            .option("pathGlobFilter", "*.parquet")
+            .parquet(ruta_dataset)
+        )
     except Exception as e:
         logger.warning(f"No se pudo leer dataset (posiblemente vacío): {ruta_dataset}")
         

@@ -46,3 +46,10 @@ Los otros 358 jobs (`jobs.json`) y sus scripts (`scripts\`, 267 archivos). Inclu
 
 ## Nota
 Los scripts son los que Glue tenía guardados en la extracción; no hay repositorio Git, así que la cuenta es la única fuente.
+
+## Contraste con lo desplegado (2026-11-10)
+Comparado con `EvidenciasAws\dev-codigo-actual\` (sin contar diferencias de espacios ni de fin de línea):
+- **Iguales:** extracción, SCD y los 6 silver.
+- **Actualizados al desplegado:** `niif-dev-remediacion-estandar` y `niif-dev-val-tecnica`. En DEV ya leen Parquet de forma recursiva y saltan los `_DONE.json`.
+- **`niif-dev-certification`:** la copia local tiene un arreglo **que no está desplegado** (`contar_filas_datos`, commit 0020179). Antes de entregarlo, compararlo otra vez con lo desplegado.
+- `niif-dev-notification-certification`: igual al desplegado (el monolito con SES). Su versión nueva (hexagonal) está en `Backend\notificacion\niif-dev-notification-certification\`.

@@ -61,7 +61,7 @@ Las cifras que produce este sistema se **certifican** por personas del negocio, 
 - Documentar en dos lugares: `Docs\` (humanos, prosa completa) y `MemoriaIa\` (IA, notas cortas que apuntan a Docs). No duplicar.
 - Toda brecha nueva lleva ID `SEG-xx`, `COS-xx`, `ARQ-xx` o `CUM-xx`, igual en la nota y en `Docs\06-brechas\`.
 - Esta skill no lleva código. Los ejemplos de referencia viven en el repo:
-  - Job de Glue hexagonal: `Backend\Glue\reposNew\niif-dev-notification-certification\`.
+  - Job de Glue hexagonal: `Backend\notificacion\niif-dev-notification-certification\`.
   - Lambda hexagonal: `Backend\Lamnbdas\inventario-aws\t2 unificadas\sc-niif-configurador-mallas\` (desplegaría como `datalake-<amb>-niif-configurador-mallas-lambda`).
 
 ## Mantener esta skill

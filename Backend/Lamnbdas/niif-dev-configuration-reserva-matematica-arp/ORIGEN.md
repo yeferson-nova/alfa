@@ -1,7 +1,6 @@
 # Origen del código
 
-`lambda_function.py` es una **copia** del código de `niif-dev-configurador-reserva-matematica-arp` (versión anterior), tomada de `Backend\Lamnbdas\pruebas-lambda\codigo\` el 2026-11-03.
+`conf_res_mat_arp.py` es el código **desplegado en DEV** de la lambda `niif-dev-configuration-reserva-matematica-arp` (handler `conf_res_mat_arp.lambda_handler`), descargado con `Backend\cloudshell-inventario\codigo-actual-dev.sh` el 2026-11-10 (última modificación en AWS: 2026-10-22).
 
-- **No es el código desplegado** de `niif-dev-configuration-reserva-matematica-arp`: su extracción falló (disco lleno en CloudShell).
-- Frente a auxilios-funerarios (única con código real), la `configuration` es la `configurador` más ~120 líneas (92,3 % igual); aquí faltan `_evento_desde_prg` y `_resolver_where_periodo`.
-- Reemplazar por el código real cuando se repita la extracción.
+- Reemplaza la copia anterior (`lambda_function.py`), que no era el código desplegado sino la del configurador viejo `niif-dev-configurador-reserva-matematica-arp`.
+- No incluye las librerías empaquetadas. Solo lectura, para análisis.

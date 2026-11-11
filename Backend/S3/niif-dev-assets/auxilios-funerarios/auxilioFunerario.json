@@ -1,0 +1,112 @@
+{
+  "useCaseId": "auxilioFunerario",
+  "emailType": "cert",
+  "athena": {
+    "defaultDatabase": "niif-dev-gold-catalog-db",
+    "outputPath": "athena/notifications/unload"
+  },
+  "queries": {
+    "detail": [
+      {
+        "queryName": "detail#1",
+        "database": "niif-dev-gold-catalog-db",
+        "query": "UNLOAD (\n\nSELECT\n    CAST(num_poliza AS VARCHAR) AS numero_de_poliza,\n    CAST(per_expedicion_pension AS VARCHAR) AS periodo_de_expedicion_de_la_poliza,\n    CAST(dsc_origen AS VARCHAR) AS origen_de_la_renta,\n    CAST(CAST(vlr_total AS DECIMAL(38,0)) AS VARCHAR) AS valor_auxilio_funerario_pagado,\n    CAST(per_envio_tesoreria AS VARCHAR) AS mes_de_pago\nFROM \"niif-dev-gold-catalog-db\".\"scd_auxilios_funerarios\"\nWHERE CAST(per_envio_tesoreria AS VARCHAR) = '$period'\n  AND act_reg = 1\nORDER BY numero_de_poliza\n\n)\nTO 's3://$assets_bucket/athena/notifications/unload/$execution_id/'\nWITH (\n    format = 'TEXTFILE',\n    field_delimiter = '|',\n    compression = 'NONE'\n);"
+      }
+    ],
+    "summary": [
+      {
+        "queryName": "summary#1",
+        "database": "niif-dev-gold-catalog-db",
+        "query": "SELECT\n    rst.origen_de_la_renta,\n    COUNT(*) AS no_registros,\n    CAST(SUM(rst.valor_auxilio_funerario_pagado) AS DECIMAL(38,0)) AS valor\nFROM (\n    SELECT\n        CAST(num_poliza AS VARCHAR) AS numero_de_poliza,\n        CAST(per_expedicion_pension AS VARCHAR) AS periodo_de_expedicion_de_la_poliza,\n        CAST(dsc_origen AS VARCHAR) AS origen_de_la_renta,\n        CAST(vlr_total AS DECIMAL(38,0)) AS valor_auxilio_funerario_pagado,\n        CAST(per_envio_tesoreria AS VARCHAR) AS mes_de_pago\n    FROM \"niif-dev-gold-catalog-db\".\"scd_auxilios_funerarios\"\n    WHERE CAST(per_envio_tesoreria AS VARCHAR) = '$period'\n      AND act_reg = 1\n) rst\nGROUP BY rst.origen_de_la_renta;"
+      }
+    ],
+    "total": [
+      {
+        "queryName": "total#1",
+        "database": "niif-dev-gold-catalog-db",
+        "query": "SELECT\n    COUNT(*) AS no_registros,\n    CAST(SUM(rst.valor_auxilio_funerario_pagado) AS DECIMAL(38,0)) AS valor\nFROM (\n    SELECT\n        CAST(num_poliza AS VARCHAR) AS numero_de_poliza,\n        CAST(per_expedicion_pension AS VARCHAR) AS periodo_de_expedicion_de_la_poliza,\n        CAST(dsc_origen AS VARCHAR) AS origen_de_la_renta,\n        CAST(vlr_total AS DECIMAL(38,0)) AS valor_auxilio_funerario_pagado,\n        CAST(per_envio_tesoreria AS VARCHAR) AS mes_de_pago\n    FROM \"niif-dev-gold-catalog-db\".\"scd_auxilios_funerarios\"\n    WHERE CAST(per_envio_tesoreria AS VARCHAR) = '$period'\n      AND act_reg = 1\n) rst;"
+      }
+    ]
+  },
+  "email": {
+    "subject": "NIIF 17 - Certificación Auxilio Funerario Periodo $period",
+    "templatePath": "email-templates/auxilio_funerario_cert.html",
+    "sender": "<REMITENTE_SES>",
+    "destinations": [
+      "<DESTINATARIO>",
+      "<DESTINATARIO>"
+    ],
+    "stringVars": {
+      "certificarLink": "https://datalake-dev-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fhfoy06vw40.execute-api.us-east-1.amazonaws.com%2Fdev%2Fpost_login&response_type=TOKEN&client_id=36re6flv000etb314d9gpo479u&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fcertify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+      "nocertificarLink": "https://datalake-dev-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fhfoy06vw40.execute-api.us-east-1.amazonaws.com%2Fdev%2Fpost_login&response_type=TOKEN&client_id=36re6flv000etb314d9gpo479u&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fnot_certify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+      "useCaseName": "Auxilios Funerarios"
+    },
+    "tableVars": {
+      "tableDetail": {
+        "queryName": "detail",
+        "export": true,
+        "columns": {
+          "numero_de_poliza": {
+            "name": "Número de Póliza",
+            "type": "string"
+          },
+          "periodo_de_expedicion_de_la_poliza": {
+            "name": "Periodo de Expedición de la Póliza",
+            "type": "string"
+          },
+          "origen_de_la_renta": {
+            "name": "Origen de la Renta",
+            "type": "string"
+          },
+          "valor_auxilio_funerario_pagado": {
+            "name": "Valor Auxilio Funerario Pagado",
+            "type": "money"
+          },
+          "mes_de_pago": {
+            "name": "Mes de Pago",
+            "type": "string"
+          }
+        }
+      },
+      "tableSummary": {
+        "queryName": "summary",
+        "asText": true,
+        "columns": {
+          "origen_de_la_renta": {
+            "name": "Origen de la Renta",
+            "type": "string"
+          },
+          "no_registros": {
+            "name": "Número de Registros",
+            "type": "int"
+          },
+          "valor": {
+            "name": "Valor Auxilio Funerario Pagado",
+            "type": "money"
+          }
+        }
+      },
+      "tableTotal": {
+        "queryName": "total",
+        "asText": true,
+        "columns": {
+          "no_registros": {
+            "name": "Número Total de Registros de Auxilios Funerarios",
+            "type": "int"
+          },
+          "valor": {
+            "name": "Valor Total de los Auxilios Funerarios Pagados",
+            "type": "money"
+          }
+        }
+      }
+    }
+  },
+  "approvers": {
+    "required": 1,
+    "users": [
+      "<APROBADOR>",
+      "<APROBADOR>"
+    ]
+  }
+}

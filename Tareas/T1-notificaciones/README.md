@@ -1,6 +1,6 @@
 # T1. Ajuste de notificaciones AWS
 
-**Estado:** en análisis; **1a (SES) implementado en local, no desplegado**: `Backend\Glue\reposNew\niif-dev-notification-certification\`. **Depende de:** T2 (formato de logs y taxonomía de errores comunes).
+**Estado:** en análisis; **1a (SES) implementado en local, no desplegado**: `Backend\notificacion\niif-dev-notification-certification\`. **Depende de:** T2 (formato de logs y taxonomía de errores comunes).
 
 ## Qué se pidió
 - **1a.** Cambiar el servicio SNS por SES.

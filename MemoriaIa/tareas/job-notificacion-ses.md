@@ -6,9 +6,9 @@ actualizado: 2026-11-09
 
 Cambio de SNS a SES en el job de Glue `niif-dev-notification-certification`, que es quien arma y envía el correo de certificación. **La lambda de T2 no envía correos** (solo configura y arranca la malla), y la Step Function tampoco: ver [[tareas-aws]] y [[arquitectura-niif17]].
 
-> **Vigente (2026-11-09):** la entrega de T1a+T1b se hace **sobre el script desplegado** (`Backend\Glue\niif-dev-notification-certification\notification_certification.py`), con cambio mínimo. La reescritura de `reposNew` **no se usa todavía**: es posterior a esta entrega y los cambios van por auditoría. Ver la sección "Entrega T1a+T1b sobre el job desplegado" más abajo.
+> **Vigente (2026-11-09):** la entrega de T1a+T1b se hace **sobre el script desplegado** (`Backend\Glue\niif-dev-notification-certification\notification_certification.py`), con cambio mínimo. La reescritura de `niif-dev-notification-certification` hexagonal **no se usa todavía**: es posterior a esta entrega y los cambios van por auditoría. Ver la sección "Entrega T1a+T1b sobre el job desplegado" más abajo.
 
-- **Código reescrito (pospuesto):** `Backend\Glue\reposNew\niif-dev-notification-certification\` (carpeta nueva `reposNew`, una por job reescrito). El job desplegado sigue en `Backend\Glue\niif-dev-notification-certification\`.
+- **Código reescrito (pospuesto):** `Backend\notificacion\niif-dev-notification-certification\` (carpeta nueva `niif-dev-notification-certification` hexagonal, una por job reescrito). El job desplegado sigue en `Backend\Glue\niif-dev-notification-certification\`.
 - **Estado de la reescritura (2026-11-04):** implementada y probada en local; **no desplegada**. 451 pruebas, 99,9 % de cobertura. No se usa en la entrega actual.
 
 ## Entrega T1a+T1b sobre el job desplegado (2026-11-09)
@@ -178,3 +178,9 @@ Fuente: CloudShell de solo lectura + código descargado en `Backend\Lamnbdas\<la
 - **Resultado final de la prueba (2026-11-10): job SUCCEEDED en QA.** Con los permisos corregidos, el job leyó `email-template/primas_arl_cert.html`, ejecutó Athena, creó 3 enlaces cortos, envió por SES a un destinatario (`MessageId` devuelto) y marcó SENT con `sesMessageId` (`certCode` `202605-20261110-1035`, `executionId` `23392b50-...`). Pendiente: confirmar llegada a la bandeja y aspecto en Outlook, Gmail y móvil; verificar `SES_EMAIL` en DynamoDB; restaurar `primas-arl/primasArl.json`; pruebas 4 a 7 del LEEME; botones solo con caso de prueba acordado.
 - **Prueba 2 parcial (2026-11-10): el correo llegó a la bandeja sin pasar por basura en QA** (identidad con dominio y DKIM válido). Falta evidencia de aspecto en Outlook de escritorio, Gmail y móvil. DynamoDB confirmado: `SES_EMAIL`, `SENT`, `sesMessageId` igual al del log. Plan de QA: pruebas 1 y 3 hechas; 2 parcial; 4 a 7 pendientes.
 
+
+## Auditoría nuevo vs. desplegado (2026-11-10)
+Humano: `Docs\06-brechas\auditoria-job-notificacion-nuevo-vs-actual.md`. **El nuevo aún no reemplaza al actual.**
+- **Bloqueante/alto:** N-01 no arma HTML (no lee `templatePath`; falta portar `build_html_body`, tablas, avisos y archivos). N-02 se detiene en el primer destinatario fallido (el actual sigue y marca si salió al menos uno). N-03 pide `--SES_REMITENTE` (QA usa `--SES_SENDER`) y 6 argumentos obligatorios nuevos que nadie pasa.
+- **Equivalente:** configuración, búsqueda por `certCode` (con paginación), compuesto (mismos estados y transacción), avisos, enlaces, cuerpo de texto, marca `SENT`. Mejoras: tiempo máximo en Athena, sin SQL ni correos en el log, errores con código, no reenvía si todo está en `SENT` (N-04: cambio por confirmar).
+- **Observabilidad:** O-01 `ejecucion_id` = `JOB_RUN_ID` o un `uuid4` inventado, no el del flujo (ARQ-32). O-02 `cert_code`, `use_case_id` y `periodo` no van en cada línea. O-03 sin mensaje en español. O-04 los errores de arranque no salen en JSON. O-05 faltan eventos (fallo por destinatario, avisos, HTML/texto, `QueryExecutionId` y bytes). O-06 sin EMF.

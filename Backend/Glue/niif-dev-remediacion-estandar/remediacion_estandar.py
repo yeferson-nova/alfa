@@ -1,3 +1,4 @@
+# LECTURA_RECURSIVA_PARQUET_REMEDIACION
 import sys
 import json
 import logging
@@ -83,7 +84,12 @@ def _leer_lotes_disponibles(spark, ruta, lotes):
         return None, set()
 
     # Los errores de permisos, lectura o esquema no se ocultan.
-    df = spark.read.parquet(ruta)
+    df = (
+        spark.read
+        .option("recursiveFileLookup", "true")
+        .option("pathGlobFilter", "*.parquet")
+        .parquet(ruta)
+    )
     columnas = [c for c in df.columns if c.lower() == "lote_cargue_id"]
     if len(columnas) != 1:
         raise ValueError("Columna de lote ausente o ambigua: " + ruta)
@@ -432,7 +438,10 @@ for item in datasets_extraidos:
     )
 
     df_dataset = (
-        spark.read.parquet(ruta_origen)
+        spark.read
+        .option("recursiveFileLookup", "true")
+        .option("pathGlobFilter", "*.parquet")
+        .parquet(ruta_origen)
         .filter(
             col("LOTE_CARGUE_ID").cast("bigint").isin(lotes_copiar)
         )

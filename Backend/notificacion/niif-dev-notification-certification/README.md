@@ -108,7 +108,7 @@ Desde esta carpeta o desde la raíz del repositorio:
 ```
 python -m pip install -r requirements-dev.txt
 python -m pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=reports/pytest.xml
-python -m pytest Backend/Glue/reposNew/niif-dev-notification-certification
+python -m pytest Backend/notificacion/niif-dev-notification-certification
 ```
 
 - Cobertura mínima configurada: 90 % (`pyproject.toml`).

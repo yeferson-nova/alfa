@@ -10,17 +10,17 @@ Humano: `Docs\06-brechas\notificaciones-vs-arquitectura.md`. Diagrama: hoja `Pá
 - SES ya coincide con el diagrama (antes SNS). Pendiente de QA.
 - **ARQ-21** diagrama no refleja las 5 lambdas, enlaces cortos ni estados. **ARQ-22** el job (no la lambda) envía el correo: recomendado corregir el diagrama. **ARQ-23** No certificar no deja la tarea pendiente (Víctor L276-277: pendiente hasta que negocio avise **a mano** al operador). Verificado en DEV: modelo = tabla `niif-dev-prg-programaciones`; el manager solo actúa con `activo=true` y `scheduleEstado=PENDIENTE` y rechaza `scheduleExpression`/`periodoNegocio` = `"PENDIENTE"`; escribe `PROGRAMADO` y nadie lo limpia al terminar el `at()` (ARL sigue `PROGRAMADO` sin schedule). Propuesta sin confirmar: escribir `PENDIENTE` en esos tres campos, o `RECHAZADO` para evitar el error del stream. Detalle en el doc humano §4.1. **ARQ-24** `NIIF_CARPETAS` duplicado en copy y move. **ARQ-25** `sendLock` solo se lee, nunca se escribe. **ARQ-26** trigger/copy/move tragan excepciones y devuelven éxito. **ARQ-27** `--ENVIRONMENT='{env}'` literal en el evaluador. **ARQ-28** WAF sin verificar.
 - **SEG-10** Cognito flujo implícito. **SEG-11** `state` sin firma. **SEG-12** tokens y NewImage (con correo) en logs.
-- Calidad: job desplegado = monolito de 727 líneas (cambio mínimo por decisión); `reposNew` hexagonal con 163 pruebas, sin desplegar; las 4 lambdas sin pruebas ni estructura. Sonar: Maintainability B (204 olores, falta desglose por regla).
-- Orden propuesto: QA → decidir ARQ-22/23 → ARQ-26/27/SEG-12 → desplegar `reposNew` → unificar lambdas → SEG-10/11 con DevOps → actualizar diagrama.
+- Calidad: job desplegado = monolito de 727 líneas (cambio mínimo por decisión); `niif-dev-notification-certification` hexagonal hexagonal con 163 pruebas, sin desplegar; las 4 lambdas sin pruebas ni estructura. Sonar: Maintainability B (204 olores, falta desglose por regla).
+- Orden propuesto: QA → decidir ARQ-22/23 → ARQ-26/27/SEG-12 → desplegar `niif-dev-notification-certification` hexagonal → unificar lambdas → SEG-10/11 con DevOps → actualizar diagrama.
 
 ## Plan de trabajo para unificar (propuesta 2026-11-10, tiempos estimados, sin aprobar)
-- **Meta:** un paquete con dominio compartido. Una lambda orquestadora del stream de `notification-certification` reemplaza a `trigger`, `copy` y `move` (decide por transición: `PENDING` inicia el job; `CERTIFICATE` copia a transporte; `NO_CERTIFICATE` archiva y deja la malla pendiente). Evaluador compuesto y API `niif-dev-certification` se mantienen aparte con el mismo dominio. Job = `reposNew`. Mapa de carpetas sale de la configuración global. Ver [[estructura-repos-propuesta]].
+- **Meta:** un paquete con dominio compartido. Una lambda orquestadora del stream de `notification-certification` reemplaza a `trigger`, `copy` y `move` (decide por transición: `PENDING` inicia el job; `CERTIFICATE` copia a transporte; `NO_CERTIFICATE` archiva y deja la malla pendiente). Evaluador compuesto y API `niif-dev-certification` se mantienen aparte con el mismo dominio. Job = `niif-dev-notification-certification` hexagonal. Mapa de carpetas sale de la configuración global. Ver [[estructura-repos-propuesta]].
 - **Riesgo de unir el stream:** un registro con error frena el lote. Mitigar con `ReportBatchItemFailures` y cola SQS de fallos. Cambio de 3 a 1 lambda: desplegar la nueva con el mapeo deshabilitado y conmutar.
 - **Fase 0 (1-2 d):** validar paquete en QA, alinear DEV a `email-template`, `git rm` previews viejos, reanalizar Sonar con desglose de reglas.
 - **Fase 1 (1 reunión):** decidir ARQ-22, ARQ-23 (qué escribir y quién limpia `PROGRAMADO`), una lambda o tres con código común, estructura de repos.
 - **Fase 2 (2-3 d):** ARQ-26, ARQ-27, SEG-12, ARQ-25 sobre lo desplegado.
 - **Fase 3 (5-8 d):** dominio compartido, lambda orquestadora con pruebas > 80 %, escritura de "pendiente" en `prg-programaciones`, alarma de registros atascados, DEV, luego QA vía DevOps.
-- **Fase 4 (3-4 d):** desplegar `reposNew` tras QA, retirar el monolito, quitar `SNS_TOPIC_ARN` y permisos SNS.
+- **Fase 4 (3-4 d):** desplegar `niif-dev-notification-certification` hexagonal tras QA, retirar el monolito, quitar `SNS_TOPIC_ARN` y permisos SNS.
 - **Fase 5 (3-5 d, con DevOps):** SEG-10 (PKCE), SEG-11 (firmar `state`), ARQ-28 (WAF).
 - **Fase 6 (1 d):** actualizar la hoja `Página-2` (ARQ-21).
 - **Fuera de alcance:** T3, deploy de T2, 1c y 1d (encajan en fase 3 si se define alcance).
@@ -36,6 +36,6 @@ Humano: `Docs\06-brechas\notificaciones-vs-arquitectura.md`. Diagrama: hoja `Pá
 Para aislar fallas, el problema se separa en 5 partes. Todo lo demás (costos y montos de Athena, Gold, pipeline del paso 2) queda en [[pendientes]].
 1. **Lambdas de la cadena:** trigger, evaluador compuesto, copy, move, certificar/rechazar, enlace corto y post-login. Brechas: ARQ-24 a ARQ-27, ARQ-30 (copy → SFTP) y ARQ-33.
 2. **Plantillas HTML:** T1b hecho; falta probar cómo se ven en Outlook, Gmail y móvil. ARQ-35 (ARL sin resumen) afecta al correo y se corrige en el JSON del caso.
-3. **Job de notificación por SES:** desplegar `reposNew` (hexagonal, PEP 8 en inglés, zip para DevOps). Brechas: ARQ-22, ARQ-38 y SEG-15.
+3. **Job de notificación por SES:** desplegar `niif-dev-notification-certification` hexagonal (hexagonal, PEP 8 en inglés, zip para DevOps). Brechas: ARQ-22, ARQ-38 y SEG-15.
 4. **Enlaces de aprobación y rechazo:** enlace corto → WAF/API → `postLogin` → Cognito → certificar. Brechas: ARQ-23, ARQ-29, SEG-10, SEG-11, SEG-13 y SEG-14 (API viejo).
 5. **Observabilidad completa en logs:** un log JSON en español por paso, con `ejecucion_id`, `cert_code` y `request_id`, para saber en qué paso falló (ARQ-32 desde la certificación, ARQ-26 sin errores silenciosos); alarmas por SES al grupo de soporte (ARQ-31).

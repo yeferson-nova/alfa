@@ -1,0 +1,197 @@
+{
+  "useCaseId": "primasRentasEndosos",
+  "emailType": "cert",
+  "athena": {
+    "defaultDatabase": "niif-dev-gold-catalog-db",
+    "outputPath": "athena/notifications/unload"
+  },
+  "queries": {
+    "detail": [
+      {
+        "queryName": "detail#1",
+        "database": "niif-dev-gold-catalog-db",
+        "query": "UNLOAD (\nselect\n\t  nid_renta\t\t\t\t\t\t\t\t\t\tas nro_renta\n\t, nid_endoso\t\t\t\t\t\t\t\t\tas nro_endoso\n\t, ramo_point_t\t\t\t\t\t\t\t\t\tas ramo\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_tipo_renta\t\t\t\t\t\t\t\tas cod_tipo_movimiento\n\t, dsc_tipo_renta\t\t\t\t\t\t\t\tas dsc_tipo_movimiento\n\t, (case\n            when cod_tipo_renta <> 3 then 'Reintegro de Renta'\n            else 'Renta Vejez'\n        end)\t\t\t\t\t\t\t\t\t\tas dsc_tipo_movimiento_h\n\t, cod_dvlcn_rntgr\t\t\t\t\t\t\t\tas cod_tipo_renta\n\t, dsc_dvlcn_rntgr\t\t\t\t\t\t\t\tas dsc_tipo_renta\n\t, cast(sum(vlr_endoso) as decimal(38, 0))\t\tas vlr_prima\n\t, 'Endoso'\t\t\t\t\t\t\t\t\t\tas naturaleza\n\t, per_expedicion_endoso\t\t\t\t\t\t\tas periodo\nfrom \"niif-dev-gold-catalog-db\".\"scd_primas_endosos\"\nwhere per_expedicion_endoso = '$period'\nand act_reg = 1\ngroup by nid_renta\n\t, nid_endoso\n\t, ramo_point_t\n\t, cod_tipo_renta\n\t, dsc_tipo_renta\n\t, (case\n            when cod_tipo_renta <> 3 then 'Reintegro de Renta'\n            else 'Renta Vejez'\n        end)\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_dvlcn_rntgr\n\t, dsc_dvlcn_rntgr\n\t, 'Endoso'\n\t, per_expedicion_endoso\nunion\nselect\n\t  nid_renta\t\t\t\t\t\t\t\t\t\tas nro_renta\n\t, nid_renta\t\t\t\t\t\t\t\t\t\tas nro_endoso\n\t, '052'\t\t\t\t\t\t\t\t\t\t\tas ramo\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_tipo_renta\t\t\t\t\t\t\t\tas cod_tipo_movimiento\n\t, dsc_tipo_renta\t\t\t\t\t\t\t\tas dsc_tipo_movimiento\n\t, 'Renta Invalidez Muerte'\t\t\t\t\t\tas dsc_tipo_movimiento_h\n\t, 3\t\t\t\t\t\t\t\t\t\t\t\tas cod_tipo_renta\n\t, 'Renta Nueva'\t\t\t\t\t\t\t\t\tas dsc_tipo_renta\n\t, cast(sum(vlr_renta) as decimal(38, 0))\t\tas vlr_prima\n\t, 'Renta'\t\t\t\t\t\t\t\t\t\tas naturaleza\n\t, per_pago_renta\t\t\t\t\t\t\t\tas periodo\nfrom \"niif-dev-gold-catalog-db\".\"scd_primas_rentas\"\nwhere per_pago_renta = '$period'\nand act_reg = 1\ngroup by nid_renta\n\t, nid_renta\n\t, '052'\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_tipo_renta\n\t, dsc_tipo_renta\n\t, 'Renta Invalidez Muerte'\n\t, 3\n\t, 'Renta Nueva'\n\t, 'Renta'\n\t, per_pago_renta\n)\nTO 's3://$assets_bucket/athena/notifications/unload/$execution_id/'\nWITH (\n    format = 'TEXTFILE',\n    field_delimiter = '|',\n    compression = 'NONE'\n);",
+        "headers": [
+          "Número de Renta",
+          "Número de Endoso",
+          "Ramo",
+          "Fecha Expedición Renta",
+          "Periodo Expedición Renta",
+          "Código Tipo Movimiento",
+          "Descripción Tipo Movimiento",
+          "Descripción Tipo Movimiento Homologado",
+          "Código Tipo Renta",
+          "Descripción Tipo Renta",
+          "Valor Prima",
+          "Naturaleza",
+          "Periodo"
+        ]
+      }
+    ],
+    "summary": [
+      {
+        "queryName": "summary#1",
+        "database": "niif-dev-gold-catalog-db",
+        "query": "select\n\t  periodo\t\t\t\t\t\t\t\t\tas periodo\n\t, dsc_tipo_renta\t\t\t\t\t\t\tas tipo_renta\n\t, ramo\t\t\t\t\t\t\t\t\t\tas ramo\n\t, cast(sum(vlr_prima) as decimal(38, 0))\tas valor_prima\n\t, count(distinct nro_endoso)\t\t\t\tas cantidad_registros\nfrom\n((select\n\t  nid_renta\t\t\t\t\t\t\t\t\t\tas nro_renta\n\t, nid_endoso\t\t\t\t\t\t\t\t\tas nro_endoso\n\t, ramo_point_t\t\t\t\t\t\t\t\t\tas ramo\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_tipo_renta\t\t\t\t\t\t\t\tas cod_tipo_movimiento\n\t, dsc_tipo_renta\t\t\t\t\t\t\t\tas dsc_tipo_movimiento\n\t, (case\n            when cod_tipo_renta <> 3 then 'Reintegro de Renta'\n            else 'Renta Vejez'\n        end)\t\t\t\t\t\t\t\t\t\tas dsc_tipo_movimiento_h\n\t, cod_dvlcn_rntgr\t\t\t\t\t\t\t\tas cod_tipo_renta\n\t, dsc_dvlcn_rntgr\t\t\t\t\t\t\t\tas dsc_tipo_renta\n\t, cast(sum(vlr_endoso) as decimal(38, 7))\t\tas vlr_prima\n\t, 'Endoso'\t\t\t\t\t\t\t\t\t\tas naturaleza\n\t, per_expedicion_endoso\t\t\t\t\t\t\tas periodo\nfrom \"niif-dev-gold-catalog-db\".\"scd_primas_endosos\"\nwhere per_expedicion_endoso = '$period'\nand act_reg = 1\ngroup by nid_renta\n\t, nid_endoso\n\t, ramo_point_t\n\t, cod_tipo_renta\n\t, dsc_tipo_renta\n\t, (case\n            when cod_tipo_renta <> 3 then 'Reintegro de Renta'\n            else 'Renta Vejez'\n        end)\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_dvlcn_rntgr\n\t, dsc_dvlcn_rntgr\n\t, 'Endoso'\n\t, per_expedicion_endoso)\nunion\n(select\n\t  nid_renta\t\t\t\t\t\t\t\t\t\tas nro_renta\n\t, nid_renta\t\t\t\t\t\t\t\t\t\tas nro_endoso\n\t, '052'\t\t\t\t\t\t\t\t\t\t\tas ramo\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_tipo_renta\t\t\t\t\t\t\t\tas cod_tipo_movimiento\n\t, dsc_tipo_renta\t\t\t\t\t\t\t\tas dsc_tipo_movimiento\n\t, 'Renta Invalidez Muerte'\t\t\t\t\t\tas dsc_tipo_movimiento_h\n\t, 3\t\t\t\t\t\t\t\t\t\t\t\tas cod_tipo_renta\n\t, 'Renta Nueva'\t\t\t\t\t\t\t\t\tas dsc_tipo_renta\n\t, cast(sum(vlr_renta) as decimal(38, 7))\t\tas vlr_prima\n\t, 'Renta'\t\t\t\t\t\t\t\t\t\tas naturaleza\n\t, per_pago_renta\t\t\t\t\t\t\t\tas periodo\nfrom \"niif-dev-gold-catalog-db\".\"scd_primas_rentas\"\nwhere per_pago_renta = '$period'\nand act_reg = 1\ngroup by nid_renta\n\t, nid_renta\n\t, '052'\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_tipo_renta\n\t, dsc_tipo_renta\n\t, 'Renta Invalidez Muerte'\n\t, 3\n\t, 'Renta Nueva'\n\t, 'Renta'\n\t, per_pago_renta))\ngroup by periodo\n\t, dsc_tipo_renta\n\t, ramo\norder by dsc_tipo_renta desc\n\t, ramo"
+      }
+    ],
+    "total": [
+      {
+        "queryName": "total#1",
+        "database": "niif-dev-gold-catalog-db",
+        "query": "select\n\t  periodo\t\t\t\t\t\t\t\t\tas periodo\n\t, ramo\t\t\t\t\t\t\t\t\t\tas ramo\n\t, cast(sum(vlr_prima) as decimal(38, 0))\tas valor_prima\n\t, count(distinct nro_endoso)\t\t\t\tas cantidad_registros\nfrom\n((select\n\t  nid_renta\t\t\t\t\t\t\t\t\t\tas nro_renta\n\t, nid_endoso\t\t\t\t\t\t\t\t\tas nro_endoso\n\t, ramo_point_t\t\t\t\t\t\t\t\t\tas ramo\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_tipo_renta\t\t\t\t\t\t\t\tas cod_tipo_movimiento\n\t, dsc_tipo_renta\t\t\t\t\t\t\t\tas dsc_tipo_movimiento\n\t, (case\n            when cod_tipo_renta <> 3 then 'Reintegro de Renta'\n            else 'Renta Vejez'\n        end)\t\t\t\t\t\t\t\t\t\tas dsc_tipo_movimiento_h\n\t, cod_dvlcn_rntgr\t\t\t\t\t\t\t\tas cod_tipo_renta\n\t, dsc_dvlcn_rntgr\t\t\t\t\t\t\t\tas dsc_tipo_renta\n\t, cast(sum(vlr_endoso) as decimal(38, 7))\t\tas vlr_prima\n\t, 'Endoso'\t\t\t\t\t\t\t\t\t\tas naturaleza\n\t, per_expedicion_endoso\t\t\t\t\t\t\tas periodo\nfrom \"niif-dev-gold-catalog-db\".\"scd_primas_endosos\"\nwhere per_expedicion_endoso = '$period'\nand act_reg = 1\ngroup by nid_renta\n\t, nid_endoso\n\t, ramo_point_t\n\t, cod_tipo_renta\n\t, dsc_tipo_renta\n\t, (case\n            when cod_tipo_renta <> 3 then 'Reintegro de Renta'\n            else 'Renta Vejez'\n        end)\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_dvlcn_rntgr\n\t, dsc_dvlcn_rntgr\n\t, 'Endoso'\n\t, per_expedicion_endoso)\nunion\n(select\n\t  nid_renta\t\t\t\t\t\t\t\t\t\tas nro_renta\n\t, nid_renta\t\t\t\t\t\t\t\t\t\tas nro_endoso\n\t, '052'\t\t\t\t\t\t\t\t\t\t\tas ramo\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_tipo_renta\t\t\t\t\t\t\t\tas cod_tipo_movimiento\n\t, dsc_tipo_renta\t\t\t\t\t\t\t\tas dsc_tipo_movimiento\n\t, 'Renta Invalidez Muerte'\t\t\t\t\t\tas dsc_tipo_movimiento_h\n\t, 3\t\t\t\t\t\t\t\t\t\t\t\tas cod_tipo_renta\n\t, 'Renta Nueva'\t\t\t\t\t\t\t\t\tas dsc_tipo_renta\n\t, cast(sum(vlr_renta) as decimal(38, 7))\t\tas vlr_prima\n\t, 'Renta'\t\t\t\t\t\t\t\t\t\tas naturaleza\n\t, per_pago_renta\t\t\t\t\t\t\t\tas periodo\nfrom \"niif-dev-gold-catalog-db\".\"scd_primas_rentas\"\nwhere per_pago_renta = '$period'\nand act_reg = 1\ngroup by nid_renta\n\t, nid_renta\n\t, '052'\n\t, fec_expedicion_renta\n\t, per_expedicion_renta\n\t, cod_tipo_renta\n\t, dsc_tipo_renta\n\t, 'Renta Invalidez Muerte'\n\t, 3\n\t, 'Renta Nueva'\n\t, 'Renta'\n\t, per_pago_renta))\ngroup by periodo\n\t, ramo\norder by ramo"
+      }
+    ]
+  },
+  "email": {
+    "subject": "NIIF 17 - Certificación Primas Rentas y Endosos Periodo $period",
+    "templatePath": "email-templates/primas_rentas_cert.html",
+    "sender": "<REMITENTE_SES>",
+    "destinations": [
+      "<DESTINATARIO>",
+      "<DESTINATARIO>"
+    ],
+    "stringVars": {
+      "certificarLink": "https://datalake-dev-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fhfoy06vw40.execute-api.us-east-1.amazonaws.com%2Fdev%2Fpost_login&response_type=TOKEN&client_id=36re6flv000etb314d9gpo479u&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fcertify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+      "nocertificarLink": "https://datalake-dev-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fhfoy06vw40.execute-api.us-east-1.amazonaws.com%2Fdev%2Fpost_login&response_type=TOKEN&client_id=36re6flv000etb314d9gpo479u&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fnot_certify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+      "useCaseName": "Primas Rentas Endosos"
+    },
+    "tableVars": {
+      "tableDetail": {
+        "queryName": "detail",
+        "export": true,
+        "columns": {
+          "nro_renta": {
+            "name": "Número de Renta",
+            "type": "string"
+          },
+          "nro_endoso": {
+            "name": "Número de Endoso",
+            "type": "string"
+          },
+          "ramo": {
+            "name": "Ramo",
+            "type": "string"
+          },
+          "fec_expedicion_renta": {
+            "name": "Fecha Expedición Renta",
+            "type": "string"
+          },
+          "per_expedicion_renta": {
+            "name": "Periodo Expedición Renta",
+            "type": "string"
+          },
+          "cod_tipo_movimiento": {
+            "name": "Código Tipo Movimiento",
+            "type": "string"
+          },
+          "dsc_tipo_movimiento": {
+            "name": "Descripción Tipo Movimiento",
+            "type": "string"
+          },
+          "dsc_tipo_movimiento_h": {
+            "name": "Descripción Tipo Movimiento Homologado",
+            "type": "string"
+          },
+          "cod_tipo_renta": {
+            "name": "Código Tipo Renta",
+            "type": "string"
+          },
+          "dsc_tipo_renta": {
+            "name": "Descripción Tipo Renta",
+            "type": "string"
+          },
+          "vlr_prima": {
+            "name": "Valor Prima",
+            "type": "money"
+          },
+          "naturaleza": {
+            "name": "Naturaleza",
+            "type": "string"
+          },
+          "periodo": {
+            "name": "Periodo",
+            "type": "string"
+          }
+        }
+      },
+      "tableSummary": {
+        "queryName": "summary",
+        "asText": true,
+        "columns": {
+          "periodo": {
+            "name": "Periodo",
+            "type": "string"
+          },
+          "tipo_renta": {
+            "name": "Tipo Renta",
+            "type": "string"
+          },
+          "ramo": {
+            "name": "Ramo",
+            "type": "int"
+          },
+          "valor_prima": {
+            "name": "Valor Prima",
+            "type": "money"
+          },
+          "cantidad_registros": {
+            "name": "Cantidad Registros",
+            "type": "int"
+          }
+        }
+      },
+      "tableTotal": {
+        "queryName": "total",
+        "asText": true,
+        "columns": {
+          "periodo": {
+            "name": "Periodo",
+            "type": "string"
+          },
+          "ramo": {
+            "name": "Ramo",
+            "type": "int"
+          },
+          "valor_prima": {
+            "name": "Valor Prima",
+            "type": "money"
+          },
+          "cantidad_registros": {
+            "name": "Cantidad Registros",
+            "type": "int"
+          }
+        }
+      }
+    },
+    "dataPresence": [
+      {
+        "name": "Rentas",
+        "database": "niif-dev-gold-catalog-db",
+        "query": "SELECT COUNT(*) AS registros FROM \"niif-dev-gold-catalog-db\".\"scd_primas_rentas\" WHERE CAST(per_pago_renta AS VARCHAR) = '$period' AND act_reg = 1"
+      },
+      {
+        "name": "Endosos",
+        "database": "niif-dev-gold-catalog-db",
+        "query": "SELECT COUNT(*) AS registros FROM \"niif-dev-gold-catalog-db\".\"scd_primas_endosos\" WHERE CAST(per_expedicion_endoso AS VARCHAR) = '$period' AND act_reg = 1"
+      }
+    ]
+  },
+  "compositeNotification": {
+    "enabled": true,
+    "tableName": "niif-dev-composite-notification-status",
+    "groupId": "NIIF17#casosCompuestos#1",
+    "controlMemberId": "_CONTROL",
+    "memberIds": [
+      "primasRentas",
+      "primasEndosos"
+    ]
+  },
+  "approvers": {
+    "required": 1,
+    "users": [
+      "<APROBADOR>",
+      "<APROBADOR>"
+    ]
+  }
+}
