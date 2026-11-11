@@ -14,7 +14,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 RAIZ_HTML = Path(__file__).resolve().parents[1]
-DIRECTORIO_PLANTILLAS = RAIZ_HTML / "newUx"
+DIRECTORIO_PLANTILLAS = RAIZ_HTML.parent / "notificacion" / "email-template"
 DIRECTORIO_PREVIEWS = RAIZ_HTML / "previews"
 DIRECTORIO_JOB = RAIZ_HTML.parent / "Glue" / "niif-dev-notification-certification"
 

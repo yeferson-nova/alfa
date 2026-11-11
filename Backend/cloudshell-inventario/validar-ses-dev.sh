@@ -168,7 +168,7 @@ else
 fi
 run s3/html-en-bucket.txt bash -c "aws s3 ls s3://$BUCKET/ --recursive | grep -Ei '\.(html|htm)$' | head -50"
 [ -s "$OUT/s3/html-en-bucket.txt" ] && ok "Hay $(wc -l <"$OUT/s3/html-en-bucket.txt") archivo(s) HTML en $BUCKET (s3/html-en-bucket.txt)" \
-  || revisar "No hay .html en $BUCKET: las plantillas de 1b hay que subirlas (origen: Backend/htmlNew/newUx)"
+  || revisar "No hay .html en $BUCKET: las plantillas de 1b hay que subirlas (origen: Backend/notificacion/email-template)"
 
 echo "== 8. Quien lee snsMessageId o SNS_EMAIL (lambdas de la cadena final)"
 aws lambda list-functions --query "Functions[?contains(FunctionName,'niif-dev') || contains(FunctionName,'datalake-dev')].FunctionName" --output text 2>/dev/null | tr '\t' '\n' >"$OUT/lambdas/lista.txt"

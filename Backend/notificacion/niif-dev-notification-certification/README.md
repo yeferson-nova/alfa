@@ -2,7 +2,7 @@
 
 Job de Glue que arma y **envía por Amazon SES** el correo de certificación NIIF 17. Reemplaza la versión anterior (`Backend\Glue\niif-dev-notification-certification\notification_certificacion.py`), que publicaba en SNS.
 
-**Tarea:** T1, punto 1a (SNS a SES). **Estado:** propuesta implementada y probada en local; **no desplegada ni probada contra AWS**.
+**Tarea:** T1, puntos 1a (SNS a SES) y 1b (HTML). **Estado:** implementado y probado en local (486 pruebas, 99 % de cobertura). **No desplegado ni probado contra AWS.** El job que está en QA sigue siendo el monolito de `Backend\Glue\niif-dev-notification-certification\`. Auditoría frente a ese job: `Docs\06-brechas\auditoria-job-notificacion-nuevo-vs-actual.md` (N-01, N-02, N-03, N-05, N-07 y O-01 a O-06 resueltos el 2026-11-10).
 
 ## Qué cambia frente al job anterior
 
@@ -12,7 +12,7 @@ Job de Glue que arma y **envía por Amazon SES** el correo de certificación NII
 | Estructura | Un script de 600 líneas con todo mezclado, ejecutado al importarse | Arquitectura hexagonal: dominio, aplicación, adaptadores y configuración (ver abajo) |
 | Valores fijos | Zona horaria, vigencia de enlaces, nombre del índice, longitud del token y tiempo de espera en el código | Todo llega por argumentos del job; el código no tiene cuentas, regiones, ARN, buckets ni tablas |
 | Errores | Texto libre y `ValueError` | Taxonomía con código, dominio, severidad, recuperable, acción y destinatario |
-| Logs | `print` de texto | Una línea JSON por evento, con `ejecucion_id` y catálogo cerrado de eventos |
+| Logs | `print` de texto | Una línea JSON por evento, con mensaje en español y los campos de trazabilidad en todas las líneas (`ejecucion_id`, `request_id`, `cert_code`, `use_case_id`, `periodo_negocio`) |
 | Consulta de Athena | Espera sin límite y solo la primera página | Espera con tiempo máximo y lectura de todas las páginas |
 | Idempotencia | Un reintento reenviaba el correo | Si todos los registros del `certCode` ya están en estado enviado, no reenvía |
 | Pruebas | Ninguna | Pruebas unitarias, de adaptadores (`Stubber`), de arquitectura y de calidad |
@@ -28,13 +28,19 @@ Obligatorios:
 | `--useCaseId`, `--certCode`, `--emailType` | Identifican la solicitud (los envía la lambda `niif-dev-notification-certification-trigger`) |
 | `--CONFIG_BUCKET`, `--CONFIG_KEY`, `--GLOBAL_CONFIG_KEY` | Ubicación de la configuración global y del caso |
 | `--REDIRECT_BASE_URL`, `--SHORT_LINKS_TABLE` | Enlaces cortos |
-| `--SES_REMITENTE` | Dirección remitente, verificada en SES |
+| `--SES_SENDER` | Dirección remitente, verificada en SES (mismo nombre que usa el job desplegado en QA) |
 | `--INDICE_CERT_CODE` | Índice de `notification-certification` por `certCode` |
 | `--ZONA_HORARIA` | Zona horaria de las fechas de envío y de vigencia de enlaces |
-| `--DIAS_VIGENCIA_ENLACE`, `--LONGITUD_TOKEN_ENLACE` | Política de enlaces cortos (longitud entre 1 y 32) |
+| `--DIAS_VIGENCIA_ENLACE`, `--LONGITUD_TOKEN_ENLACE` | Política de enlaces cortos (longitud entre 1 y 32; usar 32 para cerrar SEG-13) |
 | `--SEGUNDOS_ENTRE_CONSULTAS`, `--SEGUNDOS_MAXIMOS_CONSULTA` | Espera de Athena |
 
-Opcionales: `--SES_CONFIGURATION_SET` (rebotes y quejas), `--REGENERACION_SIN_DATOS_NUEVOS` (`true` o `false`, por defecto `false`) y `--JOB_RUN_ID` (lo entrega Glue; se usa como `ejecucion_id`).
+Opcionales:
+- `--SES_CONFIGURATION_SET` (rebotes y quejas).
+- `--REGENERACION_SIN_DATOS_NUEVOS` (`true` o `false`, por defecto `false`).
+- `--JOB_RUN_ID`: lo entrega Glue y se registra como `request_id`.
+- `--EJECUCION_ID`: el ID del flujo (nombre de la ejecución de la Step Function). Si no llega, se toma del campo `ejecucionId` del registro de notificación. Si tampoco está, se registra `NTF_ID_FLUJO_AUSENTE`. **Nunca se inventa un ID.** Hoy ni el trigger ni el job de certificación lo envían (ARQ-32).
+
+Los 6 argumentos técnicos (`INDICE_CERT_CODE`, `ZONA_HORARIA`, `DIAS_VIGENCIA_ENLACE`, `LONGITUD_TOKEN_ENLACE`, `SEGUNDOS_ENTRE_CONSULTAS`, `SEGUNDOS_MAXIMOS_CONSULTA`) y `SES_SENDER` deben ir en los **argumentos por defecto del job**: el trigger no los envía.
 
 Los valores de DEV están en `config\job.dev.json`; el ejemplo de invocación, en `eventos\argumentos-job.dev.json`.
 
@@ -52,7 +58,17 @@ src/notificacion_certificacion/
 
 Regla de dependencias: `dominio <- aplicacion <- adaptadores`; solo `configuracion` conoce a todos. La prueba `tests\test_arquitectura.py` la verifica por análisis de imports.
 
-Flujo del caso de uso: carga la configuración, busca los registros por `certCode`, reserva el grupo compuesto si aplica, ejecuta las consultas de Athena, crea los enlaces cortos, arma el mensaje, lo envía por SES, marca los registros como enviados y cierra el grupo compuesto.
+Flujo del caso de uso:
+1. Fija el contexto de trazabilidad.
+2. Carga la configuración y busca los registros por `certCode`.
+3. Reserva el grupo compuesto si aplica.
+4. Ejecuta las consultas de Athena.
+5. Crea los enlaces cortos.
+6. Arma el texto y el HTML (plantilla de `email.templatePath`).
+7. Envía por SES, uno por destinatario. Si uno falla, sigue con los demás.
+8. Marca los enviados y cierra el grupo compuesto.
+
+Las consultas se parametrizan en modo estricto: si falta una variable, el job falla (`NTF-CFG-009`) en vez de consultar con `$period` literal.
 
 ## Cambios de contrato que hay que conocer
 
@@ -85,13 +101,30 @@ Cada error tiene código `NTF-<DOM>-<NNN>`:
 | `NTF-PLA-003` | PLATAFORMA | SES no confirmó el identificador del mensaje |
 | `NTF-PLA-004` | PLATAFORMA | Otro error de AWS |
 | `NTF-PLA-005` | PLATAFORMA | La consulta de Athena superó el tiempo máximo |
+| `NTF-CFG-009` | CONFIGURACION | Consulta con una variable sin valor o un marcador inválido |
+| `NTF-PLA-006` | PLATAFORMA | SES no envió el correo a ningún destinatario |
 | `NTF-PLA-999` | PLATAFORMA | Error inesperado |
 
 El job registra el error y lo relanza, para que Glue marque la ejecución como fallida.
 
-## Logs
+## Logs y trazabilidad
 
-Una línea JSON por evento: `marcaTiempo`, `nivel`, `evento`, `funcion`, `ejecucion_id` y el contexto. Los eventos son `NTF_INICIO_JOB`, `NTF_CONFIGURACION_CARGADA`, `NTF_SIN_REGISTROS`, `NTF_YA_ENVIADO`, `NTF_COMPUESTO_YA_COMPLETADO`, `NTF_CONSULTA_EJECUTADA`, `NTF_CONSULTA_FALLIDA`, `NTF_ENLACE_CREADO`, `NTF_CORREO_ENVIADO`, `NTF_REGISTROS_MARCADOS`, `NTF_COMPUESTO_CERRADO`, `NTF_FIN_JOB` y `NTF_ERROR_JOB`. No se registran direcciones de correo (Ley 1581). No se emiten métricas EMF: en Glue no se procesan como en Lambda.
+La bitácora usa la librería común `niif_observability`, que va copiada en `src\niif_observability\` (la misma copia en cada paquete de la cadena; ver `Backend\notificacion\LEEME.md`). Cada línea es un JSON con:
+- `marcaTiempo`, `nivel`, `evento`, `mensaje` (en español) y `funcion`;
+- **siempre** `ejecucion_id`, `request_id`, `cert_code`, `use_case_id` y `periodo_negocio` (en `null` mientras no se conozcan);
+- el detalle del evento. El mensaje de un error va en `detalle`.
+
+**Eventos:**
+- `NTF_INICIO_JOB`, `NTF_CONFIGURACION_CARGADA`, `NTF_SIN_REGISTROS`, `NTF_YA_ENVIADO`, `NTF_COMPUESTO_YA_COMPLETADO`.
+- `NTF_ID_FLUJO_AUSENTE` y `NTF_ID_FLUJO_DISTINTO`.
+- `NTF_CONSULTA_EJECUTADA` (con `id_consulta` de Athena y `bytes_escaneados`) y `NTF_CONSULTA_FALLIDA`.
+- `NTF_ENLACE_CREADO`, `NTF_AVISOS_AGREGADOS`, `NTF_PLANTILLA_NO_DISPONIBLE`, `NTF_FORMATO_CORREO` (`HTML` o `TEXTO`).
+- `NTF_CORREO_ENVIADO`, `NTF_CORREO_FALLIDO`, `NTF_ENVIO_PARCIAL`, `NTF_REGISTROS_MARCADOS`, `NTF_COMPUESTO_CERRADO`.
+- `NTF_FIN_JOB`, `NTF_ERROR_JOB` (también para los errores de arranque) y `NTF_RESUMEN_JOB`.
+
+No se registran direcciones de correo ni el SQL (Ley 1581, SEG-15).
+
+**Métricas:** en Glue las líneas EMF no se convierten en métricas (solo pasa en Lambda). Por eso el job emite `NTF_RESUMEN_JOB` con `job_exitoso`, `job_fallido`, `correos_enviados`, `correos_fallidos` y `duracion_ms`. DevOps las convierte en métricas con **filtros de métricas de CloudWatch Logs** sobre esos campos.
 
 ## Permisos mínimos del rol del job
 
@@ -136,5 +169,8 @@ Antes de desplegar, en AWS:
 
 ## Pendiente
 
-- **1b (correo en HTML):** el modelo `Mensaje` y el adaptador de SES ya admiten cuerpo HTML; falta la plantilla (`Backend\htmlNew\`) y la decisión de seguridad de los botones.
-- El tipo de job sigue siendo `glueetl` con Spark. Como ya no usa Spark, podría pasar a un job de Python (shell) o a una lambda para reducir costo; requiere decisión y pruebas.
+- **N-04:** el job no reenvía si todos los registros ya están en `SENT` (el desplegado sí). Confirmar con el equipo; si hace falta reenviar, que sea con una bandera explícita.
+- **N-06:** acordar con DevOps la publicación (script + zip con `notificacion_certificacion` y `niif_observability`, ambos desde `src/`, que arma `scripts/empaquetar.sh`).
+- **N-08:** llevar el código al estándar de hoy (identificadores en inglés y PEP 8, `test/` en singular, punto de entrada en `src/`, `tox.ini`, `config/` de qa y prd).
+- **ARQ-32:** para que llegue el `ejecucion_id`, el job de certificación debe guardar `ejecucionId` en `notification-certification` y el trigger debe pasar `--EJECUCION_ID`.
+- **Tipo de job:** sigue siendo `glueetl` con Spark. Como ya no usa Spark, podría pasar a un job de Python (shell) o a una lambda para bajar el costo; requiere decisión y pruebas.

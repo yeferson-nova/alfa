@@ -20,7 +20,7 @@ Ejemplo en `Docs\05-arquitectura\ejemplo-correo-certificacion.png`. Es el objeti
 `Backend\htmlNew\` contiene las 5 plantillas reescritas para clientes de correo: tablas, estilos en línea, botones VML para Outlook y `@media` para móvil. Tienen los mismos placeholders (`$useCaseName`, `$periodRange`/`$perido_a`, `$tableTotal`, `$tableSummary`, `$tableDetail`, `$certificarLink`, `$nocertificarLink`). Detalle y pendientes en su `README.md`. Las tablas las inyecta el backend (clase `dataframe`, probablemente pandas); para máxima fidelidad deberían llegar con estilos en línea. Errata en reservas: `$perido_a - $perido_a`.
 
 ## Diseño nuevo, reemplazo directo (2026-11-03)
-- `Backend\htmlNew\newUx\` contiene las mismas 5 plantillas con el diseño del mockup `Backend\htmlNew\mockup\propuesta-ux-notificaciones.html`.
+- `Backend\notificacion\email-template\` contiene las mismas 5 plantillas con el diseño del mockup `Backend\htmlNew\mockup\propuesta-ux-notificaciones.html`.
 - Mismos placeholders y mismo orden; las lambdas no cambian.
 - El usuario pidió explícitamente que sean **las mismas plantillas** con el diseño nuevo, no un sistema de componentes nuevo.
 - Fase 2 (requiere cambios en la lambda): tarjetas de cifras, validaciones, plazo, ID de ejecución y estados adicionales.
@@ -38,4 +38,4 @@ Envío por SES (1a) ya implementado en el job de notificación: [[job-notificaci
 Ver [[diseno-propuesto]] y [[preguntas-abiertas]].
 
 ## Estructura y uso actual (2026-11-09)
-`Backend\htmlNew\` quedó organizado: `newUx\` (6 plantillas de producción, incluida `primas_rentas_cert.html`), `anterior\`, `mockup\` (4 estados y variaciones), `previews\` (6 escenarios por plantilla) y `herramientas\` (generador y validador contra el estándar de correo). Las plantillas se suben a `niif-dev-assets/email-templates/` y el job las lee con `email.templatePath` del JSON del caso. Detalle de cambios, marcadores (`$avisoHtml` incluido) y pruebas en [[job-notificacion-ses]] y en `htmlNew\README.md`.
+`Backend\htmlNew\` quedó organizado (desde 2026-11-10 las 6 plantillas de producción están en `Backend\notificacion\email-template\`, antes `newUx\`, incluida `primas_rentas_cert.html`), `anterior\`, `mockup\` (4 estados y variaciones), `previews\` (6 escenarios por plantilla) y `herramientas\` (generador y validador contra el estándar de correo). Las plantillas se suben a `niif-dev-assets/email-templates/` y el job las lee con `email.templatePath` del JSON del caso. Detalle de cambios, marcadores (`$avisoHtml` incluido) y pruebas en [[job-notificacion-ses]] y en `htmlNew\README.md`.

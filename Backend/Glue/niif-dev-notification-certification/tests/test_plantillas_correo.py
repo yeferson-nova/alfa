@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 HERRAMIENTAS = Path(__file__).resolve().parents[3] / "htmlNew" / "herramientas"
-PLANTILLAS = sorted((HERRAMIENTAS.parent / "newUx").glob("*.html"))
+PLANTILLAS = sorted((HERRAMIENTAS.parents[1] / "notificacion" / "email-template").glob("*.html"))
 PREVIEWS = sorted(p for p in (HERRAMIENTAS.parent / "previews").rglob("*.html") if p.name != "index.html")
 
 

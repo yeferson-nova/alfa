@@ -125,6 +125,12 @@ def _variables_texto(correo: Any) -> dict[str, str]:
     return {str(clave): str(valor) for clave, valor in crudas.items()}
 
 
+def _ruta_plantilla(correo: Any) -> str | None:
+    if not _existe(correo, ("templatePath",)):
+        return None
+    return _texto(correo, "templatePath").strip()
+
+
 def leer_configuracion_caso(datos: Any, caso_uso_esperado: str) -> ConfiguracionCaso:
     declarado = datos.get("useCaseId") if isinstance(datos, Mapping) else None
     if declarado != caso_uso_esperado:
@@ -142,4 +148,5 @@ def leer_configuracion_caso(datos: Any, caso_uso_esperado: str) -> Configuracion
         consultas_totales=_consultas(datos, TIPO_CONSULTA_TOTALES),
         consultas_presencia=_presencia(correo),
         compuesta=_compuesta(datos),
+        ruta_plantilla=_ruta_plantilla(correo),
     )

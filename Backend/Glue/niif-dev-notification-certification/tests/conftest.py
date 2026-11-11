@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 DIRECTORIO_JOB = Path(__file__).resolve().parents[1]
-DIRECTORIO_PLANTILLAS = Path(__file__).resolve().parents[3] / "htmlNew" / "newUx"
+DIRECTORIO_PLANTILLAS = Path(__file__).resolve().parents[3] / "notificacion" / "email-template"
 
 ARGUMENTOS = {
     "useCaseId": "casoA",

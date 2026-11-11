@@ -1,7 +1,8 @@
 from string import Template
 from typing import Mapping, Sequence
 
-from notificacion_certificacion.dominio.modelos import ConfiguracionCaso, RegistroNotificacion
+from notificacion_certificacion.dominio.correo_html import TONO_ADVERTENCIA, TONO_INFORMATIVO
+from notificacion_certificacion.dominio.modelos import Aviso, ConfiguracionCaso, RegistroNotificacion
 from notificacion_certificacion.dominio.parametrizacion import parametrizar
 from notificacion_certificacion.dominio.periodo import rango_periodo
 from notificacion_certificacion.dominio.textos import (
@@ -106,3 +107,10 @@ def componer_texto(cuerpo: str, aviso: str, regenerado: bool) -> str:
     if regenerado:
         texto = AVISO_REGENERACION + SEPARADOR_AVISO + texto
     return texto
+
+
+def avisos_del_correo(aviso: str, regenerado: bool) -> list[Aviso]:
+    avisos = [Aviso(TONO_ADVERTENCIA, aviso)] if aviso else []
+    if regenerado:
+        avisos.insert(0, Aviso(TONO_INFORMATIVO, AVISO_REGENERACION))
+    return avisos

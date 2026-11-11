@@ -46,6 +46,7 @@ def armar_escenario(
     respuestas: Any = None,
     compuesto: Any = None,
     notificador: Any = None,
+    plantillas: Any = None,
 ) -> Escenario:
     parametros = parametros or construir_parametros()
     config_caso = config_caso if config_caso is not None else copiar_config_caso()
@@ -53,7 +54,7 @@ def armar_escenario(
         (parametros.bucket_configuracion, parametros.clave_global): CONFIG_GLOBAL,
         (parametros.bucket_configuracion, parametros.clave_caso): config_caso,
     }
-    configuracion = RepositorioConfiguracionFalso(documentos)
+    configuracion = RepositorioConfiguracionFalso(documentos, plantillas)
     notificaciones = RepositorioNotificacionesFalso(
         registros if registros is not None else [construir_registro()]
     )

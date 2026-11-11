@@ -299,7 +299,7 @@ def validar(ruta, conjunto):
 
 def descubrir():
     conjuntos = {
-        "newUx": sorted((RAIZ / "newUx").glob("*.html")),
+        "newUx": sorted((RAIZ.parent / "notificacion" / "email-template").glob("*.html")),
         "anterior": sorted((RAIZ / "anterior").glob("*.html")),
         "previews": sorted(p for p in (RAIZ / "previews").rglob("*.html") if p.name != "index.html"),
     }

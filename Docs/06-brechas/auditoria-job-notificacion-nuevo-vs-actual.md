@@ -38,7 +38,7 @@ Fecha: 2026-11-10. Revisión de código, sin cambios.
 ## 2. Lo que falta o cambió (antes de reemplazar)
 | # | Severidad | Hallazgo | Evidencia | Qué hacer |
 |---|---|---|---|---|
-| N-01 | **Bloqueante** | **No arma el HTML.** El modelo `Mensaje` y SES admiten HTML, pero el caso de uso nunca lo llena y la configuración no lee `templatePath`. Faltan:<br>• la carga de la plantilla desde `email-template/`;<br>• las tablas HTML de resumen y totales;<br>• los recuadros de aviso (azul de regeneración, ámbar de sin datos) con `$avisoHtml`;<br>• la lista de archivos con `rel="noopener noreferrer"`;<br>• el escape de variables;<br>• la regla de mandar solo texto si la plantilla no tiene `$avisoHtml` y hay avisos. | `notificar_certificacion.py` (el `Mensaje` sin `html`); `configuracion.py` (sin `templatePath`) | Portar `build_html_body`, `result_to_html`, `details_to_html` y `notice_box` del actual, con pruebas contra las 6 plantillas de `Backend\htmlNew\newUx\` |
+| N-01 | **Bloqueante** | **No arma el HTML.** El modelo `Mensaje` y SES admiten HTML, pero el caso de uso nunca lo llena y la configuración no lee `templatePath`. Faltan:<br>• la carga de la plantilla desde `email-template/`;<br>• las tablas HTML de resumen y totales;<br>• los recuadros de aviso (azul de regeneración, ámbar de sin datos) con `$avisoHtml`;<br>• la lista de archivos con `rel="noopener noreferrer"`;<br>• el escape de variables;<br>• la regla de mandar solo texto si la plantilla no tiene `$avisoHtml` y hay avisos. | `notificar_certificacion.py` (el `Mensaje` sin `html`); `configuracion.py` (sin `templatePath`) | Portar `build_html_body`, `result_to_html`, `details_to_html` y `notice_box` del actual, con pruebas contra las 6 plantillas de `Backend\notificacion\email-template\` |
 | N-02 | **Alta** | **Envío parcial distinto.**<br>• El actual sigue con los demás si un destinatario falla, marca `SENT` si salió al menos uno y registra `ENVIO PARCIAL`.<br>• El nuevo se detiene en la primera falla y no marca nada. Si el primero ya salió, el reintento le vuelve a mandar el correo. | `_enviar` del nuevo frente al ciclo `for dest` del actual (l. 700-715) | Mantener la regla del actual: un evento por destinatario fallido y fallar solo si no salió ninguno |
 | N-03 | **Alta** | **Contrato de argumentos.**<br>• Pide `--SES_REMITENTE`, pero QA está configurado con `--SES_SENDER`.<br>• Agrega 6 argumentos obligatorios que nadie pasa hoy: `INDICE_CERT_CODE`, `ZONA_HORARIA`, `DIAS_VIGENCIA_ENLACE`, `LONGITUD_TOKEN_ENLACE`, `SEGUNDOS_ENTRE_CONSULTAS` y `SEGUNDOS_MAXIMOS_CONSULTA`.<br>• El trigger no los envía, así que el job falla al arrancar si no están entre sus valores por defecto. | `ajustes.py` (`ARGUMENTOS_OBLIGATORIOS`) | Aceptar el nombre `SES_SENDER` (el mismo que ya tiene QA) y documentar los 6 como argumentos por defecto del job en el paquete para DevOps |
 | N-04 | Media | **Cambia el reenvío.** El actual reenvía si se relanza un `certCode` en `SENT` (el paquete de QA lo documenta). El nuevo lo omite. Es más seguro, pero cambia un comportamiento que quizá se usa para reenviar a mano. | `_omision` (`YA_ENVIADO`) | Confirmar con el equipo. Si se necesita reenviar, que sea con una bandera explícita |
@@ -62,8 +62,28 @@ Lo que ya trae: una línea JSON por evento, con `marcaTiempo`, `nivel`, `evento`
 
 ## 4. Orden recomendado
 1. N-01 (HTML), N-02 (envío parcial) y N-03 (argumentos): sin estos, el nuevo empeora lo que ya funciona en QA.
-2. O-01 y O-02: el ID y el contexto en cada línea. Es la base de la parte 5 (observabilidad) y lo comparten todas las lambdas (`_shared\`).
+2. O-01 y O-02: el ID y el contexto en cada línea. Es la base de la parte 5 (observabilidad) y lo comparten todas las lambdas (librería `niif_observability`).
 3. O-03 a O-06, N-05 y N-07.
 4. Llevarlo al estándar (N-08) al empaquetarlo.
 
 Hasta que se cierre el punto 1, lo que se entrega sigue siendo el job actual.
+
+## 5. Estado de las correcciones (2026-11-10)
+| # | Estado | Cómo quedó |
+|---|---|---|
+| N-01 | **Resuelto** | El job lee `email.templatePath`. Arma las tablas HTML, los recuadros de aviso (el azul de regeneración antes que el ámbar de sin datos), la lista de archivos con `rel="noopener noreferrer"` y escapa las variables. Si la plantilla no se puede leer o le falta `$avisoHtml` cuando hay avisos, envía solo texto y lo registra. Probado contra las 6 plantillas reales de `Backend\notificacion\email-template\`: no queda ningún marcador sin reemplazar |
+| N-02 | **Resuelto** | Hace un intento por destinatario. Registra `NTF_CORREO_FALLIDO` y sigue con los demás. Marca y cierra el compuesto solo con los enviados (`NTF_ENVIO_PARCIAL`). Si no salió ninguno, falla con `NTF-PLA-006` |
+| N-03 | **Resuelto en código** | El argumento es `--SES_SENDER`. Los 6 argumentos técnicos están en `config\job.dev.json`; DevOps debe ponerlos como argumentos por defecto del job |
+| N-04 | Pendiente | Decisión del equipo |
+| N-05 | **Resuelto** | Las consultas se parametrizan en modo estricto (`NTF-CFG-009`) |
+| N-06 | Avanzado | `empaquetar.sh` arma el zip con `notificacion_certificacion` y `niif_observability` y se probó que importa desde el zip. Falta acordarlo con DevOps |
+| N-07 | **Resuelto en configuración** | `LONGITUD_TOKEN_ENLACE = 32` en `job.dev.json` |
+| N-08 | Pendiente | Traducir a inglés y PEP 8, `test\`, punto de entrada en `src\` |
+| O-01 | **Resuelto** | Acepta `--EJECUCION_ID` o lo toma del campo `ejecucionId` del registro. Si no llega, registra `NTF_ID_FLUJO_AUSENTE` y **no inventa**. Si los dos no coinciden, registra `NTF_ID_FLUJO_DISTINTO`. `JOB_RUN_ID` va como `request_id`. **Falta del lado de ARQ-32:** que certificación guarde `ejecucionId` y que el trigger lo pase |
+| O-02 | **Resuelto** | Librería común `niif_observability`, copia de `niif_observability` dentro de `src\` de cada paquete (decisión del usuario 2026-11-10: se duplica en Git porque la entrega es por carpeta); `Backend\notificacion\verificar_copias_comunes.py` comprueba que todas las copias sean iguales: los 5 campos de trazabilidad van en todas las líneas |
+| O-03 | **Resuelto** | Cada evento tiene su mensaje en español (una prueba exige que el catálogo esté completo) |
+| O-04 | **Resuelto** | Los errores de arranque salen en JSON (`NTF_ERROR_JOB`) |
+| O-05 | **Resuelto** | Eventos nuevos: fallo y envío parcial, avisos, formato HTML o texto, plantilla no disponible, ID del flujo ausente o distinto, y el ID de Athena con los bytes escaneados |
+| O-06 | **Resuelto con ajuste** | En Glue el EMF no se convierte en métricas. El job emite `NTF_RESUMEN_JOB` para filtros de métricas (DevOps). `emf_line` queda en `niif_observability` para las lambdas |
+
+**Pruebas:** el job tiene 486 pruebas que pasan, con 99 % de cobertura (antes eran 451); con la copia de `niif_observability` y sus pruebas son 513. Todo es local: nada se desplegó ni se probó en AWS.

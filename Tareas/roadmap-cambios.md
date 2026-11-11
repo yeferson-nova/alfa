@@ -105,7 +105,7 @@ flowchart LR
 - **Un solo punto de envío:** el job `niif-dev-notification-certification` hace `sns.publish` por destinatario (línea 605) con un cuerpo de texto (línea 578), y antes reescribe el `FilterPolicy` de cada suscripción (líneas 78-156). Lo lanza el trigger del stream `PENDING`, cuyo código no tenemos.
 - Destinatarios, asunto y variables vienen del JSON de cada caso en `niif-dev-assets` (`email.destinations`, `subject`, `stringVars`).
 - Ya hubo una prueba con SES: la lambda `testNotifications` usa `ses.send_email` y convierte tablas a HTML. Puede haber identidades verificadas (lo dice la sección `ses` del script).
-- Las plantillas HTML están en `Backend\htmlNew\` (versión compatible y `newUx\`).
+- Las plantillas HTML de producción están en `Backend\notificacion\email-template\`; las herramientas y la versión compatible, en `Backend\htmlNew\`.
 
 ### El cambio (propuesta)
 1. **Configuración, no código, para el canal:** agregar al JSON global (`configs/certification/json_global_notif_cert.json`) el canal (`SNS` o `SES`), el remitente y el conjunto de configuración de SES. Así **no hay que tocar el trigger**, cuyo código no tenemos.

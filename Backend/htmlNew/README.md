@@ -6,7 +6,7 @@ Plantillas HTML para clientes de correo (Outlook de escritorio, Outlook web y m�
 
 | Carpeta | Qué contiene | Se usa |
 |---|---|---|
-| `newUx\` | **Las 5 plantillas de producción**, con el diseño nuevo. Son las que se suben a `s3://niif-dev-assets/email-template/`. Ver su `README.md` | Sí |
+| `..\notificacion\email-template\` (antes `newUx\`, movida el 2026-11-10) | **Las 6 plantillas de producción**, con el diseño nuevo. Son las que se suben a `s3://niif-dev-assets/email-template/`. Ver su `README.md` | Sí |
 | `anterior\` | Las 5 plantillas con el diseño anterior (compatibles con correo, sin el marcador `$avisoHtml`) | No. Referencia histórica |
 | `mockup\` | `propuesta-ux-notificaciones.html`: mockup de propuesta UX/CX (no es una plantilla). Se abre en el navegador | No. Propuesta |
 | `previews\` | Correos de ejemplo ya llenos: 3 variantes por plantilla (15 archivos) y un `index.html`. Datos inventados | Para revisar |
@@ -16,11 +16,11 @@ Las 5 plantillas, una por caso de uso: `primas_arl_cert`, `auxilio_funerario_cer
 
 ## Cómo trabajar
 
-1. **Editar** una plantilla en `newUx\`.
+1. **Editar** una plantilla en `Backend\notificacion\email-template\`.
 2. **Regenerar las vistas previas:** `python herramientas/generar_previews.py`. Usa las mismas funciones del job (`build_html_body`, `result_to_html`, `details_to_html`, `notices_to_html`), así que lo que se ve es lo que sale por SES. No necesita AWS.
-3. **Validar:** `python herramientas/validar_plantillas.py`. Revisa `newUx\`, `anterior\` y `previews\` contra el estándar de HTML para correo. Devuelve código 1 si hay algún ERROR. Las pruebas del job (`Backend\Glue\niif-dev-notification-certification\tests\`) ejecutan la misma validación.
+3. **Validar:** `python herramientas/validar_plantillas.py`. Revisa `Backend\notificacion\email-template\`, `anterior\` y `previews\` contra el estándar de HTML para correo. Devuelve código 1 si hay algún ERROR. Las pruebas del job (`Backend\Glue\niif-dev-notification-certification\tests\`) ejecutan la misma validación.
 4. **Mirar** `previews\index.html` en el navegador. Para ver el ancho móvil real hay que usar las herramientas de desarrollador del navegador con un ancho de 390 px (una ventana de escritorio reducida suele tener un mínimo de ~500 px).
-5. **Subir** las plantillas de `newUx\` a `s3://niif-dev-assets/email-template/` y probar con un envío real a una dirección verificada.
+5. **Subir** las plantillas de `Backend\notificacion\email-template\` a `s3://niif-dev-assets/email-template/` y probar con un envío real a una dirección verificada.
 
 Las vistas previas son un apoyo. No reemplazan la prueba en clientes reales (Outlook de escritorio, Gmail web y app, iOS Mail).
 

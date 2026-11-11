@@ -40,11 +40,14 @@ def _inicio(stub):
     )
 
 
-def _estado(stub, nombre, motivo=None):
+def _estado(stub, nombre, motivo=None, escaneados=None):
     estado = {"State": nombre}
     if motivo:
         estado["StateChangeReason"] = motivo
-    stub.add_response("get_query_execution", {"QueryExecution": {"Status": estado}}, {"QueryExecutionId": "q1"})
+    ejecucion = {"Status": estado}
+    if escaneados is not None:
+        ejecucion["Statistics"] = {"DataScannedInBytes": escaneados}
+    stub.add_response("get_query_execution", {"QueryExecution": ejecucion}, {"QueryExecutionId": "q1"})
 
 
 def _filas(*filas):
@@ -56,7 +59,7 @@ def test_athena_espera_hasta_que_la_consulta_termina_y_lee_el_resultado():
     _inicio(stub)
     _estado(stub, "QUEUED")
     _estado(stub, "RUNNING")
-    _estado(stub, "SUCCEEDED")
+    _estado(stub, "SUCCEEDED", escaneados=2048)
     stub.add_response(
         "get_query_results",
         {"ResultSet": {"Rows": _filas(("a", "b"), ("1", "2"), ("3", "4"))}},
@@ -65,7 +68,7 @@ def test_athena_espera_hasta_que_la_consulta_termina_y_lee_el_resultado():
     with stub:
         resultado = consultor.ejecutar("SELECT 1", "db", ENTORNO)
 
-    assert resultado == ResultadoConsulta(("a", "b"), (("1", "2"), ("3", "4")))
+    assert resultado == ResultadoConsulta(("a", "b"), (("1", "2"), ("3", "4")), "q1", 2048)
     assert espera.segundos == [1.0, 1.0]
 
 
@@ -86,7 +89,7 @@ def test_athena_lee_todas_las_paginas_y_toma_los_encabezados_solo_de_la_primera(
     with stub:
         resultado = consultor.ejecutar("SELECT 1", "db", ENTORNO)
 
-    assert resultado == ResultadoConsulta(("a",), (("1",), ("2",), ("3",)))
+    assert resultado == ResultadoConsulta(("a",), (("1",), ("2",), ("3",)), "q1")
 
 
 def test_athena_con_solo_encabezados_devuelve_resultado_sin_filas():
@@ -95,7 +98,7 @@ def test_athena_con_solo_encabezados_devuelve_resultado_sin_filas():
     _estado(stub, "SUCCEEDED")
     stub.add_response("get_query_results", {"ResultSet": {"Rows": _filas(("a",))}}, {"QueryExecutionId": "q1"})
     with stub:
-        assert consultor.ejecutar("SELECT 1", "db", ENTORNO) == ResultadoConsulta(("a",), ())
+        assert consultor.ejecutar("SELECT 1", "db", ENTORNO) == ResultadoConsulta(("a",), (), "q1")
 
 
 def test_athena_sin_filas_devuelve_encabezados_vacios():
@@ -104,7 +107,7 @@ def test_athena_sin_filas_devuelve_encabezados_vacios():
     _estado(stub, "SUCCEEDED")
     stub.add_response("get_query_results", {"ResultSet": {"Rows": []}}, {"QueryExecutionId": "q1"})
     with stub:
-        assert consultor.ejecutar("SELECT 1", "db", ENTORNO) == ResultadoConsulta((), ())
+        assert consultor.ejecutar("SELECT 1", "db", ENTORNO) == ResultadoConsulta((), (), "q1")
 
 
 def test_athena_completa_celdas_vacias_con_texto_vacio():

@@ -18,6 +18,12 @@ class RepositorioConfiguracionS3:
             contenido = respuesta["Body"].read().decode(CODIFICACION)
         return self._interpretar(contenido, f"{bucket}/{clave_normalizada}")
 
+    def cargar_texto(self, bucket: str, clave: str) -> str:
+        clave_normalizada = normalizar_clave(bucket, clave)
+        with traduciendo(f"S3 get_object {bucket}/{clave_normalizada}"):
+            respuesta = self._cliente.get_object(Bucket=bucket, Key=clave_normalizada)
+            return respuesta["Body"].read().decode(CODIFICACION)
+
     @staticmethod
     def _interpretar(contenido: str, origen: str) -> Mapping[str, Any]:
         try:

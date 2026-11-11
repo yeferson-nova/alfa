@@ -1,10 +1,11 @@
 from typing import Mapping, Sequence
 
 from notificacion_certificacion.aplicacion.puertos import Bitacora, ConsultorAnalitico, EventoLog
+from notificacion_certificacion.dominio.correo_html import bloque_tabla, error_a_html, resultado_a_html
 from notificacion_certificacion.dominio.disponibilidad import extraer_cantidad
 from notificacion_certificacion.dominio.errores import ErrorConsultaFallida
-from notificacion_certificacion.dominio.modelos import Consulta, EntornoConsultas, ResultadoConsulta
-from notificacion_certificacion.dominio.parametrizacion import parametrizar
+from notificacion_certificacion.dominio.modelos import Consulta, EntornoConsultas, ResultadoConsulta, TablaCorreo
+from notificacion_certificacion.dominio.parametrizacion import parametrizar_estricto
 from notificacion_certificacion.dominio.redaccion import aviso_disponibilidad
 from notificacion_certificacion.dominio.tablas import formatear_resultado, unir_bloques
 from notificacion_certificacion.dominio.textos import TEXTO_ERROR_CONSULTA
@@ -20,8 +21,12 @@ class ServicioConsultas:
         consultas: Sequence[Consulta],
         variables: Mapping[str, str],
         entorno: EntornoConsultas,
-    ) -> str:
-        return unir_bloques(self._texto(consulta, variables, entorno) for consulta in consultas)
+    ) -> TablaCorreo:
+        bloques = [self._bloque(consulta, variables, entorno) for consulta in consultas]
+        return TablaCorreo(
+            texto=unir_bloques(texto for texto, _ in bloques),
+            html="".join(bloque_tabla(html) for _, html in bloques),
+        )
 
     def disponibilidad(
         self,
@@ -44,27 +49,32 @@ class ServicioConsultas:
         variables: Mapping[str, str],
         entorno: EntornoConsultas,
     ) -> ResultadoConsulta:
-        base_datos = parametrizar(consulta.base_datos, variables, desescapar=True)
-        sql = parametrizar(consulta.sql, variables, desescapar=True)
+        base_datos = parametrizar_estricto(consulta.base_datos, variables, f"{consulta.nombre}.database")
+        sql = parametrizar_estricto(consulta.sql, variables, f"{consulta.nombre}.query")
         resultado = self._consultor.ejecutar(sql, base_datos, entorno)
         self._bitacora.registrar(
-            EventoLog.CONSULTA_EJECUTADA, consulta=consulta.nombre, filas=len(resultado.filas)
+            EventoLog.CONSULTA_EJECUTADA,
+            consulta=consulta.nombre,
+            filas=len(resultado.filas),
+            id_consulta=resultado.id_consulta,
+            bytes_escaneados=resultado.bytes_escaneados,
         )
         return resultado
 
-    def _texto(
+    def _bloque(
         self,
         consulta: Consulta,
         variables: Mapping[str, str],
         entorno: EntornoConsultas,
-    ) -> str:
+    ) -> tuple[str, str]:
         try:
-            return formatear_resultado(self._ejecutar(consulta, variables, entorno))
+            resultado = self._ejecutar(consulta, variables, entorno)
         except ErrorConsultaFallida as error:
             self._bitacora.registrar(
                 EventoLog.CONSULTA_FALLIDA, nivel="ERROR", consulta=consulta.nombre, **error.como_diccionario()
             )
-            return TEXTO_ERROR_CONSULTA
+            return TEXTO_ERROR_CONSULTA, error_a_html()
+        return formatear_resultado(resultado), resultado_a_html(resultado)
 
     def _cantidad(
         self,

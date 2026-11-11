@@ -66,23 +66,27 @@ def test_servicio_consultas_ejecuta_con_variables_y_une_los_bloques():
     )
     servicio = ServicioConsultas(consultor, BitacoraEnMemoria())
 
-    texto = servicio.tabla([_consulta(), _consulta("q2", "SELECT otro")], VARIABLES, ENTORNO)
+    tabla = servicio.tabla([_consulta(), _consulta("q2", "SELECT otro")], VARIABLES, ENTORNO)
 
-    assert texto == "a: 1\n\nb: 2"
+    assert tabla.texto == "a: 1\n\nb: 2"
+    assert tabla.html.count("<table") == 2
+    assert tabla.html.startswith('<div style="margin:0 0 12px 0;">')
     assert consultor.llamadas[0] == ("SELECT 202610", "db_dev", ENTORNO)
 
 
 def test_servicio_consultas_sin_consultas_devuelve_texto_vacio():
-    assert ServicioConsultas(ConsultorFalso({}), BitacoraEnMemoria()).tabla([], VARIABLES, ENTORNO) == ""
+    tabla = ServicioConsultas(ConsultorFalso({}), BitacoraEnMemoria()).tabla([], VARIABLES, ENTORNO)
+    assert (tabla.texto, tabla.html) == ("", "")
 
 
 def test_servicio_consultas_convierte_una_consulta_fallida_en_texto_y_la_registra():
     bitacora = BitacoraEnMemoria()
     consultor = ConsultorFalso({"SELECT 202610": ErrorConsultaFallida("NTF-PLA-002", "fallo")})
 
-    texto = ServicioConsultas(consultor, bitacora).tabla([_consulta()], VARIABLES, ENTORNO)
+    tabla = ServicioConsultas(consultor, bitacora).tabla([_consulta()], VARIABLES, ENTORNO)
 
-    assert texto == "Error ejecutando consulta"
+    assert tabla.texto == "Error ejecutando consulta"
+    assert "Error ejecutando consulta" in tabla.html
     evento, nivel, contexto = bitacora.eventos[0]
     assert (evento, nivel, contexto["codigo"]) == (EventoLog.CONSULTA_FALLIDA, "ERROR", "NTF-PLA-002")
 

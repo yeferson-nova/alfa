@@ -24,7 +24,7 @@ Base: `Docs\08-estandares-desarrollo\estandar-lambdas-python.md` (leerlo si se v
 - **SES para todo correo: el de negocio y el de alertas técnicas** (decisión del 2026-11-10; el grupo de soporte que las recibe está pendiente). El diagrama dibuja SES (icono "Mensaje"). Implementado en el job y probado en QA el 2026-11-10.
 - Lo aprendido en QA: el rol necesita `ses:SendEmail` sobre la identidad **y** sobre el conjunto de configuración; `--SES_SENDER` debe ser argumento por defecto del job; las plantillas viven en `<bucket-assets>/email-template/` (en singular). Detalle en `[[job-notificacion-ses]]`.
 - Identidad del dominio verificada (SPF, DKIM, DMARC), salida de *sandbox*, conjunto de configuración con rebotes y quejas hacia una alarma.
-- Plantillas HTML compatibles con clientes de correo (`Backend\htmlNew\newUx\`), con los mismos *placeholders*. Todo valor insertado se **escapa**; nada de `to_html(escape=False)`.
+- Plantillas HTML compatibles con clientes de correo (`Backend\notificacion\email-template\`), con los mismos *placeholders*. Todo valor insertado se **escapa**; nada de `to_html(escape=False)`.
 - Asunto `NIIF 17 - Certificación <CasoUso> Periodo <AAAAMM>`; marca `[REGENERADO]` cuando aplique.
 - **No enviar** si el resumen o los totales están vacíos o el CSV no tiene filas reales: emitir evento de fallo de negocio y alerta técnica (lección del incidente Primas ARL 202606).
 - Destinatarios desde metadata del caso, contra lista permitida; nunca desde el evento.

@@ -28,6 +28,10 @@ class GeneradorSecuencial:
 class BitacoraEnMemoria:
     def __init__(self) -> None:
         self.eventos: list[tuple[object, str, dict]] = []
+        self.contexto: dict = {}
+
+    def fijar_contexto(self, **contexto) -> None:
+        self.contexto.update(contexto)
 
     def registrar(self, evento, nivel="INFO", **contexto) -> None:
         self.eventos.append((evento, nivel, contexto))
@@ -37,9 +41,17 @@ class BitacoraEnMemoria:
 
 
 class RepositorioConfiguracionFalso:
-    def __init__(self, documentos: dict) -> None:
+    def __init__(self, documentos: dict, textos: dict | None = None) -> None:
         self.documentos = documentos
+        self.textos = textos or {}
         self.lecturas: list[tuple[str, str]] = []
+
+    def cargar_texto(self, bucket: str, clave: str) -> str:
+        self.lecturas.append((bucket, clave))
+        texto = self.textos[(bucket, clave)]
+        if isinstance(texto, Exception):
+            raise texto
+        return texto
 
     def cargar_json(self, bucket: str, clave: str) -> dict:
         self.lecturas.append((bucket, clave))

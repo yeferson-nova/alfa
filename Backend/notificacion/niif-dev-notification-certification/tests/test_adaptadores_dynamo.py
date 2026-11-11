@@ -284,3 +284,11 @@ def test_consumir_con_condicion_incumplida_falla_como_concurrencia():
     stub.add_client_error("transact_write_items", service_error_code="TransactionCanceledException")
     with stub, pytest.raises(ErrorConcurrencia):
         RepositorioCompuestoDynamo(cliente).consumir(_reserva(), "m1", "fecha")
+
+
+def test_buscar_por_cert_code_lee_el_id_del_flujo_si_el_registro_lo_trae():
+    cliente, stub = _cliente()
+    stub.add_response("query", {"Items": [_item(ejecucionId={"S": "arl-202606-auto-x-1"})]}, _consulta_esperada())
+    with stub:
+        (registro,) = RepositorioNotificacionesDynamo(cliente).buscar_por_cert_code("tabla", "indice", "CERT1", "casoA")
+    assert registro.ejecucion_flujo == "arl-202606-auto-x-1"

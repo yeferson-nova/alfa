@@ -28,7 +28,7 @@ Para probar en local mientras no hay acceso a AWS ni a Git ([[preferencias-usuar
 ## Qué se puede probar por tarea ([[tareas-aws]])
 - **T1:**
   - correo con SES v1 (`SendEmail`, `SendTemplatedEmail`; LocalStack captura los correos sin enviarlos);
-  - plantillas de `Backend\htmlNew\newUx\`;
+  - plantillas de `Backend\notificacion\email-template\`;
   - SNS con suscriptores Lambda o SQS;
   - API Gateway + Lambda para Certificar / No certificar;
   - Step Functions con `waitForTaskToken`.

@@ -21,7 +21,8 @@ class ParametrosEjecucion:
     segundos_entre_consultas: float
     segundos_maximos_consulta: float
     regeneracion_sin_datos_nuevos: bool
-    id_ejecucion: str
+    id_ejecucion: str | None
+    id_corrida: str | None = None
 
 
 @dataclass(frozen=True)
@@ -59,6 +60,7 @@ class ConfiguracionCaso:
     consultas_totales: tuple[Consulta, ...]
     consultas_presencia: tuple[Consulta, ...]
     compuesta: ConfiguracionCompuesta | None
+    ruta_plantilla: str | None = None
 
 
 @dataclass(frozen=True)
@@ -72,6 +74,7 @@ class RegistroNotificacion:
     nombre_archivo: str
     url_s3: str
     sin_datos_periodo: bool
+    ejecucion_flujo: str = ""
 
 
 @dataclass(frozen=True)
@@ -103,6 +106,20 @@ class EntornoConsultas:
 class ResultadoConsulta:
     encabezados: tuple[str, ...]
     filas: tuple[tuple[str, ...], ...]
+    id_consulta: str = ""
+    bytes_escaneados: int | None = None
+
+
+@dataclass(frozen=True)
+class TablaCorreo:
+    texto: str
+    html: str
+
+
+@dataclass(frozen=True)
+class Aviso:
+    tono: str
+    texto: str
 
 
 @dataclass(frozen=True)

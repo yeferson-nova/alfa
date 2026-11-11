@@ -1,6 +1,5 @@
 import argparse
 from typing import Any, NoReturn, Sequence
-from uuid import uuid4
 
 from notificacion_certificacion.dominio.constantes import LONGITUD_MAXIMA_TOKEN
 from notificacion_certificacion.dominio.errores import ErrorEntrada
@@ -17,7 +16,7 @@ ARGUMENTOS_OBLIGATORIOS: tuple[tuple[str, str, type], ...] = (
     ("GLOBAL_CONFIG_KEY", "clave_global", str),
     ("REDIRECT_BASE_URL", "url_redireccion", str),
     ("SHORT_LINKS_TABLE", "tabla_enlaces", str),
-    ("SES_REMITENTE", "remitente", str),
+    ("SES_SENDER", "remitente", str),
     ("INDICE_CERT_CODE", "indice_cert_code", str),
     ("ZONA_HORARIA", "zona_horaria", str),
     ("DIAS_VIGENCIA_ENLACE", "dias_vigencia_enlace", int),
@@ -54,7 +53,8 @@ def _analizador() -> argparse.ArgumentParser:
     analizador.add_argument(
         "--REGENERACION_SIN_DATOS_NUEVOS", dest="regeneracion", default=VALORES_BANDERA[1]
     )
-    analizador.add_argument("--JOB_RUN_ID", dest="id_ejecucion", default=None)
+    analizador.add_argument("--JOB_RUN_ID", dest="id_corrida", default=None)
+    analizador.add_argument("--EJECUCION_ID", dest="id_ejecucion", default=None)
     return analizador
 
 
@@ -108,5 +108,6 @@ def leer_parametros(argv: Sequence[str]) -> ParametrosEjecucion:
         segundos_entre_consultas=crudos.segundos_entre_consultas,
         segundos_maximos_consulta=crudos.segundos_maximos_consulta,
         regeneracion_sin_datos_nuevos=_leer_bandera(crudos.regeneracion),
-        id_ejecucion=_opcional(crudos.id_ejecucion) or uuid4().hex,
+        id_ejecucion=_opcional(crudos.id_ejecucion),
+        id_corrida=_opcional(crudos.id_corrida),
     )

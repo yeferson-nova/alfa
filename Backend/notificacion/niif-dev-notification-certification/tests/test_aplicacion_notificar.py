@@ -244,38 +244,46 @@ def test_con_compuesto_ya_completado_no_reenvia():
     assert EventoLog.COMPUESTO_YA_COMPLETADO in escenario.bitacora.nombres()
 
 
-def test_si_el_servicio_de_correo_no_confirma_el_mensaje_no_se_marca_ni_se_consume():
+def test_si_ningun_destinatario_recibe_el_correo_no_se_marca_ni_se_consume():
     datos = copiar_config_caso()
     datos["compositeNotification"] = config_compuesta()
     escenario = armar_escenario(
-        config_caso=datos, compuesto=_compuesto_listo(), notificador=NotificadorFalso(ids=[""])
+        config_caso=datos, compuesto=_compuesto_listo(), notificador=NotificadorFalso(ids=["", ""])
     )
 
     with pytest.raises(ErrorPlataforma) as error:
         escenario.caso.ejecutar()
 
-    assert error.value.codigo == "NTF-PLA-003"
+    assert error.value.codigo == "NTF-PLA-006"
     assert escenario.notificaciones.marcados == []
     assert escenario.compuesto.consumos == []
+    fallidos = [contexto for evento, _, contexto in escenario.bitacora.eventos if evento == EventoLog.CORREO_FALLIDO]
+    assert [contexto["codigo"] for contexto in fallidos] == ["NTF-PLA-003", "NTF-PLA-003"]
+    assert (escenario.caso.enviados, escenario.caso.fallidos) == (0, 2)
 
 
-def test_si_falla_el_segundo_envio_no_se_marcan_registros_ni_se_cierra_el_compuesto():
-    class NotificadorQueFalla(NotificadorFalso):
+def test_si_falla_un_destinatario_sigue_con_los_demas_y_marca_solo_los_enviados():
+    class NotificadorQueFallaPrimero(NotificadorFalso):
         def enviar(self, mensaje, destinatario):
-            if self.enviados:
+            if not self.enviados:
+                self.enviados.append((mensaje, destinatario))
                 raise ErrorPlataforma("NTF-PLA-004", "rechazado")
             return super().enviar(mensaje, destinatario)
 
     datos = copiar_config_caso()
     datos["compositeNotification"] = config_compuesta()
-    escenario = armar_escenario(config_caso=datos, compuesto=_compuesto_listo(), notificador=NotificadorQueFalla())
+    escenario = armar_escenario(
+        config_caso=datos, compuesto=_compuesto_listo(), notificador=NotificadorQueFallaPrimero()
+    )
 
-    with pytest.raises(ErrorPlataforma):
-        escenario.caso.ejecutar()
+    assert escenario.caso.ejecutar() == ResultadoJob.ENVIADO
 
-    assert len(escenario.notificador.enviados) == 1
-    assert escenario.notificaciones.marcados == []
-    assert escenario.compuesto.consumos == []
+    marcado = escenario.notificaciones.marcados[0]
+    assert [envio.destinatario for envio in marcado["envios"]] == ["dos@example.com"]
+    assert len(escenario.compuesto.consumos) == 1
+    nombres = escenario.bitacora.nombres()
+    assert EventoLog.CORREO_FALLIDO in nombres and EventoLog.ENVIO_PARCIAL in nombres
+    assert (escenario.caso.enviados, escenario.caso.fallidos) == (1, 1)
 
 
 def test_el_flujo_normal_registra_inicio_y_fin_sin_datos_personales():

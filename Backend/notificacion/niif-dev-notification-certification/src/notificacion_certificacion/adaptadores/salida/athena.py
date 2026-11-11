@@ -1,4 +1,5 @@
 import math
+from dataclasses import replace
 from typing import Any, Callable
 
 from notificacion_certificacion.adaptadores.salida.errores_aws import traduciendo
@@ -24,8 +25,9 @@ class ConsultorAthena:
 
     def ejecutar(self, sql: str, base_datos: str, entorno: EntornoConsultas) -> ResultadoConsulta:
         identificador = self._iniciar(sql, base_datos, entorno)
-        self._esperar_termino(identificador)
-        return self._leer_resultado(identificador)
+        bytes_escaneados = self._esperar_termino(identificador)
+        resultado = self._leer_resultado(identificador)
+        return replace(resultado, id_consulta=identificador, bytes_escaneados=bytes_escaneados)
 
     def _iniciar(self, sql: str, base_datos: str, entorno: EntornoConsultas) -> str:
         with traduciendo("Athena start_query_execution"):
@@ -36,17 +38,19 @@ class ConsultorAthena:
             )
         return respuesta["QueryExecutionId"]
 
-    def _estado(self, identificador: str) -> tuple[str, str]:
+    def _estado(self, identificador: str) -> tuple[str, str, int | None]:
         with traduciendo("Athena get_query_execution"):
             respuesta = self._cliente.get_query_execution(QueryExecutionId=identificador)
-        estado = respuesta["QueryExecution"]["Status"]
-        return estado["State"], estado.get("StateChangeReason", "")
+        ejecucion = respuesta["QueryExecution"]
+        estado = ejecucion["Status"]
+        escaneados = ejecucion.get("Statistics", {}).get("DataScannedInBytes")
+        return estado["State"], estado.get("StateChangeReason", ""), escaneados
 
-    def _esperar_termino(self, identificador: str) -> None:
+    def _esperar_termino(self, identificador: str) -> int | None:
         for _ in range(self._intentos):
-            nombre, motivo = self._estado(identificador)
+            nombre, motivo, escaneados = self._estado(identificador)
             if nombre == ESTADO_EXITOSO:
-                return
+                return escaneados
             if nombre in ESTADOS_FALLIDOS:
                 raise ErrorConsultaFallida("NTF-PLA-002", f"Consulta {identificador} {nombre}: {motivo}")
             self._esperar(self._intervalo)

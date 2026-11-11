@@ -21,7 +21,7 @@ testpaths = ["tests"]
 addopts = "-q --strict-markers"
 
 [tool.coverage.run]
-source = ["notificacion_certificacion"]
+source = ["notificacion_certificacion", "niif_observability"]
 branch = true
 
 [tool.coverage.report]

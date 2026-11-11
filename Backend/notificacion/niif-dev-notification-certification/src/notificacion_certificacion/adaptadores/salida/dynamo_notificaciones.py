@@ -83,4 +83,5 @@ class RepositorioNotificacionesDynamo:
             nombre_archivo=str(item.get("nameFile", "")),
             url_s3=str(item.get("s3_url", "")),
             sin_datos_periodo=item.get("sinDatosPeriodo") is True,
+            ejecucion_flujo=str(item.get("ejecucionId", "")),
         )
