@@ -1,6 +1,6 @@
 ---
 tipo: diseno
-actualizado: 2026-11-09
+actualizado: 2026-11-11
 ---
 # Job de notificación con SES (T1, punto 1a)
 
@@ -190,3 +190,12 @@ Humano: `Docs\06-brechas\auditoria-job-notificacion-nuevo-vs-actual.md`. **El nu
   - Librería común `niif_observability` (en inglés, 10 pruebas): copia de `niif_observability` dentro de `src\` de cada paquete (decisión del usuario 2026-11-10: se duplica en Git porque la entrega es por carpeta); `Backend\notificacion\verificar_copias_comunes.py` comprueba que todas las copias sean iguales. El job tiene 513 pruebas con ella.
   - El job pasó de 451 a 486 pruebas (99 %).
   - Pendientes: N-04, N-06, N-08 y el lado de ARQ-32 (certificación y trigger).
+
+## Revisión contra la regla de configuración (2026-11-11)
+Regla: JSON en S3 por ambiente, con la fuente en Git; argumentos solo para lo que cambia por ejecución y para los apuntadores (skill `niif17-alfa`, `references/configuracion-por-ambiente.md`). Revisado el job nuevo (`Backend\notificacion\jobs-glue\niif-dev-notification-certification\`). **C-01 a C-03 aplicados el 2026-11-11** (orden del usuario): bloque `notification` en el JSON global, índice en `dynamodb.cert_code_index` (compartido con la certificación), sin valores por defecto, argumento retirado → `NTF-ENT-004`. 537 pruebas. Carpetas renombradas al inglés y `test/`, `src/job_notificacion.py`, `scripts/package.sh` (misma estructura que el job de certificación). **En DEV el job aún tiene los argumentos viejos y el JSON de S3 no tiene el bloque `notification`: corregir ambos antes de correrlo.**
+- **Cumple:** los argumentos por ejecución (`useCaseId`, `certCode`, `emailType`, `CONFIG_KEY`, `EJECUCION_ID`, `REGENERACION_SIN_DATOS_NUEVOS`) y los apuntadores (`CONFIG_BUCKET`, `GLOBAL_CONFIG_KEY`). Lee la configuración en cada corrida, valida los argumentos al arrancar y falla con `NTF-CFG-001` si falta una clave obligatoria.
+- **C-01:** 10 valores técnicos van como argumentos fijos del job y deberían ir en el JSON global: `ZONA_HORARIA`, `INDICE_CERT_CODE`, `DIAS_VIGENCIA_ENLACE`, `LONGITUD_TOKEN_ENLACE`, `SEGUNDOS_ENTRE_CONSULTAS`, `SEGUNDOS_MAXIMOS_CONSULTA`, `SHORT_LINKS_TABLE`, `REDIRECT_BASE_URL`, `SES_SENDER`, `SES_CONFIGURATION_SET`. Cambiarlos hoy exige un cambio en Terraform y no en el JSON.
+- **C-02:** dos fuentes para la zona horaria: `--ZONA_HORARIA` y `timezone` del JSON global (las dos dicen `America/Bogota`).
+- **C-03:** valores por defecto en `domain/constantes.py` cuando falta la clave: `catalog` → `AwsDataCatalog`, `certification.sent_status` → `SENT`, `controlMemberId` → `_CONTROL`. La regla pide fallar.
+- **C-04:** sin workgroup de Athena en la configuración (se cruza con COS-08).
+- **Propuesta:** un bloque `notification` en el JSON global con esas claves, y en los argumentos solo los apuntadores y lo de cada ejecución.

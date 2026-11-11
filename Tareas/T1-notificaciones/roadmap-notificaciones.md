@@ -89,7 +89,8 @@ _Lo más avanzado y lo primero que llega al usuario._
 - ⬜ 1.1 Prueba en DEV con envío real y HTML (alinear `email-templates/*` y `email-template/`).
 - ⬜ Volver a empaquetar y subir a DEV (el zip de DEV no trae `NTF_FIN_JOB` ni 1.5).
 - ⬜ 1.2 Decidir el reenvío sobre `SENT` (D4).
-- ⬜ 1.3 Llevar el job al estándar: inglés y PEP 8, `test\`, punto de entrada en `src\`, `tox.ini`, `config\` de qa y prd (N-08).
+- ✅ 1.6 Configuración por ambiente (2026-11-11): los 10 valores técnicos pasaron de argumentos al JSON global (`notification.*`, `dynamodb.cert_code_index`, `timezone`); sin valores por defecto; un argumento retirado falla con `NTF-ENT-004`. **Antes de volver a correrlo en DEV:** agregar el bloque `notification` al JSON global de S3 y quitar esos argumentos del job.
+- ⬜ 1.3 Llevar el job al estándar: identificadores en inglés y PEP 8, `config\` de qa y prd (N-08). Ya hecho (2026-11-11): carpetas en inglés (`domain`, `application`, `adapters/inbound`, `adapters/outbound`, `config`), `test\`, punto de entrada en `src\`, `tox.ini` y `scripts\package.sh`.
 - ⬜ 1.4 Paquete para DevOps: argumentos, permisos (incluido `athena:StopQueryExecution`) y retirar SNS.
 - ⬜ Prueba en QA.
 
@@ -105,11 +106,12 @@ _Corto. Define el tiempo máximo del job y si hay que adelantar el particionado 
 _La orquestadora y las alertas usan este ID._
 - ✅ Etapa 1 (verificación, solo lectura, 2026-11-11): ninguna Step Function le pasa el ID al job de certificación; el ID debe ir en el `put_item` (`PROCESSED`); los argumentos por defecto del job están quemados (`PERIOD=202411`, `CONFIG_KEY` de Auxilios).
 - ✅ Decisiones E1, E2 y E3 (versión base, formato del ID con UUID v7 y caso compuesto).
-- ⬜ Etapa 2: cambio en el job, en local y con pruebas (espera orden explícita).
+- ✅ Etapa 2 (2026-11-11): job reescrito al estándar en `Backend\notificacion\jobs-glue\niif-dev-certification\` (hexagonal, PEP 8 en inglés, logs en español, 412 pruebas, 97 % de cobertura). Paridad con lo desplegado + INC-3; agrega `--EJECUCION_ID` y `--EJECUCIONES_ORIGEN`; el mapa de carpetas y el portal SSO pasan al JSON global. Hallazgos CER-H1 a CER-H7 en su README.
+- ⬜ Antes de la etapa 3: **el job lo comparten otras mallas** (generales, pcr-vida, satélites y previsional, que usa otro JSON global). Agregar las claves nuevas a **todos** los JSON globales que lo usan y probar con un job aparte (CER-H5).
 - ⬜ Etapa 3: prueba en DEV con un job de certificación aparte (confirmación antes de lanzar).
 - ⬜ Etapa 4: Step Function, con DevOps o en una copia de la de ARL (confirmación manual).
 - ⬜ Configurador (T2): generar el nombre de la ejecución `<malla>-<periodo>-<uuid v7>`.
-- ⬜ 2.1 El job de certificación recibe `--EJECUCION_ID` y guarda `ejecucionId` (y `ejecucionesOrigen` en el compuesto) junto al `certCode`.
+- ✅ 2.1 El job de certificación recibe `--EJECUCION_ID` y guarda `ejecucionId` (y `ejecucionesOrigen` en el compuesto) junto al `certCode` (en código; falta desplegar).
 - ⬜ 2.2 Las 6 Step Functions pasan el argumento (DevOps, Terraform).
 - ⬜ 2.3 Quien lanza el job de notificación pasa `--EJECUCION_ID` (lo hará la orquestadora, fase 3.1).
 - ⬜ 2.4 Prueba automática sobre las definiciones de las Step Functions.

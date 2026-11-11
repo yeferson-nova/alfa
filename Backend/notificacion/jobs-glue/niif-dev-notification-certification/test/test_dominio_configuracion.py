@@ -2,12 +2,12 @@ import copy
 
 import pytest
 
-from constructores import CONFIG_GLOBAL, config_compuesta, copiar_config_caso
-from notificacion_certificacion.dominio.configuracion import (
+from constructores import CONFIG_GLOBAL, config_compuesta, copiar_config_caso, copiar_config_global
+from notificacion_certificacion.domain.configuracion import (
     leer_configuracion_caso,
     leer_configuracion_global,
 )
-from notificacion_certificacion.dominio.errores import ErrorConfiguracion
+from notificacion_certificacion.domain.errores import ErrorConfiguracion
 
 
 def _global(**cambios):
@@ -24,6 +24,17 @@ def test_configuracion_global_se_lee_completa():
     assert configuracion.prefijo_salida_athena == "athena/salida"
     assert configuracion.estado_enviado == "SENT"
     assert configuracion.catalogo == "AwsDataCatalog"
+    assert configuracion.zona_horaria == "America/Bogota"
+    ajustes = configuracion.notificacion
+    assert ajustes.indice_cert_code == "indice-cert"
+    assert ajustes.remitente == "no-responder@example.com"
+    assert ajustes.conjunto_configuracion is None
+    assert ajustes.segundos_entre_consultas == 1.0
+    assert ajustes.segundos_maximos_consulta == 60.0
+    assert ajustes.enlaces.url_base == "https://redir.example/r"
+    assert ajustes.enlaces.tabla == "tabla-enlaces"
+    assert ajustes.enlaces.dias_vigencia == 7
+    assert ajustes.enlaces.longitud_token == 8
 
 
 def test_configuracion_global_respeta_catalogo_y_estado_configurados():
@@ -34,13 +45,16 @@ def test_configuracion_global_respeta_catalogo_y_estado_configurados():
     assert configuracion.estado_enviado == "ENVIADO"
 
 
-def test_configuracion_global_usa_estado_por_defecto_si_no_hay_seccion():
-    datos = _global()
-    del datos["certification"]
-    assert leer_configuracion_global(datos).estado_enviado == "SENT"
+def test_configuracion_global_lee_el_conjunto_de_configuracion_de_ses():
+    datos = copiar_config_global()
+    datos["notification"]["ses_configuration_set"] = " conjunto "
+    assert leer_configuracion_global(datos).notificacion.conjunto_configuracion == "conjunto"
 
 
-@pytest.mark.parametrize("clave", ["buckets", "dynamodb", "environment", "athena"])
+@pytest.mark.parametrize(
+    "clave",
+    ["buckets", "dynamodb", "environment", "athena", "catalog", "timezone", "certification", "notification"],
+)
 def test_configuracion_global_exige_las_claves_obligatorias(clave):
     datos = _global()
     del datos[clave]
@@ -55,6 +69,51 @@ def test_configuracion_global_rechaza_valores_que_no_son_texto():
         leer_configuracion_global(_global(environment="  "))
     with pytest.raises(ErrorConfiguracion):
         leer_configuracion_global(_global(environment=5))
+
+
+@pytest.mark.parametrize(
+    "clave",
+    [
+        "short_links_table",
+        "redirect_base_url",
+        "ses_sender",
+        "ses_configuration_set",
+        "link_validity_days",
+        "link_token_length",
+        "athena_poll_seconds",
+        "athena_max_wait_seconds",
+    ],
+)
+def test_configuracion_global_exige_cada_clave_de_notificacion_sin_valor_por_defecto(clave):
+    datos = copiar_config_global()
+    del datos["notification"][clave]
+    with pytest.raises(ErrorConfiguracion) as error:
+        leer_configuracion_global(datos)
+    assert f"notification.{clave}" in error.value.mensaje
+
+
+@pytest.mark.parametrize(
+    "cambio",
+    [
+        {"link_validity_days": 0},
+        {"link_validity_days": "7"},
+        {"link_validity_days": 1.5},
+        {"link_validity_days": True},
+        {"link_token_length": 0},
+        {"link_token_length": 33},
+        {"athena_poll_seconds": 0},
+        {"athena_poll_seconds": "1"},
+        {"athena_max_wait_seconds": 0.5},
+        {"ses_sender": " "},
+        {"ses_configuration_set": 5},
+    ],
+)
+def test_configuracion_global_rechaza_valores_invalidos_de_notificacion(cambio):
+    datos = copiar_config_global()
+    datos["notification"].update(cambio)
+    with pytest.raises(ErrorConfiguracion) as error:
+        leer_configuracion_global(datos)
+    assert error.value.codigo == "NTF-CFG-001"
 
 
 def test_configuracion_global_rechaza_un_documento_que_no_es_objeto():

@@ -1,14 +1,14 @@
 from typing import Any
 
-from notificacion_certificacion.adaptadores.salida.dynamo_tipos import deserializar, serializar
-from notificacion_certificacion.adaptadores.salida.errores_aws import traduciendo
-from notificacion_certificacion.dominio.constantes import (
+from notificacion_certificacion.adapters.outbound.dynamo_tipos import deserializar, serializar
+from notificacion_certificacion.adapters.outbound.errores_aws import traduciendo
+from notificacion_certificacion.domain.constantes import (
     ESTADO_CONSUMIDO,
     ESTADO_LISTO_PARA_NOTIFICAR,
     ESTADO_NOTIFICACION_COMPLETADA,
     ESTADO_NOTIFICACION_EN_CURSO,
 )
-from notificacion_certificacion.dominio.modelos import RegistroCompuesto, ReservaCompuesta
+from notificacion_certificacion.domain.modelos import RegistroCompuesto, ReservaCompuesta
 
 CONSUMIR_MIEMBRO = (
     "SET #st = :consumed, notificationReleased = :yes, completedAt = :now, updatedAt = :now, "

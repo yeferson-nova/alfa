@@ -2,9 +2,9 @@ import math
 from dataclasses import replace
 from typing import Any, Callable
 
-from notificacion_certificacion.adaptadores.salida.errores_aws import traduciendo
-from notificacion_certificacion.dominio.errores import ErrorConsultaFallida, ErrorNotificacion, ErrorPlataforma
-from notificacion_certificacion.dominio.modelos import EntornoConsultas, ResultadoConsulta
+from notificacion_certificacion.adapters.outbound.errores_aws import traduciendo
+from notificacion_certificacion.domain.errores import ErrorConsultaFallida, ErrorNotificacion, ErrorPlataforma
+from notificacion_certificacion.domain.modelos import EntornoConsultas, ResultadoConsulta
 
 ESTADO_EXITOSO = "SUCCEEDED"
 ESTADOS_FALLIDOS = frozenset({"FAILED", "CANCELLED"})

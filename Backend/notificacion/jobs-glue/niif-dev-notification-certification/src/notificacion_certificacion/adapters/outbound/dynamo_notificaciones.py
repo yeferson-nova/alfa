@@ -1,9 +1,9 @@
 from typing import Any, Mapping, Sequence
 
-from notificacion_certificacion.adaptadores.salida.dynamo_tipos import deserializar, serializar
-from notificacion_certificacion.adaptadores.salida.errores_aws import traduciendo
-from notificacion_certificacion.dominio.errores import ErrorConfiguracion
-from notificacion_certificacion.dominio.modelos import EnvioRealizado, RegistroNotificacion
+from notificacion_certificacion.adapters.outbound.dynamo_tipos import deserializar, serializar
+from notificacion_certificacion.adapters.outbound.errores_aws import traduciendo
+from notificacion_certificacion.domain.errores import ErrorConfiguracion
+from notificacion_certificacion.domain.modelos import EnvioRealizado, RegistroNotificacion
 
 SEPARADOR_IDENTIFICADORES = ","
 ACTUALIZAR_ENVIO = (

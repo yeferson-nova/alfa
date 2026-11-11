@@ -10,15 +10,15 @@ from botocore.stub import Stubber
 from constructores import construir_parametros, construir_registro, copiar_config_caso
 from escenario import armar_escenario
 from fakes import BitacoraEnMemoria, ConsultorFalso
-from notificacion_certificacion.adaptadores.salida.s3_configuracion import RepositorioConfiguracionS3
-from notificacion_certificacion.aplicacion.consultas import ServicioConsultas
-from notificacion_certificacion.aplicacion.notificar_certificacion import ResultadoJob
-from notificacion_certificacion.aplicacion.puertos import EventoLog
-from notificacion_certificacion.dominio.configuracion import leer_configuracion_caso
-from notificacion_certificacion.dominio.correo_html import avisos_a_html, componer_html, resultado_a_html
-from notificacion_certificacion.dominio.errores import ErrorConfiguracion, ErrorPermisos
-from notificacion_certificacion.dominio.modelos import Aviso, Consulta, EntornoConsultas, ResultadoConsulta
-from notificacion_certificacion.dominio.parametrizacion import parametrizar_estricto
+from notificacion_certificacion.adapters.outbound.s3_configuracion import RepositorioConfiguracionS3
+from notificacion_certificacion.application.consultas import ServicioConsultas
+from notificacion_certificacion.application.notificar_certificacion import ResultadoJob
+from notificacion_certificacion.application.puertos import EventoLog
+from notificacion_certificacion.domain.configuracion import leer_configuracion_caso
+from notificacion_certificacion.domain.correo_html import avisos_a_html, componer_html, resultado_a_html
+from notificacion_certificacion.domain.errores import ErrorConfiguracion, ErrorPermisos
+from notificacion_certificacion.domain.modelos import Aviso, Consulta, EntornoConsultas, ResultadoConsulta
+from notificacion_certificacion.domain.parametrizacion import parametrizar_estricto
 
 PLANTILLAS_REALES = Path(__file__).resolve().parents[3] / "email-template"
 RUTA_PLANTILLA = "email-template/caso.html"
@@ -209,13 +209,13 @@ def test_s3_cargar_texto_lee_la_plantilla_normalizando_la_clave():
 
 
 def test_sin_archivos_de_detalle_el_html_lo_indica():
-    from notificacion_certificacion.dominio.correo_html import archivos_a_html
+    from notificacion_certificacion.domain.correo_html import archivos_a_html
 
     assert "No se encontraron archivos detalle." in archivos_a_html([])
 
 
 def test_la_salida_por_defecto_escribe_en_la_consola(capsys):
-    from notificacion_certificacion.adaptadores.entrada.job_glue import _escribir
+    from notificacion_certificacion.adapters.inbound.job_glue import _escribir
 
     _escribir('{"a": 1}')
     assert capsys.readouterr().out == '{"a": 1}\n'

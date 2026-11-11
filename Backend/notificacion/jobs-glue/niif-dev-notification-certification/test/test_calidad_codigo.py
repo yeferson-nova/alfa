@@ -8,9 +8,8 @@ import pytest
 
 PROYECTO = Path(__file__).resolve().parents[1]
 FUENTES = sorted((PROYECTO / "src").rglob("*.py"))
-PRUEBAS = sorted((PROYECTO / "tests").glob("*.py"))
-SCRIPTS = sorted((PROYECTO / "scripts").glob("*.py"))
-TODOS = FUENTES + PRUEBAS + SCRIPTS
+PRUEBAS = sorted((PROYECTO / "test").glob("*.py"))
+TODOS = FUENTES + PRUEBAS
 MAXIMO_LINEAS_FUNCION = 40
 MAXIMO_PARAMETROS = 8
 
@@ -82,5 +81,5 @@ def test_el_codigo_no_usa_prints_ni_excepciones_silenciadas(ruta):
 
 
 def test_el_proyecto_incluye_los_archivos_de_calidad_exigidos():
-    for nombre in ("pyproject.toml", "sonar-project.properties", "requirements-dev.txt", "README.md"):
+    for nombre in ("pyproject.toml", "sonar-project.properties", "requirements-dev.txt", "README.md", "tox.ini"):
         assert (PROYECTO / nombre).is_file(), nombre

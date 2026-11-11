@@ -1,11 +1,11 @@
 from string import Template
 from typing import Mapping, Sequence
 
-from notificacion_certificacion.dominio.correo_html import TONO_ADVERTENCIA, TONO_INFORMATIVO
-from notificacion_certificacion.dominio.modelos import Aviso, ConfiguracionCaso, RegistroNotificacion
-from notificacion_certificacion.dominio.parametrizacion import parametrizar
-from notificacion_certificacion.dominio.periodo import rango_periodo
-from notificacion_certificacion.dominio.textos import (
+from notificacion_certificacion.domain.correo_html import TONO_ADVERTENCIA, TONO_INFORMATIVO
+from notificacion_certificacion.domain.modelos import Aviso, ConfiguracionCaso, RegistroNotificacion
+from notificacion_certificacion.domain.parametrizacion import parametrizar
+from notificacion_certificacion.domain.periodo import rango_periodo
+from notificacion_certificacion.domain.textos import (
     AVISO_DEMAS_MIEMBROS,
     AVISO_NINGUN_MIEMBRO,
     AVISO_REGENERACION,

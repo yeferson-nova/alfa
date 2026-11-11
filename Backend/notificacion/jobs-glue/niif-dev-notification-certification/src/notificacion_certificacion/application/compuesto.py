@@ -1,11 +1,11 @@
-from notificacion_certificacion.aplicacion.puertos import Bitacora, EventoLog, Reloj, RepositorioCompuesto
-from notificacion_certificacion.dominio.compuesto import (
+from notificacion_certificacion.application.puertos import Bitacora, EventoLog, Reloj, RepositorioCompuesto
+from notificacion_certificacion.domain.compuesto import (
     control_ya_completado,
     identificador_compuesto,
     validar_miembro,
 )
-from notificacion_certificacion.dominio.errores import ErrorPlataforma
-from notificacion_certificacion.dominio.modelos import (
+from notificacion_certificacion.domain.errores import ErrorPlataforma
+from notificacion_certificacion.domain.modelos import (
     ConfiguracionCompuesta,
     RegistroCompuesto,
     ReservaCompuesta,

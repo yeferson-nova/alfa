@@ -11,17 +11,17 @@ from fakes import (
     RepositorioCompuestoFalso,
     RepositorioEnlacesFalso,
 )
-from notificacion_certificacion.aplicacion.compuesto import ServicioCompuesto
-from notificacion_certificacion.aplicacion.consultas import ServicioConsultas
-from notificacion_certificacion.aplicacion.enlaces import ServicioEnlaces
-from notificacion_certificacion.aplicacion.puertos import EventoLog
-from notificacion_certificacion.dominio.errores import (
+from notificacion_certificacion.application.compuesto import ServicioCompuesto
+from notificacion_certificacion.application.consultas import ServicioConsultas
+from notificacion_certificacion.application.enlaces import ServicioEnlaces
+from notificacion_certificacion.application.puertos import EventoLog
+from notificacion_certificacion.domain.errores import (
     ErrorConcurrencia,
     ErrorConfiguracion,
     ErrorConsultaFallida,
     ErrorPlataforma,
 )
-from notificacion_certificacion.dominio.modelos import (
+from notificacion_certificacion.domain.modelos import (
     ConfiguracionCompuesta,
     Consulta,
     EntornoConsultas,

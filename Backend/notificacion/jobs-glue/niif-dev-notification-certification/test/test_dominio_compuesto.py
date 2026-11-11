@@ -1,13 +1,13 @@
 import pytest
 
 from constructores import construir_registro_compuesto
-from notificacion_certificacion.dominio.compuesto import (
+from notificacion_certificacion.domain.compuesto import (
     control_ya_completado,
     identificador_compuesto,
     validar_miembro,
 )
-from notificacion_certificacion.dominio.errores import ErrorConcurrencia
-from notificacion_certificacion.dominio.modelos import ConfiguracionCompuesta
+from notificacion_certificacion.domain.errores import ErrorConcurrencia
+from notificacion_certificacion.domain.modelos import ConfiguracionCompuesta
 
 
 def test_identificador_compuesto_une_grupo_y_periodo():

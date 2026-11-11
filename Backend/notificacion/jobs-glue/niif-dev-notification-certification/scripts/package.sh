@@ -32,6 +32,6 @@ with zipfile.ZipFile(destino, "w", zipfile.ZIP_DEFLATED) as archivo:
                     ruta = os.path.join(raiz, nombre)
                     archivo.write(ruta, os.path.relpath(ruta, origen))
 PY
-cp "$RAIZ/scripts/job_notificacion.py" "$SCRIPT"
+cp "$RAIZ/src/job_notificacion.py" "$SCRIPT"
 echo "Libreria: $LIBRERIA  (--extra-py-files)"
 echo "Script:   $SCRIPT  (ScriptLocation del job)"

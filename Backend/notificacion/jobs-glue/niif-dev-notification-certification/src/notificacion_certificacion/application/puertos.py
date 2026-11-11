@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Mapping, Protocol, Sequence
 
-from notificacion_certificacion.dominio.modelos import (
+from notificacion_certificacion.domain.modelos import (
     EnlaceCorto,
     EntornoConsultas,
     EnvioRealizado,

@@ -1,14 +1,14 @@
 from typing import Mapping, Sequence
 
-from notificacion_certificacion.aplicacion.puertos import Bitacora, ConsultorAnalitico, EventoLog
-from notificacion_certificacion.dominio.correo_html import bloque_tabla, error_a_html, resultado_a_html
-from notificacion_certificacion.dominio.disponibilidad import extraer_cantidad
-from notificacion_certificacion.dominio.errores import ErrorConsultaFallida
-from notificacion_certificacion.dominio.modelos import Consulta, EntornoConsultas, ResultadoConsulta, TablaCorreo
-from notificacion_certificacion.dominio.parametrizacion import parametrizar_estricto
-from notificacion_certificacion.dominio.redaccion import aviso_disponibilidad
-from notificacion_certificacion.dominio.tablas import formatear_resultado, unir_bloques
-from notificacion_certificacion.dominio.textos import TEXTO_ERROR_CONSULTA
+from notificacion_certificacion.application.puertos import Bitacora, ConsultorAnalitico, EventoLog
+from notificacion_certificacion.domain.correo_html import bloque_tabla, error_a_html, resultado_a_html
+from notificacion_certificacion.domain.disponibilidad import extraer_cantidad
+from notificacion_certificacion.domain.errores import ErrorConsultaFallida
+from notificacion_certificacion.domain.modelos import Consulta, EntornoConsultas, ResultadoConsulta, TablaCorreo
+from notificacion_certificacion.domain.parametrizacion import parametrizar_estricto
+from notificacion_certificacion.domain.redaccion import aviso_disponibilidad
+from notificacion_certificacion.domain.tablas import formatear_resultado, unir_bloques
+from notificacion_certificacion.domain.textos import TEXTO_ERROR_CONSULTA
 
 
 class ServicioConsultas:

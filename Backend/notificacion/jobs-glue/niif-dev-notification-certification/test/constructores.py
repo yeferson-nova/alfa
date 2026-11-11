@@ -1,7 +1,7 @@
 import copy
 from typing import Any
 
-from notificacion_certificacion.dominio.modelos import (
+from notificacion_certificacion.domain.modelos import (
     ParametrosEjecucion,
     RegistroCompuesto,
     RegistroNotificacion,
@@ -10,10 +10,22 @@ from notificacion_certificacion.dominio.modelos import (
 
 CONFIG_GLOBAL: dict[str, Any] = {
     "buckets": {"assets": "bucket-activos"},
-    "dynamodb": {"notification_table": "tabla-notificaciones"},
+    "dynamodb": {"notification_table": "tabla-notificaciones", "cert_code_index": "indice-cert"},
     "environment": "dev",
+    "catalog": "AwsDataCatalog",
+    "timezone": "America/Bogota",
     "athena": {"output_path": "athena/salida"},
     "certification": {"sent_status": "SENT"},
+    "notification": {
+        "short_links_table": "tabla-enlaces",
+        "redirect_base_url": "https://redir.example/r",
+        "ses_sender": "no-responder@example.com",
+        "ses_configuration_set": None,
+        "link_validity_days": 7,
+        "link_token_length": 8,
+        "athena_poll_seconds": 1,
+        "athena_max_wait_seconds": 60,
+    },
 }
 
 CONFIG_CASO: dict[str, Any] = {
@@ -53,16 +65,6 @@ def construir_parametros(**cambios: Any) -> ParametrosEjecucion:
         "bucket_configuracion": "bucket-config",
         "clave_caso": "casos/casoA.json",
         "clave_global": "global.json",
-        "url_redireccion": "https://redir.example/r",
-        "tabla_enlaces": "tabla-enlaces",
-        "remitente": "no-responder@example.com",
-        "conjunto_configuracion": None,
-        "indice_cert_code": "indice-cert",
-        "zona_horaria": "America/Bogota",
-        "dias_vigencia_enlace": 7,
-        "longitud_token_enlace": 8,
-        "segundos_entre_consultas": 1.0,
-        "segundos_maximos_consulta": 60.0,
         "regeneracion_sin_datos_nuevos": False,
         "id_ejecucion": "ejec-1",
     }
@@ -100,6 +102,10 @@ def construir_registro_compuesto(**cambios: Any) -> RegistroCompuesto:
     return RegistroCompuesto(**base)
 
 
+def copiar_config_global() -> dict[str, Any]:
+    return copy.deepcopy(CONFIG_GLOBAL)
+
+
 def copiar_config_caso() -> dict[str, Any]:
     return copy.deepcopy(CONFIG_CASO)
 
@@ -109,5 +115,6 @@ def config_compuesta() -> dict[str, Any]:
         "enabled": True,
         "tableName": "tabla-compuesto",
         "groupId": "grupo",
+        "controlMemberId": "_CONTROL",
         "memberIds": ["m1", "m2"],
     }

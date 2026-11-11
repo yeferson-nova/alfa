@@ -2,7 +2,7 @@ import calendar
 import re
 from datetime import date
 
-from notificacion_certificacion.dominio.errores import ErrorEntrada
+from notificacion_certificacion.domain.errores import ErrorEntrada
 
 FORMATO_PERIODO = re.compile(r"[0-9]{6}")
 FORMATO_FECHA = "%d/%m/%Y"

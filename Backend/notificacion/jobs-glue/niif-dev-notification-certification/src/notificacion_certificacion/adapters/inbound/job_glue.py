@@ -5,12 +5,12 @@ from typing import Callable, Sequence
 
 from niif_observability import StructuredLogger
 
-from notificacion_certificacion.aplicacion.notificar_certificacion import ResultadoJob
-from notificacion_certificacion.aplicacion.puertos import MENSAJES_EVENTO, EventoLog
-from notificacion_certificacion.configuracion.ajustes import leer_parametros
-from notificacion_certificacion.configuracion.composicion import COMPONENTE, Contexto, construir_contexto
-from notificacion_certificacion.dominio.errores import ErrorNotificacion, ErrorPlataforma
-from notificacion_certificacion.dominio.modelos import ParametrosEjecucion
+from notificacion_certificacion.application.notificar_certificacion import ResultadoJob
+from notificacion_certificacion.application.puertos import MENSAJES_EVENTO, EventoLog
+from notificacion_certificacion.config.ajustes import leer_parametros
+from notificacion_certificacion.config.composicion import COMPONENTE, Contexto, construir_contexto
+from notificacion_certificacion.domain.errores import ErrorNotificacion, ErrorPlataforma
+from notificacion_certificacion.domain.modelos import ParametrosEjecucion
 
 CODIGO_ERROR_NO_CLASIFICADO = "NTF-PLA-999"
 MILISEGUNDOS_POR_SEGUNDO = 1000

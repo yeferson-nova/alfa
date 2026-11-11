@@ -9,7 +9,8 @@
   },
   "dynamodb": {
     "notification_table": "niif-dev-notification-certification",
-    "audit_table": "niif-dev-approval-audit-log"
+    "audit_table": "niif-dev-approval-audit-log",
+    "cert_code_index": "certCode-index"
   },
   "athena": {
     "output_path": "athena/notifications",
@@ -34,7 +35,21 @@
     "no_certificate_status": "NO_CERTIFICATE",
     "transport_status": "TRANSPORT",
     "no_transport_status": "NO_TRANSPORT",
-    "pending_approvers_status": "PENDING_APPROVERS"
+    "pending_approvers_status": "PENDING_APPROVERS",
+    "report_folders": {
+      "Previsional": "Previsional",
+      "auxilioFunerario": "auxiliosFunerario",
+      "auxiliosFunerario": "auxiliosFunerario",
+      "primasArl": "primasArl",
+      "primasRentasEndosos": "primasRentasEndosos",
+      "reservaMatematicaRvi": "reservaMatematicaRviArp",
+      "reservaMatematicaRviArp": "reservaMatematicaRviArp",
+      "primasPCR": "primasPCR"
+    },
+    "athena_poll_seconds": 2,
+    "athena_max_wait_seconds": 900,
+    "index_visibility_attempts": 6,
+    "index_visibility_wait_seconds": 2
   },
   "s3_export": {
     "csv_content_type": "text/csv; charset=utf-8",
@@ -43,5 +58,15 @@
     "compression": "NONE"
   },
   "account_id": "<CUENTA_AWS>",
-  "role_name": "ALFA-DEV-DATALAKE-ADM"
+  "role_name": "ALFA-DEV-DATALAKE-ADM",
+  "notification": {
+    "short_links_table": "niif-dev-short-links",
+    "redirect_base_url": "<URL_API_REDIRECCION>/dev/r",
+    "ses_sender": "notificaciones@segurosalfa.com.co",
+    "ses_configuration_set": "niif-dev-notificaciones",
+    "link_validity_days": 7,
+    "link_token_length": 32,
+    "athena_poll_seconds": 1,
+    "athena_max_wait_seconds": 900
+  }
 }

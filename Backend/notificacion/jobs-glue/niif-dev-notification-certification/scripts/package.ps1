@@ -1,5 +1,5 @@
-# Arma el paquete del job de Glue (igual que empaquetar.sh), para Windows PowerShell 5.1 o superior.
-# Uso, desde la carpeta del job:  powershell -ExecutionPolicy Bypass -File scripts\empaquetar.ps1
+# Arma el paquete del job de Glue (igual que package.sh), para Windows PowerShell 5.1 o superior.
+# Uso, desde la carpeta del job:  powershell -ExecutionPolicy Bypass -File scripts\package.ps1
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -37,7 +37,7 @@ try {
 finally {
     $zip.Dispose()
 }
-Copy-Item (Join-Path $raiz 'scripts\job_notificacion.py') $script
+Copy-Item (Join-Path $raiz 'src\job_notificacion.py') $script
 
 Write-Output "Libreria: $libreria  (--extra-py-files)"
 Write-Output "Script:   $script  (ScriptLocation del job)"

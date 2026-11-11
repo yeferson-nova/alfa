@@ -1,10 +1,10 @@
 import json
 from typing import Any, Mapping
 
-from notificacion_certificacion.adaptadores.salida.errores_aws import traduciendo
-from notificacion_certificacion.dominio.constantes import CODIFICACION
-from notificacion_certificacion.dominio.errores import ErrorConfiguracion
-from notificacion_certificacion.dominio.rutas import normalizar_clave
+from notificacion_certificacion.adapters.outbound.errores_aws import traduciendo
+from notificacion_certificacion.domain.constantes import CODIFICACION
+from notificacion_certificacion.domain.errores import ErrorConfiguracion
+from notificacion_certificacion.domain.rutas import normalizar_clave
 
 
 class RepositorioConfiguracionS3:

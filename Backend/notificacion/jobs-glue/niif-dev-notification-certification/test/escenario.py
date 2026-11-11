@@ -19,11 +19,11 @@ from fakes import (
     RepositorioEnlacesFalso,
     RepositorioNotificacionesFalso,
 )
-from notificacion_certificacion.aplicacion.compuesto import ServicioCompuesto
-from notificacion_certificacion.aplicacion.consultas import ServicioConsultas
-from notificacion_certificacion.aplicacion.enlaces import ServicioEnlaces
-from notificacion_certificacion.aplicacion.notificar_certificacion import Dependencias, NotificarCertificacion
-from notificacion_certificacion.dominio.modelos import PoliticaEnlaces
+from notificacion_certificacion.application.compuesto import ServicioCompuesto
+from notificacion_certificacion.application.consultas import ServicioConsultas
+from notificacion_certificacion.application.enlaces import ServicioEnlaces
+from notificacion_certificacion.application.notificar_certificacion import Dependencias, NotificarCertificacion
+from notificacion_certificacion.domain.configuracion import leer_configuracion_global
 
 
 @dataclass
@@ -47,13 +47,12 @@ def armar_escenario(
     compuesto: Any = None,
     notificador: Any = None,
     plantillas: Any = None,
+    config_global: Any = None,
 ) -> Escenario:
     parametros = parametros or construir_parametros()
     config_caso = config_caso if config_caso is not None else copiar_config_caso()
-    documentos = {
-        (parametros.bucket_configuracion, parametros.clave_global): CONFIG_GLOBAL,
-        (parametros.bucket_configuracion, parametros.clave_caso): config_caso,
-    }
+    configuracion_global = leer_configuracion_global(config_global if config_global is not None else CONFIG_GLOBAL)
+    documentos = {(parametros.bucket_configuracion, parametros.clave_caso): config_caso}
     configuracion = RepositorioConfiguracionFalso(documentos, plantillas)
     notificaciones = RepositorioNotificacionesFalso(
         registros if registros is not None else [construir_registro()]
@@ -64,12 +63,7 @@ def armar_escenario(
     repositorio_compuesto = compuesto or RepositorioCompuestoFalso()
     bitacora = BitacoraEnMemoria()
     reloj = RelojFijo()
-    politica = PoliticaEnlaces(
-        url_base=parametros.url_redireccion,
-        tabla=parametros.tabla_enlaces,
-        dias_vigencia=parametros.dias_vigencia_enlace,
-        longitud_token=parametros.longitud_token_enlace,
-    )
+    politica = configuracion_global.notificacion.enlaces
     dependencias = Dependencias(
         configuracion=configuracion,
         notificaciones=notificaciones,
@@ -83,7 +77,7 @@ def armar_escenario(
         bitacora=bitacora,
     )
     return Escenario(
-        caso=NotificarCertificacion(parametros, dependencias),
+        caso=NotificarCertificacion(parametros, configuracion_global, dependencias),
         configuracion=configuracion,
         notificaciones=notificaciones,
         enlaces=enlaces,

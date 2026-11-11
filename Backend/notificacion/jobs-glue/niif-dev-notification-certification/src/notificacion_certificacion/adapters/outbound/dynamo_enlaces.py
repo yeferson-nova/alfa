@@ -1,8 +1,8 @@
 from typing import Any
 
-from notificacion_certificacion.adaptadores.salida.dynamo_tipos import serializar
-from notificacion_certificacion.adaptadores.salida.errores_aws import traduciendo
-from notificacion_certificacion.dominio.modelos import EnlaceCorto
+from notificacion_certificacion.adapters.outbound.dynamo_tipos import serializar
+from notificacion_certificacion.adapters.outbound.errores_aws import traduciendo
+from notificacion_certificacion.domain.modelos import EnlaceCorto
 
 CONDICION_TOKEN_NUEVO = "attribute_not_exists(#tk)"
 

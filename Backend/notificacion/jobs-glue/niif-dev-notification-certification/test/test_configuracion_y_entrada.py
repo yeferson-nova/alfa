@@ -6,17 +6,18 @@ from pathlib import Path
 import pytest
 
 from fakes import BitacoraEnMemoria, RelojFijo
-from notificacion_certificacion.adaptadores.entrada import job_glue
-from notificacion_certificacion.adaptadores.salida.bitacora_json import BitacoraJson
-from notificacion_certificacion.adaptadores.salida.reloj import GeneradorTokensUuid, RelojSistema
-from notificacion_certificacion.aplicacion.notificar_certificacion import ResultadoJob
+from notificacion_certificacion.adapters.inbound import job_glue
+from notificacion_certificacion.adapters.outbound.bitacora_json import BitacoraJson
+from notificacion_certificacion.adapters.outbound.reloj import GeneradorTokensUuid, RelojSistema
+from notificacion_certificacion.application.notificar_certificacion import ResultadoJob
 from niif_observability import StructuredLogger
 
-from notificacion_certificacion.aplicacion.puertos import MENSAJES_EVENTO, EventoLog
-from notificacion_certificacion.configuracion.ajustes import leer_parametros
-from notificacion_certificacion.configuracion.composicion import Contexto, construir_contexto
-from notificacion_certificacion.dominio.errores import ErrorConfiguracion, ErrorEntrada, ErrorPlataforma
-from constructores import construir_parametros
+from notificacion_certificacion.application.puertos import MENSAJES_EVENTO, EventoLog
+from notificacion_certificacion.config.ajustes import leer_parametros
+from notificacion_certificacion.config.composicion import Contexto, construir_contexto
+from notificacion_certificacion.domain.errores import ErrorConfiguracion, ErrorEntrada, ErrorPlataforma
+from constructores import construir_parametros, copiar_config_global
+from notificacion_certificacion.adapters.outbound.s3_configuracion import RepositorioConfiguracionS3
 
 ARGUMENTOS = {
     "useCaseId": "casoA",
@@ -25,15 +26,6 @@ ARGUMENTOS = {
     "CONFIG_BUCKET": "bucket-config",
     "CONFIG_KEY": "casos/casoA.json",
     "GLOBAL_CONFIG_KEY": "global.json",
-    "REDIRECT_BASE_URL": "https://redir.example/r",
-    "SHORT_LINKS_TABLE": "tabla-enlaces",
-    "SES_SENDER": "no-responder@example.com",
-    "INDICE_CERT_CODE": "indice-cert",
-    "ZONA_HORARIA": "America/Bogota",
-    "DIAS_VIGENCIA_ENLACE": "7",
-    "LONGITUD_TOKEN_ENLACE": "8",
-    "SEGUNDOS_ENTRE_CONSULTAS": "1",
-    "SEGUNDOS_MAXIMOS_CONSULTA": "60",
 }
 
 
@@ -59,11 +51,7 @@ def test_leer_parametros_construye_el_contrato_con_valores_normalizados():
 
     assert parametros.caso_uso == "casoA"
     assert parametros.tipo_correo == "certification"
-    assert parametros.dias_vigencia_enlace == 7
-    assert parametros.longitud_token_enlace == 8
-    assert parametros.segundos_entre_consultas == 1.0
-    assert parametros.segundos_maximos_consulta == 60.0
-    assert parametros.conjunto_configuracion is None
+    assert parametros.clave_global == "global.json"
     assert parametros.regeneracion_sin_datos_nuevos is False
     assert parametros.id_corrida == "jr_1"
     assert parametros.id_ejecucion is None
@@ -79,10 +67,37 @@ def test_leer_parametros_no_inventa_identificadores_si_no_llegan():
     assert (parametros.id_ejecucion, parametros.id_corrida) == (None, None)
 
 
-def test_leer_parametros_acepta_opcionales_y_la_marca_de_regeneracion():
-    parametros = leer_parametros(_argv(SES_CONFIGURATION_SET=" conjunto ", REGENERACION_SIN_DATOS_NUEVOS="TRUE"))
-    assert parametros.conjunto_configuracion == "conjunto"
+def test_leer_parametros_acepta_la_marca_de_regeneracion():
+    parametros = leer_parametros(_argv(REGENERACION_SIN_DATOS_NUEVOS="TRUE"))
     assert parametros.regeneracion_sin_datos_nuevos is True
+
+
+@pytest.mark.parametrize(
+    "retirado",
+    [
+        "REDIRECT_BASE_URL",
+        "SHORT_LINKS_TABLE",
+        "SES_SENDER",
+        "SES_CONFIGURATION_SET",
+        "INDICE_CERT_CODE",
+        "ZONA_HORARIA",
+        "DIAS_VIGENCIA_ENLACE",
+        "LONGITUD_TOKEN_ENLACE",
+        "SEGUNDOS_ENTRE_CONSULTAS",
+        "SEGUNDOS_MAXIMOS_CONSULTA",
+    ],
+)
+def test_leer_parametros_rechaza_los_argumentos_que_pasaron_al_json_global(retirado):
+    with pytest.raises(ErrorEntrada) as error:
+        leer_parametros(_argv(**{retirado: "valor"}))
+    assert error.value.codigo == "NTF-ENT-004"
+    assert retirado in error.value.mensaje
+
+
+def test_leer_parametros_rechaza_un_argumento_retirado_escrito_con_igual():
+    with pytest.raises(ErrorEntrada) as error:
+        leer_parametros(_argv() + ["--ZONA_HORARIA=America/Bogota"])
+    assert "timezone" in error.value.mensaje
 
 
 def test_leer_parametros_ignora_los_argumentos_propios_de_glue():
@@ -107,14 +122,7 @@ def test_leer_parametros_exige_cada_argumento_obligatorio(faltante):
     "cambio",
     [
         {"useCaseId": "   "},
-        {"SES_SENDER": " "},
-        {"DIAS_VIGENCIA_ENLACE": "0"},
-        {"DIAS_VIGENCIA_ENLACE": "x"},
-        {"LONGITUD_TOKEN_ENLACE": "0"},
-        {"LONGITUD_TOKEN_ENLACE": "33"},
-        {"SEGUNDOS_ENTRE_CONSULTAS": "0"},
-        {"SEGUNDOS_ENTRE_CONSULTAS": "abc"},
-        {"SEGUNDOS_MAXIMOS_CONSULTA": "0.5"},
+        {"GLOBAL_CONFIG_KEY": " "},
         {"REGENERACION_SIN_DATOS_NUEVOS": "quiza"},
     ],
 )
@@ -169,9 +177,9 @@ def test_reloj_sistema_entrega_hora_local_y_utc_con_zona():
 
 
 def test_reloj_sistema_rechaza_zonas_inexistentes():
-    with pytest.raises(ErrorEntrada) as error:
+    with pytest.raises(ErrorConfiguracion) as error:
         RelojSistema("Mundo/Imaginario")
-    assert error.value.codigo == "NTF-ENT-003"
+    assert error.value.codigo == "NTF-CFG-001"
 
 
 def test_generador_de_tokens_respeta_la_longitud_y_no_repite():
@@ -284,21 +292,47 @@ def test_ejecutar_clasifica_los_errores_inesperados_de_arranque():
     assert json.loads(lineas[0])["codigo"] == "NTF-PLA-999"
 
 
-def test_construir_contexto_arma_el_caso_de_uso_con_los_adaptadores_reales():
-    contexto = construir_contexto(construir_parametros(conjunto_configuracion="conjunto"))
+def _global_en_s3(monkeypatch, **cambios):
+    datos = copiar_config_global()
+    datos.update(cambios)
+    lecturas = []
+
+    def cargar_json(_repositorio, bucket, clave):
+        lecturas.append((bucket, clave))
+        return datos
+
+    monkeypatch.setattr(RepositorioConfiguracionS3, "cargar_json", cargar_json)
+    return lecturas
+
+
+def test_construir_contexto_lee_el_json_global_y_arma_el_caso_de_uso(monkeypatch):
+    lecturas = _global_en_s3(monkeypatch)
+    contexto = construir_contexto(construir_parametros())
     assert contexto.caso_de_uso is not None
     assert contexto.bitacora is not None
+    assert lecturas == [("bucket-config", "global.json")]
 
 
-def test_construir_contexto_rechaza_una_zona_horaria_invalida():
-    with pytest.raises(ErrorEntrada):
-        construir_contexto(construir_parametros(zona_horaria="Mundo/Imaginario"))
+def test_construir_contexto_rechaza_una_zona_horaria_invalida(monkeypatch):
+    _global_en_s3(monkeypatch, timezone="Mundo/Imaginario")
+    with pytest.raises(ErrorConfiguracion) as error:
+        construir_contexto(construir_parametros())
+    assert "timezone" in error.value.mensaje
+
+
+def test_construir_contexto_falla_si_el_json_global_no_trae_la_seccion_de_notificacion(monkeypatch):
+    datos = copiar_config_global()
+    del datos["notification"]
+    monkeypatch.setattr(RepositorioConfiguracionS3, "cargar_json", lambda *_: datos)
+    with pytest.raises(ErrorConfiguracion) as error:
+        construir_contexto(construir_parametros())
+    assert error.value.codigo == "NTF-CFG-001"
 
 
 def test_script_del_job_invoca_el_punto_de_entrada(monkeypatch):
     llamadas = []
     monkeypatch.setattr(job_glue, "ejecutar", lambda: llamadas.append("ejecutado"))
-    script = Path(__file__).resolve().parents[1] / "scripts" / "job_notificacion.py"
+    script = Path(__file__).resolve().parents[1] / "src" / "job_notificacion.py"
 
     runpy.run_path(str(script), run_name="__main__")
 
@@ -308,7 +342,7 @@ def test_script_del_job_invoca_el_punto_de_entrada(monkeypatch):
 def test_script_del_job_no_ejecuta_nada_al_importarse(monkeypatch):
     llamadas = []
     monkeypatch.setattr(job_glue, "ejecutar", lambda: llamadas.append("ejecutado"))
-    script = Path(__file__).resolve().parents[1] / "scripts" / "job_notificacion.py"
+    script = Path(__file__).resolve().parents[1] / "src" / "job_notificacion.py"
 
     runpy.run_path(str(script), run_name="importado")
 

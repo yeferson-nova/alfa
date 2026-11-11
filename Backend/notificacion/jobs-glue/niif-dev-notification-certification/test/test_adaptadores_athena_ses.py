@@ -2,14 +2,14 @@ import boto3
 import pytest
 from botocore.stub import Stubber
 
-from notificacion_certificacion.adaptadores.salida.athena import ConsultorAthena
-from notificacion_certificacion.adaptadores.salida.ses import NotificadorSes
-from notificacion_certificacion.dominio.errores import (
+from notificacion_certificacion.adapters.outbound.athena import ConsultorAthena
+from notificacion_certificacion.adapters.outbound.ses import NotificadorSes
+from notificacion_certificacion.domain.errores import (
     ErrorConsultaFallida,
     ErrorPermisos,
     ErrorPlataforma,
 )
-from notificacion_certificacion.dominio.modelos import EntornoConsultas, Mensaje, ResultadoConsulta
+from notificacion_certificacion.domain.modelos import EntornoConsultas, Mensaje, ResultadoConsulta
 
 ENTORNO = EntornoConsultas(catalogo="catalogo", salida="s3://bucket/salida/")
 

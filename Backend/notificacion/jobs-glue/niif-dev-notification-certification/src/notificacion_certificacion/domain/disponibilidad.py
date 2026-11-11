@@ -1,8 +1,8 @@
 import re
 
-from notificacion_certificacion.dominio.constantes import COLUMNA_REGISTROS
-from notificacion_certificacion.dominio.errores import ErrorConfiguracion
-from notificacion_certificacion.dominio.modelos import ResultadoConsulta
+from notificacion_certificacion.domain.constantes import COLUMNA_REGISTROS
+from notificacion_certificacion.domain.errores import ErrorConfiguracion
+from notificacion_certificacion.domain.modelos import ResultadoConsulta
 
 FORMATO_CANTIDAD = re.compile(r"[0-9]+")
 

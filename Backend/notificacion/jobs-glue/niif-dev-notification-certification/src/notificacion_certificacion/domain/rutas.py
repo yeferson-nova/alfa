@@ -1,4 +1,4 @@
-from notificacion_certificacion.dominio.errores import ErrorConfiguracion
+from notificacion_certificacion.domain.errores import ErrorConfiguracion
 
 ESQUEMA_S3 = "s3://"
 

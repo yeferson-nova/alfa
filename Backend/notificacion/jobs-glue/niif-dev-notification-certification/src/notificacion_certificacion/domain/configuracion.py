@@ -1,20 +1,22 @@
 from typing import Any, Mapping
 
-from notificacion_certificacion.dominio.constantes import (
-    CATALOGO_POR_DEFECTO,
-    ESTADO_ENVIADO_POR_DEFECTO,
-    MIEMBRO_CONTROL_POR_DEFECTO,
+from notificacion_certificacion.domain.constantes import (
+    LONGITUD_MAXIMA_TOKEN,
     TIPO_CONSULTA_RESUMEN,
     TIPO_CONSULTA_TOTALES,
 )
-from notificacion_certificacion.dominio.destinatarios import normalizar_destinatarios
-from notificacion_certificacion.dominio.errores import ErrorConfiguracion
-from notificacion_certificacion.dominio.modelos import (
+from notificacion_certificacion.domain.destinatarios import normalizar_destinatarios
+from notificacion_certificacion.domain.errores import ErrorConfiguracion
+from notificacion_certificacion.domain.modelos import (
+    AjustesNotificacion,
     ConfiguracionCaso,
     ConfiguracionCompuesta,
     ConfiguracionGlobal,
     Consulta,
+    PoliticaEnlaces,
 )
+
+SECCION_NOTIFICACION = "notification"
 
 
 def _existe(datos: Any, ruta: tuple[str, ...]) -> bool:
@@ -42,10 +44,25 @@ def _texto(datos: Any, *ruta: str) -> str:
     return valor
 
 
-def _texto_opcional(datos: Any, por_defecto: str, *ruta: str) -> str:
-    if not _existe(datos, ruta):
-        return por_defecto
-    return _texto(datos, *ruta)
+def _texto_o_nulo(datos: Any, *ruta: str) -> str | None:
+    valor = _buscar(datos, ruta)
+    if valor is None:
+        return None
+    return _texto(datos, *ruta).strip()
+
+
+def _numero(datos: Any, *ruta: str) -> float:
+    valor = _buscar(datos, ruta)
+    if isinstance(valor, bool) or not isinstance(valor, (int, float)) or valor <= 0:
+        raise ErrorConfiguracion("NTF-CFG-001", f"La clave debe ser un numero mayor a cero: {'.'.join(ruta)}")
+    return float(valor)
+
+
+def _entero(datos: Any, *ruta: str) -> int:
+    valor = _buscar(datos, ruta)
+    if isinstance(valor, bool) or not isinstance(valor, int) or valor <= 0:
+        raise ErrorConfiguracion("NTF-CFG-001", f"La clave debe ser un entero mayor a cero: {'.'.join(ruta)}")
+    return valor
 
 
 def _lista(datos: Any, ruta: tuple[str, ...], codigo: str) -> list[Any]:
@@ -57,14 +74,47 @@ def _lista(datos: Any, ruta: tuple[str, ...], codigo: str) -> list[Any]:
     return valor
 
 
+def _politica_enlaces(datos: Any) -> PoliticaEnlaces:
+    longitud = _entero(datos, SECCION_NOTIFICACION, "link_token_length")
+    if longitud > LONGITUD_MAXIMA_TOKEN:
+        raise ErrorConfiguracion(
+            "NTF-CFG-001", f"notification.link_token_length no puede ser mayor a {LONGITUD_MAXIMA_TOKEN}"
+        )
+    return PoliticaEnlaces(
+        url_base=_texto(datos, SECCION_NOTIFICACION, "redirect_base_url").strip(),
+        tabla=_texto(datos, SECCION_NOTIFICACION, "short_links_table").strip(),
+        dias_vigencia=_entero(datos, SECCION_NOTIFICACION, "link_validity_days"),
+        longitud_token=longitud,
+    )
+
+
+def _ajustes_notificacion(datos: Any) -> AjustesNotificacion:
+    entre_consultas = _numero(datos, SECCION_NOTIFICACION, "athena_poll_seconds")
+    maximo_consulta = _numero(datos, SECCION_NOTIFICACION, "athena_max_wait_seconds")
+    if maximo_consulta < entre_consultas:
+        raise ErrorConfiguracion(
+            "NTF-CFG-001", "notification.athena_max_wait_seconds no puede ser menor a athena_poll_seconds"
+        )
+    return AjustesNotificacion(
+        indice_cert_code=_texto(datos, "dynamodb", "cert_code_index").strip(),
+        remitente=_texto(datos, SECCION_NOTIFICACION, "ses_sender").strip(),
+        conjunto_configuracion=_texto_o_nulo(datos, SECCION_NOTIFICACION, "ses_configuration_set"),
+        enlaces=_politica_enlaces(datos),
+        segundos_entre_consultas=entre_consultas,
+        segundos_maximos_consulta=maximo_consulta,
+    )
+
+
 def leer_configuracion_global(datos: Any) -> ConfiguracionGlobal:
     return ConfiguracionGlobal(
         bucket_activos=_texto(datos, "buckets", "assets"),
         tabla_notificaciones=_texto(datos, "dynamodb", "notification_table"),
-        catalogo=_texto_opcional(datos, CATALOGO_POR_DEFECTO, "catalog"),
+        catalogo=_texto(datos, "catalog"),
         ambiente=_texto(datos, "environment"),
         prefijo_salida_athena=_texto(datos, "athena", "output_path"),
-        estado_enviado=_texto_opcional(datos, ESTADO_ENVIADO_POR_DEFECTO, "certification", "sent_status"),
+        estado_enviado=_texto(datos, "certification", "sent_status"),
+        zona_horaria=_texto(datos, "timezone").strip(),
+        notificacion=_ajustes_notificacion(datos),
     )
 
 
@@ -105,7 +155,7 @@ def _compuesta(datos: Any) -> ConfiguracionCompuesta | None:
     if not cruda or not cruda.get("enabled", False):
         return None
     miembros = tuple(_lista(cruda, ("memberIds",), "NTF-CFG-004"))
-    control = _texto_opcional(cruda, MIEMBRO_CONTROL_POR_DEFECTO, "controlMemberId")
+    control = _texto(cruda, "controlMemberId")
     if not miembros or len(set(miembros)) != len(miembros) or control in miembros:
         raise ErrorConfiguracion("NTF-CFG-004", "Miembros del compuesto invalidos")
     return ConfiguracionCompuesta(

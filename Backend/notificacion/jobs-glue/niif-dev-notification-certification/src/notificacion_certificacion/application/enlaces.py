@@ -1,13 +1,13 @@
 from datetime import timedelta
 
-from notificacion_certificacion.aplicacion.puertos import (
+from notificacion_certificacion.application.puertos import (
     Bitacora,
     EventoLog,
     GeneradorTokens,
     Reloj,
     RepositorioEnlaces,
 )
-from notificacion_certificacion.dominio.modelos import EnlaceCorto, PoliticaEnlaces
+from notificacion_certificacion.domain.modelos import EnlaceCorto, PoliticaEnlaces
 
 
 class ServicioEnlaces:

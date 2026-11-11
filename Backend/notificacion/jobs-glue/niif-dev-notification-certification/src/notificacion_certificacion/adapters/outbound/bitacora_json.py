@@ -2,7 +2,7 @@ from typing import Any
 
 from niif_observability import StructuredLogger
 
-from notificacion_certificacion.aplicacion.puertos import MENSAJES_EVENTO, EventoLog
+from notificacion_certificacion.application.puertos import MENSAJES_EVENTO, EventoLog
 
 CAMPO_MENSAJE = "mensaje"
 CAMPO_DETALLE = "detalle"

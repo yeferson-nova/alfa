@@ -2,7 +2,7 @@ import html
 from string import Template
 from typing import Any, Mapping
 
-from notificacion_certificacion.dominio.errores import ErrorConfiguracion
+from notificacion_certificacion.domain.errores import ErrorConfiguracion
 
 REPETICIONES_DESESCAPE = 3
 

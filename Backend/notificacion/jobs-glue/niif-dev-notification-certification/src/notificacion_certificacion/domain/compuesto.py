@@ -1,10 +1,10 @@
-from notificacion_certificacion.dominio.constantes import (
+from notificacion_certificacion.domain.constantes import (
     ESTADO_LISTO_PARA_NOTIFICAR,
     ESTADO_NOTIFICACION_COMPLETADA,
     ESTADO_NOTIFICACION_EN_CURSO,
 )
-from notificacion_certificacion.dominio.errores import ErrorConcurrencia
-from notificacion_certificacion.dominio.modelos import ConfiguracionCompuesta, RegistroCompuesto
+from notificacion_certificacion.domain.errores import ErrorConcurrencia
+from notificacion_certificacion.domain.modelos import ConfiguracionCompuesta, RegistroCompuesto
 
 SEPARADOR_IDENTIFICADOR = "#"
 

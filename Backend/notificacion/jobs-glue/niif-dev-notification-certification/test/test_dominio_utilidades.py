@@ -1,20 +1,20 @@
 import pytest
 
-from notificacion_certificacion.dominio.destinatarios import normalizar_destinatarios
-from notificacion_certificacion.dominio.disponibilidad import extraer_cantidad
-from notificacion_certificacion.dominio.errores import (
+from notificacion_certificacion.domain.destinatarios import normalizar_destinatarios
+from notificacion_certificacion.domain.disponibilidad import extraer_cantidad
+from notificacion_certificacion.domain.errores import (
     ErrorConcurrencia,
     ErrorConfiguracion,
     ErrorEntrada,
     ErrorNotificacion,
     ErrorPlataforma,
 )
-from notificacion_certificacion.dominio.modelos import ResultadoConsulta
-from notificacion_certificacion.dominio.parametrizacion import limpiar_url, parametrizar
-from notificacion_certificacion.dominio.periodo import rango_periodo
-from notificacion_certificacion.dominio.rutas import normalizar_clave, ruta_salida_consultas
-from notificacion_certificacion.dominio.tablas import formatear_resultado, unir_bloques
-from notificacion_certificacion.dominio.textos import TEXTO_SIN_DATOS
+from notificacion_certificacion.domain.modelos import ResultadoConsulta
+from notificacion_certificacion.domain.parametrizacion import limpiar_url, parametrizar
+from notificacion_certificacion.domain.periodo import rango_periodo
+from notificacion_certificacion.domain.rutas import normalizar_clave, ruta_salida_consultas
+from notificacion_certificacion.domain.tablas import formatear_resultado, unir_bloques
+from notificacion_certificacion.domain.textos import TEXTO_SIN_DATOS
 
 
 def test_limpiar_url_desescapa_hasta_estabilizar():

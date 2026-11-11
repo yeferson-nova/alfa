@@ -1,6 +1,6 @@
 from constructores import construir_registro, copiar_config_caso
-from notificacion_certificacion.dominio.configuracion import leer_configuracion_caso
-from notificacion_certificacion.dominio.redaccion import (
+from notificacion_certificacion.domain.configuracion import leer_configuracion_caso
+from notificacion_certificacion.domain.redaccion import (
     aviso_disponibilidad,
     aviso_por_registros,
     componer_texto,
@@ -11,7 +11,7 @@ from notificacion_certificacion.dominio.redaccion import (
     variables_base,
     variables_finales,
 )
-from notificacion_certificacion.dominio.textos import (
+from notificacion_certificacion.domain.textos import (
     AVISO_REGENERACION,
     TEXTO_ARCHIVO_POR_DEFECTO,
     TEXTO_SIN_ARCHIVOS,

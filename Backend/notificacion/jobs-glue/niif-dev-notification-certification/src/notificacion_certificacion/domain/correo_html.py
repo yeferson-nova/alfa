@@ -2,8 +2,8 @@ import html
 from string import Template
 from typing import Mapping, Sequence
 
-from notificacion_certificacion.dominio.modelos import Aviso, ResultadoConsulta
-from notificacion_certificacion.dominio.textos import TEXTO_ERROR_CONSULTA, TEXTO_SIN_ARCHIVOS, TEXTO_SIN_DATOS
+from notificacion_certificacion.domain.modelos import Aviso, ResultadoConsulta
+from notificacion_certificacion.domain.textos import TEXTO_ERROR_CONSULTA, TEXTO_SIN_ARCHIVOS, TEXTO_SIN_DATOS
 
 MARCADOR_AVISOS = "$avisoHtml"
 VARIABLE_AVISOS = "avisoHtml"

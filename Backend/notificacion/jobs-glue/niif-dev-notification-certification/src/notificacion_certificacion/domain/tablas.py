@@ -1,7 +1,7 @@
 from typing import Iterable
 
-from notificacion_certificacion.dominio.modelos import ResultadoConsulta
-from notificacion_certificacion.dominio.textos import TEXTO_SIN_DATOS
+from notificacion_certificacion.domain.modelos import ResultadoConsulta
+from notificacion_certificacion.domain.textos import TEXTO_SIN_DATOS
 
 SEPARADOR_COLUMNAS = " | "
 SEPARADOR_BLOQUES = "\n\n"

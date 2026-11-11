@@ -3,12 +3,12 @@ import pytest
 from botocore.stub import Stubber
 
 from constructores import construir_registro, construir_registro_compuesto
-from notificacion_certificacion.adaptadores.salida.dynamo_compuesto import RepositorioCompuestoDynamo
-from notificacion_certificacion.adaptadores.salida.dynamo_enlaces import RepositorioEnlacesDynamo
-from notificacion_certificacion.adaptadores.salida.dynamo_notificaciones import RepositorioNotificacionesDynamo
-from notificacion_certificacion.adaptadores.salida.dynamo_tipos import deserializar, serializar
-from notificacion_certificacion.dominio.errores import ErrorConcurrencia, ErrorConfiguracion
-from notificacion_certificacion.dominio.modelos import EnlaceCorto, EnvioRealizado, ReservaCompuesta
+from notificacion_certificacion.adapters.outbound.dynamo_compuesto import RepositorioCompuestoDynamo
+from notificacion_certificacion.adapters.outbound.dynamo_enlaces import RepositorioEnlacesDynamo
+from notificacion_certificacion.adapters.outbound.dynamo_notificaciones import RepositorioNotificacionesDynamo
+from notificacion_certificacion.adapters.outbound.dynamo_tipos import deserializar, serializar
+from notificacion_certificacion.domain.errores import ErrorConcurrencia, ErrorConfiguracion
+from notificacion_certificacion.domain.modelos import EnlaceCorto, EnvioRealizado, ReservaCompuesta
 
 
 def _cliente():

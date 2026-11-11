@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
-from notificacion_certificacion.dominio.modelos import RegistroCompuesto, ResultadoConsulta
+from notificacion_certificacion.domain.modelos import RegistroCompuesto, ResultadoConsulta
 
 
 class RelojFijo:

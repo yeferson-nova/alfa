@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from notificacion_certificacion.dominio.errores import ErrorConfiguracion
+from notificacion_certificacion.domain.errores import ErrorConfiguracion
 
 
 def normalizar_destinatarios(valores: Iterable[object]) -> tuple[str, ...]:

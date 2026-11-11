@@ -10,16 +10,6 @@ class ParametrosEjecucion:
     bucket_configuracion: str
     clave_caso: str
     clave_global: str
-    url_redireccion: str
-    tabla_enlaces: str
-    remitente: str
-    conjunto_configuracion: str | None
-    indice_cert_code: str
-    zona_horaria: str
-    dias_vigencia_enlace: int
-    longitud_token_enlace: int
-    segundos_entre_consultas: float
-    segundos_maximos_consulta: float
     regeneracion_sin_datos_nuevos: bool
     id_ejecucion: str | None
     id_corrida: str | None = None
@@ -30,16 +20,6 @@ class Consulta:
     nombre: str
     base_datos: str
     sql: str
-
-
-@dataclass(frozen=True)
-class ConfiguracionGlobal:
-    bucket_activos: str
-    tabla_notificaciones: str
-    catalogo: str
-    ambiente: str
-    prefijo_salida_athena: str
-    estado_enviado: str
 
 
 @dataclass(frozen=True)
@@ -94,6 +74,28 @@ class PoliticaEnlaces:
     tabla: str
     dias_vigencia: int
     longitud_token: int
+
+
+@dataclass(frozen=True)
+class AjustesNotificacion:
+    indice_cert_code: str
+    remitente: str
+    conjunto_configuracion: str | None
+    enlaces: PoliticaEnlaces
+    segundos_entre_consultas: float
+    segundos_maximos_consulta: float
+
+
+@dataclass(frozen=True)
+class ConfiguracionGlobal:
+    bucket_activos: str
+    tabla_notificaciones: str
+    catalogo: str
+    ambiente: str
+    prefijo_salida_athena: str
+    estado_enviado: str
+    zona_horaria: str
+    notificacion: AjustesNotificacion
 
 
 @dataclass(frozen=True)

@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from notificacion_certificacion.dominio.errores import ErrorEntrada
+from notificacion_certificacion.domain.errores import ErrorConfiguracion
 
 
 class RelojSistema:
@@ -10,7 +10,7 @@ class RelojSistema:
         try:
             self._zona = ZoneInfo(zona_horaria)
         except (ZoneInfoNotFoundError, ValueError) as error:
-            raise ErrorEntrada("NTF-ENT-003", f"Zona horaria invalida: {zona_horaria}") from error
+            raise ErrorConfiguracion("NTF-CFG-001", f"Zona horaria invalida en timezone: {zona_horaria}") from error
 
     def ahora_local(self) -> datetime:
         return datetime.now(self._zona)

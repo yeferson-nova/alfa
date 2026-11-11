@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Mapping, Sequence
 
-from notificacion_certificacion.aplicacion.compuesto import ServicioCompuesto
-from notificacion_certificacion.aplicacion.consultas import ServicioConsultas
-from notificacion_certificacion.aplicacion.enlaces import ServicioEnlaces
-from notificacion_certificacion.aplicacion.puertos import (
+from notificacion_certificacion.application.compuesto import ServicioCompuesto
+from notificacion_certificacion.application.consultas import ServicioConsultas
+from notificacion_certificacion.application.enlaces import ServicioEnlaces
+from notificacion_certificacion.application.puertos import (
     Bitacora,
     EventoLog,
     Notificador,
@@ -13,25 +13,22 @@ from notificacion_certificacion.aplicacion.puertos import (
     RepositorioConfiguracion,
     RepositorioNotificaciones,
 )
-from notificacion_certificacion.dominio.configuracion import (
-    leer_configuracion_caso,
-    leer_configuracion_global,
-)
-from notificacion_certificacion.dominio.constantes import (
+from notificacion_certificacion.domain.configuracion import leer_configuracion_caso
+from notificacion_certificacion.domain.constantes import (
     ACCION_CERTIFICAR,
     ACCION_DESCARGAR,
     ACCION_NO_CERTIFICAR,
     CANAL_CORREO,
     PREFIJO_CONSULTA_DETALLE,
 )
-from notificacion_certificacion.dominio.correo_html import (
+from notificacion_certificacion.domain.correo_html import (
     archivos_a_html,
     componer_html,
     escapar,
     plantilla_admite_avisos,
 )
-from notificacion_certificacion.dominio.errores import ErrorNotificacion, ErrorPlataforma
-from notificacion_certificacion.dominio.modelos import (
+from notificacion_certificacion.domain.errores import ErrorNotificacion, ErrorPlataforma
+from notificacion_certificacion.domain.modelos import (
     Aviso,
     ConfiguracionCaso,
     ConfiguracionGlobal,
@@ -42,8 +39,8 @@ from notificacion_certificacion.dominio.modelos import (
     RegistroNotificacion,
     TablaCorreo,
 )
-from notificacion_certificacion.dominio.parametrizacion import limpiar_url
-from notificacion_certificacion.dominio.redaccion import (
+from notificacion_certificacion.domain.parametrizacion import limpiar_url
+from notificacion_certificacion.domain.redaccion import (
     aviso_por_registros,
     avisos_del_correo,
     componer_texto,
@@ -54,7 +51,7 @@ from notificacion_certificacion.dominio.redaccion import (
     variables_base,
     variables_finales,
 )
-from notificacion_certificacion.dominio.rutas import ruta_salida_consultas
+from notificacion_certificacion.domain.rutas import ruta_salida_consultas
 
 SEPARADOR_IDENTIFICADORES = ","
 ETIQUETA_CASO_USO = "useCaseId"
@@ -101,8 +98,14 @@ class Contenido:
 
 
 class NotificarCertificacion:
-    def __init__(self, parametros: ParametrosEjecucion, dependencias: Dependencias) -> None:
+    def __init__(
+        self,
+        parametros: ParametrosEjecucion,
+        configuracion_global: ConfiguracionGlobal,
+        dependencias: Dependencias,
+    ) -> None:
         self._parametros = parametros
+        self._configuracion_global = configuracion_global
         self._dependencias = dependencias
         self.enviados = 0
         self.fallidos = 0
@@ -119,7 +122,7 @@ class NotificarCertificacion:
         configuracion_global, configuracion_caso = self._cargar_configuraciones()
         registros = self._dependencias.notificaciones.buscar_por_cert_code(
             configuracion_global.tabla_notificaciones,
-            self._parametros.indice_cert_code,
+            configuracion_global.notificacion.indice_cert_code,
             self._parametros.cert_code,
             self._parametros.caso_uso,
         )
@@ -132,9 +135,7 @@ class NotificarCertificacion:
     def _cargar_configuraciones(self) -> tuple[ConfiguracionGlobal, ConfiguracionCaso]:
         parametros = self._parametros
         repositorio = self._dependencias.configuracion
-        configuracion_global = leer_configuracion_global(
-            repositorio.cargar_json(parametros.bucket_configuracion, parametros.clave_global)
-        )
+        configuracion_global = self._configuracion_global
         configuracion_caso = leer_configuracion_caso(
             repositorio.cargar_json(parametros.bucket_configuracion, parametros.clave_caso),
             parametros.caso_uso,

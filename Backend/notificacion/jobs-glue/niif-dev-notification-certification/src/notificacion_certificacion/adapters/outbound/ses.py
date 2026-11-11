@@ -1,8 +1,8 @@
 from typing import Any
 
-from notificacion_certificacion.adaptadores.salida.errores_aws import traduciendo
-from notificacion_certificacion.dominio.constantes import CODIFICACION
-from notificacion_certificacion.dominio.modelos import Mensaje
+from notificacion_certificacion.adapters.outbound.errores_aws import traduciendo
+from notificacion_certificacion.domain.constantes import CODIFICACION
+from notificacion_certificacion.domain.modelos import Mensaje
 
 
 class NotificadorSes:

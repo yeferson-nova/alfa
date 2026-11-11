@@ -2,7 +2,7 @@
 
 Job de Glue que arma y **envía por Amazon SES** el correo de certificación NIIF 17. Reemplaza la versión anterior (`Backend\Glue\niif-dev-notification-certification\notification_certificacion.py`), que publicaba en SNS.
 
-**Tarea:** T1, puntos 1a (SNS a SES) y 1b (HTML). **Estado:** implementado y probado en local (486 pruebas, 99 % de cobertura). **No desplegado ni probado contra AWS.** El job que está en QA sigue siendo el monolito de `Backend\Glue\niif-dev-notification-certification\`. Auditoría frente a ese job: `Docs\06-brechas\auditoria-job-notificacion-nuevo-vs-actual.md` (N-01, N-02, N-03, N-05, N-07 y O-01 a O-06 resueltos el 2026-11-10).
+**Tarea:** T1, puntos 1a (SNS a SES) y 1b (HTML). **Estado:** implementado y probado en local (537 pruebas, 99 % de cobertura). **No desplegado ni probado contra AWS.** El job que está en QA sigue siendo el monolito de `Backend\Glue\niif-dev-notification-certification\`. Auditoría frente a ese job: `Docs\06-brechas\auditoria-job-notificacion-nuevo-vs-actual.md` (N-01, N-02, N-03, N-05, N-07 y O-01 a O-06 resueltos el 2026-11-10).
 
 ## Qué cambia frente al job anterior
 
@@ -10,57 +10,101 @@ Job de Glue que arma y **envía por Amazon SES** el correo de certificación NII
 |---|---|---|
 | Canal | `sns.publish` a un tópico, con `FilterPolicy` por destinatario reconfigurado en cada ejecución | SES (SESv2 `send_email`), un correo por destinatario, sin tópico ni suscripciones |
 | Estructura | Un script de 600 líneas con todo mezclado, ejecutado al importarse | Arquitectura hexagonal: dominio, aplicación, adaptadores y configuración (ver abajo) |
-| Valores fijos | Zona horaria, vigencia de enlaces, nombre del índice, longitud del token y tiempo de espera en el código | Todo llega por argumentos del job; el código no tiene cuentas, regiones, ARN, buckets ni tablas |
+| Valores fijos | Zona horaria, vigencia de enlaces, nombre del índice, longitud del token y tiempo de espera en el código | Todo viene del JSON global del ambiente, validado al arrancar y sin valores por defecto; el código no tiene cuentas, regiones, ARN, buckets ni tablas |
 | Errores | Texto libre y `ValueError` | Taxonomía con código, dominio, severidad, recuperable, acción y destinatario |
 | Logs | `print` de texto | Una línea JSON por evento, con mensaje en español y los campos de trazabilidad en todas las líneas (`ejecucion_id`, `request_id`, `cert_code`, `use_case_id`, `periodo_negocio`) |
 | Consulta de Athena | Espera sin límite y solo la primera página | Espera con tiempo máximo y lectura de todas las páginas |
 | Idempotencia | Un reintento reenviaba el correo | Si todos los registros del `certCode` ya están en estado enviado, no reenvía |
 | Pruebas | Ninguna | Pruebas unitarias, de adaptadores (`Stubber`), de arquitectura y de calidad |
 
-Se **mantiene** el contrato de negocio: mismos argumentos de entrada (`useCaseId`, `certCode`, `emailType`, `CONFIG_BUCKET`, `CONFIG_KEY`, `GLOBAL_CONFIG_KEY`, `REDIRECT_BASE_URL`, `SHORT_LINKS_TABLE`, `REGENERACION_SIN_DATOS_NUEVOS`), mismo JSON de configuración global y del caso, mismo texto del correo, mismos avisos (regeneración, sin datos, disponibilidad por miembro), mismos enlaces cortos y mismo cierre de grupos compuestos.
+Se **mantiene** el contrato de negocio: mismos argumentos de cada ejecución (`useCaseId`, `certCode`, `emailType`, `CONFIG_KEY`, `REGENERACION_SIN_DATOS_NUEVOS`), mismo JSON del caso, mismo texto del correo, mismos avisos (regeneración, sin datos, disponibilidad por miembro), mismos enlaces cortos y mismo cierre de grupos compuestos.
 
-## Argumentos del job
+## Configuración: argumentos y JSON
 
-Obligatorios:
+Regla del proyecto (2026-11-11): **la configuración vive en un JSON en S3 por ambiente**, con la fuente versionada en Git y desplegada por el pipeline de DevOps. Los argumentos del job solo llevan lo que cambia en cada ejecución y dónde está el JSON. Un valor está en un solo lugar. Si falta una clave o un valor no es válido, el job falla al arrancar con un error que nombra la clave; no hay valores por defecto. Para cambiar un valor (por ejemplo, el tiempo máximo de Athena) se cambia el JSON; no hace falta desplegar código.
 
-| Argumento | Para qué |
-|---|---|
-| `--useCaseId`, `--certCode`, `--emailType` | Identifican la solicitud (los envía la lambda `niif-dev-notification-certification-trigger`) |
-| `--CONFIG_BUCKET`, `--CONFIG_KEY`, `--GLOBAL_CONFIG_KEY` | Ubicación de la configuración global y del caso |
-| `--REDIRECT_BASE_URL`, `--SHORT_LINKS_TABLE` | Enlaces cortos |
-| `--SES_SENDER` | Dirección remitente, verificada en SES (mismo nombre que usa el job desplegado en QA) |
-| `--INDICE_CERT_CODE` | Índice de `notification-certification` por `certCode` |
-| `--ZONA_HORARIA` | Zona horaria de las fechas de envío y de vigencia de enlaces |
-| `--DIAS_VIGENCIA_ENLACE`, `--LONGITUD_TOKEN_ENLACE` | Política de enlaces cortos (longitud entre 1 y 32; usar 32 para cerrar SEG-13) |
-| `--SEGUNDOS_ENTRE_CONSULTAS`, `--SEGUNDOS_MAXIMOS_CONSULTA` | Espera de Athena |
+### Argumentos de entrada
 
-Opcionales:
-- `--SES_CONFIGURATION_SET` (rebotes y quejas).
-- `--REGENERACION_SIN_DATOS_NUEVOS` (`true` o `false`, por defecto `false`).
-- `--JOB_RUN_ID`: lo entrega Glue y se registra como `request_id`.
-- `--EJECUCION_ID`: el ID del flujo (nombre de la ejecución de la Step Function). Si no llega, se toma del campo `ejecucionId` del registro de notificación. Si tampoco está, se registra `NTF_ID_FLUJO_AUSENTE`. **Nunca se inventa un ID.** Hoy ni el trigger ni el job de certificación lo envían (ARQ-32).
+| Argumento | Obligatorio | Quién lo pone | Qué significa | Ejemplo |
+|---|---|---|---|---|
+| `--useCaseId` | Sí | La lambda que lanza el job, en cada ejecución | Caso de uso (malla). Debe coincidir con `useCaseId` del JSON del caso | `primasArl` |
+| `--certCode` | Sí | Ídem | Código de certificación que se notifica. Con él se buscan los registros en `notification-certification` | `202606-20261110-1530` |
+| `--emailType` | Sí | Ídem | Tipo de correo | `certification` |
+| `--CONFIG_KEY` | Sí | Ídem | Ruta del JSON del caso dentro de `CONFIG_BUCKET` | `configs/certification/primas-arl/primasArl.json` |
+| `--EJECUCION_ID` | No | Ídem | ID del flujo (nombre de la ejecución de la Step Function). Si no llega, se toma del campo `ejecucionId` del registro; si tampoco está, se registra `NTF_ID_FLUJO_AUSENTE`. **Nunca se inventa** | `primasArl-202606-<uuid v7>` |
+| `--REGENERACION_SIN_DATOS_NUEVOS` | No | Ídem | `true` si es una regeneración sin datos nuevos (agrega el aviso). Por defecto `false` | `false` |
+| `--CONFIG_BUCKET` | Sí | Argumento fijo del job (Terraform) | Bucket de la configuración | `niif-dev-assets` |
+| `--GLOBAL_CONFIG_KEY` | Sí | Argumento fijo del job (Terraform) | Ruta del JSON global del ambiente | `configs/certification/json_global_notif_cert.json` |
+| `--JOB_RUN_ID` | No | Glue | ID de la corrida; se registra como `request_id` | `jr_...` |
 
-Los 6 argumentos técnicos (`INDICE_CERT_CODE`, `ZONA_HORARIA`, `DIAS_VIGENCIA_ENLACE`, `LONGITUD_TOKEN_ENLACE`, `SEGUNDOS_ENTRE_CONSULTAS`, `SEGUNDOS_MAXIMOS_CONSULTA`) y `SES_SENDER` deben ir en los **argumentos por defecto del job**: el trigger no los envía.
+**Argumentos retirados:** `REDIRECT_BASE_URL`, `SHORT_LINKS_TABLE`, `SES_SENDER`, `SES_CONFIGURATION_SET`, `INDICE_CERT_CODE`, `ZONA_HORARIA`, `DIAS_VIGENCIA_ENLACE`, `LONGITUD_TOKEN_ENLACE`, `SEGUNDOS_ENTRE_CONSULTAS` y `SEGUNDOS_MAXIMOS_CONSULTA` pasaron al JSON global. Si alguno llega como argumento, el job falla con `NTF-ENT-004` y el mensaje dice en qué clave va ahora. Así no quedan dos fuentes para el mismo valor.
 
-Los valores de DEV están en `config\job.dev.json`; el ejemplo de invocación, en `eventos\argumentos-job.dev.json`.
+### JSON global (`GLOBAL_CONFIG_KEY`)
+
+Todas las claves son obligatorias. Ejemplo de DEV: `Backend\S3\niif-dev-assets\configs\certification\json_global_notif_cert.json`.
+
+| Clave | Qué significa | Regla | Ejemplo DEV |
+|---|---|---|---|
+| `environment` | Ambiente; se usa como `${env}` en las consultas | Texto | `dev` |
+| `catalog` | Catálogo de datos de Athena | Texto | `AwsDataCatalog` |
+| `timezone` | Zona horaria de las fechas de envío y de vigencia de enlaces | Zona IANA válida | `America/Bogota` |
+| `buckets.assets` | Bucket de activos: plantillas HTML y salida de Athena | Texto | `niif-dev-assets` |
+| `dynamodb.notification_table` | Tabla `notification-certification` | Texto | `niif-dev-notification-certification` |
+| `dynamodb.cert_code_index` | Índice de esa tabla por `certCode` (lo usa también el job de certificación) | Texto | `certCode-index` |
+| `athena.output_path` | Prefijo de salida de Athena dentro de `buckets.assets` | Texto | `athena/notifications` |
+| `certification.sent_status` | Estado con el que se marca un registro enviado | Texto | `SENT` |
+| `notification.short_links_table` | Tabla de enlaces cortos | Texto | `niif-dev-short-links` |
+| `notification.redirect_base_url` | URL base del API que redirige los enlaces cortos | Texto | `https://<api>/dev/r` |
+| `notification.ses_sender` | Remitente verificado en SES | Texto | `notificaciones@...` |
+| `notification.ses_configuration_set` | Conjunto de configuración de SES (rebotes y quejas) | Texto, o `null` si no se usa | `niif-dev-notificaciones` |
+| `notification.link_validity_days` | Días de vigencia de los enlaces | Entero > 0 | `7` |
+| `notification.link_token_length` | Longitud del token del enlace corto (32 cierra SEG-13) | Entero de 1 a 32 | `32` |
+| `notification.athena_poll_seconds` | Segundos entre consultas del estado de Athena | Número > 0 | `1` |
+| `notification.athena_max_wait_seconds` | Tiempo máximo de una consulta; al pasarlo se cancela (`NTF-PLA-005`) | Número ≥ `athena_poll_seconds` | `900` |
+
+El JSON trae otras claves (`console_url`, `s3_export`, `certification.*`) que usa el job de certificación; este job las ignora.
+
+### JSON del caso (`CONFIG_KEY`)
+
+| Clave | Obligatoria | Qué significa |
+|---|---|---|
+| `useCaseId` | Sí | Debe ser igual a `--useCaseId` (`NTF-CFG-002`) |
+| `email.subject` | Sí | Asunto, con variables `${...}` |
+| `email.destinations` | Sí | Destinatarios; se normalizan y se quitan los repetidos (`NTF-CFG-003` si queda vacía) |
+| `email.stringVars` | No | Variables de texto del correo (nombre del caso, enlaces) |
+| `email.templatePath` | No | Plantilla HTML en `buckets.assets`; sin ella el correo va en texto |
+| `email.dataPresence` | No | Consultas de disponibilidad por miembro (`NTF-CFG-005`) |
+| `queries.summary`, `queries.total` | No | Consultas del resumen y de los totales: `queryName`, `database`, `query` |
+| `compositeNotification` | No | Si `enabled` es `true`, son obligatorios `tableName`, `groupId`, `controlMemberId` y `memberIds` (`NTF-CFG-004`) |
+
+Los valores de DEV del job están en `config\job.dev.json`; el ejemplo de invocación, en `eventos\argumentos-job.dev.json`.
 
 ## Arquitectura
 
+Misma estructura de carpetas que `niif-dev-certification` (estándar del 10/11: carpetas en inglés; el código interno de este job sigue en español hasta N-08):
+
 ```
-src/notificacion_certificacion/
-  dominio/          Reglas puras: configuración, redacción del correo, periodo, compuesto, errores
-  aplicacion/       Caso de uso NotificarCertificacion, servicios y puertos (Protocol)
-  adaptadores/
-    entrada/        Punto de entrada del job de Glue
-    salida/         SES, DynamoDB, Athena, S3, bitácora JSON, reloj
-  configuracion/    Lectura de argumentos y raíz de composición
+src/
+  job_notificacion.py            Script del job (ScriptLocation). Solo llama al adaptador de entrada
+  notificacion_certificacion/
+    domain/                      Reglas puras: configuración, redacción del correo, periodo, compuesto, errores
+    application/                 Caso de uso NotificarCertificacion, servicios y puertos (Protocol)
+    adapters/
+      inbound/                   Punto de entrada del job de Glue
+      outbound/                  SES, DynamoDB, Athena, S3, bitácora JSON, reloj
+    config/                      Lectura de argumentos y raíz de composición
+  niif_observability/            Librería común de logs (copia idéntica en cada paquete de la cadena)
+test/                            Pruebas
+config/job.dev.json              Definición del job para DevOps
+eventos/                         Ejemplo de argumentos
+scripts/package.sh, package.ps1  Empaquetado
 ```
 
-Regla de dependencias: `dominio <- aplicacion <- adaptadores`; solo `configuracion` conoce a todos. La prueba `tests\test_arquitectura.py` la verifica por análisis de imports.
+Regla de dependencias: `domain <- application <- adapters`; solo `config` conoce a todos. La prueba `test\test_arquitectura.py` la verifica por análisis de imports.
 
 Flujo del caso de uso:
 1. Fija el contexto de trazabilidad.
-2. Carga la configuración y busca los registros por `certCode`.
+2. Carga la configuración del caso (la global ya se leyó y validó al armar el job) y busca los registros por `certCode`.
 3. Reserva el grupo compuesto si aplica.
 4. Ejecuta las consultas de Athena.
 5. Crea los enlaces cortos.
@@ -84,8 +128,8 @@ Cada error tiene código `NTF-<DOM>-<NNN>`:
 |---|---|---|
 | `NTF-ENT-001` | ENTRADA | Argumento faltante o inválido |
 | `NTF-ENT-002` | ENTRADA | Periodo con formato inválido |
-| `NTF-ENT-003` | ENTRADA | Zona horaria inválida |
-| `NTF-CFG-001` | CONFIGURACION | Falta una clave, el valor no es del tipo esperado o el JSON es inválido |
+| `NTF-ENT-004` | ENTRADA | Llegó un argumento retirado, cuyo valor va ahora en el JSON global |
+| `NTF-CFG-001` | CONFIGURACION | Falta una clave, el valor no es del tipo o del rango esperado (incluida una zona horaria inválida) o el JSON es inválido |
 | `NTF-CFG-002` | CONFIGURACION | El `useCaseId` del JSON no coincide con el argumento |
 | `NTF-CFG-003` | CONFIGURACION | Sin destinatarios |
 | `NTF-CFG-004` | CONFIGURACION | Grupo compuesto inválido |
@@ -145,17 +189,18 @@ python -m pytest Backend/notificacion/jobs-glue/niif-dev-notification-certificat
 ```
 
 - Cobertura mínima configurada: 90 % (`pyproject.toml`).
-- `tests\test_calidad_codigo.py` exige: sin comentarios ni docstrings, sin valores quemados de infraestructura (cuentas, ARN, regiones, nombres de recursos, correos), funciones de menos de 40 líneas y sin excepciones silenciadas.
+- `test\test_calidad_codigo.py` exige: sin comentarios ni docstrings, sin valores quemados de infraestructura (cuentas, ARN, regiones, nombres de recursos, correos), funciones de menos de 40 líneas y sin excepciones silenciadas.
 - `sonar-project.properties` está listo para SonarQube. Falta la línea base del repositorio (ver `pendientes`).
 - `tzdata` es solo para pruebas locales en Windows; en Glue (Linux) la base de zonas horarias ya existe.
 
 ## Empaquetado y despliegue
 
 ```
-bash scripts/empaquetar.sh
+bash scripts/package.sh
+powershell -ExecutionPolicy Bypass -File scripts\package.ps1   (en Windows)
 ```
 
-Genera en `dist\` la librería `niif-dev-notification-certification-<versión>.zip` (va en `--extra-py-files`) y el script `job_notificacion.py` (es el `ScriptLocation`). El mismo artefacto sirve para DEV, QA y PROD; cambian solo los argumentos del job.
+Genera en `dist\` la librería `niif-dev-notification-certification-<versión>.zip` (va en `--extra-py-files`) y el script `job_notificacion.py` (es el `ScriptLocation`). El mismo artefacto sirve para DEV, QA y PROD; cambia solo el JSON global de cada ambiente.
 
 Antes de desplegar, en AWS:
 
@@ -163,14 +208,15 @@ Antes de desplegar, en AWS:
 2. Crear el conjunto de configuración de SES y enviar rebotes y quejas a EventBridge o SNS con alerta.
 3. Ajustar el rol del job (sección de permisos).
 4. Subir la librería y el script a `niif-dev-assets/glue-resources/`.
-5. Actualizar el job con `config\job.dev.json` por Terraform.
+5. Agregar el bloque `notification` al JSON global del ambiente (antes de actualizar el job).
+6. Actualizar el job con `config\job.dev.json` por Terraform: **quitar** los 10 argumentos retirados, o el job falla con `NTF-ENT-004`.
 
 **Vuelta atrás:** apuntar de nuevo el `ScriptLocation` y los argumentos al script anterior; el tópico SNS no se elimina hasta cerrar la validación.
 
 ## Pendiente
 
 - **N-04:** el job no reenvía si todos los registros ya están en `SENT` (el desplegado sí). Confirmar con el equipo; si hace falta reenviar, que sea con una bandera explícita.
-- **N-06:** acordar con DevOps la publicación (script + zip con `notificacion_certificacion` y `niif_observability`, ambos desde `src/`, que arma `scripts/empaquetar.sh`).
-- **N-08:** llevar el código al estándar de hoy (identificadores en inglés y PEP 8, `test/` en singular, punto de entrada en `src/`, `tox.ini`, `config/` de qa y prd).
+- **N-06:** acordar con DevOps la publicación (script + zip con `notificacion_certificacion` y `niif_observability`, ambos desde `src/`, que arma `scripts/package.sh`).
+- **N-08:** llevar el código al estándar de hoy: identificadores en inglés y PEP 8, y `config/` de qa y prd. Ya hecho (2026-11-11): carpetas en inglés, `test/` en singular, punto de entrada en `src/`, `tox.ini` y `scripts/package.sh`.
 - **ARQ-32:** para que llegue el `ejecucion_id`, el job de certificación debe guardar `ejecucionId` en `notification-certification` y el trigger debe pasar `--EJECUCION_ID`.
 - **Tipo de job:** sigue siendo `glueetl` con Spark. Como ya no usa Spark, podría pasar a un job de Python (shell) o a una lambda para bajar el costo; requiere decisión y pruebas.

@@ -8,10 +8,10 @@ RAIZ = Path(__file__).resolve().parents[1] / "src" / PAQUETE
 EXTERNOS_AWS = ("boto3", "botocore")
 
 PROHIBIDOS = {
-    "dominio": EXTERNOS_AWS + (f"{PAQUETE}.aplicacion", f"{PAQUETE}.adaptadores", f"{PAQUETE}.configuracion"),
-    "aplicacion": EXTERNOS_AWS + (f"{PAQUETE}.adaptadores", f"{PAQUETE}.configuracion"),
-    "adaptadores/entrada": EXTERNOS_AWS + (f"{PAQUETE}.adaptadores.salida",),
-    "adaptadores/salida": (f"{PAQUETE}.configuracion", f"{PAQUETE}.adaptadores.entrada"),
+    "domain": EXTERNOS_AWS + (f"{PAQUETE}.application", f"{PAQUETE}.adapters", f"{PAQUETE}.config"),
+    "application": EXTERNOS_AWS + (f"{PAQUETE}.adapters", f"{PAQUETE}.config"),
+    "adapters/inbound": EXTERNOS_AWS + (f"{PAQUETE}.adapters.outbound",),
+    "adapters/outbound": (f"{PAQUETE}.config", f"{PAQUETE}.adapters.inbound"),
 }
 
 
@@ -50,4 +50,4 @@ def test_solo_la_configuracion_y_los_adaptadores_de_salida_usan_boto3():
         for archivo in RAIZ.rglob("*.py")
         if any(_viola(modulo, externo) for modulo in _modulos_importados(archivo) for externo in EXTERNOS_AWS)
     }
-    assert carpetas_con_boto3 <= {"adaptadores/salida", "configuracion"}
+    assert carpetas_con_boto3 <= {"adapters/outbound", "config"}

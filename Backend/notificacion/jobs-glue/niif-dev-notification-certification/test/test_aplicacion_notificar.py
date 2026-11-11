@@ -9,10 +9,10 @@ from constructores import (
 )
 from escenario import armar_escenario
 from fakes import NotificadorFalso, RepositorioCompuestoFalso
-from notificacion_certificacion.aplicacion.notificar_certificacion import ResultadoJob
-from notificacion_certificacion.aplicacion.puertos import EventoLog
-from notificacion_certificacion.dominio.errores import ErrorConfiguracion, ErrorPlataforma
-from notificacion_certificacion.dominio.modelos import ResultadoConsulta
+from notificacion_certificacion.application.notificar_certificacion import ResultadoJob
+from notificacion_certificacion.application.puertos import EventoLog
+from notificacion_certificacion.domain.errores import ErrorConfiguracion, ErrorPlataforma
+from notificacion_certificacion.domain.modelos import ResultadoConsulta
 
 
 def test_flujo_normal_envia_un_correo_por_destinatario_y_marca_los_registros():
@@ -37,7 +37,7 @@ def test_flujo_normal_busca_los_registros_con_los_parametros_recibidos():
     escenario = armar_escenario()
     escenario.caso.ejecutar()
     assert escenario.notificaciones.busquedas == [("tabla-notificaciones", "indice-cert", "CERT1", "casoA")]
-    assert escenario.configuracion.lecturas == [("bucket-config", "global.json"), ("bucket-config", "casos/casoA.json")]
+    assert escenario.configuracion.lecturas == [("bucket-config", "casos/casoA.json")]
 
 
 def test_el_mensaje_lleva_asunto_cuerpo_etiquetas_y_enlaces_cortos():
@@ -163,7 +163,7 @@ def test_aviso_de_disponibilidad_por_miembro_reemplaza_al_de_registros():
 
 
 def test_una_consulta_de_resumen_fallida_se_informa_en_el_cuerpo_sin_detener_el_envio():
-    from notificacion_certificacion.dominio.errores import ErrorConsultaFallida
+    from notificacion_certificacion.domain.errores import ErrorConsultaFallida
 
     respuestas = {
         "SELECT 'a' FROM t WHERE p='202610'": ErrorConsultaFallida("NTF-PLA-002", "fallo"),

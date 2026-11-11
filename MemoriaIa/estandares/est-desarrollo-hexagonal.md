@@ -1,6 +1,6 @@
 ---
 tipo: estandar
-actualizado: 2026-11-03
+actualizado: 2026-11-11
 ---
 # Estándar propio de desarrollo Python (hexagonal)
 
@@ -22,3 +22,4 @@ Fuente: `Docs\08-estandares-desarrollo\estandar-lambdas-python.md` (decidido por
 
 - **Con el gobierno DevOps NIIF 17 (2026-11-10) no hay choque:** DevOps se encarga de la infraestructura y nosotros del código. Seguimos con lambdas modulares en hexagonal; `/src/lambda_function.py` es solo el handler y las pruebas van en `/test/`. Entregamos un zip con el nombre de la lambda y DevOps hace el commit. Ver [[est-gobierno-devops-niif]].
 - **Estilo de código (decisión del usuario, 2026-11-10):** PEP 8, con sangría de 4 espacios y **todos los identificadores en inglés** (`snake_case`, `PascalCase`, `UPPER_SNAKE_CASE`). Las capas pasan a llamarse `domain`, `application`, `adapters/{inbound,outbound}` y `config`; `src/lambda_function.py` es el handler y las pruebas van en `test/`. Los contratos externos en español (campos de DynamoDB, llaves de JSON, estados) no cambian y se declaran como constantes en inglés. **Mensajes de log en español** (decidido) y cada log con `ejecucion_id` + `request_id` (+ `cert_code` desde certificación) para rastrear la solicitud ([[notificaciones-vs-arquitectura]] ARQ-32). Sin confirmar: idioma de docstrings y comentarios (propuesta: español). El código actual (T2 y `niif-dev-notification-certification` hexagonal) usa nombres en español y hay que migrarlo antes de entregarlo.
+- **Configuración por ambiente (decisión del usuario, 2026-11-11):** JSON en S3 por ambiente, con la fuente en Git y desplegado por el pipeline de DevOps. Argumentos solo para lo que cambia por ejecución y para los apuntadores. Sin valores por defecto y una sola fuente por valor. Los tags no son configuración. Detalle en la skill (`references/configuracion-por-ambiente.md`) y brechas del job en [[job-notificacion-ses]].

@@ -3,7 +3,7 @@ from typing import Iterator
 
 from botocore.exceptions import BotoCoreError, ClientError
 
-from notificacion_certificacion.dominio.errores import (
+from notificacion_certificacion.domain.errores import (
     ErrorConcurrencia,
     ErrorConfiguracion,
     ErrorNotificacion,

@@ -7,9 +7,9 @@ from botocore.exceptions import ClientError, EndpointConnectionError
 from botocore.response import StreamingBody
 from botocore.stub import Stubber
 
-from notificacion_certificacion.adaptadores.salida.errores_aws import traducir, traduciendo
-from notificacion_certificacion.adaptadores.salida.s3_configuracion import RepositorioConfiguracionS3
-from notificacion_certificacion.dominio.errores import (
+from notificacion_certificacion.adapters.outbound.errores_aws import traducir, traduciendo
+from notificacion_certificacion.adapters.outbound.s3_configuracion import RepositorioConfiguracionS3
+from notificacion_certificacion.domain.errores import (
     ErrorConcurrencia,
     ErrorConfiguracion,
     ErrorPermisos,
