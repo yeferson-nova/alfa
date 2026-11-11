@@ -48,6 +48,7 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 
 ## Índice (notas en `MemoriaIa/`)
 **meta**
+- [[traspaso-sesion]] - **leer primero en una sesión nueva o remota:** estado al día, qué no está en el repo, reglas y cómo verificar
 - [[rutas-workspace]] - dónde está cada archivo
 - [[preferencias-usuario]]
 - [[preguntas-abiertas]]
@@ -66,6 +67,8 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - [[correo-notificacion]] - formato del correo de certificación
 - [[roadmap-notificaciones]] - roadmap de la cadena de notificación: pasos 1 a 9, componentes, decisiones D1-D7 y E1-E3 y estado (humano con ✅/⬜: `Tareas\T1-notificaciones\roadmap-notificaciones.md`)
 - [[job-notificacion-ses]] - job de Glue de notificación reescrito para enviar por SES (T1a), en `Backend\notificacion\`; implementado, no desplegado
+- [[job-certificacion]] - job de Glue de certificación reescrito (412 pruebas, no desplegado); riesgo CER-H5: lo comparten otras mallas
+- [[orquestadora-notificaciones]] - lambda que reemplaza trigger, copy y move (404 pruebas, no desplegada); O-1 a O-4 aprobadas; espera a DevOps (índice `status-pendingDate-index`)
 - [[estructura-repos-propuesta]] - estructura de repos y de archivos (lambdas, jobs de Glue, config, librería), decisiones del usuario, plantilla de DevOps y tablas por malla; propuesta en iteración
 - [[reunion-diseno-pcr]] - notas de la reunión de explicación del diseño PCR (2026-11-10), en curso
 - [[monitoreo-grafana]] - observabilidad: Grafana fuera de alcance (2026-11-10); logs, métricas y alarmas listos, alertas técnicas por SES; antes: propuesta de dos planos (técnico/negocio, SNS, EventBridge, ServiceNow), pendiente de validar (humano: `Tareas\T1-notificaciones\propuesta-observabilidad-eventos.md`)

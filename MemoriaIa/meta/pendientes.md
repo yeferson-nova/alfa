@@ -1,6 +1,6 @@
 ---
 tipo: pendiente
-actualizado: 2026-11-09
+actualizado: 2026-11-11
 ---
 # Pendientes
 
@@ -81,3 +81,9 @@ ewUx\` con vistas previas y validador, JSON de caso unificados a `email-template
   - Los argumentos por defecto del job están quemados (`PERIOD=202411`, `CONFIG_KEY` de Auxilios).
   - **Decisiones:** E1 = versión desplegada + INC-3. El paquete inprod solo trae extracción y SCD, y ambos ya están desplegados en DEV, idénticos (comprobado el 2026-11-11). E2 = el configurador genera el nombre `<malla>-<periodo>-<uuid v7>` y se propaga con `$$.Execution.Name`, sin agregar nada después. E3 = en el compuesto, `ejecucionId` + `ejecucionesOrigen`.
   - **Siguiente:** etapa 2 (código en local), solo con orden explícita.
+
+- [ ] **Cadena de notificación (2026-11-11), estado en [[traspaso-sesion]]:**
+  - Orquestadora: código listo (commit `a0e1ac0`). Falta lo de DevOps (índice `status-pendingDate-index`, mapping, Scheduler y permisos), el correo de `alert_recipients`, las claves en el JSON global de previsional y verificar `pendingDate` en el job viejo. Ver [[orquestadora-notificaciones]].
+  - Certificación: código listo. Falta la etapa 3 en DEV y decidir CER-H1 a CER-H7. Ver [[job-certificacion]].
+  - Notificación: en DEV, quitar los 10 argumentos viejos y subir el bloque `notification` al JSON global de S3 antes de volver a correrlo. Ver [[job-notificacion-ses]].
+  - Siguiente paso del roadmap: el Paso 5 (transporte a FIS / Lambda SFTP).

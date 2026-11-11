@@ -1,6 +1,6 @@
 ---
 tipo: preferencia
-actualizado: 2026-11-09
+actualizado: 2026-11-11
 ---
 # Preferencias del usuario
 
@@ -31,3 +31,10 @@ actualizado: 2026-11-09
 - Se hace `git pull` cuando el usuario dice que subió archivos ("baja la carpeta").
 - **Código Python (2026-11-10):** PEP 8, sangría de 4 espacios e identificadores en inglés. Arquitectura modular hexagonal (es nuestra; DevOps solo hace la infraestructura). Entrega en un zip con el nombre del recurso; los commits los hace DevOps. Ver [[est-desarrollo-hexagonal]] y [[est-gobierno-devops-niif]].
 - **No cambiar código sin una orden explícita (2026-11-10):** mientras se refina un diseño, solo se hace análisis y documentación. El código se escribe o modifica solo cuando el usuario lo pide de forma explícita ("ejecuta", "hazlo", "implementa"). Preguntas como "¿podemos avanzar?" no son una orden. Antecedente: se aplicó el punto 1.5 (cancelación en Athena) sin orden explícita.
+
+## Agregado el 2026-11-11
+- **Configuración por ambiente:** un JSON en S3 con la fuente en Git, desplegado por DevOps. Los argumentos solo llevan valores de cada ejecución y apuntadores. Sin valores por defecto, una sola fuente por valor, y los tags no son configuración. La regla está en la skill: `references\configuracion-por-ambiente.md`.
+- **Misma estructura de carpetas en todos los componentes, en inglés:** `domain`, `application`, `adapters/inbound`, `adapters/outbound`, `config`, `test/`. **Un solo `README.md`** por componente: argumentos, claves del JSON, salidas y qué hay en cada módulo.
+- **Commits:** mensaje **muy corto en español**, sin coautor. El commit y el push los pide el usuario, normalmente al terminar una tarea ("al terminar haz commit push").
+- **Orden explícita:** "aprobado, ejecuta los cambios" cuenta como orden para escribir código. Aprobar una recomendación (por ejemplo, O-2) no da permiso para crear recursos en AWS: lo de Terraform se pide a DevOps.
+- **Sesiones remotas:** todo lo necesario debe quedar en el repo (`MemoriaIa\`, `CLAUDE.md` y la skill), porque la memoria local de Claude no viaja. Al cerrar un bloque de trabajo, actualizar [[traspaso-sesion]].

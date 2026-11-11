@@ -9,8 +9,8 @@ Humano (control, con ✅ y ⬜): `Tareas\T1-notificaciones\roadmap-notificacione
 - **Alcance:** el flujo completo de la hoja `Página-2`: 6 lambdas y 1 job de Glue, del Modelo Notificaciones hasta FIS, incluida la Lambda SFTP. Fuera: el resto del paso 2.
 - **Orden (pasos):** 1 cerrar el job de notificación · 2 medir Athena (hecho en DEV) · 3 ID único (etapa 1 hecha) · 4 orquestadora · 5 transporte a FIS · 6 resto de lambdas (6.1 a 6.4) · 7 mejoras de Athena · 8 alertas y métricas · 9 limpieza y diagrama. En paralelo: Gold particionado y las decisiones pendientes.
 - **Componentes y carpetas (código nuevo en `Backend\notificacion\`):**
-  - `jobs-glue\niif-dev-notification-certification` (515 pruebas, probado en Glue de DEV sin envío);
-  - `lambdas\`, con 5 esqueletos: `niif-dev-notification-certification-orchestrator` (reemplaza a trigger, copy y move), `niif-dev-composite-notification-evaluator`, `niif-dev-certification`, `niif-dev-short-link-redirect` y `niif-dev-post-login`;
+  - `jobs-glue\niif-dev-notification-certification` (537 pruebas, probado en Glue de DEV sin envío) y `jobs-glue\niif-dev-certification` (412 pruebas, [[job-certificacion]]);
+  - `lambdas\`: la orquestadora ya tiene código (404 pruebas, [[orquestadora-notificaciones]]); los demás son esqueletos: `niif-dev-notification-certification-orchestrator` (reemplaza a trigger, copy y move), `niif-dev-composite-notification-evaluator`, `niif-dev-certification`, `niif-dev-short-link-redirect` y `niif-dev-post-login`;
   - `email-template\`.
   - La Lambda SFTP `datalake-dev-niif-send-via-sftp` está inactiva en DEV y su nombre está por decidir.
   - El código actual está en `Backend\Lamnbdas\` y `Backend\Glue\`.
