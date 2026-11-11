@@ -1,8 +1,0 @@
-===== CONSULTA TOTAL =====
-[
-  {
-    "queryName": "total#1",
-    "database": "niif-prd-gold-catalog-db",
-    "query": "SELECT\n    rst.periodo,\n    COUNT(*) AS total_registros,\n    CAST(SUM(rst.vlr_prima) AS DECIMAL(38,0)) AS valor_total_primas\nFROM (\n    SELECT\n        CAST(nid_poliza AS VARCHAR) AS nid_poliza,\n        CAST(nid_endoso AS VARCHAR) AS nid_endoso,\n        SUM(vlr_prima) AS vlr_prima,\n        date_format(fec_expedicion, '%d/%m/%Y') AS fec_expedicion,\n        date_format(fec_proceso_point, '%d/%m/%Y') AS mes_contable,\n        CAST(cod_sucursal_alfa AS VARCHAR) AS cod_sucursal_alfa,\n        nom_sucursal_alfa,\n        CAST(nid_nro_identificacion_tercero AS VARCHAR) AS nid_numero_identificacion_tercero,\n        nom_tercero,\n        CAST(per_proceso_point AS VARCHAR) AS periodo\n    FROM \"niif-prd-gold-catalog-db\".\"scd_primas_arl\"\n    WHERE CAST(per_proceso_point AS VARCHAR) = '$period'\n      AND act_reg = 1\n    GROUP BY\n        nid_poliza,\n        nid_endoso,\n        fec_expedicion,\n        fec_proceso_point,\n        cod_sucursal_alfa,\n        nom_sucursal_alfa,\n                nid_nro_identificacion_tercero,\n        nom_tercero,\n        per_proceso_point\n) rst\nGROUP BY rst.periodo;"
-  }
-]

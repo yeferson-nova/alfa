@@ -1,1 +1,0 @@
-{"Comment":"Configuración de variables Step Calidad","StartAt":"SetupStaticVariables","States":{"SetupStaticVariables":{"Type":"Pass","Parameters":{"mes_actual.$":"$$.Execution.StartTime"},"Next":"GetSMBConfiguration"},"GetSMBConfiguration":{"Type":"Pass","End":true}}}

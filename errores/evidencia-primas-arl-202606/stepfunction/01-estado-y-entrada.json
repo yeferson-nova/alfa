@@ -1,7 +1,0 @@
-{
-  "status": "SUCCEEDED",
-  "startDate": "2026-11-02T03:00:32.475000+00:00",
-  "stopDate": "2026-11-02T03:24:02.984000+00:00",
-  "name": "arl-202606-auto-20261102T030032Z-976ae7fc",
-  "input": "{\"ejcPK\": \"EJC#PRIMAS_ARL#202606\", \"ejcSK\": \"EJECUCION#arl-202606-auto-20261102T030032Z-976ae7fc\", \"malla\": \"PRIMAS_ARL\", \"periodoNegocio\": \"202606\", \"modoEjecucion\": \"NORMAL\", \"rutaConfigExtraccion\": \"s3://niif-prd-assets/primas-arl/config_extraccion_primas_arl.json\", \"origen\": \"PROGRAMACION_GESTOR\"}"
-}
