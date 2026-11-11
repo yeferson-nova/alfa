@@ -2,7 +2,7 @@
 
 Fecha: 2026-11-10. Revisión de código, sin cambios.
 - **Actual:** `Backend\Glue\niif-dev-notification-certification\notification_certification.py`. Son 727 líneas, igual a lo desplegado en DEV, con SES y HTML.
-- **Nuevo:** `Backend\notificacion\niif-dev-notification-certification\`. Es hexagonal, con 33 módulos y 451 pruebas que pasan.
+- **Nuevo:** `Backend\notificacion\jobs-glue\niif-dev-notification-certification\`. Es hexagonal, con 33 módulos y 451 pruebas que pasan.
 - **Pregunta:** ¿el nuevo hace todo lo que hace el actual? ¿Trae un ID único y observabilidad completa?
 
 **Veredicto: el nuevo todavía no puede reemplazar al actual.**

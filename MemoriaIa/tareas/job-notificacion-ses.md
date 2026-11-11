@@ -8,7 +8,7 @@ Cambio de SNS a SES en el job de Glue `niif-dev-notification-certification`, que
 
 > **Vigente (2026-11-09):** la entrega de T1a+T1b se hace **sobre el script desplegado** (`Backend\Glue\niif-dev-notification-certification\notification_certification.py`), con cambio mínimo. La reescritura de `niif-dev-notification-certification` hexagonal **no se usa todavía**: es posterior a esta entrega y los cambios van por auditoría. Ver la sección "Entrega T1a+T1b sobre el job desplegado" más abajo.
 
-- **Código reescrito (pospuesto):** `Backend\notificacion\niif-dev-notification-certification\` (carpeta nueva `niif-dev-notification-certification` hexagonal, una por job reescrito). El job desplegado sigue en `Backend\Glue\niif-dev-notification-certification\`.
+- **Código reescrito (pospuesto):** `Backend\notificacion\jobs-glue\niif-dev-notification-certification\` (carpeta nueva `niif-dev-notification-certification` hexagonal, una por job reescrito). El job desplegado sigue en `Backend\Glue\niif-dev-notification-certification\`.
 - **Estado de la reescritura (2026-11-04):** implementada y probada en local; **no desplegada**. 451 pruebas, 99,9 % de cobertura. No se usa en la entrega actual.
 
 ## Entrega T1a+T1b sobre el job desplegado (2026-11-09)

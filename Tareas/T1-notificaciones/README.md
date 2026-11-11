@@ -1,6 +1,8 @@
 # T1. Ajuste de notificaciones AWS
 
-**Estado:** en análisis; **1a (SES) implementado en local, no desplegado**: `Backend\notificacion\niif-dev-notification-certification\`. **Depende de:** T2 (formato de logs y taxonomía de errores comunes).
+**Roadmap para completar la cadena con la nueva arquitectura (2026-11-10):** ver `roadmap-notificaciones.md` en esta carpeta.
+
+**Estado:** en análisis; **1a (SES) implementado en local, no desplegado**: `Backend\notificacion\jobs-glue\niif-dev-notification-certification\`. **Depende de:** T2 (formato de logs y taxonomía de errores comunes).
 
 ## Qué se pidió
 - **1a.** Cambiar el servicio SNS por SES.

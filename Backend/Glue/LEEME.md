@@ -52,4 +52,4 @@ Comparado con `EvidenciasAws\dev-codigo-actual\` (sin contar diferencias de espa
 - **Iguales:** extracción, SCD y los 6 silver.
 - **Actualizados al desplegado:** `niif-dev-remediacion-estandar` y `niif-dev-val-tecnica`. En DEV ya leen Parquet de forma recursiva y saltan los `_DONE.json`.
 - **`niif-dev-certification`:** la copia local tiene un arreglo **que no está desplegado** (`contar_filas_datos`, commit 0020179). Antes de entregarlo, compararlo otra vez con lo desplegado.
-- `niif-dev-notification-certification`: igual al desplegado (el monolito con SES). Su versión nueva (hexagonal) está en `Backend\notificacion\niif-dev-notification-certification\`.
+- `niif-dev-notification-certification`: igual al desplegado (el monolito con SES). Su versión nueva (hexagonal) está en `Backend\notificacion\jobs-glue\niif-dev-notification-certification\`.

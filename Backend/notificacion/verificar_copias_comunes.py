@@ -16,8 +16,8 @@ def huella(carpeta: Path) -> str:
 
 def main() -> int:
     copias = {
-        carpeta.parents[1].name: huella(carpeta)
-        for carpeta in sorted(RAIZ.glob(f"*/src/{PAQUETE_COMUN}"))
+        f"{carpeta.parents[2].name}/{carpeta.parents[1].name}": huella(carpeta)
+        for carpeta in sorted(RAIZ.glob(f"*/*/src/{PAQUETE_COMUN}"))
     }
     for componente, valor in copias.items():
         print(f"{valor[:12]}  {componente}")

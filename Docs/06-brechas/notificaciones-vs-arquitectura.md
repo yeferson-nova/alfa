@@ -82,7 +82,7 @@ Contra `Docs\08-estandares-desarrollo\` (hexagonal, sin valores quemados, taxono
 | Pieza | Situación | Brecha |
 |---|---|---|
 | Job desplegado (`notification_certification.py`, 727 líneas) | Ejecuta al importar (lee argumentos a nivel de módulo); `main()` de ~120 líneas con 8 responsabilidades; nombres heredados de SNS (`subject_sns`, `mensaje_sns`); sin pruebas propias antes del cambio de SES; registra todos los argumentos. | **Cumple poco.** Se mantuvo a propósito el cambio mínimo (decisión del usuario). |
-| Job nuevo en `Backend\notificacion\niif-dev-notification-certification` | Hexagonal, con taxonomía de errores, logs JSON, idempotencia, argumentos sin valores fijos; 163 pruebas pasan. | **Cumple, pero no está desplegado ni probado en AWS.** Es el camino para cerrar la brecha de calidad. |
+| Job nuevo en `Backend\notificacion\jobs-glue\niif-dev-notification-certification` | Hexagonal, con taxonomía de errores, logs JSON, idempotencia, argumentos sin valores fijos; 163 pruebas pasan. | **Cumple, pero no está desplegado ni probado en AWS.** Es el camino para cerrar la brecha de calidad. |
 | Lambdas trigger, evaluador, `copy`, `move` | Sin pruebas, sin estructura, `print`/`logger` de texto libre, excepciones tragadas (ARQ-26), mapa duplicado (ARQ-24), `os.environ[...]` de una variable SNS que ya no usan. | **No cumplen.** |
 | Cobertura / Sonar | Quality Gate fallido: Maintainability B (204 olores en nuevo código) y 12 hotspots `Web:S5148` de las plantillas (corregidos con `rel="noopener noreferrer"`, pendiente de reanalizar). | Falta el desglose por regla de los 204 olores para decidir. |
 

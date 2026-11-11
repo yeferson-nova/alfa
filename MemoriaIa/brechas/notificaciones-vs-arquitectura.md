@@ -33,7 +33,7 @@ Humano: `Docs\06-brechas\notificaciones-vs-arquitectura.md`. Diagrama: hoja `Pá
 - **Consultas de Athena (revisadas 2026-11-10, humano: `Docs\06-brechas\consultas-athena-notificacion.md`):** COS-07 Gold sin particiones (cada consulta lee todo el historial); COS-08 sin workgroup propio (corre en `primary`, sin tope de escaneo); COS-09 `CAST` de la columna de periodo; ARQ-34 detalle y total pueden no cuadrar por redondeo a `DECIMAL(38,0)` en sitios distintos; ARQ-35 ARL sin `summary`; ARQ-36 resumen y total de Reserva sin montos; ARQ-37 conteo de Rentas/Endosos mezcla endoso y renta (hipótesis); ARQ-38 `safe_substitute` deja `'$period'` literal y devuelve 0 filas sin error; SEG-15 log del SQL completo.
 
 ## Alcance actual (decisión del usuario, 2026-11-10): solo la cadena de notificación, por partes
-Para aislar fallas, el problema se separa en 5 partes. Todo lo demás (costos y montos de Athena, Gold, pipeline del paso 2) queda en [[pendientes]].
+Para aislar fallas, el problema se separa en 5 partes. La optimización de Athena y de Gold entró como fase 7 del roadmap (2026-11-10). El resto del pipeline del paso 2 queda fuera. Roadmap: `Tareas\T1-notificaciones\roadmap-notificaciones.md`.
 1. **Lambdas de la cadena:** trigger, evaluador compuesto, copy, move, certificar/rechazar, enlace corto y post-login. Brechas: ARQ-24 a ARQ-27, ARQ-30 (copy → SFTP) y ARQ-33.
 2. **Plantillas HTML:** T1b hecho; falta probar cómo se ven en Outlook, Gmail y móvil. ARQ-35 (ARL sin resumen) afecta al correo y se corrige en el JSON del caso.
 3. **Job de notificación por SES:** desplegar `niif-dev-notification-certification` hexagonal (hexagonal, PEP 8 en inglés, zip para DevOps). Brechas: ARQ-22, ARQ-38 y SEG-15.
