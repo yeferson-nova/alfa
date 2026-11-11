@@ -70,6 +70,7 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - [[job-certificacion]] - job de Glue de certificación reescrito (412 pruebas, no desplegado); riesgo CER-H5: lo comparten otras mallas
 - [[orquestadora-notificaciones]] - lambda que reemplaza trigger, copy y move (404 pruebas, no desplegada); O-1 a O-4 aprobadas; espera a DevOps (índice `status-pendingDate-index`)
 - [[estructura-repos-propuesta]] - estructura de repos y de archivos (lambdas, jobs de Glue, config, librería), decisiones del usuario, plantilla de DevOps y tablas por malla; propuesta en iteración
+- [[repos-alfa-notificacion]] - repos de Alfa (Jenkins) de la cadena de notificación, copiados en `Backend\ReposAws\`: el de Glue sigue con SNS, las plantillas ya son las nuevas y los JSON tienen `templatePath` mal y el espacio de Auxilios (R-01 a R-06)
 - [[reunion-diseno-pcr]] - notas de la reunión de explicación del diseño PCR (2026-11-10), en curso
 - [[monitoreo-grafana]] - observabilidad: Grafana fuera de alcance (2026-11-10); logs, métricas y alarmas listos, alertas técnicas por SES; antes: propuesta de dos planos (técnico/negocio, SNS, EventBridge, ServiceNow), pendiente de validar (humano: `Tareas\T1-notificaciones\propuesta-observabilidad-eventos.md`)
 

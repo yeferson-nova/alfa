@@ -15,7 +15,8 @@ actualizado: 2026-11-11
 - El host con espacio no resuelve en DNS. El correcto (`datalake-prd-niif`) resuelve y su dominio de Cognito está `ACTIVE`.
 - El proveedor `AzureAD` (OIDC) responde con HTTP 200 desde AWS: Azure no es la causa.
 - En DynamoDB, `niif-prd-short-links` tiene 2 enlaces cortos ya guardados con el host roto. Hay que corregirlos o regenerarlos.
-- El cliente `d5qmm9fi64` / `48laf...` aparece solo en el respaldo `primas-arl/configs/certification/backups/primasArl_20260623_160752.json`; ese API ya no existe. Todos los JSON vigentes usan el API `jdwkua9re5` y el único cliente del pool (`datalake-prd-niif-api`).
+- El API `d5qmm9fi64` con el cliente `48laf...` **es el de QA**: así aparece en `envConfig.qa` de los repos. En el S3 de prod solo lo trae el respaldo `primasArl_20260623_160752.json`. Todos los JSON vigentes de prod usan el API `jdwkua9re5` y el único cliente del pool (`datalake-prd-niif-api`).
+- Origen del espacio en el repo: `cfg-datalake-niif-config-s3`, en `email.envConfig.prd.certificarLink` ([[repos-alfa-notificacion]] R-02).
 - **Segundo bloqueo, más grave:** el único cliente de la aplicación tiene `CallbackURLs = ["https://localhost/post_login"]`, pero los enlaces mandan `redirect_uri=https://jdwkua9re5.../prd/post_login`.
   - Hipótesis fuerte: Cognito responde `redirect_mismatch` y el botón falla aunque se corrija el espacio.
   - La apoya que en 14 días no haya ni un evento `/post_login` en los logs del API.
