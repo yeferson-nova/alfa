@@ -1,0 +1,103 @@
+{
+  "columnas_administrativas": [
+    "FEC_INI_VIG_REG",
+    "FEC_FIN_VIG_REG",
+    "VRS_REG",
+    "ACT_REG"
+  ],
+  "columnas_cambio": {
+    "alerta": [
+      "NRO_IDNT_TOMADOR",
+      "COD_SUCURSAL",
+      "INI_VIGENCIA",
+      "FIN_VIGENCIA"
+    ],
+    "normales": [
+      "NOM_TOMADOR",
+      "REVERSION",
+      "REAL",
+      "CAUSACION",
+      "VLR_PRM_EMITIDA",
+      "VLR_PRM_CEDIDA"
+    ]
+  },
+  "columnas_fijas": [
+    "LOTE_CARGUE_ID"
+  ],
+  "columnas_negocio": [
+    "POLIZA",
+    "NRO_IDNT_TOMADOR",
+    "NOM_TOMADOR",
+    "COD_SUCURSAL",
+    "REVERSION",
+    "REAL",
+    "CAUSACION",
+    "VLR_PRM_EMITIDA",
+    "VLR_PRM_CEDIDA",
+    "INI_VIGENCIA",
+    "FIN_VIGENCIA",
+    "MES_CIERRE",
+    "LOTE_CARGUE_ID"
+  ],
+  "entrada": {
+    "columna_particion": "fecha_carga",
+    "database": "niif-{env}-bronze-catalog-db",
+    "tabla": "archivo_previsional",
+    "usar_ultima_carga": true
+  },
+  "llaves": {
+    "apertura": [],
+    "primaria": [
+      "POLIZA"
+    ]
+  },
+  "metadatos": {
+    "capa": "gold",
+    "dominio": "niif17",
+    "tabla_destino": "PRIMA_PREVISIONAL",
+    "tipo": "scd_tipo_2"
+  },
+  "nombre_caso": "primas_previsional",
+  "salida": {
+    "ruta_gold": "s3://alfa-datalake-{env}-gold/GOLD/NIIF/PRIMA_PREVISIONAL/"
+  },
+  "scd": {
+    "cerrar_ausentes": true,
+    "columna_activo": "ACT_REG",
+    "columna_fin_vigencia": "FEC_FIN_VIG_REG",
+    "columna_inicio_vigencia": "FEC_INI_VIG_REG",
+    "columna_version": "VRS_REG",
+    "modo": "TIPO_2"
+  },
+  "transformaciones": {
+    "CAUSACION": {
+      "tipo_destino": "decimal(38,7)"
+    },
+    "FIN_VIGENCIA": {
+      "hora": "23:59:59",
+      "tipo_destino": "timestamp"
+    },
+    "INI_VIGENCIA": {
+      "hora": "00:00:00",
+      "tipo_destino": "timestamp"
+    },
+    "LOTE_CARGUE_ID": {
+      "origen": "parametro",
+      "parametro": "LOTE_CARGUE_ID",
+      "tipo_destino": "bigint"
+    },
+    "REAL": {
+      "tipo_destino": "decimal(38,7)"
+    },
+    "REVERSION": {
+      "tipo_destino": "decimal(38,7)"
+    },
+    "VLR_PRM_CEDIDA": {
+      "tipo_destino": "decimal(38,7)"
+    },
+    "VLR_PRM_EMITIDA": {
+      "tipo_destino": "decimal(38,7)"
+    }
+  },
+  "version_configuracion": "1.0"
+}

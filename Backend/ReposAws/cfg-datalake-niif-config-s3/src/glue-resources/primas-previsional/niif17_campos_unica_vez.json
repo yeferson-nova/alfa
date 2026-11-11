@@ -1,0 +1,103 @@
+{
+  "case_use": "NIIF17_CAMPOS_UNICA_VEZ",
+  "archivo": {
+    "nombre": "CAMPOS_UNICA_VEZ",
+    "extension": ".xlsx",
+    "hoja": "Hoja1",
+    "cantidad_archivos_esperada": 1
+  },
+  "rutas": {
+    "bucket_landing": "niif-{env}-landing",
+    "bucket_bronze": "alfa-datalake-{env}-bronce",
+    "bucket_silver": "alfa-datalake-{env}-silver",
+    "landing_in": "NIIF17_CAMPOS_UNICA_VEZ/IN/",
+    "landing_out": "NIIF17_CAMPOS_UNICA_VEZ/OUT/",
+    "landing_error": "NIIF17_CAMPOS_UNICA_VEZ/ERROR/",
+    "bronze_path": "NIIF17_CAMPOS_UNICA_VEZ/CAMPOS_UNICA_VEZ/",
+    "logs_path": "LOGS/FILES_VALIDATION/",
+    "landing_in_s3_uri": "s3://niif-{env}-landing/NIIF17_CAMPOS_UNICA_VEZ/IN/",
+    "landing_out_s3_uri": "s3://niif-{env}-landing/NIIF17_CAMPOS_UNICA_VEZ/OUT/",
+    "landing_error_s3_uri": "s3://niif-{env}-landing/NIIF17_CAMPOS_UNICA_VEZ/ERROR/",
+    "bronze_s3_uri": "s3://alfa-datalake-{env}-bronce/NIIF17_CAMPOS_UNICA_VEZ/CAMPOS_UNICA_VEZ/",
+    "logs_s3_uri": "s3://alfa-datalake-{env}-silver/LOGS/FILES_VALIDATION/",
+    "metadata_path": "NIIF17_CAMPOS_UNICA_VEZ/METADATA/",
+    "metadata_s3_uri": "s3://niif-{env}-landing/NIIF17_CAMPOS_UNICA_VEZ/METADATA/"
+  },
+  "columnas": [
+    {
+      "nombre": "RAMO",
+      "orden": 1,
+      "tipo": "int",
+      "obligatorio": true,
+      "dominio": [
+        39,
+        40
+      ]
+    },
+    {
+      "nombre": "RENTA",
+      "orden": 2,
+      "tipo": "int",
+      "obligatorio": true
+    },
+    {
+      "nombre": "FAIR_VALUE",
+      "orden": 3,
+      "tipo": "decimal",
+      "obligatorio": true
+    },
+    {
+      "nombre": "INTERES_TECNICO_NIIF4",
+      "orden": 4,
+      "tipo": "decimal",
+      "obligatorio": true
+    }
+  ],
+  "salida_bronze": {
+    "columnas": [
+      "NO_REGISTRO",
+      "RAMO",
+      "RENTA",
+      "FAIR_VALUE",
+      "INTERES_TECNICO_NIIF4",
+      "ID_LOTE_CARGUE"
+    ],
+    "agregar_no_registro": true,
+    "agregar_id_lote_cargue": true,
+    "columna_lote_cargue": "ID_LOTE_CARGUE",
+    "modo_escritura": "overwrite"
+  },
+  "validaciones": {
+    "archivo_existe": true,
+    "nombre_archivo": true,
+    "extension": true,
+    "hoja": true,
+    "estructura": true,
+    "orden_columnas": true,
+    "nulidad": true,
+    "tipo_dato": true,
+    "dominio": true,
+    "cantidad_archivos": true,
+    "archivo_vacio": true,
+    "encabezados_duplicados": true,
+    "duplicados": true
+  },
+  "version_configuracion": "1.0",
+  "configuracion_global": {
+    "bucket": "niif-{env}-assets",
+    "key": "previsional/json_global_gestor_archivos.json"
+  },
+  "parametros_ejecucion": {
+    "periodo": {
+      "aplica": false,
+      "columna_origen": null,
+      "formato": null,
+      "requiere_valor_unico": false
+    },
+    "lote_cargue": {
+      "aplica": true,
+      "parametro_job": "LOTE_CARGUE_ID"
+    },
+    "generar_metadata": false
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "nombre_caso": "primas_rentas",
+  "salida": {
+    "ruta_gold": "s3://alfa-datalake-{env}-gold/niif/scd_primas_rentas/"
+  },
+  "llaves": {
+    "primaria": [
+      "NID_RENTA"
+    ],
+    "apertura": []
+  },
+  "columnas_cambio": {
+    "normales": [
+      "NID_CALCULO",
+      "PER_CALCULO",
+      "PER_EXPEDICION_RENTA",
+      "PER_INVALIDACION_REGISTRO",
+      "PER_POINT_RENTA",
+      "COD_TIPO_RENTA",
+      "DSC_TIPO_RENTA",
+      "VLR_RENTA",
+      "COD_CONCEPTO_PAGO_RENTA",
+      "DSC_CONCEPTO_PAGO_RENTA",
+      "FEC_INI_PER_PAGO_RENTA",
+      "FEC_FIN_PER_PAGO_RENTA",
+      "VAL_REG_INVALIDO_NULL",
+      "VAL_REG_INVALIDO"
+    ],
+    "alerta": [
+      "FEC_CALCULO",
+      "FEC_EXPEDICION_RENTA",
+      "FEC_INVALIDACION_REGISTRO",
+      "FEC_POINT_RENTA",
+      "PER_PAGO_RENTA"
+    ]
+  },
+  "columnas_fijas": [
+    "LOTE_CARGUE_ID"
+  ],
+  "columnas_administrativas": [
+    "FEC_INI_VIG_REG",
+    "FEC_FIN_VIG_REG",
+    "VRS_REG",
+    "ACT_REG"
+  ],
+  "metadatos": {
+    "dominio": "niif17",
+    "capa": "gold",
+    "tipo": "scd_tipo_2",
+    "tabla_destino": "PRIMA_RENTA"
+  }
+}

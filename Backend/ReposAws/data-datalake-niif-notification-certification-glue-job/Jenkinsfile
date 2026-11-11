@@ -1,0 +1,25 @@
+@Library('analitica-library') _
+
+def general = [
+    repoName: 'data-datalake-niif-notification-certification-glue-job'
+]
+
+def envParams = [
+    develop: [
+        awsCredentialId: 'aws-datalake-dev',
+        target_bucket_name: 'niif-dev-assets',
+        target_bucket_path: 'glue-resources/notification'
+    ],
+    quality: [
+        awsCredentialId: 'aws-datalake-qa',
+        target_bucket_name: 'niif-qa-assets',
+        target_bucket_path: 'glue-resources/notification'
+    ],
+    main: [
+        awsCredentialId: 'aws-datalake-prd',
+        target_bucket_name: 'niif-prd-assets',
+        target_bucket_path: 'glue-resources/notification'
+    ]
+]
+
+glueJobsClientesPipeline(general, envParams)

@@ -1,0 +1,182 @@
+{
+  "useCaseId": "Previsional",
+  "emailType": "cert",
+  "athena": {
+    "defaultDatabase": "niif-qa-gold-catalog-db",
+    "outputPath": "athena/notifications/unload"
+  },
+  "queries": {
+    "detail": [
+      {
+        "queryName": "detail#1",
+        "database": "niif-qa-gold-catalog-db",
+        "query": "UNLOAD (\nSELECT\n    poliza,\n    nro_idnt_tomador,\n    nom_tomador,\n    cod_sucursal,\n    reversion,\n    real,\n    causacion,\n    vlr_prm_emitida,\n    vlr_prm_cedida,\n    ini_vigencia,\n    fin_vigencia,\n    mes_cierre\nFROM \"niif-{env}-gold-catalog-db\".\"niif_prima_previsional\"\nWHERE mes_cierre = '$period'\n  AND act_reg = 1\n)\nTO 's3://$assets_bucket/athena/notifications/unload/$execution_id/'\nWITH (\n    format = 'TEXTFILE',\n    field_delimiter = '|',\n    compression = 'NONE'\n);",
+        "headers": [
+          "Póliza",
+          "Número Identificación Tomador",
+          "Nombre Tomador",
+          "Código Sucursal",
+          "Reversión",
+          "Real",
+          "Causación",
+          "Valor Prima Emitida",
+          "Valor Prima Cedida",
+          "Inicio Vigencia",
+          "Fin Vigencia",
+          "Mes Cierre"
+        ]
+      }
+    ],
+    "summary": [
+      {
+        "queryName": "summary#1",
+        "database": "niif-{env}-gold-catalog-db",
+        "query": "SELECT\n    mes_cierre AS periodo,\n    CAST(SUM(reversion) AS DECIMAL(38,7)) AS total_reversion,\n    CAST(SUM(real) AS DECIMAL(38,7)) AS total_real,\n    CAST(SUM(causacion) AS DECIMAL(38,7)) AS total_causacion,\n    CAST(SUM(vlr_prm_emitida) AS DECIMAL(38,7)) AS total_prima_emitida,\n    CAST(SUM(vlr_prm_cedida) AS DECIMAL(38,7)) AS total_prima_cedida,\n    COUNT(*) AS cantidad_registros\nFROM \"niif-{env}-gold-catalog-db\".\"niif_prima_previsional\"\nWHERE mes_cierre = '$period'\n  AND act_reg = 1\nGROUP BY mes_cierre"
+      }
+    ],
+    "total": [
+      {
+        "queryName": "total#1",
+        "database": "niif-{env}-gold-catalog-db",
+        "query": "SELECT\n    mes_cierre AS periodo,\n    COUNT(*) AS cantidad_registros,\n    CAST(SUM(vlr_prm_emitida) AS DECIMAL(38,7)) AS total_prima_emitida,\n    CAST(SUM(vlr_prm_cedida) AS DECIMAL(38,7)) AS total_prima_cedida\nFROM \"niif-{env}-gold-catalog-db\".\"niif_prima_previsional\"\nWHERE mes_cierre = '$period'\n  AND act_reg = 1\nGROUP BY mes_cierre"
+      }
+    ]
+  },
+  "email": {
+    "subject": "NIIF 17 - Certificación PREVISIONAL Periodo $period",
+    "templatePath": "email_templates/previsional.html",
+    "sender": "notificaciones@segurosalfa.com.co",
+    "destinations": [
+      "javier.gonzalez@segurosalfa.com.co",
+      "javier.jimenez@segurosalfa.com.co",
+      "julio.mesias@segurosalfa.com.co",
+      "laura.acuna@segurosalfa.com.co",
+      "manuel.machado@segurosalfa.com.co"
+    ],
+    "stringVars": {
+      "certificarLink": "https://datalake-{env}-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fhfoy06vw40.execute-api.us-east-1.amazonaws.com%2F{env}%2Fpost_login&response_type=TOKEN&client_id=36re6flv000etb314d9gpo479u&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fcertify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+      "nocertificarLink": "https://datalake-{env}-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fhfoy06vw40.execute-api.us-east-1.amazonaws.com%2F{env}%2Fpost_login&response_type=TOKEN&client_id=36re6flv000etb314d9gpo479u&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fnot_certify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+      "useCaseName": "Previsional"
+    },
+    "envConfig": {
+      "dev": {
+        "destinations": [
+          "manuel.machado@segurosalfa.com.co",
+          "julio.mesias@segurosalfa.com.co"
+        ],
+        "certificarLink": "https://datalake-dev-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fhfoy06vw40.execute-api.us-east-1.amazonaws.com%2Fdev%2Fpost_login&response_type=TOKEN&client_id=36re6flv000etb314d9gpo479u&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fcertify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+        "nocertificarLink": "https://datalake-{env}-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fhfoy06vw40.execute-api.us-east-1.amazonaws.com%2Fdev}%2Fpost_login&response_type=TOKEN&client_id=36re6flv000etb314d9gpo479u&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fnot_certify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+		"useCaseName": "Previsional"
+      },
+      "qa": {
+        "destinations": [
+          "manuel.machado@segurosalfa.com.co",
+          "julio.mesias@segurosalfa.com.co"
+        ],
+        "certificarLink": "https://datalake-qa-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fd5qmm9fi64.execute-api.us-east-1.amazonaws.com%2Fqa%2Fpost_login&response_type=TOKEN&client_id=48lafrvkrtbsn0ke3diofj8pdt&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fcertify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+        "nocertificarLink": "https://datalake-qa-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fd5qmm9fi64.execute-api.us-east-1.amazonaws.com%2Fqa%2Fpost_login&response_type=TOKEN&client_id=48lafrvkrtbsn0ke3diofj8pdt&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fnot_certify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+		"useCaseName": "Previsional"
+      },
+      "prd": {
+        "destinations": [
+          "churtado@segurosdevidaalfa.com.co",
+		  "laura.acuna@segurosalfa.com.co",
+		  "maria.silva@segurosalfa.com.co",
+          "javier.gonzalez@segurosalfa.com.co",
+		  "diegoa.moreno@segurosalfa.com.co",
+		  "javier.otero@segurosalfa.com.co",
+		  "julio.mesias@segurosalfa.com.co"
+        ],
+        "certificarLink": "https://datalake-prd-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fjdwkua9re5.execute-api.us-east-1.amazonaws.com%2Fprd%2Fpost_login&response_type=TOKEN&client_id=5mo3aup5u6047dlrnb6s177bap&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fcertify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+        "nocertificarLink": "https://datalake-prd-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fjdwkua9re5.execute-api.us-east-1.amazonaws.com%2Fprd%2Fpost_login&response_type=TOKEN&client_id=5mo3aup5u6047dlrnb6s177bap&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fnot_certify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+		"useCaseName": "Previsional"
+      }
+    },
+    "tableVars": {
+      "tableDetail": {
+        "queryName": "detail",
+        "export": true,
+        "columns": {
+          "poliza": {
+            "name": "POLIZA"
+          },
+          "nro_idnt_tomador": {
+            "name": "NRO_IDNT_TOMADOR"
+          },
+          "nom_tomador": {
+            "name": "NOM_TOMADOR"
+          },
+          "cod_sucursal": {
+            "name": "COD_SUCURSAL"
+          },
+          "reversion": {
+            "name": "REVERSION"
+          },
+          "real": {
+            "name": "REAL"
+          },
+          "causacion": {
+            "name": "CAUSACION"
+          },
+          "vlr_prm_emitida": {
+            "name": "VLR_PRM_EMITIDA"
+          },
+          "vlr_prm_cedida": {
+            "name": "VLR_PRM_CEDIDA"
+          },
+          "ini_vigencia": {
+            "name": "INI_VIGENCIA"
+          },
+          "fin_vigencia": {
+            "name": "FIN_VIGENCIA"
+          },
+          "mes_cierre": {
+            "name": "MES_CIERRE"
+          }
+        }
+      },
+      "tableSummary": {
+        "queryName": "summary",
+        "asText": true
+      },
+      "tableTotal": {
+        "queryName": "total",
+        "asText": true
+      }
+    }
+  },
+ "consoleEnvConfig": {
+    "dev": {
+      "approvers": {
+        "required": 1,
+        "users": [
+          "manuel.machado@segurosalfa.com.co",
+          "julio.mesias@segurosalfa.com.co"
+        ]
+      }
+    },
+    "qa": {
+      "approvers": {
+        "required": 1,
+        "users": [
+          "manuel.machado@segurosalfa.com.co",
+          "julio.mesias@segurosalfa.com.co"
+        ]
+      }
+    },
+    "prd": {
+      "approvers": {
+        "required": 1,
+        "users": [
+          "churtado@segurosdevidaalfa.com.co",
+		  "laura.acuna@segurosalfa.com.co",
+		  "maria.silva@segurosalfa.com.co",
+          "javier.gonzalez@segurosalfa.com.co",
+		  "diegoa.moreno@segurosalfa.com.co",
+		  "javier.otero@segurosalfa.com.co",
+		  "julio.mesias@segurosalfa.com.co"
+        ]
+      }
+    }
+  }
+}

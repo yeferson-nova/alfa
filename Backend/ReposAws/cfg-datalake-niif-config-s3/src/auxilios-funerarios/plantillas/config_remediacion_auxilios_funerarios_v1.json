@@ -1,0 +1,50 @@
+{
+  "nombre_caso": "auxilios_funerarios",
+  "remediacion_habilitada": true,
+  "ambiente": "{env}",
+  "modo": "DISPONIBILIZACION_Y_TRAZABILIDAD_VALIDACION",
+  "continuar_con_hallazgos": true,
+  "requiere_revision_analitica": true,
+  "rutas": {
+    "ruta_parametros_extraccion": "s3://niif-{env}-assets/auxilios-funerarios/parametros_extraccion.json",
+    "ruta_origen_remediacion": "s3://alfa-datalake-{env}-silver/niif/t_data_domain/auxilios_funerarios/validacion_tecnica_auxilios_funerarios/",
+    "ruta_destino_remediacion": "s3://alfa-datalake-{env}-silver/niif/remediacion/auxilios_funerarios/",
+    "ruta_trazabilidad_remediacion": "s3://alfa-datalake-{env}-silver/niif/remediacion/auxilios_funerarios/"
+  },
+  "reglas": [],
+  "disponibilizacion_silver": {
+    "habilitada": true,
+    "modo_escritura": "CONTROLADO_POR_DATASET",
+    "copiar_solo_datasets_requeridos": true,
+    "omitir_datasets_sin_datos_nuevos": true
+  },
+  "hallazgos_validacion": {
+    "guardar_historico": true,
+    "requiere_revision_analitica": true,
+    "modo_escritura": "append",
+    "particionar_por": [
+      "lote_cargue_id",
+      "fecha_copia_remediacion"
+    ]
+  },
+  "trazabilidad": {
+    "habilitada": true,
+    "modo_escritura": "append",
+    "campos_minimos": [
+      "nombre_caso",
+      "tabla_relativa",
+      "lote_cargue_id",
+      "estado_validacion",
+      "total_errores_validacion",
+      "fecha_remediacion"
+    ]
+  },
+  "metadatos": {
+    "dominio": "niif17",
+    "capa": "silver",
+    "tipo": "remediacion_estandar",
+    "version": "1.0",
+    "estado_definicion": "PROVISIONAL_SIN_REGLAS_TRANSFORMATIVAS",
+    "descripcion": "Disponibilizacion Bronze a Silver y trazabilidad de hallazgos de validacion tecnica para Auxilios Funerarios."
+  }
+}

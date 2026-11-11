@@ -1,0 +1,50 @@
+{
+  "nombre_caso": "primas_endosos",
+  "parametros_extraccion": {
+    "ruta": "s3://niif-{env}-assets/primas-endosos/parametros_extraccion.json"
+  },
+  "salida": {
+    "ruta_base": "s3://alfa-datalake-{env}-silver/niif/t_data_domain/primas_endosos/validacion_tecnica_primas_endosos/"
+  },
+  "datasets": [
+    {
+      "tabla_relativa": "prv/prv_rentas",
+      "reglas": [
+        { "columna": "NID_RENTAS", "tipo": "INTEGER", "nulo": false },
+        { "columna": "RAMO_POINT", "tipo": "STRING", "longitud_maxima": 3, "nulo": true },
+        { "columna": "FEC_EXPEDICION", "tipo": "DATE", "nulo": true },
+        { "columna": "COD_ORIGEN", "tipo": "STRING", "longitud_maxima": 3, "nulo": false }
+      ]
+    },
+    {
+      "tabla_relativa": "prv/prv_endosos_point",
+      "reglas": [
+        { "columna": "NID_RENTAS", "tipo": "INTEGER", "nulo": false },
+        { "columna": "NID_ENDOSO_POINT", "tipo": "INTEGER", "nulo": false },
+        { "columna": "FEC_EXPEDICION", "tipo": "DATE", "nulo": true },
+        { "columna": "FEC_ENVIO_POINT", "tipo": "DATE", "nulo": true },
+        { "columna": "VLR_TOTAL", "tipo": "DECIMAL", "precision": 17, "escala": 2, "nulo": true },
+        { "columna": "VLR_TOTAL_RECAUDO", "tipo": "DECIMAL", "precision": 17, "escala": 2, "nulo": true },
+        { "columna": "NID_ENDOSO_REVERSION", "tipo": "INTEGER", "nulo": true },
+        { "columna": "NID_ENDOSO_REVERSADO", "tipo": "INTEGER", "nulo": true },
+        { "columna": "BLN_PROCESO", "tipo": "STRING", "longitud_maxima": 1, "nulo": false },
+        { "columna": "COD_TIPO_ENDOSO", "tipo": "INTEGER", "nulo": false }
+      ]
+    },
+    {
+      "tabla_relativa": "general/cgr_origenes",
+      "reglas": [
+        { "columna": "COD_ORIGEN", "tipo": "STRING", "longitud_maxima": 3, "nulo": false },
+        { "columna": "NOMBRE", "tipo": "STRING", "longitud_maxima": 50, "nulo": true }
+      ]
+    },
+    {
+      "tabla_relativa": "general/cgr_tipos_endosos",
+      "reglas": [
+        { "columna": "COD_TIPO_ENDOSO", "tipo": "INTEGER", "nulo": false },
+        { "columna": "NOMBRE_TIPO", "tipo": "STRING", "longitud_maxima": 30, "nulo": false },
+        { "columna": "COD_TRANSACCION_POINT", "tipo": "STRING", "longitud_maxima": 2, "nulo": true }
+      ]
+    }
+  ]
+}

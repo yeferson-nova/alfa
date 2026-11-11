@@ -1,0 +1,80 @@
+{
+  "nombre_caso": "reserva_matematica_cargue_unico",
+  "entrada": {
+    "database": "niif-{env}-bronze-catalog-db",
+    "tabla": "campos_unica_vez",
+    "usar_ultima_carga": true,
+    "columna_particion": "fecha_carga"
+  },
+  "salida": {
+    "ruta_gold": "s3://alfa-datalake-{env}-gold/GOLD/NIIF/RESERVA_MATEMATICA_CARGUE_UNICO/"
+  },
+  "llaves": {
+    "primaria": [
+      "RAMO",
+      "RENTA"
+    ],
+    "apertura": []
+  },
+  "columnas_cambio": {
+    "normales": [
+      "FAIR_VALUE",
+      "INTERES_TECNICO_NIIF4"
+    ],
+    "alerta": []
+  },
+  "columnas_fijas": [
+    "ID_LOTE_CARGUE"
+  ],
+  "columnas_administrativas": [
+    "FEC_INI_VIG_REG",
+    "FEC_FIN_VIG_REG",
+    "VRS_REG",
+    "ACT_REG"
+  ],
+  "transformaciones": {
+    "RAMO": {
+      "tipo_destino": "bigint"
+    },
+    "RENTA": {
+      "tipo_destino": "bigint"
+    },
+    "FAIR_VALUE": {
+      "tipo_destino": "decimal(38,7)"
+    },
+    "INTERES_TECNICO_NIIF4": {
+      "tipo_destino": "decimal(38,7)"
+    },
+    "NO_REGISTRO": {
+      "tipo_destino": "int"
+    },
+    "ID_LOTE_CARGUE": {
+      "tipo_destino": "bigint",
+      "origen": "parametro",
+      "parametro": "LOTE_CARGUE_ID"
+    }
+  },
+  "metadatos": {
+    "dominio": "niif17",
+    "capa": "gold",
+    "tipo": "scd_tipo_2",
+    "tabla_destino": "RESERVA_MATEMATICA_CARGUE_UNICO"
+  },
+  "version_configuracion": "1.0",
+  "columnas_negocio": [
+    "NO_REGISTRO",
+    "RAMO",
+    "RENTA",
+    "FAIR_VALUE",
+    "INTERES_TECNICO_NIIF4",
+    "ID_LOTE_CARGUE"
+  ],
+  "scd": {
+    "modo": "TIPO_2",
+    "cerrar_ausentes": true,
+    "columna_inicio_vigencia": "FEC_INI_VIG_REG",
+    "columna_fin_vigencia": "FEC_FIN_VIG_REG",
+    "columna_version": "VRS_REG",
+    "columna_activo": "ACT_REG"
+  }
+}

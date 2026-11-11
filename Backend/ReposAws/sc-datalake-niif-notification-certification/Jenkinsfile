@@ -1,0 +1,32 @@
+@Library('analitica-library') _
+
+def general = [
+    repoName: 'sc-datalake-niif-notification-certification',
+    iacPipeline: 'iac-analytics-datalake',
+    iacResource: 'compute'
+]
+
+def envParams = [
+    develop: [
+        awsCredentialId: 'aws-datalake-dev',
+        awsRegion: 'us-east-1',
+        s3Bucket: 'niif-dev-lambda-artifacts',
+        s3Key: 'lambdas/notification-certification',
+        lambdaName: 'niif-dev-notification-certification-trigger'
+    ],
+    quality: [
+        awsCredentialId: 'aws-datalake-qa',
+        awsRegion: 'us-east-1',
+        s3Bucket: 'niif-qa-lambda-artifacts',
+        s3Key: 'lambdas/notification-certification',
+        lambdaName: 'niif-qa-notification-certification-trigger'
+    ],
+    main: [
+        awsRegion: 'us-east-1',
+        s3Bucket: 'niif-prd-lambda-artifacts',
+        s3Key: 'lambdas/notification-certification',
+        lambdaName: 'niif-prd-notification-certification-trigger'
+    ]
+]
+
+lambdaS3Pipeline(general, envParams)

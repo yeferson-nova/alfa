@@ -1,0 +1,32 @@
+@Library('analitica-library') _
+
+def general = [
+    repoName: 'sc-datalake-niif-short-link-redirect',
+    iacPipeline: 'iac-analytics-datalake',
+    iacResource: 'compute'
+]
+
+def envParams = [
+    develop: [
+        awsCredentialId: 'aws-datalake-dev',
+        awsRegion: 'us-east-1',
+        s3Bucket: 'niif-dev-lambda-artifacts',
+        s3Key: 'lambdas/short_link_redirect',
+        lambdaName: 'niif-dev-short-link-redirect'
+    ],
+    quality: [
+        awsCredentialId: 'aws-datalake-qa',
+        awsRegion: 'us-east-1',
+        s3Bucket: 'niif-qa-lambda-artifacts',
+        s3Key: 'lambdas/short_link_redirect',
+        lambdaName: 'niif-qa-short-link-redirect'
+    ],
+    main: [
+        awsRegion: 'us-east-1',
+        s3Bucket: 'niif-prd-lambda-artifacts',
+        s3Key: 'lambdas/short_link_redirect',
+        lambdaName: 'niif-prd-short-link-redirect'
+    ]
+]
+
+lambdaS3Pipeline(general, envParams)
