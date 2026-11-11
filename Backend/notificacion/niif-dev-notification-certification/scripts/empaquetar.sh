@@ -6,8 +6,15 @@ VERSION="$(sed -n 's/^__version__ = "\(.*\)"/\1/p' "$RAIZ/src/notificacion_certi
 DESTINO="$RAIZ/dist"
 LIBRERIA="$DESTINO/${NOMBRE}-${VERSION}.zip"
 SCRIPT="$DESTINO/job_notificacion.py"
+PY=""
+for candidato in python3 python py; do
+  if "$candidato" -c "import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)" >/dev/null 2>&1; then
+    PY="$candidato"; break
+  fi
+done
+[ -n "$PY" ] || { echo "No se encontro Python 3.10 o superior (python3, python o py)" >&2; exit 1; }
 mkdir -p "$DESTINO" && rm -f "$LIBRERIA" "$SCRIPT"
-python3 - "$LIBRERIA" "$RAIZ/src" notificacion_certificacion "$RAIZ/src" niif_observability <<'PY'
+"$PY" - "$LIBRERIA" "$RAIZ/src" notificacion_certificacion "$RAIZ/src" niif_observability <<'PY'
 import os
 import sys
 import zipfile
