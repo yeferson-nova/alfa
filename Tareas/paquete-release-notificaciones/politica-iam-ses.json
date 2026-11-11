@@ -6,7 +6,8 @@
       "Effect": "Allow",
       "Action": ["ses:SendEmail", "ses:SendRawEmail"],
       "Resource": [
-        "arn:aws:ses:us-east-1:<CUENTA_QA>:identity/<DOMINIO_O_REMITENTE>"
+        "arn:aws:ses:us-east-1:<CUENTA_QA>:identity/<DOMINIO_O_REMITENTE>",
+        "arn:aws:ses:us-east-1:<CUENTA_QA>:configuration-set/<CONJUNTO_DE_CONFIGURACION>"
       ]
     },
     {

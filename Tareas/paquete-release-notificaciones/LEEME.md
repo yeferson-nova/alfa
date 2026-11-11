@@ -66,7 +66,7 @@ El hash debe coincidir con el de `SHA256.txt`.
 **4.4 Permisos del rol del job** (política inline nueva o la que defina DevOps por IaC; no usar políticas temporales)
 - `ses:SendEmail` sobre la identidad del remitente (en QA es de dominio: `identity/<dominio>`).
 - Si la cuenta sigue en sandbox: también sobre la identidad de cada destinatario.
-- Si se usa un conjunto de configuración (`--SES_CONFIGURATION_SET`, opcional): también sobre su ARN.
+- Si el job usa un conjunto de configuración (`--SES_CONFIGURATION_SET`): también `ses:SendEmail` sobre su ARN `configuration-set/<nombre>`. **En QA el job ya lo usa** (el error de la prueba del 2026-11-10 lo citó: `datalake-ses-cofiguration-set`, tal como lo escribe el log), así que este permiso es obligatorio; si no se pide, el envío falla con `AccessDeniedException`.
 - `s3:GetObject` sobre `<bucket-assets-qa>/email-template/*`.
 - La plantilla `politica-iam-ses.json` cubre lo básico. **No** dar acceso a `pruebas/*`.
 
