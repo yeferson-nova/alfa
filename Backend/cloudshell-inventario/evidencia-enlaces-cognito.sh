@@ -14,7 +14,7 @@
 #   3. ENV=prd bash evidencia-enlaces-cognito.sh      (en DEV: ENV=dev)
 #   4. Descargar el .tar.gz que imprime al final.
 #
-# Variables opcionales: ENV=prd REGION=us-east-1 DIAS_AUDITORIA=90
+# Variables opcionales: ENV=prd REGION=us-east-1 DIAS_AUDITORIA=90 DIAS_LOGS=14
 #   ASSETS_BUCKET (defecto niif-$ENV-assets)  PREFIJO_MALLAS (defecto vacio = todo)
 # ============================================================================
 set -u
@@ -22,6 +22,7 @@ set -u
 ENV="${ENV:-prd}"
 REGION="${REGION:-us-east-1}"
 DIAS_AUDITORIA="${DIAS_AUDITORIA:-90}"
+DIAS_LOGS="${DIAS_LOGS:-14}"
 ASSETS_BUCKET="${ASSETS_BUCKET:-niif-${ENV}-assets}"
 BUCKET_ESCRITO_EN_CORREO="niif-${ENV}-assests"
 PREFIJO_MALLAS="${PREFIJO_MALLAS:-}"
@@ -312,6 +313,65 @@ PY
     --query "items[].{name:name,type:type,providerARNs:providerARNs,identitySource:identitySource}"
   guardar "$SALIDA/apigw/${api}-resources.json" aws apigateway get-resources --rest-api-id "$api" --embed methods \
     --query "items[].{path:path,methods:keys(resourceMethods || `{}`)}"
+done
+
+# ----------------------------------------------------------------------------
+# 6b. Logs de acceso del API y reglas del WAF (llegaron usuarios a /post_login?)
+#     Solo cuenta por ruta, estado HTTP y dia; no guarda IP, usuario ni agente.
+# ----------------------------------------------------------------------------
+log ""
+log "## 6b. Logs de acceso del API (ultimos ${DIAS_LOGS} dias) y WAF"
+for stagefile in "$SALIDA"/apigw/*-stages.json; do
+  [ -f "$stagefile" ] || continue
+  api="$(basename "$stagefile" -stages.json)"
+  python3 - "$stagefile" <<'PY' > "$TMP/stages-${api}.txt"
+import json, sys
+try:
+    etapas = json.load(open(sys.argv[1])) or []
+except Exception:
+    etapas = []
+for e in etapas:
+    print(e.get("stage") or "", e.get("webAcl") or "-", sep="\t")
+PY
+  while IFS=$'\t' read -r stage webacl; do
+    [ -z "$stage" ] && continue
+    grupo="$(aws apigateway get-stage --rest-api-id "$api" --stage-name "$stage" \
+      --query "accessLogSettings.destinationArn" --output text 2>/dev/null | sed 's/.*log-group://;s/:\*$//')"
+    log "  api=$api stage=$stage log_group=${grupo:-NINGUNO} waf=$( [ "$webacl" = "-" ] && echo NO || echo SI )"
+    if [ -n "$grupo" ] && [ "$grupo" != "None" ]; then
+      DESDE_MS="$(( ($(date -u +%s) - DIAS_LOGS*86400) * 1000 ))"
+      aws logs filter-log-events --log-group-name "$grupo" --start-time "$DESDE_MS" \
+        --filter-pattern '"post_login"' --max-items 2000 --output json 2>>"$FALLOS" \
+        > "$TMP/logs-${api}-${stage}.json" || fallo "filter-log-events $grupo"
+      python3 - "$TMP/logs-${api}-${stage}.json" "$SALIDA/apigw/${api}-${stage}-post_login-conteo.tsv" <<'PY' | tee -a "$RESUMEN"
+import collections, json, re, sys
+cuenta = collections.Counter()
+try:
+    eventos = json.load(open(sys.argv[1])).get("events", [])
+except Exception:
+    eventos = []
+for ev in eventos:
+    try:
+        d = json.loads(ev["message"])
+    except Exception:
+        continue
+    dia = str(d.get("requestTime", ""))[:11]
+    cuenta[(dia, d.get("httpMethod"), d.get("resourcePath"), d.get("status"))] += 1
+with open(sys.argv[2], "w", encoding="utf-8") as f:
+    f.write("dia\tmetodo\truta\testado\tcantidad\n")
+    for (dia, m, r, st), n in sorted(cuenta.items()):
+        f.write(f"{dia}\t{m}\t{r}\t{st}\t{n}\n")
+print(f"    eventos /post_login leidos: {len(eventos)} | combinaciones: {len(cuenta)} (ver apigw/*-conteo.tsv)")
+PY
+    fi
+    if [ "$webacl" != "-" ]; then
+      nombre="$(echo "$webacl" | awk -F/ '{print $(NF-1)}')"; ident="$(echo "$webacl" | awk -F/ '{print $NF}')"
+      guardar "$SALIDA/apigw/${api}-${stage}-waf.json" aws wafv2 get-web-acl --scope REGIONAL --name "$nombre" --id "$ident" \
+        --query "WebACL.{Name:Name,DefaultAction:DefaultAction,Rules:Rules[].{Name:Name,Priority:Priority,Action:Action,Override:OverrideAction}}"
+      guardar "$SALIDA/apigw/${api}-${stage}-waf-logging.json" aws wafv2 get-logging-configuration --resource-arn "$webacl" \
+        --query "LoggingConfiguration.{Destinos:LogDestinationConfigs}"
+    fi
+  done < "$TMP/stages-${api}.txt"
 done
 
 # ----------------------------------------------------------------------------
