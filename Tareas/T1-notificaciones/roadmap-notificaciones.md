@@ -120,6 +120,12 @@ _La orquestadora y las alertas usan este ID._
 <a id="paso-4"></a>
 ### Paso 4 · Fase 3.1: orquestadora (`niif-dev-notification-certification-orchestrator`, lambda; reemplaza a trigger, copy y move)
 _Reemplaza a copy y move, que hoy pierden datos sin avisar, y lanza el job con el ID._
+- ✅ Etapa 1 (auditoría, solo lectura, 2026-11-11): contrato de trigger, copy y move, mappings del stream y diseño propuesto. Hallazgos nuevos ARQ-40 a ARQ-44 y decisiones O-1 a O-4 en `Docs\06-brechas\auditoria-orquestadora-trigger-copy-move.md`. **ARQ-44:** el job de notificación nuevo y la orquestadora se despliegan juntos.
+- ✅ Decisiones (2026-11-11, aprobadas por el usuario): O-1 candado transaccional por `certCode`; O-2 índice nuevo `status-pendingDate-index` (lo crea DevOps); O-3 se conserva la ruta histórica (parametrizable); O-4 despliegue conjunto con el job de notificación nuevo.
+- ✅ Etapa 2 (2026-11-11): código en `Backend\notificacion\lambdas\niif-dev-notification-certification-orchestrator\` (404 pruebas, 97,9 % de cobertura). Stream + reprocesador con alerta SES; bloque `orchestrator` y `dynamodb.pending_index` en el JSON global de DEV. Ver su README.
+- ⬜ DevOps: índice `status-pendingDate-index`, función, mapping con `ReportBatchItemFailures` y cola de fallos, Scheduler y permisos (README, sección DevOps).
+- ⬜ Antes de probar: correo real de `alert_recipients`; claves nuevas en todos los JSON globales (incluido previsional); verificar si el job viejo escribe `pendingDate`.
+- ⬜ Etapa 3: prueba en DEV con Primas ARL (requiere confirmación).
 - ✅ Esqueleto creado.
 - ⬜ Lógica por estado: `PENDING` lanza el job, `CERTIFICATE` copia a transporte, `NO_CERTIFICATE` archiva y deja pendiente la malla (esta última espera D2).
 - ⬜ Reprocesador de registros `PENDING` atascados.

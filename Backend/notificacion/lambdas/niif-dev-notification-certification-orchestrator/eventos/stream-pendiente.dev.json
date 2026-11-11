@@ -1,0 +1,32 @@
+{
+  "Records": [
+    {
+      "eventID": "1",
+      "eventName": "MODIFY",
+      "eventSource": "aws:dynamodb",
+      "dynamodb": {
+        "SequenceNumber": "100000000000000000001",
+        "Keys": { "useCaseId": { "S": "primasArl" }, "executionId": { "S": "ejemplo-0001" } },
+        "OldImage": {
+          "useCaseId": { "S": "primasArl" }, "executionId": { "S": "ejemplo-0001" }, "status": { "S": "PROCESSED" }
+        },
+        "NewImage": {
+          "useCaseId": { "S": "primasArl" },
+          "executionId": { "S": "ejemplo-0001" },
+          "status": { "S": "PENDING" },
+          "certCode": { "S": "CERT-EJEMPLO" },
+          "queryName": { "S": "detail#1" },
+          "nameFile": { "S": "primasArl_202606_ejemplo.csv" },
+          "emailType": { "S": "certification" },
+          "period": { "S": "202606" },
+          "configBucket": { "S": "niif-dev-assets" },
+          "configKey": { "S": "configs/certification/primasArl.json" },
+          "globalConfigKey": { "S": "configs/certification/json_global_notif_cert.json" },
+          "regeneracionSinDatosNuevos": { "BOOL": false },
+          "ejecucionId": { "S": "primas-arl-202606-0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b" },
+          "pendingDate": { "S": "2026-11-11T10:00:00-05:00" }
+        }
+      }
+    }
+  ]
+}

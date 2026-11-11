@@ -48,3 +48,14 @@ Para aislar fallas, el problema se separa en 5 partes. La optimización de Athen
 4. **Enlaces de aprobación y rechazo:** enlace corto → WAF/API → `postLogin` → Cognito → certificar. Brechas: ARQ-23, ARQ-29, SEG-10, SEG-11, SEG-13 y SEG-14 (API viejo).
 5. **Observabilidad completa en logs:** un log JSON en español por paso, con `ejecucion_id`, `cert_code` y `request_id`, para saber en qué paso falló (ARQ-32 desde la certificación, ARQ-26 sin errores silenciosos); alarmas por SES al grupo de soporte (ARQ-31).
 - **Medición de Athena en DEV (2026-11-11, `EvidenciasAws\dev-medicion-athena\`):** nuestras consultas tardan 0,8-2,3 s (las `detail`, hasta unos 10 s); USD 0,01 en 45 días. Los jobs duran 47-56 s de mediana, casi todo en el arranque de Spark (propuesta: Python shell). Las fallas son de permisos durante el desarrollo, ninguna por timeout. COS-07 y COS-08 confirmados. Falta medir en PRD (`AMB=prd`). Nota: en DEV, el Gold de 5 mallas (rentas, endosos, auxilios, ARP y RVI) se vació el 2026-11-05 por pruebas; no es brecha. Para probar con datos, usar ARL o volver a correr la malla.
+
+## Orquestadora, etapa 1 (2026-11-11)
+Humano: `Docs\06-brechas\auditoria-orquestadora-trigger-copy-move.md`. Confirmados en código: ARQ-23 a ARQ-26 y SEG-12 (nadie escribe `sendLock`). Nuevos:
+- **ARQ-40:** el trigger solo notifica si la consulta se llama `detail#1` (contrato implícito).
+- **ARQ-41:** copy procesa todo el `certCode` por cada evento (N×N), con posible carrera con la condición del API (hipótesis, hoy N = 1); copy, move y el API leen solo la primera página del índice.
+- **ARQ-42:** move no es idempotente y toma `AccessDenied` como "no existe".
+- **ARQ-43:** los mappings tienen reintentos y edad infinitos, sin bisect, sin cola de fallos y sin `ReportBatchItemFailures`.
+- **ARQ-44:** el job de notificación nuevo rechaza los argumentos del trigger (`NTF-ENT-004`): desplegar junto con la orquestadora.
+- Diseño propuesto: un mapping, acción solo si cambia el estado, candado transaccional por `certCode`, `--EJECUCION_ID` desde el registro, configuración desde el `globalConfigKey` del registro (bloque `orchestrator`), carpeta desde `certification.report_folders`. Decisiones abiertas O-1 a O-4, D2 y D7.
+- **Decisiones O-1 a O-4 aprobadas (2026-11-11)** y etapa 2 hecha: `Backend\notificacion\lambdas\niif-dev-notification-certification-orchestrator\` (404 pruebas). Cierra en código ARQ-24, ARQ-25, ARQ-26, ARQ-40 a ARQ-43 y SEG-12; ARQ-23 queda parcial (D2). Requiere índice `status-pendingDate-index` (DevOps).
+

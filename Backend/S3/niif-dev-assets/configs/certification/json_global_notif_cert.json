@@ -10,7 +10,8 @@
   "dynamodb": {
     "notification_table": "niif-dev-notification-certification",
     "audit_table": "niif-dev-approval-audit-log",
-    "cert_code_index": "certCode-index"
+    "cert_code_index": "certCode-index",
+    "pending_index": "status-pendingDate-index"
   },
   "athena": {
     "output_path": "athena/notifications",
@@ -68,5 +69,17 @@
     "link_token_length": 32,
     "athena_poll_seconds": 1,
     "athena_max_wait_seconds": 900
+  },
+  "orchestrator": {
+    "notification_job_name": "niif-dev-notification-certification",
+    "transport_bucket": "niif-dev-transport",
+    "transport_prefix": "export",
+    "rejected_folder": "NO-CERTIFICADOS",
+    "use_historic_source_path": true,
+    "reprocess_after_minutes": 60,
+    "reprocess_max_attempts": 3,
+    "alert_recipients": [
+      "<CORREO_SOPORTE_NIIF>"
+    ]
   }
 }
