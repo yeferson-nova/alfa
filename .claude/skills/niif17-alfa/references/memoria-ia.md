@@ -24,7 +24,7 @@
 - La nota resume y apunta al documento humano en `Docs\` o `Tareas\`; no copia su contenido.
 - Fechas absolutas, nunca "ayer" o "la semana pasada".
 - Marcar lo no confirmado como **propuesta** o **hipótesis**.
-- Nada sensible (repo público): sin tokens, correos de personas, IDs de cuenta, IPs.
+- Nada sensible (el repo fue público; tratarlo como expuesto): sin tokens, correos de personas, IDs de cuenta, IPs.
 
 ## Estados que se registran
 - **Trabajo:** `[[pendientes]]` con casillas `- [ ]` / `- [x]`, fecha y ruta del entregable. Un componente pasa por: propuesto → diseñado → implementado en local (pruebas y cobertura) → desplegado en DEV → validado → QA → PRD. Escribir siempre en cuál está y qué falta para el siguiente.

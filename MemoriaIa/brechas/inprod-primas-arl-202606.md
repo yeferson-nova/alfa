@@ -81,7 +81,7 @@ Dónde verlo en AWS: Glue → ETL jobs → `niif-prd-extraccion-estandar-optimiz
 ## 7. Artefactos (rutas relativas a la raíz del repo)
 - Documentos: `errores\errores.md` (paso a paso, CSV de Athena, consola web, logs), `errores\analisis-flujo-primas-arl-202606.md` (conclusión, flujo, evidencia por problema, sección 9 limpiar segmentos), `errores\replicar-fallo-en-dev.md`.
 - Scripts: `recolectar-evidencia-prd.sh` (CloudShell, solo lectura), `replicar-fallo-dev.sh` (**solo DEV**), `validar-analisis.py` (17/17 PASS), `validar-athena.py` (4/4 PASS), `simular-limpieza-segmentos.py`, `ver-logs-evidencia.py`.
-- Evidencia: `errores\evidencia-primas-arl-202606\` (incluye `athena\` con el CSV) y `errores\Evidencia\` (ignorada en `.gitignore`).
+- Evidencia (fuera de Git desde 2026-11-10): `EvidenciasAws\prd-primas-arl-202606\subida-equipo\` (subida por el equipo; incluye `athena\` con el CSV) y `EvidenciasAws\prd-primas-arl-202606\recolectada\`.
 - Estado de pruebas: los scripts de validación corren sobre la evidencia real; `replicar-fallo-dev.sh` solo se probó con un `aws` simulado, **no contra AWS real**.
 
 ## 8. Cautelas

@@ -62,3 +62,9 @@ Al resolver una, moverla a la nota correspondiente y borrarla de aquí.
 - **Decisión para el equipo/Víctor:** (A) descarga mediada por API Gateway, o (B) dejar la consola solo para usuarios con acceso y documentarlo como limitación. Víctor (L270-271) y el diagrama esperaban descarga por API.
 - **Si es A, necesita DevOps:** ruta nueva en API Gateway y lambda; el job de certificación guardaría bucket/key en lugar de la URL de consola.
 - **Otros para el daily:** restaurar el JSON real `primas-arl/primasArl.json` en QA (destinatarios de prueba); DevOps: `--SES_SENDER` por defecto, `templatePath` singular en todos los JSON de caso, reenvío de `politica-iam-ses.json` y `SHA256.txt` actualizados; pendientes de pruebas QA 2, 4, 5, 6 y 7.
+
+## Limpieza de DEV (2026-11-10, ver `Docs\06-brechas\limpieza-dev-recursos.md`)
+- ¿Quién mantiene `niif-dev-configuration-general` (configurador general en modo validación, ya cubre Satélites/PCR)? ¿Reemplaza a las 6 `configuration-<malla>` y a nuestro T2?
+- ¿De quién es `niif-dev-configurador-mallas` (Terraform, 0 invocaciones)? Nuestro T2 se desplegaría como `datalake-<amb>-niif-configurador-mallas-lambda`.
+- ARQ-30: ¿quién borró los 2 archivos de ARL de `niif-dev-transport/export/` (2026-10-09)? ¿Hay ciclo de vida en el bucket? ¿Cuándo se configuró la notificación de S3 hacia `send-via-sftp`?
+- ¿Se puede quitar el callback del API viejo (`53x06brwqh`) del cliente de Cognito `datalake-dev-niif-api`? Lo hace DevOps/Terraform (SEG-14).

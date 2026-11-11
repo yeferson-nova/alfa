@@ -1,8 +1,19 @@
 ---
 tipo: referencia
-actualizado: 2026-11-03
+actualizado: 2026-11-10
 ---
 # Inventario de lambdas y Step Functions (código desplegado)
+
+## Evidencia de uso 2026-11-10 (manda sobre lo de abajo)
+Clasificación completa en `Docs\06-brechas\limpieza-dev-recursos.md`; datos en `EvidenciasAws\dev-uso-recursos\` (ignorada).
+- **G3 ya no lee el stream:** los dos mappings de `programador-configuraciones` están `Disabled`. Se corrige el riesgo de doble ejecución de abajo.
+- **G2 sigue activo:** stream de `niif-dev-programacion-cargues` `Enabled` (79 inv, 18 err) y finalizador 39/53 errores.
+- **Dos API:** `datalake-dev-niif-api-gtw` (Terraform, con WAF; `/r`, `/post_login`, `/certify`, `/not_certify`) es el vigente. `Certificación API` (viejo, sin WAF) sigue con tráfico en `postLogin` (46): **SEG-14**.
+- Vigentes de la cadena: `niif-dev-short-link-redirect`, `niif-post-login` (sin etiquetas de Terraform), `niif-dev-certification`, trigger, copy, move, composite, `datalake-dev-niif-send-via-sftp` (0 inv: **ARQ-30**, hipótesis).
+- Nuevas sin documentar: `niif-dev-configuration-general` (2026-11-07, 82 inv / 27 err), `niif-dev-configurador-mallas` (Terraform, 0 inv), `niif-dev-configurador-pcr-vida`.
+- Últimas invocaciones: G3 programador 2026-11-03, configuradores 2026-10-22; G2 programador 2026-09-15, iniciador 2026-09-18; **finalizador G2 sigue disparado por la regla de fin de la SF ARL** (2026-11-06, falla 39/53); `postLogin` viejo 2026-09-25. Cognito `datalake-dev-niif-api` tiene callback a los dos API (quitar el viejo antes de retirarlo). ARQ-30: el filtro `export/` coincide con donde escribe copy; falta ver si copy copió algo.
+- **ARQ-30 confirmada:** copy falló todos los Certificar del 2026-08-19 al 2026-09-25 (falta índice `certCode`, error tragado); el 2026-10-09 copió 2 de ARL pero `export/` está vacío y `send-via-sftp` sin logs: Certificar → FIS nunca probado de punta a punta en DEV. Finalizador G2: `KeyError idAutomatizacion` antes de escribir (quitar la regla es seguro). `configuration-general`: configurador general de otro desarrollador (misma base que los `configuration-<malla>`, no nuestro T2), modo validación, ya cubre Satélites/PCR.
+- DEV lo usan otras mallas en paralelo (PCR Vida, Generales, Satélites, Previsional, Emisiones): no se tocan.
 
 ## Alcance de trabajo (decidido 2026-11-03)
 - **Lambdas de trabajo (7):** `niif-dev-configuration-{primas-rentas,primas-endosos,primas-arl,auxilios-funerarios,reserva-matematica-rvi,reserva-matematica-arp}` y `niif-dev-manager-configuration`.
@@ -22,7 +33,7 @@ Humano: `Backend\Lamnbdas\inventario-aws\lambdas.md` (movido desde `Docs\05-arqu
 - **Documentos separados (2026-11-03):** entender = `flujo-integral-niif17.md` (estado actual), `jobs-glue.md` (12 jobs y 3 crawlers) y `tareas-sobre-el-flujo.md` (T1, T2, T3 sobre el flujo), en `Docs\05-arquitectura\`. Corregir = `Docs\06-brechas\rendimiento-y-costos.md` (`RYC-01` a `RYC-17`) y `revision-pre-produccion.md` (`PP-01` a `PP-23`: 5 bloqueantes, 9 altos, 9 medios; veredicto: hoy no está listo para producción). Los `FLU-01` a `FLU-14` están en el anexo de `revision-pre-produccion.md`.
 
 ## Fuente
-- `Backend\inventario\`: extraído por script de la cuenta 533267035849 (us-east-1, DEV). **No hay repo Git: el código desplegado es la única fuente.**
+- `Backend\inventario\` (hoy `EvidenciasAws\dev-inventario-cuenta\`): extraído por script de la cuenta 533267035849 (us-east-1, DEV). **No hay repo Git: el código desplegado es la única fuente.**
 - `lambdas\codigo\<nombre>\` (código) y `lambdas\config\<nombre>.{json,triggers,policy,aliases}.json`.
 - `stepfunctions\` (73 ASL), `sns\`, `dynamodb\`, `iam\`, `s3\`, `logs\`, `athena\`.
 - **Ya organizado y sacado de `inventario\` (2026-11-03):** jobs y scripts de Glue en `Backend\Glue\`, reglas EventBridge en `Backend\Eventos\`, ambos con su `pruebas-*`. Se verificó copia idéntica antes de borrar el original.

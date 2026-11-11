@@ -11,7 +11,7 @@ Base: `Docs\08-estandares-desarrollo\estandar-lambdas-python.md` (leerlo si se v
 ## 2. Errores, logs y métricas
 - Errores con `codigo`, `dominio`, `severidad`, `recuperable`, `accion`, `destinatario`; códigos `<COMP>-<DOM>-<NNN>` documentados en el README (ej. `NTF-CNF-001`).
 - Los adaptadores traducen errores de AWS (`AccessDenied` → permisos, `Throttling` → plataforma recuperable, `ConditionalCheckFailed` → concurrencia).
-- El handler registra y **relanza**. Toda invocación asíncrona y todo stream tienen reintentos limitados, división de lote y **destino de fallo** (hoy varios streams reintentan sin fin: no repetir).
+- El handler registra y **relanza**. Toda invocación asíncrona y todo stream tienen reintentos limitados, división de lote y **destino de fallo** (hoy varios streams reintentan sin fin: no repetir). Lección real: `copy-s3-cert` tragó durante semanas un error de índice y dejó certificaciones en `CERTIFICATE` sin alarma (ARQ-26, ARQ-30).
 - Logs JSON de una línea con `ejecucion_id`, `certCode`, `useCaseId`, `periodo`; métricas EMF de éxito, fallo por dominio y duración.
 
 ## 3. Idempotencia y concurrencia
@@ -20,7 +20,8 @@ Base: `Docs\08-estandares-desarrollo\estandar-lambdas-python.md` (leerlo si se v
 - Streams de DynamoDB entregan "al menos una vez": todo consumidor debe tolerar duplicados y desorden.
 
 ## 4. Correo de negocio (T1a, T1b)
-- **SES para el correo de negocio; SNS se queda para alarmas técnicas** (decisión tomada; SES aún sin aval formal de Arquitectura, ver `[[preguntas-abiertas]]`).
+- **SES para el correo de negocio; SNS se queda para alarmas técnicas.** El diagrama dibuja SES (icono "Mensaje"). Implementado en el job y probado en QA el 2026-11-10.
+- Lo aprendido en QA: el rol necesita `ses:SendEmail` sobre la identidad **y** sobre el conjunto de configuración; `--SES_SENDER` debe ser argumento por defecto del job; las plantillas viven en `<bucket-assets>/email-template/` (en singular). Detalle en `[[job-notificacion-ses]]`.
 - Identidad del dominio verificada (SPF, DKIM, DMARC), salida de *sandbox*, conjunto de configuración con rebotes y quejas hacia una alarma.
 - Plantillas HTML compatibles con clientes de correo (`Backend\htmlNew\newUx\`), con los mismos *placeholders*. Todo valor insertado se **escapa**; nada de `to_html(escape=False)`.
 - Asunto `NIIF 17 - Certificación <CasoUso> Periodo <AAAAMM>`; marca `[REGENERADO]` cuando aplique.
@@ -32,7 +33,7 @@ Base: `Docs\08-estandares-desarrollo\estandar-lambdas-python.md` (leerlo si se v
 - El clic del correo abre una **página de confirmación**; la decisión se envía por **POST** autenticado (los escáneres de correo siguen GET).
 - Token firmado, de un solo uso, con expiración; identidad federada (Cognito / IAM Identity Center con el directorio corporativo).
 - Se registra quién, cuándo, desde dónde y sobre qué versión de los datos (checksum del manifiesto). Multiaprobador: `approvers.required` desde metadata, cada voto auditado.
-- CSV por URL prefirmada de corta duración, bucket privado con KMS; no saltarse Lake Formation.
+- CSV por URL prefirmada de corta duración, bucket privado con KMS; no saltarse Lake Formation. **Hoy no es así:** el enlace abre la consola de S3 por el portal SSO y exige un rol en la cuenta (ARQ-29). Propuesta: acción `DOWNLOAD` tras el login de Cognito, que devuelve una URL prefirmada de 1 a 5 minutos.
 - Ningún valor por defecto apunta a otro ambiente (hoy la lambda de certificación cae a `niif-qa-*` si falta una variable: PP-10).
 
 ## 6. Orquestación del paso 3 (dirección objetivo, propuesta)

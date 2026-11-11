@@ -63,7 +63,7 @@ aws stepfunctions list-state-machines $A > raw/sf.json 2>>"$LOG"
 mkdir -p raw/sf
 : > raw/sf-ultima.tsv
 for arn in $(jq -r '.stateMachines[].stateMachineArn' raw/sf.json); do
-  n=$(basename "$arn")
+  n="${arn##*:}"   # solo el nombre: Windows no acepta ":" en archivos
   aws stepfunctions describe-state-machine --state-machine-arn "$arn" $A --query definition 2>>"$LOG" \
     | jq -r . > "raw/sf/$n.asl.json"
   ult=$(aws stepfunctions list-executions --state-machine-arn "$arn" --max-items 1 $A \

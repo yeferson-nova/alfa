@@ -23,10 +23,10 @@ Marco: solo lo entregado (`[[marco-normativo]]`). No agregar circulares que los 
 8. **Fallar cerrado:** si falta configuración, permiso o identidad, se detiene; nunca se degrada a un default inseguro o de otro ambiente.
 9. **Auditoría:** toda decisión humana y todo cambio de configuración deja registro (quién, cuándo, qué, versión). Retención de evidencia: 7 años.
 
-## Repositorio público (riesgo activo)
-El repo `alfa` es **público**. Antes de escribir en él cualquier archivo:
+## Repositorio (privado desde 2026-11-09; lo anterior quedó en el historial)
+El repo `alfa` fue público hasta el 2026-11-09. Se trata como si siguiera expuesto. Antes de escribir en él cualquier archivo:
 - Nada de evidencia de prod, correos de personas, IDs de Cognito, números de cuenta, IPs, nombres de host internos, tokens, URLs prefirmadas ni `.env`.
-- Redactar lo sensible o dejarlo en una carpeta ignorada por `.gitignore` (en la raíz).
+- Redactar lo sensible o dejarlo en `EvidenciasAws\` (ignorada por el `.gitignore` de la raíz; solo se versiona su `LEEME.md`).
 - Preguntar al usuario antes de subir evidencia.
 
 ## Brechas: cómo analizar

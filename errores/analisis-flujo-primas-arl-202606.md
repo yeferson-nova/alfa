@@ -2,7 +2,7 @@
 
 **Correo:** "NIIF 17 - Certificación Primas ARL Periodo 202606", 2026-11-01 22:23 (hora Colombia).
 **Ejecución:** `niif-prd-primas-arl` → `arl-202606-auto-20261102T030032Z-976ae7fc` (2026-11-02 03:00 a 03:24 UTC), estado `SUCCEEDED`.
-**Evidencia:** carpeta `Evidencia/` (recolectada con `recolectar-evidencia-prd.sh`, no se sube a git por contener datos de prod).
+**Evidencia:** carpeta `../EvidenciasAws/prd-primas-arl-202606/recolectada/` (recolectada con `recolectar-evidencia-prd.sh`, no se sube a git por contener datos de prod).
 **Validación con código:** `validar-analisis.py` → **17 de 17 verificaciones PASS**.
 
 ## Conclusión
@@ -30,13 +30,13 @@ Ningún job falló: todo terminó en `SUCCESS`, por eso nada alertó.
 
 ### Dónde está la evidencia de cada problema
 
-Rutas relativas a la carpeta `errores/`. Para abreviar, `EV` = `Evidencia/evidencia-primas-arl-202606/evidencia-primas-arl-202606` (la carpeta queda anidada porque el `.tar.gz` se extrajo dentro de otra con el mismo nombre). La carpeta `Evidencia/` no se versiona en git; vive en el equipo local donde se descargó.
+Rutas relativas a la carpeta `errores/`. Para abreviar, `EV` = `../EvidenciasAws/prd-primas-arl-202606/recolectada/evidencia-primas-arl-202606/evidencia-primas-arl-202606` (la carpeta queda anidada porque el `.tar.gz` se extrajo dentro de otra con el mismo nombre). La carpeta `Evidencia/` no se versiona en git; vive en el equipo local donde se descargó.
 
 | # | Problema | Archivo de evidencia | Campo o línea |
 |---|---|---|---|
 | 1 | Resumen vacío | `EV/s3/config_caso_1_primasArl.json` | `queries.summary` = `[]` (línea 16); `queries.total` (línea 17) y `queries.detail` (línea 9) sí existen |
 | 1 | Resumen vacío | `EV/00-resumen.txt` | Línea 30: `"summary":0,"total":1,"detail":1,"dataPresence":0` |
-| 1 | Resumen vacío | `Evidencia/LOG.txt` | Salida de `jq '.queries.total'` ejecutada en CloudShell (texto de la consulta `total#1`) |
+| 1 | Resumen vacío | `../EvidenciasAws/prd-primas-arl-202606/recolectada/LOG.txt` | Salida de `jq '.queries.total'` ejecutada en CloudShell (texto de la consulta `total#1`) |
 | 2 | SCD apagó 1.203.789 registros | `EV/s3/parametros_extraccion_primas_arl.json` | `metricas_gold_scd` (entrada 209, anterior 1.207.243, apagados 1.203.789, final 1.207.452) |
 | 2 | Extracción incremental | `EV/s3/parametros_extraccion_primas_arl.json` | `datasets_extraidos[arpprod/par_endosos].segmentacion_horizontal`: `modo_segmentacion`, `total_llaves_segmento` = 209, `registros_excluidos_por_segmento` = 1.203.789 |
 | 2 | Extracción incremental | `EV/s3/config_extraccion_primas_arl.json` | `where` de `par_endosos` = `PERIODO <= '202606'` y modo `EXCLUIR_EXTRAIDOS` |
@@ -47,9 +47,9 @@ Rutas relativas a la carpeta `errores/`. Para abreviar, `EV` = `Evidencia/eviden
 | 3 | CSV nunca vacío | `EV/s3/config_caso_1_primasArl.json` | `queries.detail[0].query`: `UNION ALL` con fila de encabezado (`0 AS orden`) |
 | 3 | `sinDatosPeriodo` no se activa | `Backend/Glue/niif-dev-certification/niif_certification.py` | Líneas 573-620 (`exportar_csv_raw`) |
 | — | Entrada de la ejecución y `configKey` usado | `EV/stepfunction/01-estado-y-entrada.json` y `EV/stepfunction/05-configKey-resueltos.json` | `primas-arl/primasArl.json`, modo `SIMPLE` |
-| — | Archivo original descargado | `Evidencia/evidencia-primas-arl-202606.tar.gz` | Paquete completo tal como salió de CloudShell |
+| — | Archivo original descargado | `../EvidenciasAws/prd-primas-arl-202606/recolectada/evidencia-primas-arl-202606.tar.gz` | Paquete completo tal como salió de CloudShell |
 
-Las verificaciones de estas rutas se ejecutan con `python -I validar-analisis.py Evidencia/evidencia-primas-arl-202606/evidencia-primas-arl-202606`.
+Las verificaciones de estas rutas se ejecutan con `python -I validar-analisis.py ../EvidenciasAws/prd-primas-arl-202606/recolectada/evidencia-primas-arl-202606/evidencia-primas-arl-202606`.
 
 ## 2. Flujo y dónde falló
 
@@ -146,7 +146,7 @@ ORDER BY 1 DESC, 2 DESC;
 ```
 Resultado esperado si el análisis es correcto: `act_reg = 1` con 209 registros en total, ninguno con `per_proceso_point = '202606'`.
 
-### Resultado real (ejecutado en prod; evidencia en `errores/evidencia-primas-arl-202606/athena/`)
+### Resultado real (ejecutado en prod; evidencia en `EvidenciasAws/prd-primas-arl-202606/subida-equipo/athena/`)
 
 Validado con `validar-athena.py` (**4 de 4 verificaciones PASS**):
 
@@ -185,8 +185,8 @@ Hallazgos nuevos:
 | `replicar-fallo-en-dev.md` y `replicar-fallo-dev.sh` | Cómo replicar el fallo en DEV, validar destinatarios y agregar un correo |
 | `simular-limpieza-segmentos.py` | Simulación de la propuesta "limpiar los segmentos" (sección 9) |
 | `validar-athena.py` | Valida el CSV real de Athena contra las métricas del SCD (sección 6): `python -I validar-athena.py <carpeta-evidencia>` |
-| `evidencia-primas-arl-202606/` | Evidencia de prod subida al repo por el equipo (incluye `athena/` con el CSV de la sección 6) |
-| `Evidencia/` | Evidencia recolectada de prod (no se versiona; datos sensibles) |
+| `EvidenciasAws/prd-primas-arl-202606/subida-equipo/` | Evidencia de prod subida al repo por el equipo (desde 2026-11-10 fuera de Git) (incluye `athena/` con el CSV de la sección 6) |
+| `EvidenciasAws/prd-primas-arl-202606/recolectada/` | Evidencia recolectada de prod (no se versiona; datos sensibles) |
 
 ## 9. Propuesta de prod: "limpiar los segmentos de Primas ARL"
 

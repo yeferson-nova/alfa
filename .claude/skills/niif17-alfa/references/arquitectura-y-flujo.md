@@ -40,9 +40,9 @@ Evolución de esquema: columna nueva o reordenada continúa; columna eliminada, 
 2. **Configuración:** lambda configuradora lee `cnf-mallas` y `prs-estructuras`, publica 4 JSON en `niif-<amb>-assets/<malla>/` y arranca la Step Function.
 3. **Step Function `niif-<amb>-<malla>`:** extracción (Oracle → Bronce) → ¿hay datos nuevos? → crawler bronce → validación técnica → remediación → Silver de la malla → crawler silver → SCD Gold → crawler gold → evaluador de notificación (simple o compuesta) → job de certificación.
 4. **Certificación:** Athena ejecuta `summary`, `total`, `detail` sobre Gold, genera CSV y `certCode`, escribe filas `PROCESSED → PENDING` en `notification-certification`.
-5. **Notificación:** stream `PENDING` → trigger → job de notificación arma tablas, enlaces cortos y envía el correo (SNS hoy; SES en T1a).
+5. **Notificación:** stream `PENDING` → trigger → job de notificación arma tablas, enlaces cortos y envía el correo por **SES** con plantilla HTML (T1a/T1b; antes SNS). En el diagrama el envío lo hace la lambda; en la implementación lo hace el job (ARQ-22).
 6. **Aprobación:** enlace → API Gateway + Cognito → lambda de certificación (multiaprobador, auditoría) → `CERTIFICATE` / `NO_CERTIFICATE`.
-7. **Transporte:** stream → copia al bucket de transporte → SFTP a FIS.
+7. **Transporte:** stream → `copy-s3-cert` copia a `niif-<amb>-transport/export/<carpeta>/` → la notificación de S3 dispara `datalake-<amb>-niif-send-via-sftp` → FIS. En DEV nunca se completó: copy falló por un índice que faltaba y tragó el error, y el SFTP no tiene logs (ARQ-30, ARQ-26). No Certificar → `move-s3-certification` → `NO-CERTIFICADOS`, sin reprogramar la malla (ARQ-23).
 
 **Contrato entre jobs hoy:** un archivo de estado fijo por malla (`parametros_extraccion.json`) que cada job lee y reescribe. Riesgo conocido (FLU-02): dos ejecuciones se pisan. Dirección objetivo: **manifiesto inmutable por `ejecucion_id`** (ver `[[riesgos-glue-notificacion]]`).
 
@@ -52,4 +52,4 @@ Estados de certificación: `PROCESSED → PENDING → PENDING_APPROVERS → CERT
 Primas Rentas y Primas Endosos (correo compartido), Primas ARL, Auxilios Funerarios (usa `fecDesde`/`fecHasta`), Reserva Matemática ARP y RVI (correo compartido; Silver de 440-458 columnas con lógica actuarial). Jobs genéricos: extracción, validación técnica, remediación, SCD, certificación, notificación. Un job Silver por malla.
 
 ## Lo que aún no se ve (no inventarlo)
-Código del manager, de la cadena final (trigger, copy, move, SFTP), JSON de configuración en S3, una ejecución real con tiempos y costos. Si una respuesta depende de eso, decirlo y pedir la evidencia.
+Ya se tiene el código de manager, trigger, copy, move, evaluador compuesto, certificación y notificación (en `Backend\`). Falta el de `send-via-sftp` (imagen de ECR) y una ejecución real con tiempos y costos. Si una respuesta depende de eso, decirlo y pedir la evidencia.

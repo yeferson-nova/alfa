@@ -11,7 +11,11 @@ Las cifras que produce este sistema se **certifican** por personas del negocio, 
 ## Alcance del equipo
 - **Nuestro:** el sistema de **jobs de Glue** (medallón de los pasos 2 y 3) y las **lambdas y jobs de notificación y certificación** del paso 3.
 - **Contexto, no nuestro por ahora:** programación (manager y configuradores), motores actuariales (pasos 4-7), Subledger DataStage (8), SAP (9). Se leen para entender contratos, no se rediseñan sin que el usuario lo pida.
-- Tareas asignadas: T1 notificaciones (SES, HTML, monitoreo, escenarios), T2 lambda general de configuración, T3 validaciones de reserva matemática. Estado en la memoria (`[[tareas-aws]]`, `[[pendientes]]`).
+- Tareas asignadas y estado (2026-11-10):
+  - **T1a/T1b**, correo por SES con plantilla HTML: probado en QA de punta a punta (el correo llega a la bandeja). Sigue pendiente lo de DevOps: `--SES_SENDER` por defecto y `templatePath` en singular. El enlace de descarga abre la consola de S3 (ARQ-29, decisión pendiente). **T1c y T1d** sin empezar.
+  - **T2**, lambda general de configuración hexagonal: hecha y sin desplegar. Ojo: en DEV ya existe `niif-dev-configuration-general`, de otro desarrollador y sobre la base del código desplegado; hay que aclarar cuál queda.
+  - **T3**, validaciones de reserva matemática: pendiente.
+  - En curso: alinear la cadena de notificación al diagrama y a la calidad de código, y limpiar DEV. Estado en `[[pendientes]]`, `[[notificaciones-vs-arquitectura]]` e `[[inventario-lambdas]]`.
 
 ## Antes de empezar cualquier trabajo (obligatorio)
 1. Leer el índice de `CLAUDE.md` (raíz del repo) y abrir **solo** las notas de `MemoriaIa\` que el tema requiera. Protocolo completo en [references/memoria-ia.md](references/memoria-ia.md).
@@ -37,18 +41,26 @@ Las cifras que produce este sistema se **certifican** por personas del negocio, 
 5. **Idempotencia:** el mismo evento dos veces no repite efectos (correo, escritura, transporte). Reprocesar un periodo da el mismo resultado.
 6. **Nunca se silencia un error.** Se clasifica con la taxonomía, se registra en JSON y se relanza.
 7. **Montos exactos y costo consciente en toda ETL:** importes en DECIMAL con precisión y redondeo declarados, calculados una vez y cuadrados entre capas (filas y valores). Rendimiento y costo medidos: DPU-horas de Glue, timeouts reales, Athena con workgroup y tope de escaneo, columnas explícitas (nunca `SELECT *`), particiones. Medir antes de optimizar. Todo cambio de ETL declara su impacto en montos, tiempo, cómputo y consultas.
-8. **Sin datos personales** en logs, correos, repositorio ni ambientes no productivos (Ley 1581). **El repo es público**: nada de evidencia de prod, correos, IDs de cuentas, IPs ni tokens.
+8. **Sin datos personales** en logs, correos, repositorio ni ambientes no productivos (Ley 1581). El repo es **privado desde el 2026-11-09** (antes fue público y lo expuesto sigue en el historial): igual, nada de evidencia, correos, IDs de cuenta, IPs ni tokens en archivos versionados. La evidencia sacada de AWS va en `EvidenciasAws\<ambiente>-<tema>\`, carpeta ignorada por Git.
 9. **Todo por IaC y pipeline** (Terraform/Terragrunt, Jenkins, build once deploy many). Nada creado a mano en consola. DevOps despliega; nosotros entregamos código, artefacto versionado y `config/`.
 10. **Validar con evidencia, no suponer.** Cada afirmación sobre el comportamiento real se comprueba (código, consulta, script PASS/FAIL). Lo no comprobado se marca **hipótesis** o **propuesta**.
 
 ## Forma de trabajar con el usuario
 - Español, conciso, palabras simples cuando lo pida. Plan antes de trabajo pesado.
-- No hay acceso directo a AWS: dar pasos de consola y comandos de CloudShell **de solo lectura** para prod; el usuario trae la evidencia.
+- No hay acceso directo a AWS desde aquí. El usuario (Desarrollo) solo entra a **DEV** y corre ahí los comandos de CloudShell. **QA y PRD los opera DevOps**: para esos ambientes se entregan paquetes y comandos de solo lectura, y la evidencia vuelve por el usuario.
+- Los comandos de CloudShell empiezan con `export AWS_PAGER=""` y no imprimen tokens, URL firmadas ni correos.
+
+## Estado real de AWS (no suponerlo por el nombre)
+- **DEV es compartido.** Otras mallas y equipos (PCR Vida, Generales, Satélites, Previsional, Emisiones, clientes y SMB) y la plataforma (CloudGuard, Control Tower) tienen recursos y corridas activas ahí. Solo tocamos lo de nuestro alcance.
+- Qué se usa se decide con `Backend\cloudshell-inventario\evidencia-uso-dev.sh` (invocaciones de 90 días, disparadores, API y WAF, Step Functions, streams), nunca por el nombre. La clasificación vigente está en `Docs\06-brechas\limpieza-dev-recursos.md`.
+- Lo que tiene etiquetas de Terraform (`terraform-aws-modules`, `ManagedBy`) se cambia o se retira por Terraform/DevOps, no desde la consola. No se borra nada sin un dueño confirmado.
+- La cadena vigente del paso 3 en DEV es: el API `datalake-dev-niif-api-gtw` (con WAF), `niif-dev-short-link-redirect`, `niif-post-login`, `niif-dev-certification`, trigger, copy, move, el evaluador compuesto y `datalake-dev-niif-send-via-sftp`. El API `Certificación API` es viejo, no tiene WAF y su callback sigue en Cognito (SEG-14).
+- **Certificar → FIS no se ha probado de punta a punta en DEV** (ARQ-30). No dar el transporte por funcionando.
 - Documentar en dos lugares: `Docs\` (humanos, prosa completa) y `MemoriaIa\` (IA, notas cortas que apuntan a Docs). No duplicar.
 - Toda brecha nueva lleva ID `SEG-xx`, `COS-xx`, `ARQ-xx` o `CUM-xx`, igual en la nota y en `Docs\06-brechas\`.
 - Esta skill no lleva código. Los ejemplos de referencia viven en el repo:
   - Job de Glue hexagonal: `Backend\Glue\reposNew\niif-dev-notification-certification\`.
-  - Lambda hexagonal: `Backend\Lamnbdas\inventario-aws\t2 unificadas\sc-niif-configurador-mallas\`.
+  - Lambda hexagonal: `Backend\Lamnbdas\inventario-aws\t2 unificadas\sc-niif-configurador-mallas\` (desplegaría como `datalake-<amb>-niif-configurador-mallas-lambda`).
 
 ## Mantener esta skill
 Si cambia un lineamiento (por decisión del usuario, un documento nuevo del banco o el diagrama), actualizar la referencia afectada y la nota de memoria correspondiente en el mismo cambio. Las reglas de aquí resumen; el detalle vive en `Docs\` y `MemoriaIa\`.

@@ -92,7 +92,7 @@ Hay cuatro caminos verificados:
 
 ### CUM-01. El repositorio contiene evidencia de producción, correos reales y el ID de cuenta
 El skill del proyecto declara que el repo es **público**; no pude comprobar su visibilidad (`gh` no está instalado). Versionados en Git están:
-- `errores\evidencia-primas-arl-202606\` (ejecuciones de `niif-prd-*`, configuración real de PRD, consultas de Athena).
+- `EvidenciasAws\prd-primas-arl-202606\subida-equipo\` (ejecuciones de `niif-prd-*`, configuración real de PRD, consultas de Athena).
 - Correos de personas en `Backend\SNS\*.subs.json` y en `Backend\htmlNew\`.
 - El ID de cuenta `533267035849` en 330 archivos.
 Ley 1581 (datos personales) y los lineamientos del banco exigen que esto no esté en un repositorio con acceso amplio.

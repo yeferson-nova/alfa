@@ -25,8 +25,7 @@ dist/
 .ruff_cache/
 .ipynb_checkpoints/
 
-# Evidencia capturada de prod (datos sensibles: correos, ids de cuenta/Cognito); no versionar
-errores/Evidencia/
-
-
 .claude
+# Evidencia sacada de AWS, dev y prod (ARN, cuenta, correos, ids de Cognito): no versionar; solo el LEEME
+EvidenciasAws/*
+!EvidenciasAws/LEEME.md

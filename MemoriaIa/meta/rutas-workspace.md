@@ -7,14 +7,14 @@ actualizado: 2026-11-09
 Raíz: `C:\Users\rdpuser\Git\`. Mapa humano en `Docs\00-LEEME.md`.
 
 ## Backend\ (código y entorno local)
-- `inventario\`: resto de la extracción por script de la cuenta AWS DEV, ya casi vacío: `identidad.json`, `_errores.log`, `logs\` (1 archivo vacío), `athena\`, `dynamodb\` e `iam\` (vacías) y `lambdas\codigo`/`config` por borrar (copiados). Incompleta; ver [[inventario-lambdas]].
+- `inventario\` / `inventario-archivo\`: ya no están en `Backend\`; la extracción de DEV se movió a `EvidenciasAws\dev-inventario-cuenta\` (2026-11-10).
 - **Todo lo organizado por servicio** (trabajo en la raíz, el resto en `pruebas-*`): `Lamnbdas\` (+ `pruebas-lambda\`), `Glue\`, `Eventos\`, `StepFunctions\` (6 SF + `pruebas-stepfunctions\`), `SNS\` (3 tópicos: `ALFA-DEV-DATALAKE-Critical`/`Warning` y `niif-dev-certification-email`), `S3\` (8 buckets del pipeline). Cada uno con `LEEME.md`.
 - `Lamnbdas\<nombre-lambda>\`: carpeta de trabajo de las 7 lambdas de la tarea con su `.py` (auxilios real; 5 copias de la `configurador` con `ORIGEN.md`; manager sin código, `PENDIENTE.md`).
 - `Glue\<job>\`: 11 jobs de Glue de trabajo (los que invocan las 6 Step Functions) con su `.py` y `job.json`; `Glue\pruebas-glue\` con los otros 358 jobs y sus scripts. `Glue\reposNew\<job>\`: jobs reescritos con el estándar hexagonal; hoy `niif-dev-notification-certification` (SES), ver [[job-notificacion-ses]]. También `Glue\crawlers\` (3 de la SF) y `Glue\catalogo\` (3 bases `niif-dev` con sus tablas). Movido desde `inventario\glue\`, que quedó vacío. Ver `Glue\LEEME.md`.
 - `Eventos\`: 4 reglas de EventBridge que tocan nuestras SF, jobs y lambdas (finalizador ARL y las 3 `ALFA-DEV-DATALAKE-*` hacia `PipelineObserver`); `Eventos\pruebas-eventos\` con las otras 18. Movido desde `inventario\eventos\` (ya no existe ahí). Ver `Eventos\LEEME.md`.
 - `Lamnbdas\niif-dev-notification-certification-trigger\`, `niif-dev-move-s3-certification\`, `niif-dev-copy-s3-cert\`, `niif-dev-composite-notification-evaluator\`: código DEV del flujo de certificación (descargado 2026-11-10, solo lectura, con `ORIGEN.md`).
 - `Lamnbdas\inventario-aws\`: `lambdas.md`, `step-functions-niif.md` y `spike-primas-rentas\` (lambda general por capas con pruebas). Movido aquí desde `Docs\05-arquitectura\`; ver [[inventario-lambdas]].
-- `cloudshell-inventario\`: `inventario.sh` (solo lectura) y su zip para repetir la extracción en CloudShell.
+- `cloudshell-inventario\`: `inventario.sh` (solo lectura) y su zip para repetir la extracción en CloudShell; `evidencia-uso-dev.sh` (solo lectura: uso real de lambdas, Glue, SF, streams, API GW + WAF en 90 días) (salida en `EvidenciasAws\`).
 - `localstack\`: entorno AWS local (docker compose), ver [[entorno-local-localstack]]. `.env` con token, excluido de Git; no leerlo.
 - `htmlNew\`: `newUx\` (5 plantillas de producción, diseño nuevo), `anterior\` (diseño previo), `mockup\`, `previews\` (15 correos de ejemplo) y `herramientas\` (generador y validador). Mapa en su `README.md`.
 - `reservas_matematicas_cert\`: 5 plantillas HTML del correo de certificación, ver [[correo-notificacion]].
@@ -44,9 +44,14 @@ Raíz: `C:\Users\rdpuser\Git\`. Mapa humano en `Docs\00-LEEME.md`.
 ## MemoriaIa\ (para IA)
 Subcarpetas: `meta\`, `contexto\`, `tareas\`, `estandares\`, `hu\`, `brechas\`. Los nombres de nota son únicos en toda la memoria, así que `[[nota]]` funciona sin importar la subcarpeta.
 
+## EvidenciasAws\ (salidas de AWS, ignorada salvo `LEEME.md`)
+- Una carpeta por extracción: `<ambiente>-<tema>\` (sin fecha, por preferencia del usuario). Convención en `EvidenciasAws\LEEME.md`. Movidas aquí el 2026-11-10 y sacadas de Git.
+- `dev-uso-recursos\` (salida de `evidencia-uso-dev.sh`; análisis en `Docs\06-brechas\limpieza-dev-recursos.md`), `dev-inventario-cuenta\` (antes `Backend\inventario-archivo\`), `dev-inventario-lambdas\` (antes `Backend\Lamnbdas\inventario-aws\extraccion\`), `prd-primas-arl-202606\subida-equipo\` y `\recolectada\` (antes `errores\evidencia-primas-arl-202606\` y `errores\Evidencia\`).
+- Los scripts de `errores\` reciben la carpeta como argumento: pasar la ruta nueva.
+
 ## errores\ (incidente en prod Primas ARL 202606, 2026-11-05)
 Detalle del incidente en [[inprod-primas-arl-202606]].
 - Documentos: `errores.md`, `analisis-flujo-primas-arl-202606.md`, `replicar-fallo-en-dev.md`.
 - Scripts: `recolectar-evidencia-prd.sh` (CloudShell prod, solo lectura), `replicar-fallo-dev.sh` (solo DEV), `validar-analisis.py`, `validar-athena.py`, `simular-limpieza-segmentos.py`, `ver-logs-evidencia.py`.
-- Evidencia: `evidencia-primas-arl-202606\` (subida por el equipo cuando el repo era público, hoy privado; sensible) y `Evidencia\` (ignorada).
-- En la raíz del repo: `.gitignore` (ignora `errores/Evidencia/`) y `.gitattributes` (`*.sh` con LF).
+- Evidencia: movida a `EvidenciasAws\prd-primas-arl-202606\` (ver arriba).
+- En la raíz del repo: `.gitignore` (ignora `EvidenciasAws/*` salvo el `LEEME.md`) y `.gitattributes` (`*.sh` con LF).

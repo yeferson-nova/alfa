@@ -142,7 +142,7 @@ FROM "niif-prd-gold-catalog-db"."scd_primas_arl"
 GROUP BY 1, 2
 ORDER BY 1 DESC, 2 DESC;
 ```
-Archivo: `errores/evidencia-primas-arl-202606/athena/SELECT act_reg, per_proceso_point COUNT() AS registros.csv` (49 filas).
+Archivo: `EvidenciasAws/prd-primas-arl-202606/subida-equipo/athena/SELECT act_reg, per_proceso_point COUNT() AS registros.csv` (49 filas).
 
 ### 6.2 Cómo leerlo
 Cada fila es un grupo: cuántos registros (`registros`) hay con ese `act_reg` y ese `per_proceso_point` (periodo de proceso, formato `AAAAMM`).
@@ -191,12 +191,12 @@ Cada paso responde una pregunta, se calcula sobre el CSV y se compara con otra f
 
 **Opción A: script (recomendado).** Hace los 4 primeros chequeos de forma automática y sale con código 0 si todos pasan:
 ```
-python -I errores/validar-athena.py errores/evidencia-primas-arl-202606
+python -I errores/validar-athena.py EvidenciasAws/prd-primas-arl-202606/subida-equipo
 ```
 
 **Opción B: a mano en PowerShell**, sobre el mismo CSV:
 ```powershell
-$csv = Import-Csv "errores\evidencia-primas-arl-202606\athena\SELECT act_reg, per_proceso_point COUNT() AS registros.csv"
+$csv = Import-Csv "EvidenciasAws\prd-primas-arl-202606\subida-equipo\athena\SELECT act_reg, per_proceso_point COUNT() AS registros.csv"
 ($csv | Where-Object { $_.act_reg -eq '1' } | Measure-Object registros -Sum).Sum                                  # 1) 209
 @($csv | Where-Object { $_.act_reg -eq '1' -and $_.per_proceso_point -eq '202606' }).Count                        # 3) 0
 ($csv | Measure-Object registros -Sum).Sum                                                                        # 4) 1207452
@@ -206,7 +206,7 @@ $csv = Import-Csv "errores\evidencia-primas-arl-202606\athena\SELECT act_reg, pe
 ```
 Los valores del comentario de cada línea son los obtenidos con el CSV real.
 
-**Opción C: contraste con las métricas del SCD** (para los pasos 2, 4 y 5), con el archivo `errores/evidencia-primas-arl-202606/s3/parametros_extraccion_primas_arl.json`, campo `metricas_gold_scd`:
+**Opción C: contraste con las métricas del SCD** (para los pasos 2, 4 y 5), con el archivo `EvidenciasAws/prd-primas-arl-202606/subida-equipo/s3/parametros_extraccion_primas_arl.json`, campo `metricas_gold_scd`:
 ```
 total_insertados_nuevos = 209
 total_gold_anterior     = 1.207.243
@@ -327,7 +327,7 @@ Todos son de **solo lectura**. Cuenta de prod (`992382496548`), región **us-eas
 
 ## 8. Cómo verlo con los logs que ya tenemos (sin entrar a AWS)
 
-La evidencia capturada (`errores/evidencia-primas-arl-202606/`) ya permite reconstruir qué pasó, minuto a minuto, sin acceso a prod.
+La evidencia capturada (`EvidenciasAws/prd-primas-arl-202606/subida-equipo/`) ya permite reconstruir qué pasó, minuto a minuto, sin acceso a prod.
 
 ### 8.1 Qué registros hay y para qué sirven
 
@@ -344,7 +344,7 @@ La evidencia capturada (`errores/evidencia-primas-arl-202606/`) ya permite recon
 
 ### 8.2 Verlo todo junto (un comando)
 ```
-python -I errores/ver-logs-evidencia.py errores/evidencia-primas-arl-202606
+python -I errores/ver-logs-evidencia.py EvidenciasAws/prd-primas-arl-202606/subida-equipo
 ```
 No necesita AWS. Imprime cinco bloques: **A** estados de la Step Function en orden, **B** corridas de Glue de esa ejecución con duración, **C** log de la lambda, **D** métricas escritas por los jobs, **E** límites de lo capturado. Fragmentos de la salida real:
 
@@ -386,7 +386,7 @@ El orden de los hechos es el del fallo: **extracción incremental (03:00) → Si
 Desde la raíz del repo (`alfa`):
 
 ```powershell
-$b = "errores\evidencia-primas-arl-202606"
+$b = "EvidenciasAws\prd-primas-arl-202606\subida-equipo"
 
 # Log de la lambda (hora UTC)
 $e = Get-Content "$b\logs\lambda-niif-prd-composite-notification-evaluator.json" -Raw | ConvertFrom-Json
