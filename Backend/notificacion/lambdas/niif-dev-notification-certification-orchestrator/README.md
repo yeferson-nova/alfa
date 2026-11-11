@@ -161,12 +161,22 @@ Para ejecutarlas: `python -m pytest --cov`, o `tox`.
 Para empaquetar: `scripts/package.sh` (o `package.ps1`) genera `dist/niif-dev-notification-certification-orchestrator-1.0.0.zip`.
 
 ## Lo que debe hacer DevOps (Terraform)
-1. **Índice nuevo (O-2):** en `niif-<amb>-notification-certification`, el índice global `status-pendingDate-index`:
-   - llave de partición `status` (S) y de orden `pendingDate` (S);
-   - proyección `ALL`;
-   - el mismo modo de cobro que la tabla.
+1. **Índice nuevo (O-2)** en la tabla de notificaciones:
 
-   DynamoDB lo llena en segundo plano, sin detener la tabla.
+   | Dato | Valor |
+   |---|---|
+   | Tabla | `niif-<amb>-notification-certification` (en DEV: `niif-dev-notification-certification`). Su llave primaria no cambia: `useCaseId` (S) + `executionId` (S) |
+   | Tipo | Índice secundario **global** (GSI), nuevo |
+   | Nombre | `status-pendingDate-index` (va en el JSON global como `dynamodb.pending_index`) |
+   | Llave de partición | columna `status`, tipo String |
+   | Llave de orden | columna `pendingDate`, tipo String: fecha ISO 8601 con zona, por ejemplo `2026-11-11T10:00:00-05:00` |
+   | Proyección | `ALL`: el reprocesador necesita `certCode`, `configBucket`, `globalConfigKey`, `sendLock`, `sendAttempts`, etc. |
+   | Capacidad | El mismo modo de cobro que la tabla (bajo demanda o aprovisionada) |
+   | Quién escribe esas columnas | El job de **certificación**, al marcar `PENDING`: pone `status = PENDING` y `pendingDate`. La orquestadora y el API cambian `status` después (`SENT`, `CERTIFICATE`, `TRANSPORT`...) |
+   | Quién lo lee | El **reprocesador de la orquestadora**: consulta `status = PENDING AND pendingDate < (ahora - reprocess_after_minutes)` |
+   | Permiso | `dynamodb:Query` sobre `arn:...:table/niif-<amb>-notification-certification/index/status-pendingDate-index` para el rol de la orquestadora |
+   | Efecto al crearlo | DynamoDB lo llena en segundo plano; la tabla sigue funcionando. Los registros sin `pendingDate` no entran al índice |
+
 2. **La función:**
    - handler `lambda_function.lambda_handler`, Python 3.12, 120 s y 256 MB (propuesta);
    - formato de log `Text`;

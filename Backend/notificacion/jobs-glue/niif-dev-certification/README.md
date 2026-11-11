@@ -336,6 +336,23 @@ Se agregan antes de reemplazar el job; el job anterior las ignora.
 - En DEV hay al menos dos JSON globales: `configs/certification/json_global_notif_cert.json` y `previsional/config/json_global_notif_cert.json`.
 - En QA y PRD además hay que comprobar `console_url.base_url` (CER-H4).
 
+### 2b. Índice nuevo en la tabla de notificaciones (decisión O-2)
+Lo usa la orquestadora para encontrar los `PENDING` atascados y reprocesarlos; se pide aquí porque las columnas las escribe este job.
+
+| Dato | Valor |
+|---|---|
+| Tabla | `niif-<amb>-notification-certification` (en DEV: `niif-dev-notification-certification`). Su llave primaria no cambia: `useCaseId` (S) + `executionId` (S) |
+| Tipo | Índice secundario **global** (GSI), nuevo |
+| Nombre | `status-pendingDate-index` (va en el JSON global como `dynamodb.pending_index`) |
+| Llave de partición | columna `status`, tipo String |
+| Llave de orden | columna `pendingDate`, tipo String: fecha ISO 8601 con zona, por ejemplo `2026-11-11T10:00:00-05:00` |
+| Proyección | `ALL`: el reprocesador necesita `certCode`, `configBucket`, `globalConfigKey`, `sendLock`, `sendAttempts`, etc. |
+| Capacidad | El mismo modo de cobro que la tabla (bajo demanda o aprovisionada) |
+| Quién escribe esas columnas | El job de **certificación**, al marcar `PENDING`: pone `status = PENDING` y `pendingDate`. La orquestadora y el API cambian `status` después (`SENT`, `CERTIFICATE`, `TRANSPORT`...) |
+| Quién lo lee | El **reprocesador de la orquestadora**: consulta `status = PENDING AND pendingDate < (ahora - reprocess_after_minutes)` |
+| Permiso | `dynamodb:Query` sobre `arn:...:table/niif-<amb>-notification-certification/index/status-pendingDate-index` para el rol de la orquestadora |
+| Efecto al crearlo | DynamoDB lo llena en segundo plano; la tabla sigue funcionando. Los registros sin `pendingDate` no entran al índice |
+
 ### 3. Reemplazo del job real (después de la prueba)
 - Actualizar `niif-dev-certification` con la definición de `config\job.dev.json` y los artefactos nuevos.
 - Hacerlo en el mismo cambio que la orquestadora y el job de notificación nuevo (decisión O-4).
