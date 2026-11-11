@@ -50,6 +50,11 @@ guardar() {
 log "== Evidencia enlaces Cognito | ENV=$ENV | $(date -u +%Y-%m-%dT%H:%M:%SZ) =="
 guardar "$SALIDA/00-identidad.json" aws sts get-caller-identity
 log "Cuenta/rol: ver 00-identidad.json (no se imprime aqui)"
+ENV_MAYUS="$(echo "$ENV" | tr '[:lower:]' '[:upper:]')"
+if ! grep -q "ALFA-${ENV_MAYUS}-" "$SALIDA/00-identidad.json" 2>/dev/null; then
+  log "!! ATENCION: el rol de esta sesion no parece de ${ENV_MAYUS}; ENV no coincide con la cuenta. Se detiene."
+  exit 1
+fi
 
 # ----------------------------------------------------------------------------
 # 1. S3: bucket correcto vs el escrito en el correo, y versiones de los JSON
@@ -306,7 +311,7 @@ PY
   guardar "$SALIDA/apigw/${api}-authorizers.json" aws apigateway get-authorizers --rest-api-id "$api" \
     --query "items[].{name:name,type:type,providerARNs:providerARNs,identitySource:identitySource}"
   guardar "$SALIDA/apigw/${api}-resources.json" aws apigateway get-resources --rest-api-id "$api" --embed methods \
-    --query "items[].{path:path,methods:keys(resourceMethods)}"
+    --query "items[].{path:path,methods:keys(resourceMethods || `{}`)}"
 done
 
 # ----------------------------------------------------------------------------
@@ -354,16 +359,16 @@ log "  ver lambdas/*.json (valores solo de variables de dominio, URL, tabla, buc
 #    (solo cuenta y muestra caso/accion/fecha; nunca el token ni la URL)
 # ----------------------------------------------------------------------------
 log ""
-log "## 8. Enlaces cortos guardados con espacio o %20 en la URL"
+log "## 8. Enlaces cortos con espacio en el host (patron -%20 o "- "; el %20 del scope es normal)"
 for tabla in $(aws dynamodb list-tables --query "TableNames[?contains(@,'short')]" --output text 2>/dev/null); do
   guardar "$SALIDA/dynamodb/${tabla}-cuenta.json" aws dynamodb scan --table-name "$tabla" \
     --filter-expression "contains(#u, :a) OR contains(#u, :b)" \
     --expression-attribute-names '{"#u":"url"}' \
-    --expression-attribute-values '{":a":{"S":"%20"},":b":{"S":" "}}' --select COUNT
+    --expression-attribute-values '{":a":{"S":"-%20"},":b":{"S":"- "}}' --select COUNT
   guardar "$SALIDA/dynamodb/${tabla}-muestra.json" aws dynamodb scan --table-name "$tabla" \
     --filter-expression "contains(#u, :a) OR contains(#u, :b)" \
     --expression-attribute-names '{"#u":"url","#a":"action","#c":"creationDate"}' \
-    --expression-attribute-values '{":a":{"S":"%20"},":b":{"S":" "}}' \
+    --expression-attribute-values '{":a":{"S":"-%20"},":b":{"S":"- "}}' \
     --projection-expression "useCaseId,#a,#c" --max-items 50
   log "  $tabla: $(tr -d '\n ' < "$SALIDA/dynamodb/${tabla}-cuenta.json" 2>/dev/null)"
 done
