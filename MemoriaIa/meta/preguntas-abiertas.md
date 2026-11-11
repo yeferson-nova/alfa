@@ -5,15 +5,15 @@ actualizado: 2026-11-09
 # Preguntas abiertas
 
 ## Surgidas de los estándares (fase 2)
-- **SES y Grafana no aparecen en ningún estándar entregado.** Los estándares usan SNS + CloudWatch + CloudTrail. ¿SES y Grafana son decisiones ya aprobadas por Arquitectura o hay que justificarlas? ([[hu-gobierno-ingestas]], [[hu-remediacion]])
-- ¿SNS → SES aplica solo al correo de negocio (certificación) y las alarmas técnicas siguen en SNS? (propuesta: sí)
-- ¿Podemos obtener los lineamientos citados pero no entregados: CI/CD V1, IaC Terraform GTC-GDD-004, Modelo de Seguridad de Datos y los documentos técnicos 01, 02 y 03? ([[marco-normativo]])
-- ¿Los temas transversales 01 a 04 (HUs) ya aplican a NIIF 17 o solo a Desmonte DWH, FUD y Radar 360? Dicen "toda iniciativa nueva", pero ninguno menciona NIIF 17.
+- ~~¿SES y Grafana están aprobados por Arquitectura?~~ **Resuelta (2026-11-10):** SES está en el diagrama de arquitectura (icono "Mensaje", paso 53). **Grafana sale de nuestro alcance:** dejamos el ciclo de observabilidad completo en logs y métricas, listo para conectar un Grafana si se requiere. Lo que falte en el diagrama se le sugiere al arquitecto (ver [[notificaciones-vs-arquitectura]], ARQ-31).
+- ~~¿Las alarmas técnicas siguen en SNS?~~ **Resuelta (2026-11-10): no.** Todo correo, de negocio y de alerta técnica, sale por el mismo SES. **Abierto:** cuál es el grupo de soporte que recibe las alertas técnicas.
+- **Parcialmente resuelta (2026-11-10):** llegó `Docs\02-estandares-banco\GobiernoVersionameinto-DevOps.docx` ([[est-gobierno-devops-niif]]). Ese documento remite a `LINEAMIENTO PARA EL VERSIONAMIENTO DE CODIGO V2.pdf` y `LINEAMIENTO PARA IAC CON TERRAFORM V1.pdf`, que siguen sin entregarse. Siguen faltando también el Modelo de Seguridad de Datos y los documentos técnicos 01 a 03.
+- ~~¿Las HU transversales 01 a 04 aplican a NIIF 17?~~ **Resuelta (2026-11-10): por ahora quedan fuera.** El foco es normalizar la arquitectura de notificaciones. Las fichas `hu-*` quedan como referencia.
 - ¿El paso 2 (Preparación) usa Glue DataBrew como Nuevos Cargues? ([[est-databrew]])
-- ¿El flujo de aprobación de Nuevos Cargues (frontend `dataprep-stg-approval-frontend`) se puede reutilizar para Certificar / No certificar? ([[est-nuevos-cargues]])
+- ~~¿Se reutiliza el frontend de aprobación de Nuevos Cargues?~~ **Resuelta (2026-11-10): no.** El componente 3 del diagrama define su propio camino: WAF → API Gateway → `postLogin` → Cognito ↔ Azure AD → Lambda Notificación / Zona Certificación.
 - ¿Trabajamos como proveedor externo? Si es así, aplica el reporte SonarQube inicial y final ([[est-codigo-seguro]] 5.2).
 - ¿Cuál es el ticket Jira del proyecto? Es obligatorio en ramas y commits ([[est-versionamiento-codigo]]).
-- ¿El CSV de certificación contiene datos personales? Define cifrado, expiración y si viola "notificaciones sin datos personales" ([[hu-remediacion]]).
+- ~~¿El CSV de certificación tiene datos personales?~~ **Resuelta (2026-11-10, usuario): no.** Los de DEV y QA son datos de ejemplo. Matiz: el CSV de Primas trae `NID_NUMERO_IDENTIFICACION_TERCERO` y `NOM_TERCERO`; en la muestra son NIT de empresas, pero en prod podría haber personas naturales. Revisarlo antes de producción.
 
 ## Paso 3
 - El inventario sugiere respuestas a tres preguntas: endpoint de certificación, canal del correo y qué pasa sin certificación. Ver [[inventario-lambdas]]. Falta confirmarlas con el equipo.

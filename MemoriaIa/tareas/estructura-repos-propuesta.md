@@ -45,3 +45,13 @@ actualizado: 2026-11-05
 ## Pendientes de esta nota
 - Carpetas sobrantes creadas por error: `Backend\Glue\estructura-nueva\` y `Backend\reposEstandar\`. Decidir si se borran.
 - Hallazgos de integridad de Glue (Gold SCD, sin compuerta de calidad, concurrencia): se tratan después de cerrar esta estructura.
+
+- **Ajuste obligatorio (2026-11-10):** los nombres siguen [[est-gobierno-devops-niif]]: repos `sc-datalake-niif-*` y `data-datalake-niif-*` (no `sc-niif-*` ni `data-niif-*`); lambdas y jobs `niif-{env}-*`; `src/lambda_function.py` como handler (el resto del código, modular, también dentro de `src/`) y la carpeta `test/` en singular. **Entregamos un zip con el nombre de la lambda (ej. `niif-dev-composite-notification-evaluator.zip`) y DevOps hace el commit.** Revisar esta propuesta contra eso.
+
+## Propuesta para la cadena de notificación (2026-11-10, sin aprobar)
+- **Una carpeta por componente en `Backend\notificacion\`, con el nombre del recurso AWS** (ese mismo nombre lleva el zip que se entrega). Cada carpeta es lo que irá en el repo de DevOps: `src/lambda_function.py` (o el script del job) + `src/<package>/{domain,application,adapters/{inbound,outbound},config}`, `test/`, `config/`, `eventos/`, README, `pyproject.toml`, `tox.ini`, `sonar-project.properties` y `scripts/package.sh`. El código desplegado original va en `legado/`, que no entra al zip.
+- **Componentes (8):** trigger, evaluador compuesto, copy, move, `niif-dev-certification` (certificar/rechazar), `niif-dev-short-link-redirect`, `niif-post-login` y el job `niif-dev-notification-certification` (hoy en `Glue\reposNew\`).
+- **Código común** (estados, mapa de carpetas ARQ-24, log JSON con `ejecucion_id`): una sola fuente en `Backend\notificacion\_shared\` que el empaquetado copia en cada zip. Propuesta: falta confirmar con DevOps si aceptan capas (layers).
+- **Configuración y plantillas:** `config-casos\` guarda los JSON con las consultas, con los destinatarios cambiados por marcadores; `plantillas-correo\` viene de `htmlNew`.
+- **No tenemos el código fuente** de `niif-dev-short-link-redirect` (la carpeta local solo trae librerías) ni de `niif-post-login`: bajarlos con `codigo-actual-dev.sh`.
+- La lambda `niif-dev-certification` empaqueta numpy y pandas.

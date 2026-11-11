@@ -12,7 +12,7 @@ Marcar cada punto como cumple, no cumple (con evidencia) o no aplica. Lo que no 
 - [ ] Idempotente: el mismo evento dos veces no repite efectos; transiciones de estado condicionales.
 - [ ] Cobertura de código nuevo > 80 %, Quality Gate de SonarQube en verde contra la línea base.
 - [ ] README con contrato, argumentos o variables, permisos mínimos, despliegue y vuelta atrás.
-- [ ] Commit `<tipo>-<TICKET>-<asunto>`; nada sensible en el diff (el repo fue público; evidencia solo en `EvidenciasAws\`).
+- [ ] Entrega en un zip con el nombre del recurso (`niif-<amb>-<nombre>.zip`) con `src/lambda_function.py` (o el script del job), `test/` y README; DevOps hace el commit. Nada sensible en el zip (evidencia solo en `EvidenciasAws\`).
 
 ## Datos (jobs de Glue)
 - [ ] Columnas explícitas, filtro por periodo, particiones.

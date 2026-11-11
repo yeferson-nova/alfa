@@ -1,12 +1,16 @@
 ---
 tipo: diseno
-actualizado: 2026-11-03
+actualizado: 2026-11-10
 ---
 # Monitoreo continuo a Grafana (en iteración)
 
 Humano: `Docs\06-brechas\monitoreo-continuo-grafana.md`.
 
 ## Decisiones del usuario
+- **Cambio de alcance (2026-11-10, manda sobre lo de abajo):**
+  - Grafana **ya no es tarea nuestra**. Entregamos el ciclo de observabilidad completo en logs JSON, métricas EMF y alarmas de CloudWatch, listo para conectar un Grafana si se requiere.
+  - Las alertas técnicas salen por el **mismo SES** que el correo de negocio, al grupo de soporte (pendiente: cuál es ese grupo).
+  - Lo que falte en la arquitectura se le sugiere al arquitecto (ARQ-31 en [[notificaciones-vs-arquitectura]]).
 - Soporte **no** se entera por email: la tarea 1c ([[tareas-aws]]) pasa a ser un ciclo de monitoreo continuo con logs hacia Grafana.
 - Alcance: toda la solución NIIF 17, **solo del lado AWS**.
 - Grafana: **no definido** (dónde corre, quién lo administra).

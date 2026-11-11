@@ -67,7 +67,7 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - [[job-notificacion-ses]] - job de Glue de notificación reescrito para enviar por SES (T1a), en `Backend\Glue\reposNew\`; implementado, no desplegado
 - [[estructura-repos-propuesta]] - estructura de repos y de archivos (lambdas, jobs de Glue, config, librería), decisiones del usuario, plantilla de DevOps y tablas por malla; propuesta en iteración
 - [[reunion-diseno-pcr]] - notas de la reunión de explicación del diseño PCR (2026-11-10), en curso
-- [[monitoreo-grafana]] - monitoreo y propuesta de dos planos (técnico/negocio, SNS, EventBridge, ServiceNow), pendiente de validar (humano: `Tareas\T1-notificaciones\propuesta-observabilidad-eventos.md`)
+- [[monitoreo-grafana]] - observabilidad: Grafana fuera de alcance (2026-11-10); logs, métricas y alarmas listos, alertas técnicas por SES; antes: propuesta de dos planos (técnico/negocio, SNS, EventBridge, ServiceNow), pendiente de validar (humano: `Tareas\T1-notificaciones\propuesta-observabilidad-eventos.md`)
 
 **estandares** (lineamientos y manuales de Alfa)
 - [[est-etl]] - estándar ETL GTC-GDD-010: nombres, validación, logging, cuadre de volúmenes
@@ -76,6 +76,7 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - [[est-codigo-seguro]] - SonarQube GTC-GDD-003: línea base, cobertura > 80 %, comité de cambios
 - [[est-databrew]] - manual de recetas Glue DataBrew (estado actual de preparación)
 - [[est-nuevos-cargues]] - manual de Nuevos Cargues: precedente de aprobación por correo
+- [[est-gobierno-devops-niif]] - **gobierno DevOps NIIF 17** (2026-11-09): nombres `niif-{env}-*`, repos `sc-datalake-niif-*` / `data-datalake-niif-*`, `src/lambda_function.py` como handler + módulos hexagonales, `test/`, cobertura 70 %; entregamos un zip con el nombre de la lambda y DevOps hace el commit
 - [[est-desarrollo-hexagonal]] - **estándar propio** para todo código Python: arquitectura hexagonal, sin valores quemados, errores con taxonomía, logs JSON/EMF, idempotencia, pruebas > 80 % (humano: `Docs\08-estandares-desarrollo\`)
 
 **hu** (estándares transversales obligatorios)
@@ -93,4 +94,5 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - [[notificaciones-vs-arquitectura]] - brechas de la cadena de notificación/certificación contra la hoja `Página-2` del diagrama y contra el estándar de código (ARQ-21 a ARQ-28, SEG-10 a SEG-12; humano: `Docs\06-brechas
 otificaciones-vs-arquitectura.md`)
 - [[inventario-lambdas]] §evidencia 2026-11-10 - limpieza de DEV: vigentes, nuevos y candidatos a retirar con evidencia de uso, SEG-14 y ARQ-30 (humano: `Docs\06-brechas\limpieza-dev-recursos.md`)
+- [[notificaciones-vs-arquitectura]] §consultas - SQL de Athena de certificación/notificación: COS-07 a COS-09, ARQ-34 a ARQ-38, SEG-15 (humano: `Docs\06-brechas\consultas-athena-notificacion.md`)
 - [[inprod-primas-arl-202606]] - incidente en prod: certificación Primas ARL 202606 vacía; extracción incremental + SCD que apaga por ausencia (Gold quedó con 209 activos); hechos, hipótesis y pendientes (humano: `errores\`)

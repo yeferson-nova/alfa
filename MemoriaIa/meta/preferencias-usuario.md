@@ -29,3 +29,4 @@ actualizado: 2026-11-09
 - Entregables del incidente en `errores\` (md + scripts). **Toda evidencia de AWS (dev y prod) va en `EvidenciasAws\<ambiente>-<tema>\`, fuera de Git** (decisión 2026-11-10); ya no llega por `git pull`.
 - El repo pasó a **privado** el 2026-11-09 (antes fue público). Aun así, no subir credenciales ni datos personales innecesarios de prod (correos, ids) y preguntar antes de subir evidencia.
 - Se hace `git pull` cuando el usuario dice que subió archivos ("baja la carpeta").
+- **Código Python (2026-11-10):** PEP 8, sangría de 4 espacios e identificadores en inglés. Arquitectura modular hexagonal (es nuestra; DevOps solo hace la infraestructura). Entrega en un zip con el nombre del recurso; los commits los hace DevOps. Ver [[est-desarrollo-hexagonal]] y [[est-gobierno-devops-niif]].
