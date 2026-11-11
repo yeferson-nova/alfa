@@ -1,0 +1,4 @@
+
+aws: [ERROR]: An error occurred (ParamValidation): Bad value for --query items[].{path:path,methods:keys(resourceMethods || )}: invalid token: Parse error at column 51, token ")" (RPAREN), for expression:
+"items[].{path:path,methods:keys(resourceMethods || )}"
+                                                    ^

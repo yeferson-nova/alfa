@@ -1,0 +1,2 @@
+datalake- prd-niif.auth.us-east-1.amazoncognito.com
+datalake-prd-niif.auth.us-east-1.amazoncognito.com

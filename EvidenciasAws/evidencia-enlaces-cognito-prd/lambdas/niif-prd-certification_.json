@@ -1,0 +1,12 @@
+{
+  "FunctionName": "niif-prd-certification",
+  "Runtime": "python3.12",
+  "LastModified": "2026-09-11T00:17:37.000+0000",
+  "Handler": "certification.lambda_handler",
+  "Variables": {
+    "APPROVERS_LOG_TABLE": "niif-prd-approval-audit-log",
+    "APPROVERS_TABLE": "datalake-prd-use-case-approvers",
+    "ENVIRONMENT": "prd",
+    "NOTIFICATIONS_TABLE": "niif-prd-notification-certification"
+  }
+}

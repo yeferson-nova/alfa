@@ -1,0 +1,5 @@
+{
+    "Destinos": [
+        "arn:aws:logs:us-east-1:992382496548:log-group:aws-waf-logs-datalake-prd-api"
+    ]
+}

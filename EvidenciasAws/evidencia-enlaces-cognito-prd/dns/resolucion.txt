@@ -1,0 +1,2 @@
+  'datalake- prd-niif.auth.us-east-1.amazoncognito.com': NO RESUELVE (gaierror)
+  'datalake-prd-niif.auth.us-east-1.amazoncognito.com': RESUELVE (6 IP)

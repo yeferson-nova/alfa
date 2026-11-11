@@ -1,0 +1,29 @@
+{
+    "Items": [
+        {
+            "action": {
+                "S": "CERTIFICATE"
+            },
+            "creationDate": {
+                "S": "2026-11-02T22:38:50.879752-05:00"
+            },
+            "useCaseId": {
+                "S": "auxilioFunerario"
+            }
+        },
+        {
+            "action": {
+                "S": "CERTIFICATE"
+            },
+            "creationDate": {
+                "S": "2026-11-05T03:31:32.495722-05:00"
+            },
+            "useCaseId": {
+                "S": "auxilioFunerario"
+            }
+        }
+    ],
+    "Count": 2,
+    "ScannedCount": 30,
+    "ConsumedCapacity": null
+}

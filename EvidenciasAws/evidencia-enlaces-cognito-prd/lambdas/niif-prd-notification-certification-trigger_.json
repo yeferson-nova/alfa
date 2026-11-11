@@ -1,0 +1,19 @@
+{
+  "FunctionName": "niif-prd-notification-certification-trigger",
+  "Runtime": "python3.12",
+  "LastModified": "2026-10-30T20:47:08.000+0000",
+  "Handler": "notification_certification.lambda_handler",
+  "Variables": {
+    "GLUE_JOB_NAME": "<oculto>",
+    "SNS_TOPIC_ARN": "<oculto>",
+    "REPORT_BUCKET": "niif-prd-certification",
+    "ACCOUNT_ID": "<oculto>",
+    "REDIRECT_BASE_URL": "https://jdwkua9re5.execute-api.us-east-1.amazonaws.com/prd/r",
+    "QUERY_DYNAMODB_TABLE": "datalake-prd-use-case-queries",
+    "ASSETS_BUCKET": "niif-prd-assets",
+    "ENVIRONMENT": "prd",
+    "SHORT_LINKS_TABLE": "niif-prd-short-links",
+    "NOTIFICATIONS_TABLE": "niif-prd-notification-certification",
+    "EMAIL_DYNAMODB_TABLE": "datalake-prd-use-case-emails"
+  }
+}

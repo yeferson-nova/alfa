@@ -1,0 +1,55 @@
+== Evidencia enlaces Cognito | ENV=prd | 2026-11-11T15:19:40Z ==
+Cuenta/rol: ver 00-identidad.json (no se imprime aqui)
+
+## 1. Buckets
+  niif-prd-assets : EXISTE y es accesible
+  niif-prd-assests : NO existe o sin acceso
+
+## 2. Versiones de cada JSON (quien lo toco y cuando se ve en CloudTrail; aqui solo fechas)
+  ver s3/versiones.tsv (si el bucket no tiene versionado, solo sale la version actual)
+
+## 3. Enlaces de certificacion por JSON (host, client_id, redirect_uri)
+  JSON con enlaces: 9 | enlaces: 18
+  Enlaces con problema de formato: 2
+    !! auxilios-funerarios_auxilioFunerario.json :: email.stringVars.certificarLink :: host=['datalake- prd-niif.auth.us-east-1.amazoncognito.com'] :: ESPACIO_EN_HOST,HOST_CARACTER_INVALIDO
+    !! auxilios-funerarios_configs_certification_auxilioFunerario.json :: email.stringVars.certificarLink :: host=['datalake- prd-niif.auth.us-east-1.amazoncognito.com'] :: ESPACIO_EN_HOST,HOST_CARACTER_INVALIDO
+  Hosts distintos encontrados (repr muestra espacios ocultos):
+    'datalake- prd-niif.auth.us-east-1.amazoncognito.com'
+    'datalake-prd-niif.auth.us-east-1.amazoncognito.com'
+  Combinaciones host/client_id/redirect_uri distintas:
+    'datalake- prd-niif.auth.us-east-1.amazoncognito.com' | 5mo3aup5u6047dlrnb6s177bap | https://jdwkua9re5.execute-api.us-east-1.amazonaws.com/prd/post_login
+    'datalake-prd-niif.auth.us-east-1.amazoncognito.com' | 48lafrvkrtbsn0ke3diofj8pdt | https://d5qmm9fi64.execute-api.us-east-1.amazonaws.com/prd/post_login
+    'datalake-prd-niif.auth.us-east-1.amazoncognito.com' | 5mo3aup5u6047dlrnb6s177bap | https://jdwkua9re5.execute-api.us-east-1.amazonaws.com/prd/post_login
+
+## 4. DNS de los hosts de los enlaces
+  'datalake- prd-niif.auth.us-east-1.amazoncognito.com': NO RESUELVE (gaierror)
+  'datalake-prd-niif.auth.us-east-1.amazoncognito.com': RESUELVE (6 IP)
+
+## 5. Cognito
+  pool: datalake-prd-niif-user-pool (us-east-1_HiPkWmAUu)
+
+  Dominios de Cognito (prefijo) a comprobar:
+    [datalake- prd-niif] -> {"Domain":null,"Status":null,"UserPoolId":null,"Version":null}
+    [datalake-prd-niif] -> {"Domain":"datalake-prd-niif","Status":"ACTIVE","UserPoolId":"us-east-1_HiPkWmAUu","Version":"20250509140521"}
+
+## 6. API Gateway
+  api: jdwkua9re5
+
+## 6b. Logs de acceso del API (ultimos 14 dias) y WAF
+  api=jdwkua9re5 stage=prd log_group=/aws/apigateway/datalake-prd-niif-api-gtw waf=SI
+    eventos /post_login leidos: 0 | combinaciones: 0 (ver apigw/*-conteo.tsv)
+
+## 7. Lambdas relacionadas
+  ver lambdas/*.json (valores solo de variables de dominio, URL, tabla, bucket)
+
+## 8. Enlaces cortos con espacio en el host (patron -%20 o - ; el %20 del scope es normal)
+  niif-prd-short-links: {"Count":2,"ScannedCount":30,"ConsumedCapacity":null}
+
+## 9. Corridas recientes del job de notificacion
+  ver glue/notificacion-corridas.jsonl
+
+## 10. Cambios recientes de gestion (CloudTrail, 90 dias; sin identidad)
+  cognito-idp.amazonaws.com: 1 eventos de escritura (ver auditoria/)
+  apigateway.amazonaws.com: 0 eventos de escritura (ver auditoria/)
+
+## Fallos de comandos: 1 (ver 00-fallos.txt; AccessDenied esta bien, solo se anota)

@@ -1,0 +1,14 @@
+{
+    "UserPools": [
+        {
+            "Id": "us-east-1_HiPkWmAUu",
+            "Name": "datalake-prd-niif-user-pool",
+            "LambdaConfig": {},
+            "LastModifiedDate": "2025-05-09T14:05:21.067000+00:00",
+            "CreationDate": "2025-05-09T14:05:21.067000+00:00",
+            "ReplicaRegions": [
+                "us-east-1"
+            ]
+        }
+    ]
+}

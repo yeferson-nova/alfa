@@ -1,0 +1,9 @@
+{
+    "UserPoolClients": [
+        {
+            "ClientId": "5mo3aup5u6047dlrnb6s177bap",
+            "UserPoolId": "us-east-1_HiPkWmAUu",
+            "ClientName": "datalake-prd-niif-api"
+        }
+    ]
+}

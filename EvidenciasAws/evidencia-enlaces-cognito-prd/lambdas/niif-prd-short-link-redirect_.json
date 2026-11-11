@@ -1,0 +1,10 @@
+{
+  "FunctionName": "niif-prd-short-link-redirect",
+  "Runtime": "python3.12",
+  "LastModified": "2026-09-11T00:28:19.000+0000",
+  "Handler": "short_link_redirect.lambda_handler",
+  "Variables": {
+    "ENVIRONMENT": "prd",
+    "SHORT_LINKS_TABLE": "niif-prd-short-links"
+  }
+}

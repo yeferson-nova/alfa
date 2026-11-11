@@ -1,0 +1,11 @@
+{
+  "FunctionName": "niif-prd-move-s3-certification",
+  "Runtime": "python3.12",
+  "LastModified": "2026-10-30T21:13:17.000+0000",
+  "Handler": "move_s3.lambda_handler",
+  "Variables": {
+    "REPORT_BUCKET": "niif-prd-certification",
+    "ENVIRONMENT": "prd",
+    "NOTIFICATIONS_TABLE": "niif-prd-notification-certification"
+  }
+}

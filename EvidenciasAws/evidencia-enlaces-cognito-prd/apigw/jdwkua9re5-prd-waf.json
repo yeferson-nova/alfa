@@ -1,0 +1,48 @@
+{
+    "Name": "datalake-prd-niif-apigateway-waf",
+    "DefaultAction": {
+        "Allow": {}
+    },
+    "Rules": [
+        {
+            "Name": "datalake-rule-sizeconstraintstatement-prd",
+            "Priority": 10,
+            "Action": {
+                "Block": {}
+            },
+            "Override": null
+        },
+        {
+            "Name": "datalake-rule-awsmanagedrulescommonruleset-prd",
+            "Priority": 20,
+            "Action": null,
+            "Override": {
+                "None": {}
+            }
+        },
+        {
+            "Name": "datalake-rule-awsmanagedrulessqliruleset-prd",
+            "Priority": 30,
+            "Action": null,
+            "Override": {
+                "None": {}
+            }
+        },
+        {
+            "Name": "datalake-rule-awsmanagedrulesamazonipreputationlist-prd",
+            "Priority": 40,
+            "Action": null,
+            "Override": {
+                "None": {}
+            }
+        },
+        {
+            "Name": "datalake-rule-awsmanagedrulesanonymousiplist-prd",
+            "Priority": 50,
+            "Action": null,
+            "Override": {
+                "None": {}
+            }
+        }
+    ]
+}

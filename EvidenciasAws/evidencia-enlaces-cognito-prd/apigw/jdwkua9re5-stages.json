@@ -1,0 +1,8 @@
+[
+    {
+        "stage": "prd",
+        "deployment": "u7yx2e",
+        "webAcl": "arn:aws:wafv2:us-east-1:992382496548:regional/webacl/datalake-prd-niif-apigateway-waf/af7b2abe-f692-449e-bc5d-546ebf69d7fb",
+        "lastUpdated": "2026-07-14T14:31:45+00:00"
+    }
+]

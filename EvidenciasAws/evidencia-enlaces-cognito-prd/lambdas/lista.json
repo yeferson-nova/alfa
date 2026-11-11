@@ -1,0 +1,72 @@
+[
+    {
+        "n": "niif-prd-notification-certification-trigger",
+        "r": "python3.12",
+        "m": "2026-10-30T20:47:08.000+0000"
+    },
+    {
+        "n": "niif-prd-configuration-primas-arl",
+        "r": "python3.12",
+        "m": "2026-10-30T21:00:03.000+0000"
+    },
+    {
+        "n": "niif-prd-short-link-redirect",
+        "r": "python3.12",
+        "m": "2026-09-11T00:28:19.000+0000"
+    },
+    {
+        "n": "niif-prd-configuration-primas-rentas",
+        "r": "python3.12",
+        "m": "2026-10-30T21:05:10.000+0000"
+    },
+    {
+        "n": "niif-prd-configuration-primas-endosos",
+        "r": "python3.12",
+        "m": "2026-10-30T21:02:34.000+0000"
+    },
+    {
+        "n": "datalake-prd-niif-send-via-sftp",
+        "r": null,
+        "m": "2026-10-30T20:35:37.683+0000"
+    },
+    {
+        "n": "niif-prd-composite-notification-evaluator",
+        "r": "python3.12",
+        "m": "2026-10-30T21:07:42.000+0000"
+    },
+    {
+        "n": "niif-prd-manager-configuration",
+        "r": "python3.12",
+        "m": "2026-10-03T00:19:40.000+0000"
+    },
+    {
+        "n": "niif-prd-move-s3-certification",
+        "r": "python3.12",
+        "m": "2026-10-30T21:13:17.000+0000"
+    },
+    {
+        "n": "niif-prd-configuration-reserva-matematica-rvi",
+        "r": "python3.12",
+        "m": "2026-10-30T20:57:20.000+0000"
+    },
+    {
+        "n": "niif-prd-configuration-reserva-matematica-arp",
+        "r": "python3.12",
+        "m": "2026-10-30T20:52:15.000+0000"
+    },
+    {
+        "n": "niif-prd-configuration-auxilios-funerarios",
+        "r": "python3.12",
+        "m": "2026-10-30T20:54:49.000+0000"
+    },
+    {
+        "n": "niif-prd-copy-s3-cert",
+        "r": "python3.12",
+        "m": "2026-10-30T21:15:52.000+0000"
+    },
+    {
+        "n": "niif-prd-certification",
+        "r": "python3.12",
+        "m": "2026-09-11T00:17:37.000+0000"
+    }
+]

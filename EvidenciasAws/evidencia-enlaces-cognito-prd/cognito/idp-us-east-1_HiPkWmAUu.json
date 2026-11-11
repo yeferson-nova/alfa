@@ -1,0 +1,7 @@
+[
+    {
+        "Name": "AzureAD",
+        "Type": "OIDC",
+        "LastModified": "2025-07-18T13:21:53.644000+00:00"
+    }
+]
