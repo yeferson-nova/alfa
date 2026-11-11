@@ -15,8 +15,14 @@ actualizado: 2026-11-11
 - El host con espacio no resuelve en DNS. El correcto (`datalake-prd-niif`) resuelve y su dominio de Cognito está `ACTIVE`.
 - El proveedor `AzureAD` (OIDC) responde con HTTP 200 desde AWS: Azure no es la causa.
 - En DynamoDB, `niif-prd-short-links` tiene 2 enlaces cortos ya guardados con el host roto. Hay que corregirlos o regenerarlos.
-- Hay dos combinaciones de cliente y `redirect_uri` en uso: el API `jdwkua9re5` y el API `d5qmm9fi64`. Está **por aclarar** cuál es el oficial (brecha de configuración duplicada).
-- El cliente de la aplicación usa el flujo `implicit` y tiene como callback `https://localhost/post_login`. Es **propuesta** de brecha SEG: el flujo implicit no se recomienda y el callback de localhost no debería estar en prod.
+- El cliente `d5qmm9fi64` / `48laf...` aparece solo en el respaldo `primas-arl/configs/certification/backups/primasArl_20260623_160752.json`; ese API ya no existe. Todos los JSON vigentes usan el API `jdwkua9re5` y el único cliente del pool (`datalake-prd-niif-api`).
+- **Segundo bloqueo, más grave:** el único cliente de la aplicación tiene `CallbackURLs = ["https://localhost/post_login"]`, pero los enlaces mandan `redirect_uri=https://jdwkua9re5.../prd/post_login`.
+  - Hipótesis fuerte: Cognito responde `redirect_mismatch` y el botón falla aunque se corrija el espacio.
+  - La apoya que en 14 días no haya ni un evento `/post_login` en los logs del API.
+  - Hay que pedir a DevOps (Terraform) que agregue el callback real y comprobar lo mismo en QA.
+- El cliente usa el flujo `implicit` y el logout `https://localhost:/logout`. Es **propuesta** de brecha SEG.
+- Las corridas del job de notificación en prod usan el JSON de la raíz de cada malla (por ejemplo `auxilios-funerarios/auxilioFunerario.json`). La copia de `configs/certification/` es un duplicado; Primas ARL la usó por última vez el 2026-10-05.
+- En prod no hay JSON de caso de Rentas Vitalicias.
 - El correo cita el bucket `niif-prd-assests`, que no existe (error de escritura; el bueno es `niif-prd-assets`).
 - En los últimos 14 días no hubo eventos `/post_login` en los logs del API. El WAF está activo.
 

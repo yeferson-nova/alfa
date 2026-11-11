@@ -32,6 +32,17 @@ Este es el estado al 2026-11-11 para que otra sesión de Claude (local o remota)
 3. Correr las pruebas de los 3 componentes y `verificar_copias_comunes.py`, y comprobar que siguen en verde.
 4. Seguir con las pruebas en DEV (certificación etapa 3 con Primas ARL y orquestadora), confirmando cada paso. Luego el Paso 5.
 
+**Entrega SNS → SES a QA (2026-11-11, en pausa):**
+- Se entrega la versión actual (el script de `Tareas\paquete-release-notificaciones\`), sin la optimización. El checklist está en el historial de la sesión y se resume en [[inprod-enlaces-cognito-9411325]] y [[job-notificacion-ses]].
+- **Ya hay acceso al Git de Alfa.** El usuario va a bajar los repos de los componentes afectados:
+  - el job `niif-<amb>-notification-certification`;
+  - las plantillas y los JSON de caso del bucket `niif-<amb>-assets`;
+  - la IaC del rol, de los argumentos del job y del cliente de Cognito;
+  - para leer, sin cambiar: las lambdas de la cadena.
+  - Los nombres de los repos siguen el patrón `data-datalake-niif-*` / `sc-datalake-niif-*`; hay que confirmarlos en el Git.
+  - **Copia de lectura en `Backend\ReposAws\`** (ver su `LEEME.md`). En esta máquina no se puede clonar, así que el usuario clona en otra máquina y corre `sincronizar-repos.ps1`, que copia los repos sin `.git` a `lambdas\`, `glue\` y `s3\` y escribe `VERSIONES.md`. Los primeros commits (`3f44eb5`, `4f8e828`) subieron los repos como enlaces `160000` vacíos; el script los quita.
+  - Pendientes: la lambda de `/post_login`, el Terraform (rol y argumentos del job, Cognito, API) y `sc-datalake-niif-certification`.
+
 **Abierto fuera de la migración:**
 - el caso en prod [[inprod-enlaces-cognito-9411325]] (espacio en el host del enlace de Auxilios);
 - el incidente [[inprod-primas-arl-202606]] (paquete de release del fix de extracción);
