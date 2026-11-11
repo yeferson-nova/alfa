@@ -27,4 +27,3 @@ El script hace lo siguiente:
 ## Pendientes (fuera de estos repos)
 - La lambda de `/post_login`: confirmar si existe y cómo se llama.
 - Terraform (de DevOps): el rol y los argumentos del job, Cognito y el API. Aunque sea de solo lectura.
-- `sc-datalake-niif-certification` (los botones Certificar y No certificar): no está entre los repos copiados.
