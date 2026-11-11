@@ -14,7 +14,7 @@
 #   3. ENV=prd bash evidencia-enlaces-cognito.sh      (en DEV: ENV=dev)
 #   4. Descargar el .tar.gz que imprime al final.
 #
-# Variables opcionales: ENV=prd REGION=us-east-1 DIAS_AUDITORIA=90 DIAS_LOGS=14
+# Variables opcionales: ENV=prd REGION=us-east-1 DIAS_AUDITORIA=90 DIAS_LOGS=14 PROBAR_ENTRA=1
 #   ASSETS_BUCKET (defecto niif-$ENV-assets)  PREFIJO_MALLAS (defecto vacio = todo)
 # ============================================================================
 set -u
@@ -287,6 +287,90 @@ while read -r dom; do
     log "    [$dom] -> ERROR/NO EXISTE: $(head -c 160 "${salida_dom}.err" | tr '\n' ' ')"
   fi
 done < "$TMP/dominios.txt"
+
+# ----------------------------------------------------------------------------
+# 5b. Proveedor de identidad (Azure AD) configurado en Cognito, sin el secreto,
+#     y prueba opcional contra Microsoft (PROBAR_ENTRA=1): la aplicacion esta
+#     registrada y acepta el callback de Cognito? Solo hace GET, no inicia sesion.
+# ----------------------------------------------------------------------------
+log ""
+log "## 5b. Proveedor Azure AD en Cognito (client_secret nunca se guarda)"
+echo "$POOLS" | while read -r pid pnombre; do
+  [ -z "$pid" ] && continue
+  for prov in $(python3 - "$SALIDA/cognito/idp-${pid}.json" <<'PY'
+import json, sys
+try:
+    for p in json.load(open(sys.argv[1])):
+        print(p["Name"])
+except Exception:
+    pass
+PY
+); do
+    aws cognito-idp describe-identity-provider --user-pool-id "$pid" --provider-name "$prov" --output json 2>>"$FALLOS" \
+      | python3 -c '
+import json, sys
+try:
+    p = json.load(sys.stdin)["IdentityProvider"]
+except Exception:
+    sys.exit(0)
+det = {k: v for k, v in (p.get("ProviderDetails") or {}).items() if "secret" not in k.lower()}
+print(json.dumps({"ProviderName": p.get("ProviderName"), "ProviderType": p.get("ProviderType"),
+                  "ProviderDetails": det, "AttributeMapping": p.get("AttributeMapping"),
+                  "LastModifiedDate": str(p.get("LastModifiedDate"))}, indent=2))
+' > "$SALIDA/cognito/proveedor-${pid}-${prov}.json"
+    log "  pool $pnombre proveedor $prov -> cognito/proveedor-${pid}-${prov}.json"
+  done
+done
+
+if [ "${PROBAR_ENTRA:-0}" = "1" ]; then
+  log "  Prueba contra Microsoft (PROBAR_ENTRA=1):"
+  python3 - "$SALIDA/cognito" <<'PY' | tee -a "$RESUMEN"
+import glob, json, re, sys, urllib.error, urllib.parse, urllib.request
+
+class SinRedireccion(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *a, **k):
+        return None
+
+abrir = urllib.request.build_opener(SinRedireccion).open
+carpeta = sys.argv[1]
+dominios = {}
+for ruta in glob.glob(carpeta + "/pool-*.json"):
+    try:
+        d = json.load(open(ruta))
+        dominios[d["Id"]] = d.get("Domain")
+    except Exception:
+        pass
+for ruta in glob.glob(carpeta + "/proveedor-*.json"):
+    try:
+        p = json.load(open(ruta))
+    except Exception:
+        continue
+    det = p.get("ProviderDetails") or {}
+    url, cid = det.get("authorize_url"), det.get("client_id")
+    pool = re.search(r"proveedor-(us-east-1_[A-Za-z0-9]+)-", ruta)
+    dom = dominios.get(pool.group(1)) if pool else None
+    if not (url and cid and dom):
+        print(f"  {p.get('ProviderName')}: sin authorize_url/client_id/dominio, no se prueba")
+        continue
+    cb = f"https://{dom}.auth.us-east-1.amazoncognito.com/oauth2/idpresponse"
+    q = urllib.parse.urlencode({"client_id": cid, "response_type": "code", "scope": "openid",
+                                "redirect_uri": cb})
+    try:
+        r = abrir(urllib.request.Request(url + "?" + q), timeout=20)
+        estado, cuerpo = r.status, r.read(20000).decode("utf-8", "ignore")
+    except urllib.error.HTTPError as e:
+        estado, cuerpo = e.code, e.read(20000).decode("utf-8", "ignore")
+    except Exception as e:
+        print(f"  {p.get('ProviderName')}: sin respuesta ({type(e).__name__})")
+        continue
+    codigos = sorted(set(re.findall(r"AADSTS\d+", cuerpo)))
+    veredicto = ("OK: Microsoft acepta la app y el callback (pide inicio de sesion)" if not codigos else
+                 "REVISAR: " + ", ".join(codigos))
+    print(f"  {p.get('ProviderName')}: HTTP {estado} | {veredicto}")
+print("  AADSTS700016 = app no registrada en ese tenant | AADSTS50011 = callback de Cognito no registrado en la app")
+print("  AADSTS7000215/7000222 = secreto invalido o vencido (se ve al iniciar sesion; esta prueba no llega a ese paso)")
+PY
+fi
 
 # ----------------------------------------------------------------------------
 # 6. API Gateway (post_login, certify, not_certify, autorizador, WAF)
