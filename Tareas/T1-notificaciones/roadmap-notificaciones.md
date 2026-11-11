@@ -1,5 +1,7 @@
 # Roadmap: cadena de notificación y certificación con la nueva arquitectura
 
+> ⏸️ **Migración en pausa desde el 2026-11-11** por decisión del usuario. Nada de lo que aparece con ⬜ está en curso. El código nuevo está en `Backend\notificacion\` (no desplegado) y las solicitudes a DevOps están en los README de la orquestadora y del job de certificación. Antes de retomar: revisar si cambió algo en DEV (código desplegado, JSON globales, tablas).
+
 <a id="indice"></a>
 ## Contenido
 

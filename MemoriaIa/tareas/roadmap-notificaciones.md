@@ -4,6 +4,8 @@ actualizado: 2026-11-11
 ---
 # Roadmap de la cadena de notificación (contexto para IA)
 
+> **EN PAUSA desde el 2026-11-11** por decisión del usuario. Quedan hechos los pasos 1 (parcial), 2, 3 (etapas 1 y 2) y 4 (etapas 1 y 2). Cómo retomar: [[traspaso-sesion]] §Pausa.
+
 Humano (control, con ✅ y ⬜): `Tareas\T1-notificaciones\roadmap-notificaciones.md`. Esta nota resume; no duplicar el detalle.
 
 - **Alcance:** el flujo completo de la hoja `Página-2`: 6 lambdas y 1 job de Glue, del Modelo Notificaciones hasta FIS, incluida la Lambda SFTP. Fuera: el resto del paso 2.

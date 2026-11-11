@@ -48,7 +48,7 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 
 ## Índice (notas en `MemoriaIa/`)
 **meta**
-- [[traspaso-sesion]] - **leer primero en una sesión nueva o remota:** estado al día, qué no está en el repo, reglas y cómo verificar
+- [[traspaso-sesion]] - **leer primero en una sesión nueva o remota.** **Migración EN PAUSA desde el 2026-11-11.** Tiene el estado al día, qué no está en el repo, reglas y cómo verificar
 - [[rutas-workspace]] - dónde está cada archivo
 - [[preferencias-usuario]]
 - [[preguntas-abiertas]]
@@ -95,8 +95,8 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - [[brechas-seguridad]] - riesgos de seguridad y mejoras (humano: `Docs\06-brechas\seguridad.md`)
 - [[riesgos-glue-notificacion]] - riesgos del paso Glue → Notificación y patrón de manifiesto + Step Functions (humano: `Tareas\riesgos-flujo-glue-notificacion.md`)
 - [[auditoria-pipeline-2026-11]] - auditoría validada en código del pipeline (Bronce/Plata/Oro, SCD, certificación) y de las lambdas, contrastada con el diagrama (humano: `Docs\06-brechas\auditoria-pipeline-datos-vs-arquitectura.md` y `auditoria-lambdas.md`)
-- [[notificaciones-vs-arquitectura]] - brechas de la cadena de notificación/certificación contra la hoja `Página-2` del diagrama y contra el estándar de código (ARQ-21 a ARQ-28, SEG-10 a SEG-12; humano: `Docs\06-brechas
-otificaciones-vs-arquitectura.md`)
+- [[notificaciones-vs-arquitectura]] - brechas de la cadena de notificación/certificación contra la hoja `Página-2` del diagrama y contra el estándar de código (ARQ-21 a ARQ-28, SEG-10 a SEG-12; humano: `Docs\06-brechas\notificaciones-vs-arquitectura.md`)
 - [[inventario-lambdas]] §evidencia 2026-11-10 - limpieza de DEV: vigentes, nuevos y candidatos a retirar con evidencia de uso, SEG-14 y ARQ-30 (humano: `Docs\06-brechas\limpieza-dev-recursos.md`)
 - [[notificaciones-vs-arquitectura]] §consultas - SQL de Athena de certificación/notificación: COS-07 a COS-09, ARQ-34 a ARQ-38, SEG-15 (humano: `Docs\06-brechas\consultas-athena-notificacion.md`)
 - [[inprod-primas-arl-202606]] - incidente en prod: certificación Primas ARL 202606 vacía; extracción incremental + SCD que apaga por ausencia (Gold quedó con 209 activos); hechos, hipótesis y pendientes (humano: `errores\`)
+- [[inprod-enlaces-cognito-9411325]] - incidente en prod: el enlace Certificar de Auxilios Funerarios tiene un espacio en el host de Cognito (no resuelve DNS); diagnóstico hecho, la corrección no se ha entregado
