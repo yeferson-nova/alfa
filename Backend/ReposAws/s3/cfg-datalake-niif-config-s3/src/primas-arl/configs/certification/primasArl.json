@@ -24,7 +24,7 @@
   },
   "email": {
     "subject": "NIIF 17 - Certificación Primas ARL Periodo $period",
-    "templatePath": "email-templates/primas_arl_cert.html",
+    "templatePath": "email-template/primas_arl_cert.html",
     "sender": "notificaciones@segurosalfa.com.co",
     "destinations": [
       "manuel.machado@segurosalfa.com.co",

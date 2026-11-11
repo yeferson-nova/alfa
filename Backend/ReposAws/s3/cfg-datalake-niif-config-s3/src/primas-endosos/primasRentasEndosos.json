@@ -45,7 +45,7 @@
   },
   "email": {
     "subject": "NIIF 17 - Certificación Primas Rentas y Endosos Periodo $period",
-    "templatePath": "email-templates/primas_rentas_cert.html",
+    "templatePath": "email-template/primas_rentas_cert.html",
     "sender": "notificaciones@segurosalfa.com.co",
     "destinations": [
       "manuel.machado@segurosalfa.com.co",

@@ -15,6 +15,18 @@ Copia de lectura en `Backend\ReposAws\` (ver su `LEEME.md`). `VERSIONES.md` sali
 | `sc-datalake-niif-send-via-sftp-lambda` | `src/lambda_function.py` | Sin comparar (no está en la evidencia de DEV) |
 | `cfg-datalake-niif-config-s3` | `src/**` (JSON de caso, global y `glue-resources`) | Ver hallazgos |
 
+## Corrección aplicada en la copia `Backend\ReposAws\s3\cfg-datalake-niif-config-s3\` (2026-11-11, orden del usuario)
+- R-01: `templatePath` en `email-template/` (singular, según DevOps) en 7 JSON. Reserva Matemática ya estaba bien. El respaldo `primasArl_20260623_160752.json` no se tocó.
+- R-02: se quitó el espacio de `envConfig.prd.certificarLink` en los 2 JSON de Auxilios.
+- R-03 parcial: en Previsional, `dev}` pasa a `dev` en `envConfig.dev.nocertificarLink`. **No se tocaron** la llave `{env}` de Reserva Matemática (en `envConfig` y en `consoleEnvConfig`) ni el `{env}` de Primas ARL, porque no se sabe quién los lee.
+- Los 10 cambios de línea son exactos y los JSON quedaron válidos. Falta copiarlos al clon y hacer el commit en la rama que toque.
+
+## Validación de la paridad SNS → SES (2026-11-11)
+- La copia del repo de Glue ya tiene el script SES (`1c6d…`). El usuario lo cambió en su working tree y no tiene commit. Pide los mismos 9 argumentos y las mismas claves del JSON global que la versión del repo, y tiene las mismas funciones.
+- El trigger pasa `--SNS_TOPIC_ARN`, `--REDIRECT_BASE_URL` y `--SHORT_LINKS_TABLE`, **no `--SES_SENDER`**. Por eso `--SES_SENDER` tiene que ir en los argumentos por defecto del job (Terraform). El evaluador compuesto lanza la certificación, no la notificación.
+- El JSON global del repo trae `{env}` en `environment`, `buckets` y `dynamodb`, y prod funciona. Eso confirma que el pipeline reemplaza `{env}` por ambiente; que también aplique `envConfig` sigue siendo inferencia. Riesgo: la llave `{env}` de Reserva Matemática queda duplicada con `qa` y `prd` después del reemplazo, y gana la última.
+- En el global de Previsional, `console_url.account_id` tiene fija la cuenta de QA en todos los ambientes. No afecta a la notificación.
+
 ## Hallazgos
 - **R-01, `templatePath`:** el repo tiene `email-templates/` (plural) en 7 JSON, `email_templates/` en Previsional y solo `email-template/` (singular) en Reserva Matemática. El repo de plantillas despliega en `email-template/`. Hay que corregir los JSON.
 - **R-02, espacio en Auxilios:** `email.envConfig.prd.certificarLink` tiene `datalake- prd-niif`. Está en `auxilios-funerarios/auxilioFunerario.json` y en su copia de `configs/certification/`. Ver [[inprod-enlaces-cognito-9411325]].

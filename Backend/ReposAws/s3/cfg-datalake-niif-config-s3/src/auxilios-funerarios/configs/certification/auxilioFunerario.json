@@ -30,7 +30,7 @@
   },
   "email": {
     "subject": "NIIF 17 - Certificación Auxilio Funerario Periodo $period",
-    "templatePath": "email-templates/auxilio_funerario_cert.html",
+    "templatePath": "email-template/auxilio_funerario_cert.html",
     "sender": "notificaciones@segurosalfa.com.co",
     "destinations": [
       "manuel.machado@segurosalfa.com.co",
@@ -68,7 +68,7 @@
           "javier.gonzalez@segurosalfa.com.co",
           "julio.mesias@segurosalfa.com.co"
         ],
-        "certificarLink": "https://datalake- prd-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fjdwkua9re5.execute-api.us-east-1.amazonaws.com%2Fprd%2Fpost_login&response_type=TOKEN&client_id=5mo3aup5u6047dlrnb6s177bap&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fcertify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
+        "certificarLink": "https://datalake-prd-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fjdwkua9re5.execute-api.us-east-1.amazonaws.com%2Fprd%2Fpost_login&response_type=TOKEN&client_id=5mo3aup5u6047dlrnb6s177bap&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fcertify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
         "nocertificarLink": "https://datalake-prd-niif.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=AzureAD&redirect_uri=https%3A%2F%2Fjdwkua9re5.execute-api.us-east-1.amazonaws.com%2Fprd%2Fpost_login&response_type=TOKEN&client_id=5mo3aup5u6047dlrnb6s177bap&scope=openid%20email%20profile&state=%7B%22method%22%3A%20%22POST%22%2C%20%22resource%22%3A%20%22%2Fnot_certify%22%2C%20%22queryParams%22%3A%20%22%22%2C%20%22body%22%3A%20%7B%22useCaseId%22%3A%20%22$useCaseId%22%2C%20%22period%22%3A%20%22$period%22%2C%20%22certCode%22%3A%20%22$certCode%22%7D%7D",
 		"useCaseName": "Auxilios Funerarios"
       }
