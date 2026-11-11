@@ -21,6 +21,7 @@ Al final deja los registros del `certCode` en `PENDING`. Ese cambio de estado es
 7. [Qué cambia frente al job desplegado](#qué-cambia-frente-al-job-desplegado)
 8. [Hallazgos y riesgos](#hallazgos-y-riesgos)
 9. [Pruebas, empaquetado y despliegue](#pruebas-empaquetado-y-despliegue)
+10. [Lo que debe hacer DevOps (solicitud)](#lo-que-debe-hacer-devops-solicitud)
 
 ## Configuración: argumentos y JSON
 
@@ -314,15 +315,51 @@ powershell -ExecutionPolicy Bypass -File scripts\package.ps1
 
   El mismo artefacto sirve para todos los ambientes; solo cambia el JSON global.
 
-**Antes de desplegar (orden):**
-1. Agregar a **cada** JSON global que use el job las claves nuevas (`dynamodb.cert_code_index` y, dentro de `certification`, `report_folders`, `athena_poll_seconds`, `athena_max_wait_seconds`, `index_visibility_attempts` e `index_visibility_wait_seconds`). En DEV son al menos dos: `configs/certification/json_global_notif_cert.json` y `previsional/config/json_global_notif_cert.json` (CER-H5).
-2. Probar en DEV con un **job aparte** (Etapa 3 del paso 3 del roadmap) y una malla con datos (Primas ARL), con confirmación antes de lanzar.
-3. DevOps actualiza el job con `config\job.dev.json`: script nuevo, `--extra-py-files` con el zip nuevo, sin `--PERIOD` ni `--CONFIG_KEY` por defecto, y sin `commons.zip` ni los wheels de `openpyxl`.
-4. Step Function (Etapa 4): agregar `"--EJECUCION_ID.$": "$$.Execution.Name"` a la tarea del job.
+Los pasos de despliegue y lo que se le pide a DevOps están en la sección siguiente.
 
-**Permisos del rol** (los mismos del job desplegado, más uno):
+## Lo que debe hacer DevOps (solicitud)
+
+El job, su rol, las Step Functions y los JSON de S3 los maneja DevOps con Terraform y su pipeline. Nosotros entregamos el código, el paquete y esta lista. **No se crea ni se cambia nada a mano en la consola.**
+
+### 1. Job de prueba aparte en DEV (etapa 3)
+Hace falta para probar sin afectar a las mallas que comparten el job (CER-H5).
+- **Nombre propuesto:** `niif-dev-certification-v2` (a confirmar con DevOps).
+- **Definición:** la de `config\job.dev.json`, con el `Name` cambiado. Llevar el mismo rol `niif-dev-jobs-niif-certification`, más el permiso del punto 4.
+- **Artefactos:** subir los dos archivos de `dist\` a rutas propias de la prueba, sin pisar los del job actual:
+  - `niif_certification.py` → `ScriptLocation`;
+  - `niif-dev-certification-1.0.0.zip` → `--extra-py-files`.
+- **Argumentos por defecto:** solo `--CONFIG_BUCKET` y `--GLOBAL_CONFIG_KEY`. **Sin `--PERIOD` ni `--CONFIG_KEY`**, que hoy traen valores de prueba quemados (`202411` y el caso de Auxilios). Sin `commons.zip` ni los wheels de `openpyxl`.
+
+### 2. Claves nuevas en **todos** los JSON globales que usa el job
+Se agregan antes de reemplazar el job; el job anterior las ignora.
+- Claves: `dynamodb.cert_code_index` y, en `certification`, `report_folders`, `athena_poll_seconds`, `athena_max_wait_seconds`, `index_visibility_attempts` e `index_visibility_wait_seconds`. Los valores de DEV están en `Backend\S3\niif-dev-assets\configs\certification\json_global_notif_cert.json`.
+- En DEV hay al menos dos JSON globales: `configs/certification/json_global_notif_cert.json` y `previsional/config/json_global_notif_cert.json`.
+- En QA y PRD además hay que comprobar `console_url.base_url` (CER-H4).
+
+### 3. Reemplazo del job real (después de la prueba)
+- Actualizar `niif-dev-certification` con la definición de `config\job.dev.json` y los artefactos nuevos.
+- Hacerlo en el mismo cambio que la orquestadora y el job de notificación nuevo (decisión O-4).
+
+### 4. Permiso nuevo del rol
+`athena:StopQueryExecution`, para cancelar una consulta que supera `athena_max_wait_seconds`.
+
+El resto ya lo tiene el rol del job desplegado:
 - S3: leer la configuración; listar y leer el prefijo del `UNLOAD` y el manifiesto en `buckets.assets`; escribir en `buckets.reports`.
-- Athena: `StartQueryExecution`, `GetQueryExecution` y `GetQueryResults`, más `StopQueryExecution`, que es **nuevo** y sirve para cancelar por tiempo. También el catálogo de Glue y la lectura de Gold.
-- DynamoDB: `PutItem` y `UpdateItem` en la tabla, y `Query` sobre el índice.
+- Athena: `StartQueryExecution`, `GetQueryExecution` y `GetQueryResults`, el catálogo de Glue y la lectura de Gold.
+- DynamoDB: `PutItem` y `UpdateItem` en la tabla, y `Query` sobre `certCode-index`.
 
-**Vuelta atrás:** apuntar el `ScriptLocation` y `--extra-py-files` a los del job anterior. Las claves nuevas del JSON no molestan al job anterior.
+### 5. Step Functions (etapa 4 del paso 3)
+- Agregar a la tarea del job `"--EJECUCION_ID.$": "$$.Execution.Name"` en las 6 mallas `niif-dev-<malla>` y en las que comparten el job (generales, pcr-vida, satélites y previsional).
+- `--EJECUCIONES_ORIGEN` lo pasará el evaluador compuesto, que todavía es solo un esqueleto.
+
+### 6. Vuelta atrás
+Apuntar `ScriptLocation` y `--extra-py-files` a los del job anterior. Las claves nuevas del JSON no afectan al job anterior.
+
+### Preguntas para DevOps
+| # | Pregunta | Por qué |
+|---|---|---|
+| 1 | ¿Se puede crear el job de prueba `niif-dev-certification-v2` en DEV, y con qué nombre? | Probar sin romper a generales, pcr-vida, satélites y previsional (CER-H5) |
+| 2 | ¿Quiénes son los dueños de las Step Functions generales, pcr-vida, satélites y previsional? | Avisarles antes de reemplazar el job y agregar las claves a su JSON global |
+| 3 | ¿El bucket `niif-<amb>-assets` tiene versionado? ¿Los JSON globales pueden pasar al repositorio de configuración y a su pipeline? | La regla de configuración por ambiente; es la pregunta 17 de `Docs\07-entregables\preguntas-devops-repos-y-despliegue.md` |
+| 4 | ¿Cuál es el valor de `console_url.base_url` en los JSON globales de QA y PRD? | CER-H4: el portal SSO dejó de estar quemado |
+| 5 | ¿Se puede pasar el job a Glue Python shell (CER-H7)? | No usa Spark; el arranque de Spark es casi todo su tiempo y costo |
