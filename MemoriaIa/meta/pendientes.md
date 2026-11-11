@@ -74,3 +74,10 @@ ewUx\` con vistas previas y validador, JSON de caso unificados a `email-template
     - Total: 35 a 47 días.
     - Athena no tiene modo stream: la resiliencia viene de no consultar en la notificación, cancelar, reintentar y reprocesar.
   - **Prueba en DEV del job nuevo (2026-11-10):** `niif-dev-notification-certification-prueba-v2`, código en `s3://niif-dev-assets/pruebas/notificacion-v2/` (el rol solo lee archivos exactos más `pruebas/*`, `wheelhouse/*` y `email-templates/*`). Resultado: `SUCCEEDED`, log JSON completo, sin envío. Ese zip no trae aún el arreglo de `NTF_FIN_JOB`. Borrar el job al cerrar la fase 1.
+
+- [ ] **Paso 3 (ID único), etapa 1 hecha (2026-11-11):**
+  - Ninguna Step Function pasa el ID al job de certificación; solo al evaluador compuesto (`sourceExecutionId` = ARN), y este lanza la certificación sin ID.
+  - El job lee 5 argumentos e ignora `LOTE_CARGUE_ID`. El ID debe ir en el `put_item` (`PROCESSED`), antes del `PENDING`.
+  - Los argumentos por defecto del job están quemados (`PERIOD=202411`, `CONFIG_KEY` de Auxilios).
+  - **Decisiones:** E1 = versión desplegada + INC-3. El paquete inprod solo trae extracción y SCD, y ambos ya están desplegados en DEV, idénticos (comprobado el 2026-11-11). E2 = el configurador genera el nombre `<malla>-<periodo>-<uuid v7>` y se propaga con `$$.Execution.Name`, sin agregar nada después. E3 = en el compuesto, `ejecucionId` + `ejecucionesOrigen`.
+  - **Siguiente:** etapa 2 (código en local), solo con orden explícita.

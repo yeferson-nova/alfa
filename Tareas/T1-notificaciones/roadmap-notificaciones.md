@@ -96,12 +96,20 @@ _Lo más avanzado y lo primero que llega al usuario._
 <a id="paso-2"></a>
 ### Paso 2 · Fase 7: Athena y Gold (consultas de los JSON de caso, workgroup y tablas `scd_*` de Gold): medir
 _Corto. Define el tiempo máximo del job y si hay que adelantar el particionado (7.6)._
-- ⬜ 7.1 Medir tiempo y escaneo de las consultas. Script listo: `Backend\cloudshell-inventario\medir-athena-dev.sh` (solo lectura; la opción `--ejecutar <periodo>` corre las consultas y tiene costo). Falta correrlo en DEV y analizar el zip.
+- ✅ 7.1 Medición en DEV (2026-11-11): las consultas tardan 0,8-2,3 s y hasta 10 s las `detail`; el costo es casi cero; COS-07 y COS-08 confirmados; ninguna falla por timeout. Resultado en `Docs\06-brechas\consultas-athena-notificacion.md`.
+- ⬜ 7.1b Medir en PRD (lo corre el equipo de PRD, solo lectura): `AMB=prd bash medir-athena-dev.sh`. Antes, ajustar el script (espera orden): rechazar `--ejecutar` en PRD y no guardar en el zip el historial crudo de otros equipos.
+- ✅ Nota (no es brecha): en DEV, el Gold de 5 mallas (rentas, endosos, auxilios, ARP y RVI) se vació el 2026-11-05 por pruebas. Para probar con datos, usar Primas ARL o volver a correr la malla que haga falta.
 
 <a id="paso-3"></a>
 ### Paso 3 · Fase 2: ID único de punta a punta (`niif-dev-certification` job de Glue, Step Functions `niif-dev-<malla>`)
 _La orquestadora y las alertas usan este ID._
-- ⬜ 2.1 El job de certificación recibe `--EJECUCION_ID` y guarda `ejecucionId` junto al `certCode`.
+- ✅ Etapa 1 (verificación, solo lectura, 2026-11-11): ninguna Step Function le pasa el ID al job de certificación; el ID debe ir en el `put_item` (`PROCESSED`); los argumentos por defecto del job están quemados (`PERIOD=202411`, `CONFIG_KEY` de Auxilios).
+- ✅ Decisiones E1, E2 y E3 (versión base, formato del ID con UUID v7 y caso compuesto).
+- ⬜ Etapa 2: cambio en el job, en local y con pruebas (espera orden explícita).
+- ⬜ Etapa 3: prueba en DEV con un job de certificación aparte (confirmación antes de lanzar).
+- ⬜ Etapa 4: Step Function, con DevOps o en una copia de la de ARL (confirmación manual).
+- ⬜ Configurador (T2): generar el nombre de la ejecución `<malla>-<periodo>-<uuid v7>`.
+- ⬜ 2.1 El job de certificación recibe `--EJECUCION_ID` y guarda `ejecucionId` (y `ejecucionesOrigen` en el compuesto) junto al `certCode`.
 - ⬜ 2.2 Las 6 Step Functions pasan el argumento (DevOps, Terraform).
 - ⬜ 2.3 Quien lanza el job de notificación pasa `--EJECUCION_ID` (lo hará la orquestadora, fase 3.1).
 - ⬜ 2.4 Prueba automática sobre las definiciones de las Step Functions.
@@ -221,6 +229,11 @@ _Al final, cuando lo nuevo ya reemplazó a lo viejo._
 | D6 | **Decidida (2026-11-10):** nombres en el estándar `niif-<amb>-*`. Post-login pasa a `niif-<amb>-post-login` y la orquestadora es `niif-<amb>-notification-certification-orchestrator`. Las demás conservan su nombre actual, que ya cumple | Usuario | — |
 
 D2, D3 y D4 están preguntadas al equipo y a la espera de respuesta (2026-11-10).
+
+**Decisiones del paso 3 (ID único), 2026-11-11:**
+- **E1.** El job de certificación se trabaja sobre la versión con el arreglo del incidente: lo desplegado más INC-3 (`contar_filas_datos`, commit `0020179`), que es la parte del incidente que le toca a este job. INC-1, INC-2 e INC-5 van en extracción y SCD (`Tareas\paquete-release-inprod\`, que solo trae esos dos scripts). **En DEV ya están desplegados:** el script de extracción y el de SCD que corren en DEV son idénticos a los del paquete (comprobado el 2026-11-11).
+- **E2.** El ID es el nombre de la ejecución de la Step Function. **El configurador lo genera una sola vez** con el formato `<malla>-<periodo>-<uuid v7>` (por ejemplo `arl-202606-0193f2a4-…`) y de ahí en adelante se propaga tal cual con `$$.Execution.Name`. Ningún componente le agrega nada después.
+- **E3.** En el caso compuesto se guardan los dos: `ejecucionId`, con la ejecución que completó el grupo, y `ejecucionesOrigen`, con la lista de todas las del grupo.
 
 <a id="orden-y-riesgos"></a>
 ## Orden y riesgos

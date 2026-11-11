@@ -41,3 +41,22 @@ Fecha: 2026-11-10.
 
 ## Cómo medir antes de cambiar (DEV, solo lectura)
 Bytes escaneados de las últimas corridas: `aws athena get-query-execution --query-execution-id <id> --query 'QueryExecution.Statistics.DataScannedInBytes'`. Los IDs salen del log `[ATHENA] QueryExecutionId`. Con ese dato se calcula el ahorro de COS-07.
+
+## Medición en DEV (2026-11-11)
+Script: `Backend\cloudshell-inventario\medir-athena-dev.sh` (solo lectura). Datos en `EvidenciasAws\dev-medicion-athena\`, fuera de Git. Cubre el historial de Athena de los últimos 45 días (232 consultas sobre Gold de NIIF) y las corridas de los 2 jobs de la cadena.
+
+| Qué | Resultado |
+|---|---|
+| Tiempo de nuestras consultas (`summary`, `total`, disponibilidad) | **0,8 a 2,3 s.** Las `detail` (UNLOAD) tardan hasta unos 10 s. La consulta más lenta del historial tardó 10,3 s |
+| Escaneo | Hasta 1 MB por consulta nuestra y 40 MB la mayor del historial. En total, 0,37 GB en 45 días |
+| Costo de Athena | **USD 0,01 en 45 días.** En DEV no tiene peso |
+| Duración de los jobs | Certificación: mediana 56 s y máximo 201 s. Notificación: mediana 47 s y máximo 138 s. **Casi todo es el arranque de Glue con Spark** (`glueetl`), no Athena |
+| Fallas de los jobs (18 de 92 en certificación y 29 de 100 en notificación) | Casi todas son de **permisos durante el desarrollo**, entre agosto y noviembre: `AccessDenied` en DynamoDB, S3, KMS y SNS. También hubo una tabla inexistente de Reserva, un error de código (`NameError`) y un conflicto del control compuesto. **Ninguna falla fue por timeout de Athena** |
+| COS-07 | **Confirmado:** ninguna tabla de Gold está particionada (10 de 10) |
+| COS-08 | **Confirmado:** el workgroup `primary` no tiene tope de escaneo y no fuerza su configuración |
+
+**Conclusiones:**
+- **En DEV el riesgo de timeout de Athena es bajo.** El tiempo máximo del job (`SEGUNDOS_MAXIMOS_CONSULTA = 900`) sobra; se puede bajar a 120-300 s. **Pero DEV tiene muy pocos datos:** el Gold de ARL en PRD tiene más de 1,2 millones de filas. Antes de decidir el particionado (7.6) hay que medir en PRD. El mismo script sirve en modo solo lectura con `AMB=prd bash medir-athena-dev.sh`, sin `--ejecutar`, y lo corre el equipo de PRD.
+- **El tiempo de los jobs está en el arranque de Spark.** Ni la notificación ni la certificación usan Spark para calcular nada. Pasarlos a Glue Python shell, o a una lambda en el caso de la notificación, bajaría la duración y el costo. Queda como propuesta: hay que medirlo.
+- **Nota (no es brecha):** en DEV, el Gold de 5 mallas (`scd_primas_rentas`, `scd_primas_endosos`, `scd_auxilios_funerarios`, `scd_reserva_matematica_arp` y `scd_reserva_matematica_rvi`) se vació el 2026-11-05 en un solo borrado. DEV es ambiente de pruebas y eso es esperable. Para probar con datos: usar Primas ARL, que conserva su Gold, o volver a correr la malla que haga falta.
+- 178 consultas del historial no coinciden con el SQL actual de los JSON de caso. Son versiones anteriores de las consultas o consultas manuales; no cambian las conclusiones.
