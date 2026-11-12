@@ -68,3 +68,10 @@ Al resolver una, moverla a la nota correspondiente y borrarla de aquí.
 - ¿De quién es `niif-dev-configurador-mallas` (Terraform, 0 invocaciones)? Nuestro T2 se desplegaría como `datalake-<amb>-niif-configurador-mallas-lambda`.
 - ARQ-30: ¿quién borró los 2 archivos de ARL de `niif-dev-transport/export/` (2026-10-09)? ¿Hay ciclo de vida en el bucket? ¿Cuándo se configuró la notificación de S3 hacia `send-via-sftp`?
 - ¿Se puede quitar el callback del API viejo (`53x06brwqh`) del cliente de Cognito `datalake-dev-niif-api`? Lo hace DevOps/Terraform (SEG-14).
+
+## Flujo de las mallas por periodo y SCD (Slowly Changing Dimension, dimensión de cambio lento) (2026-11-12, ver [[inprod-primas-arl-202606]] 3e)
+- **Preguntar al equipo/dueños del flujo:** en cada malla, ¿cada corrida trae la **foto acumulada** (todos los periodos hasta el actual, como el `WHERE PERIODO <= X` de ARL en prod) o **solo el periodo cargado** (Auxilios Funerarios filtra por fechas en Silver)?
+- ¿Al cargar un periodo nuevo, los registros de periodos anteriores deben **seguir activos** en Gold (`ACT_REG = 1`) o cerrarse? ¿Cómo se vuelve a certificar un periodo anterior?
+- ¿Por qué el `WHERE` de ARL en QA es `PERIODO = '202509'` y en prod `<= '202606'`? ¿Cuál es el oficial?
+- Auxilios Funerarios en prod: ¿Gold ya tiene cerrados los periodos anteriores? (consulta de solo lectura por `per_envio_tesoreria`). ¿Se detectó antes algún reclamo?
+- Primas Rentas y Endosos, Reserva Matemática ARP y RVI: ¿tienen el mismo patrón (solo el periodo en Silver)?

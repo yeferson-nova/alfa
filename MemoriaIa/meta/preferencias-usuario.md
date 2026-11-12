@@ -38,3 +38,4 @@ actualizado: 2026-11-11
 - **Commits:** mensaje **muy corto en español**, sin coautor. El commit y el push los pide el usuario, normalmente al terminar una tarea ("al terminar haz commit push").
 - **Orden explícita:** "aprobado, ejecuta los cambios" cuenta como orden para escribir código. Aprobar una recomendación (por ejemplo, O-2) no da permiso para crear recursos en AWS: lo de Terraform se pide a DevOps.
 - **Sesiones remotas:** todo lo necesario debe quedar en el repo (`MemoriaIa\`, `CLAUDE.md` y la skill), porque la memoria local de Claude no viaja. Al cerrar un bloque de trabajo, actualizar [[traspaso-sesion]].
+- **Siglas (2026-11-12):** siempre que se escriba SCD, poner entre paréntesis lo que significa: *(Slowly Changing Dimension, dimensión de cambio lento: guarda el historial de cada registro sin sobrescribirlo)*. Aplica también a otras siglas técnicas poco conocidas si el usuario lo pide.
