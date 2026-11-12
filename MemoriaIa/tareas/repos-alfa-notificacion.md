@@ -27,6 +27,27 @@ Copia de lectura en `Backend\ReposAws\` (ver su `LEEME.md`). `VERSIONES.md` sali
 - El JSON global del repo trae `{env}` en `environment`, `buckets` y `dynamodb`, y prod funciona. Eso confirma que el pipeline reemplaza `{env}` por ambiente; que también aplique `envConfig` sigue siendo inferencia. Riesgo: la llave `{env}` de Reserva Matemática queda duplicada con `qa` y `prd` después del reemplazo, y gana la última.
 - En el global de Previsional, `console_url.account_id` tiene fija la cuenta de QA en todos los ambientes. No afecta a la notificación.
 
+## Job modular en el repo de Glue (2026-11-12, decisión del usuario: va el modular)
+- La copia `glue\data-datalake-niif-notification-certification-glue-job\` ahora tiene el job hexagonal, tomado de `Backend\reposEstandar\jobs\data-niif-notificacion\`. Se borró `src/jobs/notification_certification.py`; queda en la rama `feature/migracion-ses`. Rama para el modular: `feature/modularizacion-notification-certification`.
+- Se portó desde el script SES el correo HTML (`email.templatePath`, tablas, detalle, avisos `$avisoHtml`) y el envío parcial por destinatario. `--SES_REMITENTE` pasó a `--SES_SENDER`.
+- Validación: 489 pruebas, 99,9 % de cobertura y equivalencia con el script SES de 36 de 36 (6 JSON reales x 6 escenarios). El comparador está en el scratchpad, fuera del repo.
+- Bloqueos para QA:
+  - el Jenkinsfile solo sube `src/` y no publica el zip ni `job_notificacion.py` (P3 de `SOLICITUD-DEVOPS-SES.md`);
+  - el valor de `--SEGUNDOS_MAXIMOS_CONSULTA` no está definido;
+  - el `tox.ini` declara py38 y tiene `omit = src/**.py` (P6).
+
+## Auditoría del job modular frente al monolito (2026-11-12)
+- **Funcionalidad:** cubre todas las funciones del monolito: argumentos, configuración, registros, Athena, disponibilidad, enlaces, texto, HTML, SES, marcado y compuesto.
+  - Se alineó el único cambio de lógica: una plantilla de otro bucket ahora falla (`NTF-CFG-006`), igual que el monolito.
+  - Las diferencias que quedan son intencionales y no cambian el flujo normal; la tabla está en el README del repo.
+- **Validación:** 477 pruebas, 99,9 % de cobertura, 36 de 36 en la equivalencia y pyflakes limpio. Todos los JSON de `cfg` (caso y global) se leen bien en dev, qa y prd.
+- **Brecha con el estándar:**
+  - todos los identificadores están en español, y el estándar pide inglés (decisión del 2026-11-10);
+  - las capas no se llaman `domain`, `application`, `adapters` y `config`;
+  - las pruebas están en `tests/` en vez de `test/`;
+  - hay 143 líneas de más de 100 caracteres.
+- **Bloqueo de los botones en QA (igual que con el monolito):** `stringVars` de los JSON de `cfg` trae el API de DEV (`hfoy06vw40`). Ningún código lee `envConfig`. En QA los enlaces solo funcionan si el pipeline copia `envConfig.qa` en `stringVars` (P4).
+
 ## Hallazgos
 - **R-01, `templatePath`:** el repo tiene `email-templates/` (plural) en 7 JSON, `email_templates/` en Previsional y solo `email-template/` (singular) en Reserva Matemática. El repo de plantillas despliega en `email-template/`. Hay que corregir los JSON.
 - **R-02, espacio en Auxilios:** `email.envConfig.prd.certificarLink` tiene `datalake- prd-niif`. Está en `auxilios-funerarios/auxilioFunerario.json` y en su copia de `configs/certification/`. Ver [[inprod-enlaces-cognito-9411325]].
