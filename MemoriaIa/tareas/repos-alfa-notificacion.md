@@ -48,6 +48,17 @@ Copia de lectura en `Backend\ReposAws\` (ver su `LEEME.md`). `VERSIONES.md` sali
   - hay 143 líneas de más de 100 caracteres.
 - **Bloqueo de los botones en QA (igual que con el monolito):** `stringVars` de los JSON de `cfg` trae el API de DEV (`hfoy06vw40`). Ningún código lee `envConfig`. En QA los enlaces solo funcionan si el pipeline copia `envConfig.qa` en `stringVars` (P4).
 
+## Migración a PEP 8 del estándar (2026-11-12, después del commit `7b6c56f`)
+- **Nombres nuevos:**
+  - paquete `certification_notifier`, con las capas `domain`, `application`, `adapters/{inbound,outbound}` y `config`;
+  - pruebas en `test/`;
+  - el script `scripts/notification_certification.py` (mismo `ScriptLocation` de hoy en DEV) y el empaquetado `scripts/package.sh <env>`.
+- Todos los identificadores y los nombres de las pruebas quedaron en inglés. Se conservan en español los contratos: argumentos del job, claves de los JSON, campos de DynamoDB, eventos `NTF_*`, campos fijos del log y de error, y los mensajes.
+- **Verificación:** 477 pruebas, 99,9 % de cobertura, pyflakes limpio y 36 de 36 frente al monolito. El control del comparador detecta los cambios.
+  - 5 líneas pasan de 120 caracteres (máximo 127); el usuario las acepta hasta 144.
+  - El comparador quedó en `Tareas\T1-notificaciones\validacion\comparar_monolito_modular.py`.
+- El renombrado se hizo por tokens con un mapa explícito (script en el scratchpad, no versionado).
+
 ## Hallazgos
 - **R-01, `templatePath`:** el repo tiene `email-templates/` (plural) en 7 JSON, `email_templates/` en Previsional y solo `email-template/` (singular) en Reserva Matemática. El repo de plantillas despliega en `email-template/`. Hay que corregir los JSON.
 - **R-02, espacio en Auxilios:** `email.envConfig.prd.certificarLink` tiene `datalake- prd-niif`. Está en `auxilios-funerarios/auxilioFunerario.json` y en su copia de `configs/certification/`. Ver [[inprod-enlaces-cognito-9411325]].

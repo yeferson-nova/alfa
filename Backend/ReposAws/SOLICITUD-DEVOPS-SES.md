@@ -20,7 +20,7 @@ Cuentas de referencia:
 ## 2. Cambios en los repos (los entrega Desarrollo)
 | Repo | Archivo | Cambio |
 |---|---|---|
-| `data-datalake-niif-notification-certification-glue-job` | `src/notificacion_certificacion/`, `scripts/`, `tests/`, `pyproject.toml` | Job modular (hexagonal) con envío por SES y plantilla HTML. Reemplaza a `src/jobs/notification_certification.py`. Su resultado es igual al del script SES probado en QA (36 de 36 escenarios; ver el README del repo) |
+| `data-datalake-niif-notification-certification-glue-job` | `src/certification_notifier/`, `scripts/`, `test/`, `pyproject.toml` | Job modular (hexagonal) con envío por SES y plantilla HTML. Reemplaza a `src/jobs/notification_certification.py`. Su resultado es igual al del script SES probado en QA (36 de 36 escenarios; ver el README del repo) |
 | `cfg-datalake-niif-config-s3` | 7 JSON de caso (ver abajo) | `email.templatePath` pasa a la carpeta `email-template/` (singular). Además, dos correcciones de enlaces |
 | `tpl-datalake-niif-email-template-s3` | `src/email-template/*.html` (6) | Sin cambios: ya tiene las plantillas nuevas |
 
@@ -47,7 +47,7 @@ Los 7 JSON de `cfg-datalake-niif-config-s3/src/`:
   | `--extra-py-files` | `s3://niif-<env>-assets/glue-resources/libraries/niif-<env>-notification-certification-1.0.0.zip` | Sí |
   | `--SES_CONFIGURATION_SET` | `datalake-ses-cofiguration-set` en QA; en DEV y PRD, el de cada cuenta | No, pero recomendado |
 
-- **Además:** el `ScriptLocation` del job pasa a `s3://niif-<env>-assets/glue-resources/notification/job_notificacion.py`.
+- **Además:** el `ScriptLocation` sigue siendo `s3://niif-<env>-assets/glue-resources/notification/notification_certification.py` (mismo nombre de hoy). Cambia el contenido: ahora solo llama a la librería del zip.
 - **Por qué:** la lambda `niif-<env>-notification-certification-trigger` solo pasa los argumentos de la solicitud. Sin estos argumentos por defecto, el job falla al arrancar con `NTF-ENT-001` y no envía nada. Los valores de índice, zona horaria, vigencia, token y espera son los que el script anterior tenía escritos en el código.
 - **Verificar:** `aws glue get-job --job-name niif-qa-notification-certification --query "Job.DefaultArguments"`
 
@@ -83,7 +83,7 @@ Los 7 JSON de `cfg-datalake-niif-config-s3/src/`:
 |---|---|---|
 | P1 | El `Jenkinsfile` de `tpl-datalake-niif-email-template-s3` despliega en `alfa-niif-<env>-assets`, pero el job lee las plantillas de `niif-<env>-assets` (igual que `cfg-`). ¿Es un error de copia? Si lo es, cambiar a `niif-dev-assets`, `niif-qa-assets` y `niif-prd-assets` | Las plantillas no llegan donde el job las busca y el correo sale solo en texto |
 | P2 | `cfg-` y `tpl-` sincronizan en la raíz de `niif-<env>-assets`, y el README dice que usan `--delete`. ¿El borrado se limita a las carpetas del repo o a todo el bucket? | Un despliegue de `cfg-` podría borrar `email-template/` (de `tpl-`), `glue-resources/notification/` (del job) y `athena/notifications/` |
-| P3 | El job modular necesita dos archivos que arma `bash scripts/empaquetar.sh <env>`: el zip de la librería (`--extra-py-files`) y `job_notificacion.py` (`ScriptLocation`). El `Jenkinsfile` actual solo sincroniza `src/` con `glue-resources/notification/`. ¿Cómo se publican esos dos archivos en el pipeline? | Sin el zip y el script, el job no arranca o sigue corriendo el script anterior |
+| P3 | El job modular necesita dos archivos que arma `bash scripts/package.sh <env>`: el zip de la librería (`--extra-py-files`) y `notification_certification.py` (`ScriptLocation`). El `Jenkinsfile` actual solo sincroniza `src/` con `glue-resources/notification/`. ¿Cómo se publican esos dos archivos en el pipeline? | Sin el zip y el script, el job no arranca o sigue corriendo el script anterior |
 | P6 | Las pruebas del repo requieren Python 3.10 o superior y `boto3`; la cobertura se mide con `--cov-config=pyproject.toml`. ¿Con qué Python corre el pipeline las pruebas? El `tox.ini` declara `py38`, y su `omit = src/**.py` deja la cobertura en cero | Pruebas o Sonar fallan en el pipeline |
 | P4 | El pipeline reemplaza `{env}` en los JSON (el JSON global lo usa en `buckets` y `dynamodb`). ¿También copia `email.envConfig.<env>` sobre `email.stringVars`? ¿Qué pasa con una llave que se llame `{env}` (`reserva-matematica/reservaMatematicaRviArp.json`)? | Enlaces o destinatarios de otro ambiente en el correo |
 | P5 | ¿La cuenta de SES de QA y la de PRD están en sandbox? ¿Cuál es el conjunto de configuración de PRD? ¿La identidad `segurosalfa.com.co` de PRD tiene DKIM verificado? | Correos rechazados (el dominio tiene DMARC `p=reject`) o el envío falla por permisos |
@@ -95,7 +95,7 @@ Los 7 JSON de `cfg-datalake-niif-config-s3/src/`:
 4. Desplegar `cfg-datalake-niif-config-s3` (rama `quality`) y comprobar que `email.templatePath` apunta a `email-template/`:
    `aws s3 cp s3://niif-qa-assets/primas-arl/primasArl.json - | jq .email.templatePath`
 5. Desplegar `data-datalake-niif-notification-certification-glue-job` (rama `quality`) según la respuesta a P3. Luego comprobar:
-   - que `ScriptLocation` apunta a `glue-resources/notification/job_notificacion.py`;
+   - que el script de `ScriptLocation` (`glue-resources/notification/notification_certification.py`) es el nuevo, que solo llama a `certification_notifier`;
    - que el zip de `--extra-py-files` existe en `glue-resources/libraries/`.
 
 ## 6. Pruebas en QA (las acompaña Desarrollo)

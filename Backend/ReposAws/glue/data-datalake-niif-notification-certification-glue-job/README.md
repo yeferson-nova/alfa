@@ -90,19 +90,26 @@ Los demás argumentos van en los **argumentos por defecto del job** (Terraform):
 ## Arquitectura
 
 ```
-src/notificacion_certificacion/
-  dominio/          Reglas puras: configuración, redacción, correo HTML, periodo, compuesto y errores
-  aplicacion/       Caso de uso NotificarCertificacion, servicios y puertos (Protocol)
-  adaptadores/
-    entrada/        Punto de entrada del job de Glue
-    salida/         SES, DynamoDB, Athena, S3, bitácora JSON y reloj
-  configuracion/    Lectura de argumentos y raíz de composición
+src/certification_notifier/
+  domain/           Reglas puras: configuración, redacción, correo HTML, periodo, compuesto y errores
+  application/      Caso de uso NotifyCertification, servicios y puertos (Protocol)
+  adapters/
+    inbound/        Punto de entrada del job de Glue
+    outbound/       SES, DynamoDB, Athena, S3, bitácora JSON y reloj
+  config/           Lectura de argumentos y raíz de composición
 scripts/
-  job_notificacion.py   Script del job (ScriptLocation); solo llama al punto de entrada
-  empaquetar.sh         Arma la librería y el script
+  notification_certification.py   Script del job (ScriptLocation); solo llama al punto de entrada
+  package.sh                      Arma la librería y el script
+test/               Pruebas (pytest)
 ```
 
-Regla de dependencias: `dominio <- aplicacion <- adaptadores`. Solo `configuracion` conoce a todos. La prueba `tests/test_arquitectura.py` la verifica.
+Regla de dependencias: `domain <- application <- adapters`. Solo `config` conoce a todos. La prueba `test/test_architecture.py` la verifica.
+
+**Estilo:**
+- PEP 8, con los identificadores en inglés según el estándar de desarrollo.
+- Quedan en español los contratos externos: argumentos del job, claves de los JSON, campos de DynamoDB, nombres de eventos del log (`NTF_*`) y campos fijos del log (`marcaTiempo`, `nivel`, `evento`, `funcion`, `ejecucion_id` y los de error: `codigo`, `dominio`, etc.).
+- Los mensajes de log y de error están en español.
+- Los campos de contexto de cada evento van en inglés (por ejemplo, `position`, `message_id`, `sent` y `failed`).
 
 ## Errores
 
@@ -170,11 +177,11 @@ Desde la raíz del repo:
 ```
 python -m pip install -r requirements-dev.txt
 python -m pytest
-python -m pytest --cov=notificacion_certificacion --cov-config=pyproject.toml --cov-report=term-missing
+python -m pytest --cov=certification_notifier --cov-config=pyproject.toml --cov-report=term-missing
 ```
 
 - **Resultado local del 2026-11-12:** 477 pruebas en verde y 99,9 % de cobertura. El mínimo configurado es 90 %.
-- **`tests/test_calidad_codigo.py` exige:**
+- **`test/test_code_quality.py` exige:**
   - sin comentarios ni docstrings;
   - sin valores de infraestructura escritos en el código;
   - funciones de hasta 40 líneas y hasta 8 parámetros;
@@ -185,7 +192,7 @@ python -m pytest --cov=notificacion_certificacion --cov-config=pyproject.toml --
 ## Empaquetado
 
 ```
-bash scripts/empaquetar.sh qa
+bash scripts/package.sh qa
 ```
 
 Genera dos archivos en `dist/`:
@@ -193,7 +200,7 @@ Genera dos archivos en `dist/`:
 | Archivo | Destino en S3 | Uso en el job |
 |---|---|---|
 | `niif-qa-notification-certification-<versión>.zip` | `s3://niif-qa-assets/glue-resources/libraries/` | `--extra-py-files` |
-| `job_notificacion.py` | `s3://niif-qa-assets/glue-resources/notification/` | `ScriptLocation` del job |
+| `notification_certification.py` | `s3://niif-qa-assets/glue-resources/notification/` | `ScriptLocation` del job (mismo nombre que hoy usa el job en DEV) |
 
 El código es el mismo en DEV, QA y PRD. Solo cambian el nombre del zip y los argumentos.
 
@@ -223,7 +230,7 @@ El código es el mismo en DEV, QA y PRD. Solo cambian el nombre del zip y los ar
 
 ## Despliegue con el pipeline actual (pendiente con DevOps)
 
-El `Jenkinsfile` sincroniza `src/` con `s3://niif-<env>-assets/glue-resources/notification/`. Con este repo, eso sube la carpeta `notificacion_certificacion/` suelta. **No sube el zip ni `job_notificacion.py`**, que son lo que Glue necesita. Antes de desplegar, DevOps debe definir cómo se publican los dos archivos de `scripts/empaquetar.sh`.
+El `Jenkinsfile` sincroniza `src/` con `s3://niif-<env>-assets/glue-resources/notification/`. Con este repo, eso sube la carpeta `certification_notifier/` suelta. **No sube el zip ni `notification_certification.py`**, que son lo que Glue necesita. Antes de desplegar, DevOps debe definir cómo se publican los dos archivos de `scripts/package.sh`.
 
 ## Vuelta atrás
 
