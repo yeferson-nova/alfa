@@ -1,4 +1,0 @@
-{
-    "Policy": "{\"Version\":\"2012-10-17\",\"Id\":\"default\",\"Statement\":[{\"Sid\":\"api\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:533267035849:function:certification\",\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:execute-api:us-east-1:533267035849:53x06brwqh/*/POST/certificar\"}}},{\"Sid\":\"resource_no_certificar\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:533267035849:function:certification\",\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:execute-api:us-east-1:533267035849:53x06brwqh/*/POST/no_certificar\"}}}]}",
-    "RevisionId": "5f870c4f-7f25-4dbf-b1b9-4e37e6cb6d86"
-}

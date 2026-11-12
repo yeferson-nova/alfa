@@ -1,8 +1,0 @@
-{
-    "Targets": [
-        {
-            "Id": "Compliance-Change-Topic",
-            "Arn": "arn:aws:sns:us-east-1:533267035849:aws-controltower-SecurityNotifications"
-        }
-    ]
-}

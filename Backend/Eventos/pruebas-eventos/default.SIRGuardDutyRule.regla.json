@@ -1,9 +1,0 @@
-{
-    "Name": "SIRGuardDutyRule",
-    "Arn": "arn:aws:events:us-east-1:533267035849:rule/SIRGuardDutyRule",
-    "EventPattern": "{\"source\": [\"aws.guardduty\"], \"detail-type\": [\"GuardDuty Finding\"], \"detail\": {\"accountId\": [\"533267035849\"]}, \"account\": [\"533267035849\"], \"region\": [\"us-east-1\"]}",
-    "State": "ENABLED",
-    "ManagedBy": "triage.security-ir.amazonaws.com",
-    "EventBusName": "default",
-    "CreatedBy": "533267035849"
-}

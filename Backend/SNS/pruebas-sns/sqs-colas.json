@@ -1,5 +1,0 @@
-{
-    "QueueUrls": [
-        "https://sqs.us-east-1.amazonaws.com/533267035849/ALFA-DEV-DATALAKE-Observer-DLQ"
-    ]
-}

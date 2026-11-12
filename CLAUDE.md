@@ -21,7 +21,7 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 - `Tareas\`: tareas asignadas para humanos. `00-LEEME.md` (contexto del proyecto) y una carpeta por asignación (`T1-notificaciones`, `T2-lambdas-gestor-configuracion`, `T3-validaciones-reserva-matematica`) con `README.md` y sus entregables.
 - `Docs\`: `02-estandares-banco` (solo lectura, nombres originales), `03-historias-usuario`, `04-manuales`, `05-arquitectura`, `06-brechas`, `07-entregables`, `08-estandares-desarrollo` (estándar propio de código, ver [[est-desarrollo-hexagonal]]).
 - `MemoriaIa\`: `meta`, `contexto`, `tareas`, `estandares`, `hu`, `brechas`.
-- `Backend\`: solo código.
+- `Backend\`: ya no tiene código (desde 2026-11-12 vive en el repo `alfa-repos`, ver [[repo-alfa-repos]]); quedan maquetas HTML y documentos. La evidencia de AWS está en `EvidenciasAws\backend\` (fuera de Git).
 - Detalle archivo por archivo en [[rutas-workspace]].
 
 ## Arquitectura general del proyecto
@@ -49,7 +49,8 @@ Al iniciar o al perder contexto: leer este índice y abrir solo las notas que el
 ## Índice (notas en `MemoriaIa/`)
 **meta**
 - [[traspaso-sesion]] - **leer primero en una sesión nueva o remota.** **Migración EN PAUSA desde el 2026-11-11.** Tiene el estado al día, qué no está en el repo, reglas y cómo verificar
-- [[rutas-workspace]] - dónde está cada archivo
+- [[repo-alfa-repos]] - **el código vive en el repo `alfa-repos`** (no en `alfa`): cómo viaja entre el PC personal y el corporativo (exportar / parches), dónde quedó cada carpeta de `Backend\` y pendientes de la migración (comandos: `COMANDOS-ALFA-REPOS.md`)
+- [[rutas-workspace]] - dónde está cada archivo (las rutas `Backend\` son históricas)
 - [[preferencias-usuario]]
 - [[preguntas-abiertas]]
 - [[pendientes]] - incluye el plan por fases de organización

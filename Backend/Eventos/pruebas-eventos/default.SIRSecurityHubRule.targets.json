@@ -1,8 +1,0 @@
-{
-    "Targets": [
-        {
-            "Id": "security-ir",
-            "Arn": "arn:aws:security-ir:us-east-1:::"
-        }
-    ]
-}

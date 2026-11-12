@@ -6,7 +6,9 @@ actualizado: 2026-11-09
 
 Raíz: `C:\Users\rdpuser\Git\`. Mapa humano en `Docs\00-LEEME.md`.
 
-## Backend\ (código y entorno local)
+> **2026-11-12:** el código salió de `alfa` y vive en el repo `alfa-repos` (ver [[repo-alfa-repos]]). Las rutas `Backend\...` de esta sección y de otras notas son históricas: la tabla de [[repo-alfa-repos]] dice dónde quedó cada cosa. La evidencia de AWS está en `EvidenciasAws\backend\`.
+
+## Backend\ (código y entorno local) — histórico
 - `inventario\` / `inventario-archivo\`: ya no están en `Backend\`; la extracción de DEV se movió a `EvidenciasAws\dev-inventario-cuenta\` (2026-11-10).
 - **Todo lo organizado por servicio** (trabajo en la raíz, el resto en `pruebas-*`): `Lamnbdas\` (+ `pruebas-lambda\`), `Glue\`, `Eventos\`, `StepFunctions\` (6 SF + `pruebas-stepfunctions\`), `SNS\` (3 tópicos: `ALFA-DEV-DATALAKE-Critical`/`Warning` y `niif-dev-certification-email`), `S3\` (8 buckets del pipeline). Cada uno con `LEEME.md`.
 - `Lamnbdas\<nombre-lambda>\`: las 7 lambdas de configuración con su `.py` **desplegado real** (2026-11-10: `conf_<malla>.py` y `scheduler_configurators.py` del manager, con `ORIGEN.md`; se quitaron las copias del configurador viejo).

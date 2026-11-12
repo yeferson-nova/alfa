@@ -1,4 +1,0 @@
-{
-    "Policy": "{\"Version\":\"2012-10-17\",\"Id\":\"default\",\"Statement\":[{\"Sid\":\"StackSet-AWSControlTowerBP-BASELINE-CLOUDWATCH-a7a4bd4d-b678--SNSInvokeLambdaPermission-ZHtgpHvYOos0\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"sns.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:533267035849:function:aws-controltower-NotificationForwarder\",\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:sns:us-east-1:533267035849:aws-controltower-SecurityNotifications\"}}}]}",
-    "RevisionId": "c9e90c0a-fa43-4204-836d-d6cae2d38774"
-}

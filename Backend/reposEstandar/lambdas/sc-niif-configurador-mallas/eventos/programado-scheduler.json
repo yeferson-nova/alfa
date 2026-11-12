@@ -1,1 +1,0 @@
-{"malla": "PRIMAS_RENTAS", "publicar": true, "ejecutar": true, "periodoNegocio": "202610", "modoEjecucion": "NORMAL", "origen": "PROGRAMACION_GESTOR", "idempotencyKey": "<aws.scheduler.execution-id>"}

@@ -1,9 +1,0 @@
-{
-    "Name": "ALFA-DEV-DATALAKE-GlueCrawlerEvents",
-    "Arn": "arn:aws:events:us-east-1:533267035849:rule/ALFA-DEV-DATALAKE-GlueCrawlerEvents",
-    "EventPattern": "{\"detail-type\":[\"Glue Crawler State Change\"],\"source\":[\"aws.glue\"],\"detail\":{\"state\":[\"Succeeded\",\"Failed\"]}}",
-    "State": "ENABLED",
-    "Description": "Fin de ejecucion de Glue Crawlers",
-    "EventBusName": "default",
-    "CreatedBy": "533267035849"
-}

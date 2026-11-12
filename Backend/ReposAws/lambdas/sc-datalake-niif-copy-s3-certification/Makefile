@@ -1,3 +1,0 @@
-# Commands
-runTest:
-	pytest tests

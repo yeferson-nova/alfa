@@ -1,8 +1,0 @@
-{
-    "Targets": [
-        {
-            "Id": "ControlTower-ManagedRuleTarget",
-            "Arn": "arn:aws:controltower-us-east-1:us-east-1:::"
-        }
-    ]
-}

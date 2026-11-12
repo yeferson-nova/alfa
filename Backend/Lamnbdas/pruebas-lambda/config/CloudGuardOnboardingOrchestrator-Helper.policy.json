@@ -1,4 +1,0 @@
-{
-    "Policy": "{\"Version\":\"2012-10-17\",\"Id\":\"default\",\"Statement\":[{\"Sid\":\"CloudGuard-Onboarding-OrchestratorHelperInvokePermission-2pxjZogF0ZyT\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"sns.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:533267035849:function:CloudGuardOnboardingOrchestrator-Helper\",\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:sns:us-east-1:533267035849:CloudGuardOnboardingOrchestrator\"}}}]}",
-    "RevisionId": "e2868d8e-b945-4815-837c-4110e218b6c3"
-}

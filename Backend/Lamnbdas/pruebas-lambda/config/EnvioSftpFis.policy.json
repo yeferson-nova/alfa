@@ -1,4 +1,0 @@
-{
-    "Policy": "{\"Version\":\"2012-10-17\",\"Id\":\"default\",\"Statement\":[{\"Sid\":\"533267035849_event_permissions_from_alfa-datalake-dev-landing-prophet_for_EnvioSftpFis\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:533267035849:function:EnvioSftpFis\",\"Condition\":{\"StringEquals\":{\"AWS:SourceAccount\":\"533267035849\"},\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:s3:::alfa-datalake-dev-landing-prophet\"}}}]}",
-    "RevisionId": "e33fae82-b9fb-495d-b484-81667ea91bb9"
-}

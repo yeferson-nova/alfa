@@ -1,6 +1,0 @@
-{
-    "--PERIOD": "202606",
-    "--CONFIG_KEY": "primas-rentas/primasRentasEndosos.json",
-    "--EJECUCION_ID": "<ejecucion que completo el grupo>",
-    "--EJECUCIONES_ORIGEN": "<ejecucion primas rentas>,<ejecucion primas endosos>"
-}
