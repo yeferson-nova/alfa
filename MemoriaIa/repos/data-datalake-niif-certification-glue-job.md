@@ -28,7 +28,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit 3ae720c (2026-10-19). Desplegado el monolito (por confirmar en cada ambiente).
-- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 3 solo en `main`; `main` tiene commits que `quality` no tiene (por revisar si son merges o cambios de PRD). Ver ARQ-50 en [[auditoria-repos-2026-11]].
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 3 solo en `main`, 0 archivos distintos; mismo contenido que `main` (los commits de diferencia son merges); la base `quality` sirve. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: rama `feature/codigo-nuevo-notificacion` de `alfa-repos`: reescritura hexagonal, no desplegada ni probada en AWS.
 
 ## Brechas y relacionadas

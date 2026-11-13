@@ -28,7 +28,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit 4247229 (2026-11-06). Desplegado: por confirmar.
-- `quality` frente a `main` (medido en GitHub el 2026-11-12): 3 commits solo en `quality`, 3 solo en `main`; ramas divergentes. Ver ARQ-50 en [[auditoria-repos-2026-11]].
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 3 commits solo en `quality`, 3 solo en `main`, 1 archivos distintos; las dos ramas divergen en 1 archivo por identificar. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno. El fix de exclusión de llaves planeado en [[familia-mallas-alfaprd]] parece ya estar en esta versión (`combinar_lotes_respaldados` debajo de `resolver_llaves_reales` y con parámetro de tabla); por confirmar contra el código desplegado.
 
 ## Brechas y relacionadas

@@ -31,7 +31,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit `e276080` (2026-10-16). Jenkins `lambdaDockerPipeline`: construye la imagen, la sube a ECR y actualiza el SSM de versión; la IaC (`iac-analytics-datalake-niif`, stack `serverless/lambdas/get_files_sftp`) crea la función. Despliegue real: por confirmar.
-- `quality` frente a `main` (medido en GitHub el 2026-11-12): 7 commits solo en `quality`, 0 solo en `main`; `main` no tiene lo de `quality`. Ver ARQ-50 en [[auditoria-repos-2026-11]].
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 7 commits solo en `quality`, 0 solo en `main`, 13 archivos distintos; `quality` va 13 archivos por delante de `main`: lo de QA no se ha promovido a PRD. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno.
 
 ## Brechas y relacionadas

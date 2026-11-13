@@ -28,7 +28,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit 07966fb (2026-11-12). Desplegado: por confirmar (el monolito).
-- `quality` frente a `main` (medido en GitHub el 2026-11-12): 9 commits solo en `quality`, 3 solo en `main`; ramas divergentes. Ver ARQ-50 en [[auditoria-repos-2026-11]].
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 9 commits solo en `quality`, 3 solo en `main`, 1 archivos distintos; las dos ramas divergen en 1 archivo por identificar. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: rama `feature/codigo-nuevo-notificacion`, no desplegada. Mantiene el contrato de negocio; cambia `snsMessageId` a `sesMessageId` en DynamoDB y retira argumentos que pasan al JSON global.
 
 ## Brechas y relacionadas

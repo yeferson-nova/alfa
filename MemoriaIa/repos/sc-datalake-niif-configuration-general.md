@@ -32,7 +32,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit `9c669bf` (2026-11-07). Jenkins `lambdaS3Pipeline` (ZIP a `niif-{env}-lambda-artifacts`); handler `lambda_function.lambda_handler`. Activa en DEV según [[inventario-lambdas]].
-- `quality` frente a `main` (medido en GitHub el 2026-11-12): 21 commits solo en `quality`, 0 solo en `main`; `main` no tiene lo de `quality`. Ver ARQ-50 en [[auditoria-repos-2026-11]].
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 21 commits solo en `quality`, 0 solo en `main`, 23 archivos distintos; `quality` va 23 archivos por delante de `main`: lo de QA no se ha promovido a PRD. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno.
 
 ## Brechas y relacionadas

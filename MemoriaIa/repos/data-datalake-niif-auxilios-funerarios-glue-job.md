@@ -29,7 +29,7 @@ malla: auxilios-funerarios
 
 ## Estado
 - En Alfa: `origin/quality`, commit 6081033 (2026-11-06). Desplegado: por confirmar.
-- `quality` frente a `main` (medido en GitHub el 2026-11-12): 3 commits solo en `quality`, 3 solo en `main`; ramas divergentes. Ver ARQ-50 en [[auditoria-repos-2026-11]].
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 3 commits solo en `quality`, 3 solo en `main`, 1 archivos distintos; las dos ramas divergen en 1 archivo por identificar. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno.
 
 ## Brechas y relacionadas

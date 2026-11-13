@@ -31,7 +31,7 @@ malla: reserva-matematica-arp
 
 ## Estado
 - En Alfa: `origin/quality`, commit `71c5b88` (2026-10-22). Jenkins `lambdaS3Pipeline` sube un ZIP a `niif-{env}-lambda-artifacts` y actualiza la función en dev, qa y prd; la IaC la crea en `iac-analytics-datalake-niif-operations-manager`. Si está desplegada: por confirmar.
-- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 2 solo en `main`; `main` tiene commits que `quality` no tiene (por revisar si son merges o cambios de PRD). Ver ARQ-50 en [[auditoria-repos-2026-11]].
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 2 solo en `main`, 0 archivos distintos; mismo contenido que `main` (los commits de diferencia son merges); la base `quality` sirve. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno aquí; el reemplazo es la rama `feature/T2-configurador-mallas` de `sc-datalake-niif-configurador-mallas`.
 
 ## Brechas y relacionadas

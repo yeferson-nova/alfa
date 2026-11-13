@@ -29,7 +29,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit 0a09b4d (2026-11-12). Desplegado: por confirmar por ambiente.
-- `quality` frente a `main` (medido en GitHub el 2026-11-12): 6 commits solo en `quality`, 6 solo en `main`; ramas divergentes. Ver ARQ-50 en [[auditoria-repos-2026-11]].
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 6 commits solo en `quality`, 6 solo en `main`, 12 archivos distintos; las ramas divergen, 12 archivos distintos. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno en la rama; las correcciones de `templatePath` y del espacio de Auxilios se documentaron como cambios de copia ([[repos-alfa-notificacion]], R-01 a R-03).
 
 ## Brechas y relacionadas

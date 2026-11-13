@@ -28,7 +28,7 @@ malla: transversal
 - `tests/` con dobles en memoria, prueba de arquitectura y de equivalencia con las lambdas actuales; las notas citan 174 pruebas y 99 % (2026-11-03). `scripts/empaquetar.sh` arma el ZIP; cobertura mínima 85 %.
 
 ## Estado
-- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 0 solo en `main`; ramas iguales. Ver ARQ-50 en [[auditoria-repos-2026-11]].
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 0 solo en `main`, 0 archivos distintos; mismo contenido que `main` (los commits de diferencia son merges); la base `quality` sirve. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - En Alfa (`origin/quality`, commit `3918928`, 2026-11-04): solo un README de una línea. La IaC ya declara la función en dev (`niif-{env}-configurador-mallas`; 0 invocaciones en DEV según las notas).
 - Desajustes con la IaC (por confirmar): el handler declarado no lleva el prefijo del paquete y no pasa las variables de idempotencia, catálogo ni métricas.
 

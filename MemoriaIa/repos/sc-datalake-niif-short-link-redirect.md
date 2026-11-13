@@ -29,7 +29,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit `dcaebd3` (2026-08-27); desplegado.
-- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 3 solo en `main`; `main` tiene commits que `quality` no tiene (por revisar si son merges o cambios de PRD). Ver ARQ-50 en [[auditoria-repos-2026-11]].
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 3 solo en `main`, 0 archivos distintos; mismo contenido que `main` (los commits de diferencia son merges); la base `quality` sirve. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: rama `feature/codigo-nuevo-notificacion`, solo esqueleto (`short_link_redirect/` hexagonal y `niif_observability`; el `.py` es idéntico). Meta de su README: validar vigencia, acción `DOWNLOAD` con URL prefirmada (D3) y token de 32 caracteres que ya genera el job nuevo.
 
 ## Brechas y relacionadas

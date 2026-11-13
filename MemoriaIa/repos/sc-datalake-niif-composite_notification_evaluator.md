@@ -30,7 +30,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit `80ca055` (2026-10-14); desplegado.
-- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 3 solo en `main`; `main` tiene commits que `quality` no tiene (por revisar si son merges o cambios de PRD). Ver ARQ-50 en [[auditoria-repos-2026-11]].
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 3 solo en `main`, 0 archivos distintos; mismo contenido que `main` (los commits de diferencia son merges); la base `quality` sirve. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: rama `feature/codigo-nuevo-notificacion`, solo esqueleto hexagonal `composite_evaluator/` y `niif_observability`; el `.py` es idéntico al de Alfa. Su README dice que además lee el stream de la tabla de estado compuesto, algo que el código de Alfa no hace (por confirmar).
 
 ## Brechas y relacionadas
