@@ -102,7 +102,7 @@ Los 6 configuradores tienen 768-901 líneas casi idénticas. De ellos, solo Auxi
 
 ---
 
-## 6. Contraste con la evidencia de la cuenta DEV (`errores\aud-datos\`)
+## 6. Contraste con la evidencia de la cuenta DEV (`EvidenciasAws\aud-datos-cuenta\`)
 
 Ya se tiene el código **desplegado** del manager, de la redirección y de los 5 configuradores restantes, la lista real de disparadores, la API Gateway y las políticas IAM.
 

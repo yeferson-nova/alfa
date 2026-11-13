@@ -194,7 +194,7 @@ Hallado en el código, no supuesto:
 
 ---
 
-## 9. Contraste con la evidencia de la cuenta DEV (`errores\aud-datos\`)
+## 9. Contraste con la evidencia de la cuenta DEV (`EvidenciasAws\aud-datos-cuenta\`)
 
 Recolectada con `Backend\cloudshell-inventario\auditoria-faltantes.sh` (solo lectura, 279 archivos). Los únicos errores del script fueron «no existe política de ciclo de vida o de bucket», esperables.
 

@@ -16,7 +16,7 @@ Dos documentos humanos, validados contra el código (archivo y línea): `Docs\06
 - **CUM-01** El repo versiona evidencia PRD, correos reales y el ID de cuenta (330 archivos). Visibilidad no verificada.
 - **SEG-05** `EnvioSftpFis`: `AutoAddPolicy`, contraseña, `ssh-rsa` de respaldo. **ARQ-15** el SFTP devuelve éxito con fallos, sin DLQ ni archivo temporal.
 
-## Evidencia de la cuenta DEV (`errores\aud-datos\`, 2026-11-05)
+## Evidencia de la cuenta DEV (`EvidenciasAws\aud-datos-cuenta\`, 2026-11-05)
 - **Confirmado:** las 6 mallas con validación `FAILED` (11-100 errores) y Gold `SUCCESS`; el SCD desplegado no tiene el freno; solo ARL tiene regla de cierre de ejecución; 11 de 12 scripts desplegados = repo (solo difiere `scd`).
 - **Corregido:** Gold, Silver, Bronce y assets tienen versionado, KMS y bloqueo público (ARQ-02 baja a alta); los roles de jobs están acotados por malla (excepción: `sns:*` sobre `*` en notificación); `programador-configuraciones` está Disabled; DEV es barato (máx. 1,8 DPU-h, 0,38 GB en Athena).
 - **Nuevo:** la redirección desplegada no valida expiración y filtra el registro en un 400; reintentos del Scheduler + nombre de ejecución no determinista = ejecuciones duplicadas; llaves de SCD con corte (ARP/RVI) apagarían el corte anterior cada mes (por confirmar con Athena).

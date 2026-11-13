@@ -1,7 +1,7 @@
 # Consultas de Athena de la certificación y la notificación (DEV)
 
 Fecha: 2026-11-10.
-- **Fuentes:** los 4 JSON de caso vigentes de `s3://niif-dev-assets/`, guardados en `EvidenciasAws\dev-config-notificacion\` (fuera de Git); el catálogo de Gold (`Backend\Glue\catalogo\tablas-niif-dev-gold-catalog-db.json`, foto del 2026-11-03); el workgroup de Athena (`errores\aud-datos\athena\`); y el código de los dos jobs.
+- **Fuentes:** los 4 JSON de caso vigentes de `s3://niif-dev-assets/`, guardados en `EvidenciasAws\dev-config-notificacion\` (fuera de Git); el catálogo de Gold (`Backend\Glue\catalogo\tablas-niif-dev-gold-catalog-db.json`, foto del 2026-11-03); el workgroup de Athena (`EvidenciasAws\aud-datos-cuenta\athena\`); y el código de los dos jobs.
 - **Quién ejecuta qué:** el job de certificación corre `detail` (un `UNLOAD` a CSV) y el de notificación corre `summary` y `total` para armar el correo. Las consultas viven en el JSON de cada caso, no en el código.
 
 | Caso (JSON) | detail | summary | total | Tablas de Gold |

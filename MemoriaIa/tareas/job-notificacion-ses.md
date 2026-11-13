@@ -72,7 +72,7 @@ Rol `niif-dev-jobs-notification-certification`. Se tropezó con **tres** denegac
 - El asunto ya no se recorta a 100 caracteres.
 
 ## Validación contra DEV (2026-11-09)
-Hallado en el repo (`errores\aud-datos\`, `Backend\Glue\pruebas-glue\jobs.json`):
+Hallado en el repo (`EvidenciasAws\aud-datos-cuenta\`, `Backend\Glue\pruebas-glue\jobs.json`):
 - Ya existe en DEV el job `niif-dev-notification-certification-ses-test` (creado 2026-09-16, "Prueba controlada SNS a SES", mismo remitente, script `glue-resources/notification/test/notification_certification_ses.py`, **que no está en el repo**). No se sabe si alguna ejecución terminó bien.
 - El rol `niif-dev-jobs-notification-certification` tiene la política `TemporarySesTestAccess`: `ses:SendEmail` solo sobre 2 identidades de correo (enmascaradas) y el conjunto `default`. **No** cubre el remitente ni el conjunto `niif-dev-notificaciones` de `job.dev.json`.
 - El job desplegado sigue en SNS (`SNS_TOPIC_ARN`, `commons.zip`).
