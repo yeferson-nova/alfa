@@ -29,6 +29,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit `2c68017` (2026-10-08); en DEV figura inactiva (captura del 2026-11-11), nombre pendiente de decidir.
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 1 solo en `main`; `main` tiene commits que `quality` no tiene (por revisar si son merges o cambios de PRD). Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno (rama `feature/codigo-nuevo-notificacion` idéntica). Entró al alcance como parte del flujo completo (paso 5 del roadmap, transporte a FIS).
 
 ## Brechas y relacionadas

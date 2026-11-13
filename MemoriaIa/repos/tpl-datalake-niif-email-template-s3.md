@@ -28,6 +28,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit bd77b25 (2026-11-12). Desplegado: por confirmar.
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 11 commits solo en `quality`, 2 solo en `main`; ramas divergentes. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: rama `feature/codigo-nuevo-notificacion`, solo agrega el README de plantillas. Falta probar en clientes de correo reales.
 
 ## Brechas y relacionadas

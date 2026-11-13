@@ -29,6 +29,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit `6edeb67` (2026-10-14); desplegado y alineado con DEV.
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 3 solo en `main`; `main` tiene commits que `quality` no tiene (por revisar si son merges o cambios de PRD). Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno en este repo (rama `feature/codigo-nuevo-notificacion` idéntica). Lo reemplaza la orquestadora (D1), que toma el candado, pasa `--EJECUCION_ID` y ya no envía los argumentos de enlaces cortos, porque el job nuevo los rechaza (ARQ-44). Deben desplegarse juntos.
 
 ## Brechas y relacionadas

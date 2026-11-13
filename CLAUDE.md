@@ -40,7 +40,7 @@ Al iniciar o al perder contexto: leer `MemoriaIa\00-INDEX.md` y abrir solo las n
   ---
   ```
 - Fichas de `estandares\` y `hu\`: reglas verificables (qué exige el documento), 10 a 20 líneas, con la ruta del archivo fuente.
-- Brechas con ID único: `SEG-xx` (seguridad), `COS-xx` (costos), `ARQ-xx` (arquitectura), `CUM-xx` (cumplimiento). Mismo ID en la nota IA y en `Docs\06-brechas\`. Último usado: SEG-16, COS-09, ARQ-49, CUM-01.
+- Brechas con ID único: `SEG-xx` (seguridad), `COS-xx` (costos), `ARQ-xx` (arquitectura), `CUM-xx` (cumplimiento). Mismo ID en la nota IA y en `Docs\06-brechas\`. Último usado: SEG-16, COS-09, ARQ-50, CUM-01.
 - Un repo = una ficha en `MemoriaIa/repos/<nombre-del-repo>.md`, con la plantilla [[plantilla-ficha-repo]]. Una carpeta por tipo de nota: cambios nuestros en `features`, incidentes en `inprod`, brechas en `auditorias`.
 - Validar antes de cerrar: `python C:\Users\rdpuser\Git\alfa-repos\scripts\validar-memoria.py` (frontmatter, enlaces, índice y fichas).
 - Al aprender algo nuevo: actualizar la nota existente antes de crear otra. Si es un tema nuevo, crear la nota y agregarla al índice.

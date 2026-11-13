@@ -30,6 +30,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit `7ff71d6` (2026-10-16); desplegado.
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 2 solo en `main`; `main` tiene commits que `quality` no tiene (por revisar si son merges o cambios de PRD). Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno en este repo; la rama `feature/codigo-nuevo-notificacion` lo deja igual. Lo reemplaza la orquestadora (D1), que además es idempotente y trata `AccessDenied` como error; escribir la malla como pendiente en `prg-programaciones` espera la decisión D2.
 
 ## Brechas y relacionadas
