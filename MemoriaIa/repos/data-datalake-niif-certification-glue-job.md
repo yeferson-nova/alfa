@@ -28,6 +28,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit 3ae720c (2026-10-19). Desplegado el monolito (por confirmar en cada ambiente).
+- Verificado contra GitHub (captura del 2026-11-12): `quality` tiene los mismos 8 archivos que exportamos y está **3 commits detrás de `main`**; qué traen esos 3 commits está por confirmar.
 - Código nuevo nuestro: rama `feature/codigo-nuevo-notificacion` de `alfa-repos`: reescritura hexagonal, no desplegada ni probada en AWS.
 
 ## Brechas y relacionadas
