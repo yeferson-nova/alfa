@@ -88,3 +88,9 @@ Al resolver una, moverla a la nota correspondiente y borrarla de aquí.
 - ¿Los `parametros_extraccion.json` versionados en [[cfg-datalake-niif-config-s3]] son estado de runtime que el pipeline pisa en cada corrida? ¿El Excel de ejemplo de [[cfg-datalake-niif-params-s3-landing]] trae datos reales?
 - Previsional y PCR Vida no encajan en el enum de malla de la plantilla de ficha; quedaron como `transversal`. ¿Se agregan como mallas propias?
 - **Desfase quality/main (ARQ-50, [[auditoria-repos-2026-11]]):** 21 repos tienen el mismo contenido en las dos ramas (solo merges); 12 no. Falta ver **qué** cambia en los 4 repos que divergen en 1 archivo y en `iac-analytics-datalake-niif`, `iac-analytics-datalake-niif-operations-manager`, `cfg-datalake-niif-config-s3` y `tpl-datalake-niif-email-template-s3` (`git diff --stat origin/quality origin/main`). **Aplazado:** la rama base de cada repo se confirma al trabajar en él (Alfa sigue en construcción).
+
+## Para el arquitecto: inconsistencias del diagrama aprobado (2026-11-12, ver [[arquitectura-niif17]])
+- En `Página-10` el ERP lleva el número 7 (igual que la Reportería) y no hay paso 8. ¿El ERP es el 8?
+- El job de Transformación está en la zona Plata en `Página-1` y en la zona Oro en `Página-6`. ¿Cuál es? Cambia el conteo de jobs del diagrama (8 o 9, [[familia-mallas-alfaprd]]).
+- CloudWatch y `ModeloTrazabilidad` aparecen en `Página-1` sin conexiones, y `Página-2` no dibuja observabilidad (ARQ-31).
+- Las Fuentes alimentan directo al Subledger Contable, además de la Bodega. ¿Es una carga independiente de la certificación?
