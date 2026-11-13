@@ -25,6 +25,7 @@ Raíz: `C:\Users\rdpuser\Git\`. Mapa humano en `Docs\00-LEEME.md`.
 - `TareasAsignadas.txt`: fuente original. Resumen IA en [[tareas-aws]].
 - `00-LEEME.md`: contexto del proyecto, alcance, marco normativo y resumen de asignaciones.
 - `T1-notificaciones\`, `T2-lambdas-gestor-configuracion\`, `T3-validaciones-reserva-matematica\`: `README.md` con problema, estado, estándares, propuesta y bloqueos; aquí van sus entregables.
+- `Fixs\`: una carpeta por fix (`<nombre-del-fix>\`) con informe técnico `.md`, auditorías y pruebas. `prompt-auditoria-fix.md`: prompt reutilizable con el proceso de auditoría (contexto, flujo, hallazgos, simulación con jobs reales, métricas de código, estructura del informe y reglas de redacción). `primasARL\`: `informe-negocio.md` (versión para negocio, con diagramas mermaid para exportar a PDF, convención de criticidad y conteos por grupo), `informe-tecnico.md` (revisión del flujo Primas ARL con resumen e índice: SCD-01..10, EXT-01..10 de la extracción y ARL-01..06), `pruebas\arnes_scd.py` (ejecuta el `scd.py` real con PySpark local; entorno en el scratchpad de la sesión, Python 3.11 + pyspark 3.5.5) y `pruebas\arnes_flujo_arl.py` (encadena extracción, remediación, Silver ARL y SCD reales con Oracle, S3 y Glue simulados; escenarios control, antes, raiz, ext01 a ext04).
 
 ## Docs\ (para humanos, referencia)
 - `02-estandares-banco\`: entregables del banco, solo lectura, nombre original. Fichas en `MemoriaIa\estandares\` ([[est-etl]], [[est-datastage]], [[est-versionamiento-codigo]], [[est-codigo-seguro]], [[est-databrew]]).
