@@ -34,5 +34,6 @@ malla: transversal
 - Código nuevo nuestro: ninguno en este repo. La rama `feature/codigo-nuevo-notificacion` lo deja igual; su reemplazo es la orquestadora (decisión D1), pendiente de despliegue.
 
 ## Brechas y relacionadas
+- **Arquitectura:** en la propuesta la orquestadora lo reemplaza (con el trigger y move). En la aprobada la copia a la Zona Transporte la hace la Lambda (Notificación). Ver [[arquitectura-propuesta-niif17]].
 - ARQ-24 (`NIIF_CARPETAS` duplicado en copy y move), ARQ-26 (traga excepciones y devuelve éxito), ARQ-30 (copy hacia SFTP: falló todos los Certificar del 2026-08-19 al 2026-09-25 por falta del índice; Certificar hacia FIS nunca probado de punta a punta en DEV), ARQ-41 y ARQ-43, en [[notificaciones-vs-arquitectura]] e [[inventario-lambdas]].
 - Relacionado: [[sc-datalake-niif-notification-certification-orchestrator]], [[sc-datalake-niif-mov-s3-certification]], [[sc-datalake-niif-send-via-sftp-lambda]], [[orquestadora-notificaciones]].

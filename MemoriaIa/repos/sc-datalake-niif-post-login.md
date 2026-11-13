@@ -31,6 +31,7 @@ malla: transversal
 - Código nuevo nuestro: esqueleto en `feature/codigo-nuevo-notificacion` (sin lógica).
 
 ## Brechas y relacionadas
+- **Arquitectura:** en la propuesta se renombra `niif-{env}-post-login` y llama a certificar o no certificar. En la aprobada `postLogin()` solo se conecta con Cognito. Ver [[arquitectura-propuesta-niif17]].
 - Cierra, cuando se escriba: SEG-10 (flujo implícito, pasar a código con PKCE) y SEG-11 (`state` sin firmar), en [[notificaciones-vs-arquitectura]].
 - Incidente: el cliente de Cognito tenía un callback local en lugar de la URL real de `/post_login`, con 0 eventos en 14 días, en [[inprod-enlaces-cognito-9411325]]. SEG-14 (API viejo con tráfico en el post-login anterior) en [[inventario-lambdas]].
 - Relacionado: [[sc-datalake-niif-short-link-redirect]], [[sc-datalake-niif-certification]], [[roadmap-notificaciones]].

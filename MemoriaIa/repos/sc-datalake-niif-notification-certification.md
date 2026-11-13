@@ -33,6 +33,7 @@ malla: transversal
 - Código nuevo nuestro: ninguno en este repo (rama `feature/codigo-nuevo-notificacion` idéntica). Lo reemplaza la orquestadora (D1), que toma el candado, pasa `--EJECUCION_ID` y ya no envía los argumentos de enlaces cortos, porque el job nuevo los rechaza (ARQ-44). Deben desplegarse juntos.
 
 ## Brechas y relacionadas
+- **Arquitectura:** en la propuesta la orquestadora lo reemplaza (con copy y move). En la aprobada todo es la Lambda (Notificación). Ver [[arquitectura-propuesta-niif17]].
 - **ARQ-46** el README del repo es copia de otro y no lo describe, en [[auditoria-repos-2026-11]].
 - ARQ-25 (`sendLock` solo se lee), ARQ-26 (traga excepciones), ARQ-40 (solo notifica si la consulta es `detail#1`), ARQ-43 (mapping sin cola de fallos ni reintentos acotados) y ARQ-44, en [[notificaciones-vs-arquitectura]].
 - Relacionado: [[sc-datalake-niif-notification-certification-orchestrator]], [[orquestadora-notificaciones]], [[job-notificacion-ses]], [[repos-alfa-notificacion]], [[roadmap-notificaciones]].

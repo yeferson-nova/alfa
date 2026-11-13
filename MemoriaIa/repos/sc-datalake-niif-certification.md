@@ -35,6 +35,7 @@ malla: transversal
 - Código nuevo nuestro: rama `feature/codigo-nuevo-notificacion` de `alfa-repos`, solo esqueleto: carpetas hexagonales vacías `certification_decision/{domain,application,adapters,config}` y `niif_observability`. `certification.py` es idéntico al de Alfa; el README nuevo describe la meta (log del resultado, sin claims en el log). Falta la lógica y `src/lambda_function.py`.
 
 ## Brechas y relacionadas
+- **Arquitectura:** en la propuesta es la Lambda (Certificación) nueva (`POST /certify` y `/not_certify`; escribe CERTIFICATE o NO_CERTIFICATE en el Modelo Notificaciones). En la aprobada el API llega a la Lambda (Notificación); entrada del API pendiente (D7). Ver [[arquitectura-propuesta-niif17]].
 - **ARQ-46** el README del repo es copia de otro y no lo describe, en [[auditoria-repos-2026-11]].
 - ARQ-33 (no deja log del resultado) y SEG-12 (escribe evento y claims con el correo en el log) en [[notificaciones-vs-arquitectura]]. D7 (si el API va a la orquestadora o aquí) en [[roadmap-notificaciones]].
 - SEG-10 y SEG-11 (flujo implícito, `state` sin firma) y SEG-14 (API viejo) en [[notificaciones-vs-arquitectura]] e [[inventario-lambdas]].

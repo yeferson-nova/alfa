@@ -34,5 +34,6 @@ malla: transversal
 - Código nuevo nuestro: ninguno en este repo; la rama `feature/codigo-nuevo-notificacion` lo deja igual. Lo reemplaza la orquestadora (D1), que además es idempotente y trata `AccessDenied` como error; escribir la malla como pendiente en `prg-programaciones` espera la decisión D2.
 
 ## Brechas y relacionadas
+- **Arquitectura:** en la propuesta la orquestadora lo reemplaza (con el trigger y copy). En la aprobada el archivo de no certificados lo hace la Lambda (Notificación). Ver [[arquitectura-propuesta-niif17]].
 - ARQ-23 (No certificar no deja la tarea pendiente; parcial en la orquestadora), ARQ-24, ARQ-26, ARQ-42 (no idempotente, `AccessDenied` como "no existe") y ARQ-43, en [[notificaciones-vs-arquitectura]].
 - Relacionado: [[sc-datalake-niif-notification-certification-orchestrator]], [[sc-datalake-niif-copy-s3-certification]], [[orquestadora-notificaciones]], [[roadmap-notificaciones]].

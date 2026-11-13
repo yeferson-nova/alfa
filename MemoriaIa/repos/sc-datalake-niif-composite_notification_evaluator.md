@@ -34,6 +34,7 @@ malla: transversal
 - Código nuevo nuestro: rama `feature/codigo-nuevo-notificacion`, solo esqueleto hexagonal `composite_evaluator/` y `niif_observability`; el `.py` es idéntico al de Alfa. Su README dice que además lee el stream de la tabla de estado compuesto, algo que el código de Alfa no hace (por confirmar).
 
 ## Brechas y relacionadas
+- **Arquitectura:** en la propuesta es la Lambda (Evaluador compuesto), llamada por la Malla de Ejecución, con el Modelo Compuesto; no está en la aprobada. Ver [[arquitectura-propuesta-niif17]].
 - **ARQ-46** el README del repo es copia de otro y no lo describe, en [[auditoria-repos-2026-11]].
 - ARQ-27: `--ENVIRONMENT` se envía como el texto `{env}` literal. ARQ-32: no propaga el ID de ejecución. ARQ-21: no está en el diagrama. Todas en [[notificaciones-vs-arquitectura]].
 - Relacionado: [[roadmap-notificaciones]] (E3 guarda `ejecucionId` y `ejecucionesOrigen` en el compuesto), [[inventario-lambdas]], [[job-certificacion]].

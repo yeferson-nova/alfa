@@ -31,5 +31,6 @@ malla: transversal
 - Código nuevo nuestro: rama `feature/codigo-nuevo-notificacion`. Pendiente de DevOps: índice, función, mapping con `ReportBatchItemFailures`, bisect y cola de fallos, Scheduler, permisos. Faltan el correo real de `alert_recipients` y las claves nuevas en el JSON global de previsional. Se despliega junto con el job de notificación nuevo.
 
 ## Brechas y relacionadas
+- **Arquitectura:** en la propuesta es la Lambda (Notificación): reemplaza al trigger, a copy y a move. En la aprobada la Lambda (Notificación) hace todo. Ver [[arquitectura-propuesta-niif17]].
 - Cierra en código ARQ-24, ARQ-25, ARQ-26, ARQ-40 a ARQ-43 y SEG-12; ARQ-23 queda parcial (D2); ARQ-44 exige el despliegue conjunto. Decisiones O-1 a O-4 aprobadas. En [[notificaciones-vs-arquitectura]].
 - Relacionado: [[orquestadora-notificaciones]], [[roadmap-notificaciones]], [[job-notificacion-ses]], [[sc-datalake-niif-notification-certification]], [[sc-datalake-niif-copy-s3-certification]], [[sc-datalake-niif-mov-s3-certification]], [[est-gobierno-devops-niif]].

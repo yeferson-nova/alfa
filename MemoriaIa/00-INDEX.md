@@ -14,6 +14,7 @@ actualizado: 2026-11-12
 |---|---|
 | Retomar el trabajo en una sesión nueva | [[traspaso-sesion]], luego [[pendientes]] |
 | Entender el flujo de punta a punta | [[arquitectura-niif17]] y después [[00-mapa-repos]] |
+| Tocar una pieza de la cadena de notificación o certificación (lambdas, enlaces, evaluador, orquestadora) | [[arquitectura-propuesta-niif17]]: las dos arquitecturas difieren ahí |
 | Saber qué hace un repo y qué papel juega en el flujo | su ficha en `repos\` (lista en [[00-mapa-repos]]) |
 | Dónde está el código y cómo se pasa al PC corporativo | [[repo-alfa-repos]] (comandos en `COMANDOS-ALFA-REPOS.md`, raíz del repo) |
 | Dónde está cada archivo o carpeta | [[rutas-workspace]] (las rutas `Backend\` son históricas) |
@@ -54,6 +55,7 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 
 **contexto:**
 - [[arquitectura-niif17]]: pasos 1 a 12 del diagrama aprobado, con el detalle del paso 3 (nos competen 2 y 3)
+- [[arquitectura-propuesta-niif17]]: nuestra segunda arquitectura (lambdas que faltan en la `Página-2`) y dónde difiere de la aprobada
 - [[familia-mallas-alfaprd]]: las 6 mallas, jobs del diagrama frente a los desplegados
 - [[inventario-lambdas]]: lambdas y Step Functions de DEV, con la evidencia de la limpieza
 - [[repos-alfa-notificacion]]: hallazgos R-01 a R-06 de los repos de la cadena de notificación

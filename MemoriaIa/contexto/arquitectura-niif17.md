@@ -46,6 +46,6 @@ El **ERP** está dibujado con el número 7, repetido con la Reportería, y no ha
 3. CloudWatch y `ModeloTrazabilidad` están sin flechas; la hoja 2 no dibuja observabilidad ([[notificaciones-vs-arquitectura]], ARQ-31).
 4. Las hojas 1, 2 y 9 traen direcciones IP internas: no copiarlas a notas ni al repo.
 
-Mapa de hojas y flujo AS-IS: skill `niif17-alfa`, `references\arquitectura-y-flujo.md`. Existe además `NIIF17_ModeloSolucion_V1.0-propuesta.drawio` (cambios propios, 2026-11-11; el original no se toca).
+Mapa de hojas y flujo AS-IS: skill `niif17-alfa`, `references\arquitectura-y-flujo.md`. Nuestra segunda arquitectura, con las lambdas que faltan en la hoja `Página-2`, está en `NIIF17_ModeloSolucion_V1.0-propuesta.drawio` (el original no se toca): ver [[arquitectura-propuesta-niif17]]. Al tocar esas piezas hay que tener presentes las dos.
 
-Relacionado: [[diseno-propuesto]], [[correo-notificacion]].
+Relacionado: [[arquitectura-propuesta-niif17]], [[diseno-propuesto]], [[correo-notificacion]].

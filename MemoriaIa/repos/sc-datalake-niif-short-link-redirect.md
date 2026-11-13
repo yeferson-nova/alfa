@@ -33,6 +33,7 @@ malla: transversal
 - Código nuevo nuestro: rama `feature/codigo-nuevo-notificacion`, solo esqueleto (`short_link_redirect/` hexagonal y `niif_observability`; el `.py` es idéntico). Meta de su README: validar vigencia, acción `DOWNLOAD` con URL prefirmada (D3) y token de 32 caracteres que ya genera el job nuevo.
 
 ## Brechas y relacionadas
+- **Arquitectura:** en la propuesta es la Lambda (Enlace corto) (`GET /r`, Modelo Enlaces cortos); no está en la aprobada. Ver [[arquitectura-propuesta-niif17]].
 - SEG-13 (token de 8 hex y `/r` público) y ARQ-29 (descarga del CSV por la consola de S3), en [[notificaciones-vs-arquitectura]]. ARQ-21 (enlaces cortos fuera del diagrama).
 - Incidente: los 2 enlaces cortos de Auxilios guardados con el host roto en prod, en [[inprod-enlaces-cognito-9411325]].
 - Relacionado: [[sc-datalake-niif-post-login]], [[sc-datalake-niif-certification]], [[job-notificacion-ses]], [[roadmap-notificaciones]].

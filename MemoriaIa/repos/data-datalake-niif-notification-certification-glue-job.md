@@ -32,5 +32,6 @@ malla: transversal
 - Código nuevo nuestro: rama `feature/codigo-nuevo-notificacion`, no desplegada. Mantiene el contrato de negocio; cambia `snsMessageId` a `sesMessageId` en DynamoDB y retira argumentos que pasan al JSON global.
 
 ## Brechas y relacionadas
+- **Arquitectura:** en la aprobada la Lambda (Notificación) envía el Mensaje por SES; la propuesta dice que lo envía este job (ARQ-22), aunque la flecha original sigue dibujada. Ver [[arquitectura-propuesta-niif17]].
 - ARQ-22 y ARQ-26, ARQ-27, SEG-12, SEG-13 en [[notificaciones-vs-arquitectura]]. Riesgos del paso: [[riesgos-glue-notificacion]].
 - Relacionado: [[job-notificacion-ses]], [[repos-alfa-notificacion]], [[orquestadora-notificaciones]], [[repo-alfa-repos]]
