@@ -1,7 +1,7 @@
 ---
 tipo: repo
 estado: vigente
-actualizado: 2026-11-12
+actualizado: 2026-11-13
 repo: data-datalake-niif-primas-rentas-glue-job
 categoria: glue
 paso: "2 · Silver (preparación)"
@@ -37,4 +37,5 @@ malla: primas-rentas
 - **ARQ-46** el README del repo es copia de otro y no lo describe, en [[auditoria-repos-2026-11]].
 - **ARQ-47** sin pruebas en el repo, en [[auditoria-repos-2026-11]].
 - Silver con joins sin cuadre y guarda de 0 filas parcial: ARQ-04 y ARQ-05 en [[auditoria-pipeline-2026-11]].
+- **Incidente 2026-11-13:** Silver con 75.181 registros frente a 401 del SQL de composición V2.1 (falta el "Ajuste" en el join con `prv_rentas`, falta `RAMO` y agrupa por lote), en [[inprod-primas-rentas-202606]].
 - Relacionado: [[familia-mallas-alfaprd]], [[arquitectura-niif17]], [[repo-alfa-repos]], [[est-desarrollo-hexagonal]]

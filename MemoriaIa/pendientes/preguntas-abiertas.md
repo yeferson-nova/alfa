@@ -1,7 +1,7 @@
 ---
 tipo: pendiente
 estado: vigente
-actualizado: 2026-11-09
+actualizado: 2026-11-13
 ---
 # Preguntas abiertas
 
@@ -94,3 +94,8 @@ Al resolver una, moverla a la nota correspondiente y borrarla de aquí.
 - El job de Transformación está en la zona Plata en `Página-1` y en la zona Oro en `Página-6`. ¿Cuál es? Cambia el conteo de jobs del diagrama (8 o 9, [[familia-mallas-alfaprd]]).
 - CloudWatch y `ModeloTrazabilidad` aparecen en `Página-1` sin conexiones, y `Página-2` no dibuja observabilidad (ARQ-31).
 - Las Fuentes alimentan directo al Subledger Contable, además de la Bodega. ¿Es una carga independiente de la certificación?
+
+## Primas Rentas ([[inprod-primas-rentas-202606]])
+- ¿Gold de Primas Rentas debe guardar solo las rentas expedidas en cada periodo (los 401 del SQL V2.1) o el acumulado de rentas con pago en el mes? Preguntar a Victor o al arquitecto. Si es solo lo del periodo, hace falta el SCD por periodo.
+- ¿La llave del SCD de Primas Rentas incluye el periodo? Revisar su JSON de configuración.
+- ¿La versión del job Silver con el join sin "Ajuste" está desplegada en prod? Si lo está, ¿qué periodos se certificaron con totales inflados?

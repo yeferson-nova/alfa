@@ -1,7 +1,7 @@
 ---
 tipo: pendiente
 estado: vigente
-actualizado: 2026-11-11
+actualizado: 2026-11-13
 ---
 # Pendientes
 
@@ -40,6 +40,7 @@ actualizado: 2026-11-11
 ## Incidente en prod: Primas ARL 202606 (2026-11-05), ver [[inprod-primas-arl-202606]]
 - [ ] **Plan de cambios del incidente (2026-11-05), detalle en [[inprod-primas-arl-202606]] secciones 3b y 3c.** INC-5 confirmada con diff contra el script de prod (`errores\extraccion_estandar_optimized.py`): faltan 3 bloques de la exclusión. Paquete 1 = **fix de extracción** (script del repo, 3 bloques juntos; el único obligatorio). Seguros opcionales: freno de `scd.py` (borrador sin entregar, 18 pruebas; **antes hay que hacer opcional `UMBRAL_APAGADO_PCT`**, la Step Function no lo pasa), correo con totales vacíos y alarma de fallo del SCD. `Tareas\paquete-release-inprod\LEEME.md` **no existe**: hay que crear el paquete de release (instrucciones, prueba en QA, reversa). Pendiente confirmar si QA tiene la versión nueva de extracción y decidir si se conserva el borrador de `scd.py`.
 - [ ] **Ajuste del SCD (Slowly Changing Dimension, dimensión de cambio lento) por periodo (2026-11-12), ver [[inprod-primas-arl-202606]] sección 3e.** El freno saltó en QA con periodo nuevo (Auxilios Funerarios 90/90, ARL 2099/2099): el SCD no distingue periodos. Hacer: separar release (paquete 1 solo extracción; paquete 2 SCD por periodo con la columna de periodo en la config de cada malla y pruebas); revisar Primas Rentas y Endosos; consulta de solo lectura en prod para Auxilios Funerarios (¿ya cierra periodos anteriores?); repetir la prueba de ARL en QA con `WHERE PERIODO <= '<periodo>'` en dos corridas. **Antes, preguntar el flujo esperado** (ver [[preguntas-abiertas]]).
+- [ ] **Primas Rentas 202606: 75.181 frente a 401 (2026-11-13), ver [[inprod-primas-rentas-202606]] §6.** Confirmar PR-1 con Julio (V2.1 con `fec_expedicion <= fin_periodo`), revisar la llave del SCD de Primas Rentas y, con la respuesta de negocio, ajustar el join, `RAMO` y el `groupBy` del job Silver. Depende del SCD por periodo (ítem anterior). Pedir a Andrés el usuario de SIPREN NIIF.
 - [x] ~~Inmediato: no volver a correr Primas ARL ni certificar 202606~~: la recuperación de 202606 ya la hizo el equipo (2026-11-05). Queda solo el fix preventivo.
 - [x] ~~Versionado y restauración de Gold~~: hecho por el equipo (2026-11-05).
 - [x] Comparar el script de prod con el repo: hecho 2026-11-05, INC-5 confirmada (3 bloques faltantes). [ ] Falta confirmar si QA tiene la versión nueva (comparar su script igual).

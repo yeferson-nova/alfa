@@ -1,7 +1,7 @@
 ---
 tipo: contexto
 estado: vigente
-actualizado: 2026-11-12
+actualizado: 2026-11-13
 ---
 # Índice de la memoria de IA
 
@@ -19,7 +19,7 @@ actualizado: 2026-11-12
 | Dónde está el código y cómo se pasa al PC corporativo | [[repo-alfa-repos]] (comandos en `COMANDOS-ALFA-REPOS.md`, raíz del repo) |
 | Dónde está cada archivo o carpeta | [[rutas-workspace]] (las rutas `Backend\` son históricas) |
 | Estado de un cambio nuestro (SES, orquestadora, certificación, T2, T3) | `features\`: empezar por [[tareas-aws]] y [[roadmap-notificaciones]] |
-| Un incidente en producción | `inprod\`: [[inprod-primas-arl-202606]], [[inprod-enlaces-cognito-9411325]] |
+| Un incidente en producción | `inprod\`: [[inprod-primas-arl-202606]], [[inprod-primas-rentas-202606]], [[inprod-enlaces-cognito-9411325]] |
 | Brechas de seguridad, costos o arquitectura (IDs `SEG`, `COS`, `ARQ`, `CUM`) | `auditorias\`: [[brechas-seguridad]], [[auditoria-pipeline-2026-11]], [[notificaciones-vs-arquitectura]], [[auditoria-repos-2026-11]] |
 | Qué falta por hacer, o dudas sin resolver | [[pendientes]], [[preguntas-abiertas]] |
 | Cómo escribir código (estructura, errores, logs, pruebas, nombres) | [[est-desarrollo-hexagonal]] y [[est-gobierno-devops-niif]] |
@@ -72,7 +72,7 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 - [[monitoreo-grafana]]: observabilidad (Grafana fuera de alcance)
 - [[diseno-propuesto]]: cambios propuestos en el paso 3 (sin confirmar)
 
-**inprod:** [[inprod-primas-arl-202606]] · [[inprod-enlaces-cognito-9411325]]
+**inprod:** [[inprod-primas-arl-202606]] · [[inprod-primas-rentas-202606]] · [[inprod-enlaces-cognito-9411325]]
 
 **auditorias:** [[brechas-seguridad]] · [[auditoria-pipeline-2026-11]] · [[notificaciones-vs-arquitectura]] · [[riesgos-glue-notificacion]] · [[auditoria-repos-2026-11]]
 
