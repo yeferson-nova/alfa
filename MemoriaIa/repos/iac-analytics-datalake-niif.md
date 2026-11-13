@@ -31,6 +31,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit `5577df3` (2026-11-12). Vigente. Qué parte está aplicada en cada cuenta: por confirmar.
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 3 commits solo en `quality`, 3 solo en `main`; ramas divergentes. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno. Naming `datalake-{env}-...` frente al `niif-{env}-...` del gobierno ([[est-gobierno-devops-niif]]).
 
 ## Brechas y relacionadas

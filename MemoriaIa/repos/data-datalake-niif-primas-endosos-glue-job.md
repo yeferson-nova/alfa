@@ -29,6 +29,7 @@ malla: primas-endosos
 
 ## Estado
 - En Alfa: `origin/quality`, commit da48cfc (2026-10-22). Desplegado: por confirmar.
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 0 commits solo en `quality`, 4 solo en `main`; `main` tiene commits que `quality` no tiene (por revisar si son merges o cambios de PRD). Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno.
 
 ## Brechas y relacionadas

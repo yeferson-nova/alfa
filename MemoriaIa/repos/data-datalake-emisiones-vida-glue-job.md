@@ -29,6 +29,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit ef89236 (2026-11-06). Desplegado: por confirmar. Código nuevo nuestro: ninguno.
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 8 commits solo en `quality`, 0 solo en `main`; `main` no tiene lo de `quality`. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 
 ## Brechas y relacionadas
 - **ARQ-45** `silver_vida_deudores.py` compara la cuenta AWS contra un número fijo, en [[auditoria-repos-2026-11]].

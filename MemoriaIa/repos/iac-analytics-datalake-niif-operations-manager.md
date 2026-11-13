@@ -30,6 +30,7 @@ malla: transversal
 
 ## Estado
 - En Alfa: `origin/quality`, commit `c33f40a` (2026-11-12). Vigente. Desajustes por confirmar: el handler de `configurador-mallas` no lleva el prefijo del paquete y no pasa las variables que el código nuevo exige.
+- `quality` frente a `main` (medido en GitHub el 2026-11-12): 27 commits solo en `quality`, 5 solo en `main`; ramas divergentes. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno.
 
 ## Brechas y relacionadas
