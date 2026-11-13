@@ -1,5 +1,6 @@
 ---
 tipo: contexto
+estado: vigente
 actualizado: 2026-11-03
 ---
 # Arquitectura de solución NIIF 17 (TOBE)

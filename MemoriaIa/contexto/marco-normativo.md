@@ -1,5 +1,6 @@
 ---
 tipo: contexto
+estado: vigente
 actualizado: 2026-11-03
 ---
 # Marco normativo y estándares aplicables

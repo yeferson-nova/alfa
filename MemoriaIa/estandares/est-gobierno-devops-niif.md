@@ -1,5 +1,6 @@
 ---
 tipo: estandar
+estado: vigente
 actualizado: 2026-11-10
 ---
 # Gobierno y versionamiento DevOps NIIF 17 (v1.0, 2026-11-09)

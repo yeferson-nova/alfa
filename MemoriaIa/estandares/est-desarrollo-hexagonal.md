@@ -1,5 +1,6 @@
 ---
 tipo: estandar
+estado: vigente
 actualizado: 2026-11-11
 ---
 # Estándar propio de desarrollo Python (hexagonal)

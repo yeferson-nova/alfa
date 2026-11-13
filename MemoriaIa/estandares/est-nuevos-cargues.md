@@ -1,5 +1,6 @@
 ---
 tipo: estandar
+estado: vigente
 actualizado: 2026-11-03
 ---
 # Manual de usuario Proyecto Nuevos Cargues (V5, oct-2024)

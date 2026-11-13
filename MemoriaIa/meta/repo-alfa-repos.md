@@ -1,5 +1,6 @@
 ---
 tipo: contexto
+estado: vigente
 actualizado: 2026-11-12
 ---
 # Repo `alfa-repos`: dónde vive ahora el código

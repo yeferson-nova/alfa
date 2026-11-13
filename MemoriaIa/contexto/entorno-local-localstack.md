@@ -1,5 +1,6 @@
 ---
 tipo: referencia
+estado: vigente
 actualizado: 2026-11-03
 ---
 # Entorno local de AWS con LocalStack
@@ -7,7 +8,7 @@ actualizado: 2026-11-03
 Para probar en local mientras no hay acceso a AWS ni a Git ([[preferencias-usuario]]).
 
 ## Configuración (verificado en archivos, 2026-11-03)
-- **Carpeta:** `Backend\localstack\`: `docker-compose.yml`, `.env` (token, **nunca leerlo ni copiarlo a notas**), `.env.example` y `.gitignore` (excluye `.env`).
+- **Carpeta:** `alfa-repos\scripts\localstack\`: `docker-compose.yml`, `.env` (token, **nunca leerlo ni copiarlo a notas**), `.env.example` y `.gitignore` (excluye `.env`).
 - **Contenedor:** `localstack-niif17`, imagen `localstack/localstack:latest` (edición Pro: el log carga los plugins `l.pro.*`). Endpoint `http://127.0.0.1:4566`; salud en `/_localstack/health`.
 - **`SERVICES` habilitados (14):** s3, lambda, ses, sns, sqs, events (EventBridge), stepfunctions, dynamodb, apigateway, logs, iam, kms, secretsmanager, ssm.
 - **Docker:** monta `/var/run/docker.sock`, necesario para ejecutar lambdas.
@@ -15,7 +16,7 @@ Para probar en local mientras no hay acceso a AWS ni a Git ([[preferencias-usuar
 
 ## Estado
 - El usuario reportó que estaba corriendo, con los 14 servicios disponibles y **sin recursos creados ni invocados**.
-- Al verificar (2026-11-03) el contenedor estaba **detenido**: `Exited (255)`; el log terminaba en "Ready." sin error visible. Se inicia con `docker compose up -d` desde `Backend\localstack\`.
+- Al verificar (2026-11-03) el contenedor estaba **detenido**: `Exited (255)`; el log terminaba en "Ready." sin error visible. Se inicia con `docker compose up -d` desde `alfa-repos\scripts\localstack\`.
 - **Comandos:** `docker logs localstack-niif17`, `docker compose down`, `docker compose up -d`.
 
 ## No habilitado o limitado
@@ -28,7 +29,7 @@ Para probar en local mientras no hay acceso a AWS ni a Git ([[preferencias-usuar
 ## Qué se puede probar por tarea ([[tareas-aws]])
 - **T1:**
   - correo con SES v1 (`SendEmail`, `SendTemplatedEmail`; LocalStack captura los correos sin enviarlos);
-  - plantillas de `Backend\notificacion\email-template\`;
+  - plantillas de `alfa-repos\s3\tpl-datalake-niif-email-template-s3\src\email-template\`;
   - SNS con suscriptores Lambda o SQS;
   - API Gateway + Lambda para Certificar / No certificar;
   - Step Functions con `waitForTaskToken`.

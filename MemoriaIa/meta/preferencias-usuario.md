@@ -1,5 +1,6 @@
 ---
 tipo: preferencia
+estado: vigente
 actualizado: 2026-11-11
 ---
 # Preferencias del usuario

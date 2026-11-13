@@ -1,10 +1,14 @@
 ---
 tipo: contexto
-actualizado: 2026-11-11
+estado: vigente
+actualizado: 2026-11-12
 ---
 # Traspaso entre sesiones (leer primero en una sesión nueva o remota)
 
 Este es el estado al 2026-11-11 para que otra sesión de Claude (local o remota) siga sin perder contexto. **La memoria local de Claude (`~/.claude/...`) está vacía; todo vive en este repo.** Hay que leer `CLAUDE.md` (el índice), esta nota y la skill `.claude\skills\niif17-alfa\`. **Ojo:** `.claude` está en `.gitignore`, así que la skill solo existe en la máquina del usuario. Una sesión remota no la tiene y se guía por esta nota y por [[est-desarrollo-hexagonal]].
+
+## Memoria reorganizada (2026-11-12)
+Empieza por `MemoriaIa\00-INDEX.md`. Ahora hay una carpeta por tipo (`repos`, `features`, `inprod`, `auditorias`, `pendientes`…) y una ficha por cada repo de Alfa (35, con su rol en el flujo, en `repos\`). Las rutas `Backend\...` de las notas son históricas: el código vive en el repo `alfa-repos` ([[repo-alfa-repos]]). Hallazgos nuevos del barrido de repos: [[auditoria-repos-2026-11]] (SEG-16, ARQ-45 a ARQ-49). Validar con `alfa-repos\scripts\validar-memoria.py`.
 
 ## Pausa de la migración (2026-11-11)
 **Decisión del usuario:** se detiene la migración de la cadena de notificación y certificación. Mientras siga en pausa no se escribe código, no se lanza nada en DEV y no se envían solicitudes nuevas a DevOps. Solo se retoma cuando el usuario lo pida de forma explícita.
@@ -24,7 +28,7 @@ Este es el estado al 2026-11-11 para que otra sesión de Claude (local o remota)
 - Solicitudes a DevOps **redactadas, pero sin confirmar que se enviaron**:
   - sección DevOps del README de la orquestadora (índice `status-pendingDate-index` en `niif-<amb>-notification-certification`, función, mapping, Scheduler y permisos);
   - sección "Lo que debe hacer DevOps" del README del job de certificación (job `-v2`, claves de los JSON globales, `athena:StopQueryExecution`, `--EJECUCION_ID`, rollback).
-- El JSON global de DEV en Git (`Backend\S3\niif-dev-assets\configs\certification\json_global_notif_cert.json`) ya tiene los bloques `notification` y `orchestrator` y `dynamodb.pending_index`. **No se ha subido a S3.** `alert_recipients` sigue con el marcador `<CORREO_SOPORTE_NIIF>`.
+- El JSON global de DEV en Git (`EvidenciasAws\backend\S3\niif-dev-assets\configs\certification\json_global_notif_cert.json`) ya tiene los bloques `notification` y `orchestrator` y `dynamodb.pending_index`. **No se ha subido a S3.** `alert_recipients` sigue con el marcador `<CORREO_SOPORTE_NIIF>`.
 
 **Al retomar, en este orden:**
 1. Preguntar al usuario si DevOps respondió o si creó algo (índice, función, job `-v2`).
@@ -40,7 +44,7 @@ Este es el estado al 2026-11-11 para que otra sesión de Claude (local o remota)
   - la IaC del rol, de los argumentos del job y del cliente de Cognito;
   - para leer, sin cambiar: las lambdas de la cadena.
   - Los nombres de los repos siguen el patrón `data-datalake-niif-*` / `sc-datalake-niif-*`; hay que confirmarlos en el Git.
-  - **Copia de lectura en `Backend\ReposAws\`** (ver su `LEEME.md`). En esta máquina no se puede clonar, así que el usuario clona en otra máquina y corre `sincronizar-repos.ps1`, que copia los repos sin `.git` a `lambdas\`, `glue\` y `s3\` y escribe `VERSIONES.md`. Los primeros commits (`3f44eb5`, `4f8e828`) subieron los repos como enlaces `160000` vacíos; el script los quita.
+  - **Copia de lectura en `alfa-repos\`** (ver su `LEEME.md`). En esta máquina no se puede clonar, así que el usuario clona en otra máquina y corre `sincronizar-repos.ps1`, que copia los repos sin `.git` a `lambdas\`, `glue\` y `s3\` y escribe `VERSIONES.md`. Los primeros commits (`3f44eb5`, `4f8e828`) subieron los repos como enlaces `160000` vacíos; el script los quita.
   - Pendientes: la lambda de `/post_login`, el Terraform (rol y argumentos del job, Cognito, API) y `sc-datalake-niif-certification`.
 
 **Abierto fuera de la migración:**
@@ -56,10 +60,10 @@ Este es el estado al 2026-11-11 para que otra sesión de Claude (local o remota)
 ## Estado de la cadena de notificación (detalle en [[roadmap-notificaciones]])
 | Componente | Carpeta | Estado |
 |---|---|---|
-| Job de notificación (SES) | `Backend\notificacion\jobs-glue\niif-dev-notification-certification\` | 537 pruebas; configuración ya en el JSON global (bloque `notification`). En DEV el job aún tiene los argumentos viejos. Ver [[job-notificacion-ses]] |
-| Job de certificación | `Backend\notificacion\jobs-glue\niif-dev-certification\` | 412 pruebas, no desplegado. Ver [[job-certificacion]] |
-| Orquestadora | `Backend\notificacion\lambdas\niif-dev-notification-certification-orchestrator\` | 404 pruebas, no desplegada, espera a DevOps. Ver [[orquestadora-notificaciones]] |
-| Evaluador compuesto, API de certificación, redirección de enlaces, post-login | `Backend\notificacion\lambdas\<recurso>\` | Solo esqueleto (carpetas y `niif_observability`) |
+| Job de notificación (SES) | `alfa-repos\glue\data-datalake-niif-notification-certification-glue-job\` | 537 pruebas; configuración ya en el JSON global (bloque `notification`). En DEV el job aún tiene los argumentos viejos. Ver [[job-notificacion-ses]] |
+| Job de certificación | `alfa-repos\glue\data-datalake-niif-certification-glue-job\` | 412 pruebas, no desplegado. Ver [[job-certificacion]] |
+| Orquestadora | `alfa-repos\lambdas\sc-datalake-niif-notification-certification-orchestrator\` | 404 pruebas, no desplegada, espera a DevOps. Ver [[orquestadora-notificaciones]] |
+| Evaluador compuesto, API de certificación, redirección de enlaces, post-login | `alfa-repos\lambdas\<recurso>\` | Solo esqueleto (carpetas y `niif_observability`) |
 
 **Paso siguiente según el roadmap** (`Tareas\T1-notificaciones\roadmap-notificaciones.md`):
 - Paso 5: transporte a FIS / Lambda SFTP.
@@ -78,4 +82,4 @@ Este es el estado al 2026-11-11 para que otra sesión de Claude (local o remota)
 
 ## Cómo verificar el código
 - En cada componente: `python -m pytest --cov` (o `tox`). Las pruebas incluyen arquitectura (dependencias entre capas) y calidad (sin valores quemados, largo de funciones y líneas).
-- Las copias de la librería común: `python Backend\notificacion\verificar_copias_comunes.py`. Las 7 copias de `niif_observability` deben ser iguales; si se cambia una, se copia a todas.
+- Las copias de la librería común: `python alfa-repos\scripts\verificar_copias_comunes.py`. Las 7 copias de `niif_observability` deben ser iguales; si se cambia una, se copia a todas.

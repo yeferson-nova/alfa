@@ -1,5 +1,6 @@
 ---
 tipo: estandar
+estado: vigente
 actualizado: 2026-11-03
 ---
 # Estándar de desarrollo DataStage (v6, jul-2025)

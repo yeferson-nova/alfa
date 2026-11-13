@@ -1,0 +1,62 @@
+---
+tipo: auditoria
+estado: vigente
+actualizado: 2026-11-10
+---
+# Notificación y certificación vs. arquitectura y calidad
+
+Humano: `Docs\06-brechas\notificaciones-vs-arquitectura.md`. Diagrama: hoja `Página-2` de `NIIF17_ModeloSolucion_V1.0.drawio` (ver [[arquitectura-niif17]]). Contexto del flujo: [[job-notificacion-ses]].
+
+- Diagrama: Malla → DynamoDB → Lambda Notificación → Job Glue → Athena/Zona Certificación; Mensaje (icono **SES**) → Outlook; WAF → API GW → Cognito/AD; Zona Transporte → Lambda SFTP → FIS; Lambda Notificación → Modelo Configuración Extracción → Programador → Malla (interpretación, flechas sin texto).
+- SES ya coincide con el diagrama (antes SNS). Pendiente de QA.
+- **ARQ-21** diagrama no refleja las 5 lambdas, enlaces cortos ni estados. **ARQ-22** el job (no la lambda) envía el correo: recomendado corregir el diagrama. **ARQ-23** No certificar no deja la tarea pendiente (Víctor L276-277: pendiente hasta que negocio avise **a mano** al operador). Verificado en DEV: modelo = tabla `niif-dev-prg-programaciones`; el manager solo actúa con `activo=true` y `scheduleEstado=PENDIENTE` y rechaza `scheduleExpression`/`periodoNegocio` = `"PENDIENTE"`; escribe `PROGRAMADO` y nadie lo limpia al terminar el `at()` (ARL sigue `PROGRAMADO` sin schedule). Propuesta sin confirmar: escribir `PENDIENTE` en esos tres campos, o `RECHAZADO` para evitar el error del stream. Detalle en el doc humano §4.1. **ARQ-24** `NIIF_CARPETAS` duplicado en copy y move. **ARQ-25** `sendLock` solo se lee, nunca se escribe. **ARQ-26** trigger/copy/move tragan excepciones y devuelven éxito. **ARQ-27** `--ENVIRONMENT='{env}'` literal en el evaluador. **ARQ-28** WAF sin verificar.
+- **SEG-10** Cognito flujo implícito. **SEG-11** `state` sin firma. **SEG-12** tokens y NewImage (con correo) en logs.
+- Calidad: job desplegado = monolito de 727 líneas (cambio mínimo por decisión); `niif-dev-notification-certification` hexagonal hexagonal con 163 pruebas, sin desplegar; las 4 lambdas sin pruebas ni estructura. Sonar: Maintainability B (204 olores, falta desglose por regla).
+- Orden propuesto: QA → decidir ARQ-22/23 → ARQ-26/27/SEG-12 → desplegar `niif-dev-notification-certification` hexagonal → unificar lambdas → SEG-10/11 con DevOps → actualizar diagrama.
+
+## Plan de trabajo para unificar (propuesta 2026-11-10, tiempos estimados, sin aprobar)
+- **Meta:** un paquete con dominio compartido. Una lambda orquestadora del stream de `notification-certification` reemplaza a `trigger`, `copy` y `move` (decide por transición: `PENDING` inicia el job; `CERTIFICATE` copia a transporte; `NO_CERTIFICATE` archiva y deja la malla pendiente). Evaluador compuesto y API `niif-dev-certification` se mantienen aparte con el mismo dominio. Job = `niif-dev-notification-certification` hexagonal. Mapa de carpetas sale de la configuración global. Ver [[estructura-repos-propuesta]].
+- **Riesgo de unir el stream:** un registro con error frena el lote. Mitigar con `ReportBatchItemFailures` y cola SQS de fallos. Cambio de 3 a 1 lambda: desplegar la nueva con el mapeo deshabilitado y conmutar.
+- **Fase 0 (1-2 d):** validar paquete en QA, alinear DEV a `email-template`, `git rm` previews viejos, reanalizar Sonar con desglose de reglas.
+- **Fase 1 (1 reunión):** decidir ARQ-22, ARQ-23 (qué escribir y quién limpia `PROGRAMADO`), una lambda o tres con código común, estructura de repos.
+- **Fase 2 (2-3 d):** ARQ-26, ARQ-27, SEG-12, ARQ-25 sobre lo desplegado.
+- **Fase 3 (5-8 d):** dominio compartido, lambda orquestadora con pruebas > 80 %, escritura de "pendiente" en `prg-programaciones`, alarma de registros atascados, DEV, luego QA vía DevOps.
+- **Fase 4 (3-4 d):** desplegar `niif-dev-notification-certification` hexagonal tras QA, retirar el monolito, quitar `SNS_TOPIC_ARN` y permisos SNS.
+- **Fase 5 (3-5 d, con DevOps):** SEG-10 (PKCE), SEG-11 (firmar `state`), ARQ-28 (WAF).
+- **Fase 6 (1 d):** actualizar la hoja `Página-2` (ARQ-21).
+- **Fuera de alcance:** T3, deploy de T2, 1c y 1d (encajan en fase 3 si se define alcance).
+- **Riesgos:** cada prueba en QA mueve archivos reales y dispara SFTP a FIS (coordinar con negocio); Desarrollo sin acceso a QA/PRD alarga el calendario.
+- **ARQ-29 (QA, 2026-11-10):** el enlace de descarga del CSV abre la consola de S3 vía portal SSO (`construir_url_consola_s3` en `niif_certification.py`, guardado en `s3_url`); la notificación lo acorta y la redirección solo hace 302. El usuario debe pulsar Download y necesita rol en la cuenta. Esperado (Víctor L270-271, diagrama): descarga mediada por API Gateway. Recomendado: acción `DOWNLOAD` tras login Cognito + URL prefirmada de 1 a 5 min; prefirmar en el job no sirve (vence con la sesión del rol). **SEG-13:** token de 8 hex y `/r` público. Decisión pendiente del equipo.
+- **ARQ-31 (2026-11-10):** el diagrama no dibuja la observabilidad. Grafana queda fuera de alcance; entregamos logs, métricas y alarmas, y las alertas técnicas salen por el mismo SES al grupo de soporte (grupo pendiente). Sugerir al arquitecto: CloudWatch → SES → soporte. El diagrama dibuja Lambda Notificación → Mensaje (SES) en el paso 53: ARQ-22 sigue en pie.
+- **ARQ-32 (2026-11-10, verificado en código):** no hay un ID de punta a punta. ID raíz = nombre de ejecución que crea el configurador (`arl-<periodo>-auto-<marca>-<req8>`, usado en la SF y en `EJECUCION#`). La SF **no lo pasa a ningún job de Glue** (solo el composite recibe `sourceExecutionId`); los jobs se enlazan por `parametros_extraccion.json` y `lote_cargue_id` (timestamp). Certificación crea `certCode` y no guarda ni la SF ni el lote (ignora `--LOTE_CARGUE_ID`); su `executionId` es un uuid por consulta (nombre engañoso, llave de copy/move). De `certCode` en adelante la cadena sí es trazable. Propuesta: `ejecucion_id` = nombre de la SF, pasado como `--EJECUCION_ID` y guardado junto a `certCode`.
+- **ARQ-33 (2026-11-10):** la lambda `niif-dev-certification` deja log de la solicitud (`[REQUEST] ... certCode ... decision`) pero no del resultado (403/409/404/200 sin log); la auditoría queda en la tabla de aprobaciones por `certCode`; sin `ejecucion_id`; registra el evento y los claims con el correo (SEG-12).
+- **Consultas de Athena de la notificación (DEV, 2026-11-10):** viven en el JSON de cada caso en `niif-dev-assets` (no en el job). Los vigentes, según las SF y `composite_groups`, son 4: `primas-arl/primasArl.json`, `primas-rentas/primasRentasEndosos.json`, `auxilios-funerarios/auxilioFunerario.json` y `reserva-matematica/reservaMatematicaRviArp.json`, más `configs/certification/{json_global_notif_cert,composite_groups}.json`. Cada uno tiene `detail#1`, `summary#1` y `total#1`, **salvo ARL, que en DEV tiene `summary: []`** (igual que en PRD: el resumen vacío del incidente de ARL no está corregido). Hay copias que se desalinean: `primas-endosos/primasRentasEndosos.json` pesa 13.429 bytes y el vigente 13.690; `primas-arl/configs/certification/` y `auxilios-funerarios/configs/certification/` tienen copias; `reserva-matematica-rvi/reservaMatematicaRvi.json` (2026-11-09) y `previsional/previsional.json` son nuevos y sin dueño claro. El bucket de assets lo usan varios equipos para guardar respaldos y evidencias, incluidas copias de políticas IAM (`*/respaldos/iam/`). Zip en `EvidenciasAws\dev-config-notificacion\` (pendiente de bajar).
+- **Consultas de Athena (revisadas 2026-11-10, humano: `Docs\06-brechas\consultas-athena-notificacion.md`):** COS-07 Gold sin particiones (cada consulta lee todo el historial); COS-08 sin workgroup propio (corre en `primary`, sin tope de escaneo); COS-09 `CAST` de la columna de periodo; ARQ-34 detalle y total pueden no cuadrar por redondeo a `DECIMAL(38,0)` en sitios distintos; ARQ-35 ARL sin `summary`; ARQ-36 resumen y total de Reserva sin montos; ARQ-37 conteo de Rentas/Endosos mezcla endoso y renta (hipótesis); ARQ-38 `safe_substitute` deja `'$period'` literal y devuelve 0 filas sin error; SEG-15 log del SQL completo.
+
+- **Diagrama propuesta (2026-11-11):** en `NIIF17_ModeloSolucion_V1.0-propuesta.drawio`, hoja `Página-2` (el original no se toca), se agregaron con el mismo estilo:
+  - 72-73 Lambda (Certificación);
+  - 74-75 Lambda (Enlace corto) y Modelo Enlaces cortos;
+  - 76-78 Lambda (Evaluador compuesto) y Modelo Compuesto;
+  - una nota para el arquitecto (ARQ-21; la 66 sigue sujeta a D7).
+  Se revisó exportando con draw.io de escritorio.
+- **Lambda SFTP:** `datalake-dev-niif-send-via-sftp` está **inactiva** en AWS (captura del 2026-11-11); es una imagen de ECR `datalake_dev_niif_send_via_sftp_lambda:20261008-2321` con disparador de S3. Entra al alcance (flujo completo).
+
+## Alcance actual (decisión del usuario, 2026-11-10): solo la cadena de notificación, por partes
+Para aislar fallas, el problema se separa en 5 partes. La optimización de Athena y de Gold entró como fase 7 del roadmap (2026-11-10). El resto del pipeline del paso 2 queda fuera. Roadmap: `Tareas\T1-notificaciones\roadmap-notificaciones.md`.
+1. **Lambdas de la cadena:** trigger, evaluador compuesto, copy, move, certificar/rechazar, enlace corto y post-login. Brechas: ARQ-24 a ARQ-27, ARQ-30 (copy → SFTP) y ARQ-33.
+2. **Plantillas HTML:** T1b hecho; falta probar cómo se ven en Outlook, Gmail y móvil. ARQ-35 (ARL sin resumen) afecta al correo y se corrige en el JSON del caso.
+3. **Job de notificación por SES:** desplegar `niif-dev-notification-certification` hexagonal (hexagonal, PEP 8 en inglés, zip para DevOps). Brechas: ARQ-22, ARQ-38 y SEG-15.
+4. **Enlaces de aprobación y rechazo:** enlace corto → WAF/API → `postLogin` → Cognito → certificar. Brechas: ARQ-23, ARQ-29, SEG-10, SEG-11, SEG-13 y SEG-14 (API viejo).
+5. **Observabilidad completa en logs:** un log JSON en español por paso, con `ejecucion_id`, `cert_code` y `request_id`, para saber en qué paso falló (ARQ-32 desde la certificación, ARQ-26 sin errores silenciosos); alarmas por SES al grupo de soporte (ARQ-31).
+- **Medición de Athena en DEV (2026-11-11, `EvidenciasAws\dev-medicion-athena\`):** nuestras consultas tardan 0,8-2,3 s (las `detail`, hasta unos 10 s); USD 0,01 en 45 días. Los jobs duran 47-56 s de mediana, casi todo en el arranque de Spark (propuesta: Python shell). Las fallas son de permisos durante el desarrollo, ninguna por timeout. COS-07 y COS-08 confirmados. Falta medir en PRD (`AMB=prd`). Nota: en DEV, el Gold de 5 mallas (rentas, endosos, auxilios, ARP y RVI) se vació el 2026-11-05 por pruebas; no es brecha. Para probar con datos, usar ARL o volver a correr la malla.
+
+## Orquestadora, etapa 1 (2026-11-11)
+Humano: `Docs\06-brechas\auditoria-orquestadora-trigger-copy-move.md`. Confirmados en código: ARQ-23 a ARQ-26 y SEG-12 (nadie escribe `sendLock`). Nuevos:
+- **ARQ-40:** el trigger solo notifica si la consulta se llama `detail#1` (contrato implícito).
+- **ARQ-41:** copy procesa todo el `certCode` por cada evento (N×N), con posible carrera con la condición del API (hipótesis, hoy N = 1); copy, move y el API leen solo la primera página del índice.
+- **ARQ-42:** move no es idempotente y toma `AccessDenied` como "no existe".
+- **ARQ-43:** los mappings tienen reintentos y edad infinitos, sin bisect, sin cola de fallos y sin `ReportBatchItemFailures`.
+- **ARQ-44:** el job de notificación nuevo rechaza los argumentos del trigger (`NTF-ENT-004`): desplegar junto con la orquestadora.
+- Diseño propuesto: un mapping, acción solo si cambia el estado, candado transaccional por `certCode`, `--EJECUCION_ID` desde el registro, configuración desde el `globalConfigKey` del registro (bloque `orchestrator`), carpeta desde `certification.report_folders`. Decisiones abiertas O-1 a O-4, D2 y D7.
+- **Decisiones O-1 a O-4 aprobadas (2026-11-11)** y etapa 2 hecha: `alfa-repos\lambdas\sc-datalake-niif-notification-certification-orchestrator\` (404 pruebas). Cierra en código ARQ-24, ARQ-25, ARQ-26, ARQ-40 a ARQ-43 y SEG-12; ARQ-23 queda parcial (D2). Requiere índice `status-pendingDate-index` (DevOps).
+

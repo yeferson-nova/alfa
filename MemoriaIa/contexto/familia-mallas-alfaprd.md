@@ -1,5 +1,6 @@
 ---
 tipo: contexto
+estado: vigente
 actualizado: 2026-11-06
 ---
 # Familia de mallas ALFAPRD (incluye Primas ARL) y su plan

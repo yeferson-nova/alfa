@@ -1,5 +1,6 @@
 ---
 tipo: estandar
+estado: vigente
 actualizado: 2026-11-03
 ---
 # Estándar de desarrollo ETL (GTC-GDD-010 v1, feb-2024)

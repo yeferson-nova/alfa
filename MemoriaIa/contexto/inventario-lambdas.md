@@ -1,5 +1,6 @@
 ---
 tipo: referencia
+estado: vigente
 actualizado: 2026-11-10
 ---
 # Inventario de lambdas y Step Functions (código desplegado)
@@ -13,13 +14,13 @@ Clasificación completa en `Docs\06-brechas\limpieza-dev-recursos.md`; datos en 
 - Nuevas sin documentar: `niif-dev-configuration-general` (2026-11-07, 82 inv / 27 err), `niif-dev-configurador-mallas` (Terraform, 0 inv), `niif-dev-configurador-pcr-vida`.
 - Últimas invocaciones: G3 programador 2026-11-03, configuradores 2026-10-22; G2 programador 2026-09-15, iniciador 2026-09-18; **finalizador G2 sigue disparado por la regla de fin de la SF ARL** (2026-11-06, falla 39/53); `postLogin` viejo 2026-09-25. Cognito `datalake-dev-niif-api` tiene callback a los dos API (quitar el viejo antes de retirarlo). ARQ-30: el filtro `export/` coincide con donde escribe copy; falta ver si copy copió algo.
 - **ARQ-30 confirmada:** copy falló todos los Certificar del 2026-08-19 al 2026-09-25 (falta índice `certCode`, error tragado); el 2026-10-09 copió 2 de ARL pero `export/` está vacío y `send-via-sftp` sin logs: Certificar → FIS nunca probado de punta a punta en DEV. Finalizador G2: `KeyError idAutomatizacion` antes de escribir (quitar la regla es seguro). `configuration-general`: configurador general de otro desarrollador (misma base que los `configuration-<malla>`, no nuestro T2), modo validación, ya cubre Satélites/PCR.
-- **Código completo y validado (2026-11-10):** se bajó todo lo desplegado con `codigo-actual-dev.sh` (`EvidenciasAws\dev-codigo-actual\`). Trigger, evaluador compuesto, copy y move son iguales a nuestras copias (solo cambia el fin de línea). Ahora sí tenemos el código de `niif-dev-short-link-redirect`, `niif-post-login`, el manager y los 5 `configuration-<malla>` reales: las copias anteriores eran del configurador viejo y se reemplazaron. Las 7 lambdas de la cadena quedaron en `Backend\Lamnbdas\<nombre>\`; el código nuevo va en `Backend\notificacion\`.
+- **Código completo y validado (2026-11-10):** se bajó todo lo desplegado con `codigo-actual-dev.sh` (`EvidenciasAws\dev-codigo-actual\`). Trigger, evaluador compuesto, copy y move son iguales a nuestras copias (solo cambia el fin de línea). Ahora sí tenemos el código de `niif-dev-short-link-redirect`, `niif-post-login`, el manager y los 5 `configuration-<malla>` reales: las copias anteriores eran del configurador viejo y se reemplazaron. Las 7 lambdas de la cadena quedaron en `Backend\Lamnbdas\<nombre>\`; el código nuevo va en `alfa-repos\`.
 - DEV lo usan otras mallas en paralelo (PCR Vida, Generales, Satélites, Previsional, Emisiones): no se tocan.
 
 ## Alcance de trabajo (decidido 2026-11-03)
 - **Lambdas de trabajo (7):** `niif-dev-configuration-{primas-rentas,primas-endosos,primas-arl,auxilios-funerarios,reserva-matematica-rvi,reserva-matematica-arp}` y `niif-dev-manager-configuration`.
 - **Step Functions de trabajo (6):** `niif-dev-<malla>` de esas mallas.
-- **Todo lo demás es pruebas / fuera de alcance:** movido sin modificar a `Backend\Lamnbdas\pruebas-lambda\` y `Backend\StepFunctions\pruebas-stepfunctions\`. Incluye `composite`, `certification` y el resto del paso 3 (recuperables de ahí).
+- **Todo lo demás es pruebas / fuera de alcance:** movido sin modificar a `Backend\Lamnbdas\pruebas-lambda\` y `EvidenciasAws\backend\StepFunctions\pruebas-stepfunctions\`. Incluye `composite`, `certification` y el resto del paso 3 (recuperables de ahí).
 - **Objetivo:** consolidar los 6 configuradores en **una lambda general estandarizada**. Solo difieren en `MALLA_PK`, `PRG_PK` y `STATE_MACHINE_ARN` (propuesta en `lambdas.md` §5).
 - **Spike (2026-11-03):** `Backend\Lamnbdas\inventario-aws\spike-primas-rentas\`: Primas Rentas reescrita por capas (handler, servicio, constructores, periodo, puertos y adaptadores, catálogo de mallas), 37 pruebas, 98 % de cobertura del núcleo. Base: la `configurador` anterior, no el código desplegado. Faltan pruebas de adaptadores (LocalStack) y equivalencia con datos reales.
 - **Corrección:** `primas-endosos` y `reserva-matematica-rvi` **sí existen**; su extracción salió vacía. Falta el código de manager, rentas, endosos, rvi y, parcial, arl y arp: repetir con `cloudshell-inventario\inventario.sh`.
@@ -37,7 +38,7 @@ Humano: `Backend\Lamnbdas\inventario-aws\lambdas.md` (movido desde `Docs\05-arqu
 - `Backend\inventario\` (hoy `EvidenciasAws\dev-inventario-cuenta\`): extraído por script de la cuenta 533267035849 (us-east-1, DEV). **No hay repo Git: el código desplegado es la única fuente.**
 - `lambdas\codigo\<nombre>\` (código) y `lambdas\config\<nombre>.{json,triggers,policy,aliases}.json`.
 - `stepfunctions\` (73 ASL), `sns\`, `dynamodb\`, `iam\`, `s3\`, `logs\`, `athena\`.
-- **Ya organizado y sacado de `inventario\` (2026-11-03):** jobs y scripts de Glue en `Backend\Glue\`, reglas EventBridge en `Backend\Eventos\`, ambos con su `pruebas-*`. Se verificó copia idéntica antes de borrar el original.
+- **Ya organizado y sacado de `inventario\` (2026-11-03):** jobs y scripts de Glue en `Backend\Glue\`, reglas EventBridge en `EvidenciasAws\backend\Eventos\`, ambos con su `pruebas-*`. Se verificó copia idéntica antes de borrar el original.
 - **Incompleto:** el disco se llenó al descomprimir (`_errores.log`). Faltan 13 de 62 lambdas, entre ellas `notification-certification-trigger`, `copy-s3-cert`, `move-s3-certification`, `manager-configuration`, `short-link-redirect` (G4) y `send-via-sftp` (imagen ECR).
 - `config\*.json` trae URLs prefirmadas con token de sesión (expiradas); no versionar.
 

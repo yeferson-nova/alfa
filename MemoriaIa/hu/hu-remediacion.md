@@ -1,5 +1,6 @@
 ---
 tipo: hu
+estado: vigente
 actualizado: 2026-11-03
 ---
 # HUs de Remediación y Enriquecimiento de Datos (HU-RM-01 a 21)

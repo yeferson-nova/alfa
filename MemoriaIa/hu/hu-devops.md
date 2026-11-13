@@ -1,5 +1,6 @@
 ---
 tipo: hu
+estado: vigente
 actualizado: 2026-11-03
 ---
 # HUs Tema 04: DevOps y DataOps (HU-DO-01 a 20)

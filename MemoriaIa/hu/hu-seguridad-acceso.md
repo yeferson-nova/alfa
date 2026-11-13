@@ -1,5 +1,6 @@
 ---
 tipo: hu
+estado: vigente
 actualizado: 2026-11-03
 ---
 # HUs Tema 04: Seguridad y Gobierno de Acceso al Dato (HU-SG-01 a 24)

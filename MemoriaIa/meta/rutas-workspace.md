@@ -1,5 +1,6 @@
 ---
 tipo: referencia
+estado: vigente
 actualizado: 2026-11-09
 ---
 # Rutas del workspace

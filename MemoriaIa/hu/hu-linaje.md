@@ -1,5 +1,6 @@
 ---
 tipo: hu
+estado: vigente
 actualizado: 2026-11-03
 ---
 # HUs Tema 02: Linaje de Datos (HU-LN-01 a 04)

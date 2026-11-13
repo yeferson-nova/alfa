@@ -1,5 +1,6 @@
 ---
 tipo: estandar
+estado: vigente
 actualizado: 2026-11-03
 ---
 # Lineamiento de versionamiento del código fuente (V3)

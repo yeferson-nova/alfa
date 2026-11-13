@@ -1,5 +1,6 @@
 ---
 tipo: hu
+estado: vigente
 actualizado: 2026-11-03
 ---
 # HUs Tema 03: Trazabilidad y Auditoría (HU-TR-01 a 05)
