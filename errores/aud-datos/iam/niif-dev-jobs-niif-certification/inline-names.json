@@ -1,8 +1,0 @@
-{
-    "PolicyNames": [
-        "CertificacionLeerResultadosAthena",
-        "niif-dev-certification-use-notification-kms",
-        "niif-dev-jobs-niif-certification-inline-policy",
-        "ReadNiifQaGoldCatalog"
-    ]
-}

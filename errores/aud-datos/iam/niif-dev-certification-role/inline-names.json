@@ -1,9 +1,0 @@
-{
-    "PolicyNames": [
-        "niif-dev-certification-config-read",
-        "niif-dev-certification-decrypt-assets",
-        "niif-dev-certification-dynamodb-access",
-        "niif-dev-certification-read-configs",
-        "niif-dev-certification-read-primas-compuestas"
-    ]
-}
