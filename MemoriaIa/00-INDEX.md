@@ -53,7 +53,7 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 **meta:** [[traspaso-sesion]] (estado al día, leer primero) · [[repo-alfa-repos]] · [[rutas-workspace]] · [[preferencias-usuario]] · [[plantilla-ficha-repo]]
 
 **contexto:**
-- [[arquitectura-niif17]]: pasos 1 a 14 del diagrama TOBE (nos competen 2 y 3)
+- [[arquitectura-niif17]]: pasos 1 a 12 del diagrama aprobado, con el detalle del paso 3 (nos competen 2 y 3)
 - [[familia-mallas-alfaprd]]: las 6 mallas, jobs del diagrama frente a los desplegados
 - [[inventario-lambdas]]: lambdas y Step Functions de DEV, con la evidencia de la limpieza
 - [[repos-alfa-notificacion]]: hallazgos R-01 a R-06 de los repos de la cadena de notificación

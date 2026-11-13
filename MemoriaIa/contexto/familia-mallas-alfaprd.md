@@ -15,7 +15,7 @@ Humano: `Docs\05-arquitectura\jobs-glue.md` (los 12 jobs). Relacionado: [[arquit
 - **No pertenecen a la familia:** los flujos PCR (PCR Tradicional, PCR Vida, Vida Deudores) vienen de **ACSELE**, otra familia, hoy con jobs de prueba en `Backend\Glue\pruebas-glue\`. Significado de PCR = "Pasivo por Cobertura Restante" es **inferido**, sin documento funcional (propuesta; ver [[preguntas-abiertas]]).
 
 ## Jobs: arquitectura vs desplegado (2026-11-06)
-- Diagrama TOBE: **9 jobs** (Extracción y Consolidación en Bronce; Validación, Remediación, Transformación y Consolidación en Plata; Transformación y Consolidación en Oro; Notificación). Conteo por etiquetas del drawio, sin revisar flechas.
+- Diagrama TOBE: **9 jobs** (Extracción y Consolidación en Bronce; Validación, Remediación, Transformación y Consolidación en Plata; Transformación y Consolidación en Oro; Notificación). Conteo por etiquetas del drawio (revisado el 2026-11-12): son 9 solo si se cuentan las dos Transformaciones (Plata en la hoja 1, Oro en la hoja 6); si es el mismo job dibujado en dos zonas, son 8 (7 del medallón y la Notificación). Por confirmar con el arquitecto.
 - Desplegado: **12 jobs** (5 genéricos + 6 Silver + 1 correo). Consolidación de Bronce no existe como job (va dentro de la extracción); la de Plata y las de Oro tampoco están separadas; `certification` no aparece como "Job" en el diagrama.
 
 ## Plan acordado (2026-11-06, propuesta, nada ejecutado)

@@ -5,7 +5,7 @@ actualizado: 2026-11-03
 ---
 # Estándar de desarrollo DataStage (v6, jul-2025)
 
-Fuente: `Docs\02-estandares-banco\desarrollo\Estandar de desarrollo DataStage v6.pdf` (25 págs.). Aplica al Subledger contable (paso 8 de [[arquitectura-niif17]]), **fuera de nuestro alcance directo**. Se resume porque varias reglas son de aplicación general en Analítica.
+Fuente: `Docs\02-estandares-banco\desarrollo\Estandar de desarrollo DataStage v6.pdf` (25 págs.). Aplica al Subledger contable (paso 9 de [[arquitectura-niif17]]), **fuera de nuestro alcance directo**. Se resume porque varias reglas son de aplicación general en Analítica.
 
 ## Reglas específicas de DataStage (solo referencia)
 - Jobs `JOB_<EXT|DUP|CDC|CLE|TRF|LOD>_<destino>_[nn]`; secuencias `SEQ_`; datasets `DS_<proceso>_<nombre>.ds`; prefijos por stage (`LKP_`, `JN_`, `TRSF_`, `LNK_`...).
