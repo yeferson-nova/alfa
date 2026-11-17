@@ -58,3 +58,4 @@ Detalle del incidente en [[inprod-primas-arl-202606]].
 - Scripts: `recolectar-evidencia-prd.sh` (CloudShell prod, solo lectura), `replicar-fallo-dev.sh` (solo DEV), `validar-analisis.py`, `validar-athena.py`, `simular-limpieza-segmentos.py`, `ver-logs-evidencia.py`.
 - Evidencia: movida a `EvidenciasAws\prd-primas-arl-202606\` (ver arriba).
 - En la raíz del repo: `.gitignore` (ignora `EvidenciasAws/*` salvo el `LEEME.md`) y `.gitattributes` (`*.sh` con LF).
+- **Entorno local de desarrollo (2026-11-17):** `C:\Users\rdpuser\.venvs\niif-glue` (Python 3.10 como Glue 4.0, PySpark 3.5.5 porque la 3.3 no corre con el Java 21 de este PC, pytest 8.3.5, pytest-cov y markdown). Solo en este PC, fuera de los repos. Pruebas: `python -m pytest tests -o addopts=""` desde el repo.
