@@ -96,6 +96,6 @@ Al resolver una, moverla a la nota correspondiente y borrarla de aquí.
 - Las Fuentes alimentan directo al Subledger Contable, además de la Bodega. ¿Es una carga independiente de la certificación?
 
 ## Primas Rentas ([[inprod-primas-rentas-202606]])
-- ¿Gold de Primas Rentas debe guardar solo las rentas expedidas en cada periodo (los 401 del SQL V2.1) o el acumulado de rentas con pago en el mes? Preguntar a Victor o al arquitecto. Si es solo lo del periodo, hace falta el SCD por periodo.
-- ¿La llave del SCD de Primas Rentas incluye el periodo? Revisar su JSON de configuración.
-- ¿La versión del job Silver con el join sin "Ajuste" está desplegada en prod? Si lo está, ¿qué periodos se certificaron con totales inflados?
+- ~~¿Gold de Primas Rentas debe guardar solo las rentas del periodo o el acumulado?~~ **Resuelta (2026-11-13, Victor en la reunión): solo las del periodo, 401 para 202606 (de 400 a 600 por mes).** Encaja con `VLR_PRIMA_UNICA`, que se cobra una vez, al expedir la renta. Lo que queda es técnico y nuestro: el SCD por periodo ([[pendientes]]).
+- ~~¿La llave del SCD de Primas Rentas incluye el periodo?~~ **Resuelta en el repo (2026-11-13): no, es solo `NID_RENTA`.** Falta confirmar el JSON desplegado.
+- ~~¿La versión del job Silver con el join sin "Ajuste" está en prod?~~ **Resuelta (2026-11-13): sí, el script de prod es idéntico al del repo.** No se revisan los periodos certificados ni los conteos en Athena: la simulación de Victor y el código bastan (decisión del usuario, 2026-11-13).

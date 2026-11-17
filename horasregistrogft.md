@@ -12,8 +12,127 @@ Campos del formulario "Time Entry". Un apartado por día, del más reciente al m
 ## Resumen
 | Fecha | Día | Horas | Tema |
 |---|---|---|---|
-| [10/11/2026](#dia-2026-11-10) | Martes | 8 | T1: notificación vs. arquitectura, prueba en QA, limpieza de DEV, job nuevo con trazabilidad y roadmap |
+| [13/11/2026](#dia-2026-11-13) | Viernes | 8 | T1: guía de prueba en QA del correo HTML por SES; spike de los bugs de Primas ARL y Primas Rentas |
+| [12/11/2026](#dia-2026-11-12) | Jueves | 8 | T1: job de notificación modular con SES y HTML (477 pruebas, 36/36 contra el probado); spike de Primas ARL con las pruebas de QA |
+| [11/11/2026](#dia-2026-11-11) | Miércoles | 8 | T1: entrega de SES con HTML a QA, validación contra lo desplegado y corrección de plantillas en la configuración |
+| [10/11/2026](#dia-2026-11-10) | Martes | 8 | T1: prueba en QA del correo HTML por SES y job de notificación nuevo con trazabilidad |
 | [09/11/2026](#dia-2026-11-09) | Lunes | 8 | T1: migración del correo de certificación de SNS a SES con HTML |
+
+---
+
+<a id="dia-2026-11-13"></a>
+## 13/11/2026 (viernes)
+
+| Campo | Valor |
+|---|---|
+| Start Date | 13/11/2026 |
+| End Date | 13/11/2026 |
+| Time Type | Día hábil, tiempo regular (viernes, no es festivo en Colombia) |
+| Entry Hours | 8 (supuesto de jornada completa; **ajustar** si fueron otras horas) |
+
+### Notes (texto para pegar en el campo)
+
+T1 Notificaciones: guía de prueba en QA del envío HTML por SES sin la Step Function y diagnóstico de errores. Spikes de Primas ARL (el SCD apaga datos válidos, plan de fix) y Primas Rentas (75.181 frente a 401 registros, causa en el join).
+
+### Detalle de lo trabajado
+
+#### 1. Prueba en QA del correo HTML por SES
+- Guía de comandos para CloudShell válida en DEV y QA: tomar los argumentos del trigger, ubicar un `certCode` existente, subir una copia de prueba del JSON con un único destinatario y lanzar solo el job de notificación.
+- Se corrigió la guía: el filtro devolvía dos lambdas y solo una dispara el job de notificación.
+- Diagnóstico del `AccessDenied` de QA: S3 lo devuelve cuando el archivo pedido no existe y el rol no puede listar el bucket. Se verificó la plantilla (existe, 15 KB) y se dieron comandos para revisar las otras dos claves.
+- Comandos para validar que la plantilla tenga los marcadores y que todas las plantillas de los JSON desplegados existan.
+
+#### 2. Spike del bug de Primas ARL
+- Simulación del flujo completo (extracción, remediación, Silver y SCD) con Oracle, S3 y Glue simulados: reproduce el incidente, confirma que el fix de extracción funciona y muestra que el SCD sin periodo apaga datos válidos.
+- Corrección propuesta y plan de entrega en 6 días hábiles, en tres líneas de trabajo.
+- Preguntas para negocio sobre si cada corrida trae el acumulado o solo el periodo.
+
+#### 3. Spike del bug de Primas Rentas
+- Comparación línea por línea del SQL de composición V2.1 con el job de la Silver: misma lógica salvo el join con `prv_rentas`, al que le falta el límite inferior de la fecha de expedición.
+- Explicación de la diferencia: el job cuenta las rentas vigentes que cobraron en el mes y el SQL cuenta las expedidas en el mes.
+- Confirmación de que el script de producción es idéntico al del repo y alcance del problema (solo Primas Rentas).
+- Fix propuesto y orden de entrega: la línea sola rompería la malla en la primera corrida; sale junto con el SCD por periodo.
+
+### Pendiente
+- Resultado de la prueba en QA con el JSON de caso de un solo destinatario.
+- Respuesta de negocio sobre acumulado o solo el periodo.
+- Escribir y probar el código de los fixes de ARL y Rentas.
+
+---
+
+<a id="dia-2026-11-12"></a>
+## 12/11/2026 (jueves)
+
+| Campo | Valor |
+|---|---|
+| Start Date | 12/11/2026 |
+| End Date | 12/11/2026 |
+| Time Type | Día hábil, tiempo regular (jueves, no es festivo en Colombia) |
+| Entry Hours | 8 (supuesto de jornada completa; **ajustar** si fueron otras horas) |
+
+### Notes (texto para pegar en el campo)
+
+T1 Notificaciones: job de notificación modular con SES y correo HTML, 477 pruebas e idéntico al job probado en 36 de 36 escenarios; solicitud a DevOps. Spike de Primas ARL: análisis de las pruebas en QA, el SCD no distingue periodos.
+
+### Detalle de lo trabajado
+
+#### 1. Job de notificación modular (SES y HTML)
+- Correo HTML desde `email.templatePath`, con valores escapados; si no puede leer la plantilla, envía solo texto y lo registra.
+- Envío por destinatario: si uno falla sigue con los demás y marca solo los enviados; si fallan todos, el job falla y no marca nada.
+- Avisos por tono (informativo y advertencia), tablas de resumen, totales y detalle, y enlaces cortos.
+- 477 pruebas y 99,9 % de cobertura; el comparador contra el job probado dio 36 de 36 iguales y detecta los cambios de control.
+- Migración a PEP 8 en inglés, sin tocar los contratos externos; empaquetado en zip y script por ambiente.
+- Commits en el repositorio del proyecto.
+
+#### 2. Coordinación con DevOps
+- Solicitud actualizada: permisos de SES y de lectura de plantillas y del paquete, argumentos por defecto del job y publicación del zip y del script.
+- Preguntas abiertas para DevOps: dónde se publica el paquete, cómo el pipeline resuelve los enlaces por ambiente y la salida del sandbox de SES.
+- Requisitos del cambio de dominio de SES (identidad, DKIM, SPF y DMARC) para la reunión con Seguridad y el administrador de AWS.
+
+#### 3. Spike del bug de Primas ARL (pruebas en QA)
+- Auxilios Funerarios (periodo 202512): el freno detuvo 90 de 90 activos, todos del periodo anterior.
+- Primas ARL (periodo 202509): 2.099 de 2.099; la prueba usó `=` en el filtro del periodo y producción usa `<=`, por lo que no ejercitó el fix.
+- Causa: el SCD compara contra todos los activos de Gold y no conoce el periodo.
+- Propuesta: paquete 1 solo con la extracción y paquete 2 con el SCD por periodo; método de prueba de ARL con una corrida base con tope y luego la incremental.
+
+### Pendiente
+- Respuestas de DevOps sobre la publicación del paquete y los enlaces por ambiente.
+- Decisión sobre el valor del tiempo máximo de consulta de Athena del job.
+- Prueba del job modular en QA con SES.
+
+---
+
+<a id="dia-2026-11-11"></a>
+## 11/11/2026 (miércoles)
+
+| Campo | Valor |
+|---|---|
+| Start Date | 11/11/2026 |
+| End Date | 11/11/2026 |
+| Time Type | Día hábil, tiempo regular (miércoles, no es festivo en Colombia) |
+| Entry Hours | 8 (supuesto de jornada completa; **ajustar** si fueron otras horas) |
+
+### Notes (texto para pegar en el campo)
+
+T1 Notificaciones: entrega de SES con HTML a QA. Validación del job y las plantillas HTML contra lo desplegado, rutas de plantillas corregidas en 7 JSON de configuración y checklist de entrega para DevOps.
+
+### Detalle de lo trabajado
+
+#### 1. Validación frente a lo desplegado
+- Comparación por hash del job, las plantillas y las lambdas con lo que está en DEV.
+- Resultado: job con SNS en el repositorio, plantillas idénticas y lambdas sin cambios.
+- Paridad SNS a SES: mismos argumentos y mismas claves del JSON global; el trigger no pasa el remitente, así que va por defecto en el job.
+
+#### 2. Configuración de los casos
+- Corrección de la ruta de las plantillas HTML (`templatePath`) en 7 JSON a `email-template/`.
+- Hallazgos de configuración para DevOps: carpeta de plantillas, bucket donde se despliegan y comportamiento de `--delete` en el pipeline.
+
+#### 3. Entrega a QA
+- Paquete del job con SES y checklist de entrega para DevOps.
+
+### Pendiente
+- Confirmar con DevOps el bucket de plantillas y el `--delete` del pipeline.
+- Prueba en QA del correo con SES.
 
 ---
 
@@ -29,50 +148,25 @@ Campos del formulario "Time Entry". Un apartado por día, del más reciente al m
 
 ### Notes (texto para pegar en el campo)
 
-T1 Notificaciones NIIF 17: se comparó la cadena de notificación y certificación con el diagrama de arquitectura y la calidad de código, y se documentaron brechas de arquitectura, seguridad y costos. Se probó en QA el correo de certificación por SES con HTML: el correo llegó a la bandeja, y se diagnosticaron y corrigieron los permisos faltantes (conjunto de configuración de SES y lectura de plantillas). Se levantó evidencia de uso de los recursos de AWS DEV y se clasificó qué está vigente, qué es de otros equipos y qué se puede retirar. Se bajó y validó el código desplegado de las lambdas y jobs de la cadena. Se auditó el job de notificación nuevo frente al desplegado y se completó (HTML, envío parcial, trazabilidad con un ID único y logs en español), con 514 pruebas automáticas; se probó en Glue de DEV con un job aparte. Se reorganizó el código en carpetas por componente, con esqueletos de las lambdas y una librería común de observabilidad. Se elaboró el roadmap de la cadena completa, con fases, decisiones y orden de ejecución.
+T1 Notificaciones: prueba en QA del correo HTML por SES (llegó a la bandeja), permisos corregidos y política IAM del paquete. Job de notificación nuevo con envío parcial y trazabilidad, 514 pruebas, probado en Glue DEV.
 
 ### Detalle de lo trabajado
 
-#### 1. Arquitectura y brechas
-- Comparación de la cadena de notificación con el diagrama (`Página-2`): brechas ARQ-21 a ARQ-28 y SEG-10 a SEG-12, más ARQ-29 (el enlace de descarga abre la consola de S3) y SEG-13 (token corto).
-- Análisis de la transcripción de la reunión PCR (No certificar debe dejar la malla pendiente) y revisión del modelo de configuración en DEV.
-- Plan de trabajo para unificar la cadena, en fases.
-- Trazabilidad: se confirmó que no hay un ID único de punta a punta (ARQ-32) y que certificar/rechazar no registra el resultado en el log (ARQ-33).
-- Auditoría de las consultas de Athena: Gold sin particiones, sin tope de escaneo, filtros que impiden podar, redondeo que puede descuadrar, resumen de ARL vacío y sustitución silenciosa de variables (COS-07 a COS-09, ARQ-34 a ARQ-38, SEG-15).
-
-#### 2. Prueba en QA del correo (SES + HTML)
+#### 1. Prueba en QA del correo (SES + HTML)
 - Comandos de prueba adaptados a QA y ajuste del caso de prueba.
 - Diagnóstico de fallas: argumento `--SES_SENDER` faltante, permisos de lectura de plantillas y de envío sobre el conjunto de configuración de SES.
 - Corrección de la política IAM del paquete de entrega y de su LEEME.
 - Resultado: el job terminó correctamente y **el correo llegó a la bandeja**.
 - Mensaje de estado para el equipo sobre los bloqueos de permisos de infraestructura.
 
-#### 3. Limpieza y evidencia de AWS DEV
-- Script de solo lectura para medir el uso real de lambdas, jobs, Step Functions, streams, API Gateway y WAF.
-- Clasificación de recursos: vigentes, de otros equipos y candidatos a retirar. Hallazgos: API viejo sin WAF (SEG-14) y transporte a FIS que nunca funcionó (ARQ-30).
-- Carpeta única de evidencias de AWS (`EvidenciasAws`), fuera de Git.
-- Descarga y validación del código desplegado de las lambdas y jobs de la cadena; se actualizaron las copias que estaban desfasadas.
-
-#### 4. Estándares y decisiones
-- Lineamiento de DevOps para NIIF 17: nombres, repositorios, estructura y pruebas. Entrega por carpeta comprimida con el nombre del recurso.
-- Estándar de código: PEP 8 en inglés, logs en español con un ID de trazabilidad en cada línea.
-- Decisiones registradas: SES también para alertas técnicas, Grafana fuera de alcance, una sola lambda orquestadora y nombres en el estándar.
-
-#### 5. Job de notificación nuevo
-- Auditoría frente al job desplegado y correcciones: correo HTML, envío parcial, argumentos, consultas estrictas, token de 32 caracteres y cancelación de consultas que exceden el tiempo.
+#### 2. Job de notificación nuevo
+- Correcciones: correo HTML, envío parcial, argumentos, consultas estrictas, token de 32 caracteres y cancelación de consultas que exceden el tiempo.
 - Trazabilidad: ID del flujo sin inventar, contexto en cada línea, mensajes en español, errores de arranque en JSON y resumen para métricas.
-- Librería común de observabilidad, copiada en cada paquete.
 - Empaquetado en bash y PowerShell; prueba en Glue de DEV con un job aparte: terminó correctamente con el log completo.
 - 514 pruebas automáticas.
 
-#### 6. Organización y planificación
-- Código nuevo en `Backend\notificacion\`: `email-template`, `lambdas` (esqueletos de las 5 lambdas) y `jobs-glue`.
-- Roadmap de la cadena completa: fases, decisiones (D1 a D7), lista de avance y orden de ejecución.
-- Memoria del proyecto y skill actualizadas.
-
 ### Pendiente
 - Prueba en DEV del job nuevo con envío real y revisión del HTML.
-- Decisiones del equipo: No certificar (D2), descarga del CSV (D3), reenvío (D4) y la ruta del API (D7).
 - Entregar a DevOps el paquete del job nuevo con sus argumentos y permisos.
 
 ---
@@ -89,7 +183,7 @@ T1 Notificaciones NIIF 17: se comparó la cadena de notificación y certificaci�
 
 ### Notes (texto para pegar en el campo)
 
-T1 Notificaciones NIIF 17: migración del correo de certificación de SNS a SES con formato HTML. Se modificó el job de Glue niif-dev-notification-certification (envío por SES con tolerancia a fallos por destinatario, correo HTML desde plantillas en S3, avisos por tono) con 104 pruebas automáticas. Se organizaron y validaron 6 plantillas HTML para clientes de correo (Outlook, Gmail, móvil) con 6 escenarios de vista previa. Se ajustó el mockup UX (4 estados con variaciones). En AWS DEV se subieron plantillas y script, se unificaron los templatePath de los casos, se ajustó el job y se crearon los permisos IAM necesarios. Se ejecutaron pruebas del job: terminó correctamente y SES aceptó el mensaje. Se diagnosticaron 3 problemas de permisos (SES por destinatario en sandbox, lectura de plantillas y de configuración de prueba). Se identificó que el correo no llega al buzón por DMARC y DKIM del dominio. Se prepararon las solicitudes a DevOps (permisos IAM y registros DNS) y se actualizó la memoria del proyecto.
+T1 Notificaciones: migración del correo de certificación de SNS a SES con HTML. Job con 104 pruebas, 6 plantillas HTML validadas, permisos IAM en DEV, prueba exitosa y solicitudes a DevOps por DKIM y permisos.
 
 ### Detalle de lo trabajado
 
@@ -119,7 +213,6 @@ T1 Notificaciones NIIF 17: migración del correo de certificación de SNS a SES 
 
 #### 4. Coordinación y documentación
 - Mensajes redactados para DevOps: permisos IAM y entrega para QA/PRD, y registros DNS (DKIM).
-- Memoria del proyecto actualizada (notas de la entrega, permisos IAM, repo privado).
 - Evidencia de ejecución del job para captura (comandos de solo lectura).
 
 ### Pendiente

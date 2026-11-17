@@ -75,6 +75,8 @@ Dónde verlo en AWS: Glue → ETL jobs → `niif-prd-extraccion-estandar-optimiz
 - Mejora del freno: incluir en el mensaje cuántos registros entraron y de qué periodos son los activos que se apagarían.
 **Pregunta abierta que bloquea la decisión:** ver [[preguntas-abiertas]] (¿el flujo esperado de cada malla es foto acumulada o solo el periodo?).
 
+**Continúa en [[fix-scd-freno-periodo]]** (2026-11-13): auditoría completa, simulación del flujo y plan de 6 días.
+
 ## 4. Hallazgos secundarios
 - **INC-6:** 1.100.009 registros (91,1 % de Gold) tienen `per_proceso_point` nulo → nunca salen en la certificación de ningún periodo. Causa sin analizar.
 - Los 209 "nuevos" son de 202610 pese al `WHERE PERIODO <= '202606'`. Hipótesis: `PERIODO` (columna de `par_endosos`) ≠ `per_proceso_point` (deriva de `FEC_PROCESO_POINT`). Sin verificar.
