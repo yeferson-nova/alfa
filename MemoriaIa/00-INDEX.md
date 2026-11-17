@@ -71,7 +71,7 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 - [[correo-notificacion]]: formato del correo de certificación
 - [[monitoreo-grafana]]: observabilidad (Grafana fuera de alcance)
 - [[diseno-propuesto]]: cambios propuestos en el paso 3 (sin confirmar)
-- [[fix-scd-freno-periodo]]: fix completo de Primas ARL (SCD por periodo, extracción, calidad del código), 33 hallazgos y plan de 6 días
+- [[fix-scd-freno-periodo]]: fix completo de Primas ARL (SCD por periodo, extracción, calidad del código), 33 hallazgos y plan de 7 días
 
 **inprod:** [[inprod-primas-arl-202606]] · [[inprod-primas-rentas-202606]] · [[inprod-enlaces-cognito-9411325]]
 

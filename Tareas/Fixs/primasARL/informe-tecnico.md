@@ -250,7 +250,7 @@ Medido sobre el repo `data-datalake-niif-rmd-ext-estandar-glue-job` y el Silver 
 <a id="s5"></a>
 ## 5. Orden de trabajo
 
-Todo el desarrollo de código se entrega a QA en **6 días hábiles**, del martes 17 al martes 24 de noviembre, con tres líneas en paralelo. El detalle día por día está en la sección 7 del informe de negocio.
+Todo el desarrollo de código se entrega a QA en **7 días hábiles**, del martes 17 al miércoles 25 de noviembre, con tres líneas en paralelo. El día 1 se arma una red de pruebas que fija la salida actual de cada proceso, para asegurar que el cambio no rompe nada en las 7 mallas que los usan. El detalle día por día está en la sección 7 del informe de negocio.
 
 | Línea | Hallazgos |
 |---|---|
@@ -258,11 +258,11 @@ Todo el desarrollo de código se entrega a QA en **6 días hábiles**, del marte
 | B, extracción y remediación | EXT-01 a EXT-10, COD-06 |
 | C, base común, calidad y otros repos | COD-02, COD-03, COD-05, COD-07, COD-01 y COD-04 en extracción, remediación y validación, ARL-02, ARL-04 y el ajuste de configuración de ARL-01 y ARL-03 |
 
-Los días 5 y 6 son para la prueba completa del flujo (local y DEV) y los paquetes por repo.
+El día 6 es para la prueba completa del flujo en local y la prueba de equivalencia en DEV con las 7 mallas (Gold en ruta alterna). El día 7, para los paquetes por repo.
 
 **Fuera del código:**
 - **DevOps:** versionado del histórico (parte de SCD-06), ARL-05 y el ajuste de crawlers por el guardado por lote (EXT-03).
-- **BA:** las preguntas de la sección 6, a más tardar el jueves 19, porque desbloquean SCD-02 y EXT-02.
+- **BA:** las preguntas de la sección 6, a más tardar el viernes 20, porque desbloquean SCD-02 y EXT-02.
 - **Decisión del líder técnico y BA:** ARL-06.
 
 Los casos reproducidos en la simulación pasan a ser pruebas unitarias en `tests/` del repo.

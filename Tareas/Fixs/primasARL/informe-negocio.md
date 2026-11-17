@@ -23,7 +23,7 @@
 4. Esa corrección necesita 4 respuestas de BA (sección 6).
 5. En total se encontraron 33 hallazgos: 2 críticos, 7 altos, 12 medios, 6 bajos y 6 de otros componentes asignados a su responsable.
 6. Todo se comprobó sobre el código y con una simulación del flujo completo, que reprodujo el incidente y confirmó que la corrección funciona.
-7. Plan: todo el desarrollo de código se entrega a QA en 6 días hábiles, el martes 24 de noviembre, con tres líneas de trabajo en paralelo y si BA responde a más tardar el jueves 19 (sección 7).
+7. Plan: todo el desarrollo de código se entrega a QA en 7 días hábiles, el miércoles 25 de noviembre, con tres líneas de trabajo en paralelo, pruebas que aseguran que no se rompe lo que ya existe y si BA responde a más tardar el viernes 20 (sección 7).
 
 ## Índice
 
@@ -37,7 +37,7 @@
   - [5.3 Calidad del código](#n5-3)
   - [5.4 Otros componentes](#n5-4)
 - [6. Qué se necesita de negocio](#n6)
-- [7. Plan de entrega a QA: 6 días hábiles](#n7)
+- [7. Plan de entrega a QA: 7 días hábiles](#n7)
 - [8. Cómo se comprobó](#n8)
 
 <a id="n1"></a>
@@ -215,12 +215,12 @@ Estas respuestas desbloquean la corrección del problema de fondo y del hallazgo
 3. ¿Qué define el periodo de un endoso: el campo de periodo o la fecha de proceso?
 4. ¿Un endoso ya cargado puede cambiar en Oracle (valor, tercero, sucursal) dentro del mismo periodo?
 
-Las respuestas se necesitan a más tardar el **jueves 19 de noviembre** para cumplir el plan de la sección 7.
+Las respuestas se necesitan a más tardar el **viernes 20 de noviembre** para cumplir el plan de la sección 7.
 
 <a id="n7"></a>
-## 7. Plan de entrega a QA: 6 días hábiles
+## 7. Plan de entrega a QA: 7 días hábiles
 
-**Todo el desarrollo de código se entrega en 6 días hábiles.** Inicio el martes 17 de noviembre (el lunes 16 es festivo). Entrega a QA el martes 24 de noviembre.
+**Todo el desarrollo de código se entrega en 7 días hábiles.** Inicio el martes 17 de noviembre (el lunes 16 es festivo). Entrega a QA el miércoles 25 de noviembre. El primer día se dedica a una red de pruebas que asegura que el cambio no rompe nada de lo que ya existe, en ninguna de las 7 mallas que usan estos procesos.
 
 Para cumplirlo, el trabajo se reparte en **tres líneas en paralelo**, con una persona en cada una:
 
@@ -230,12 +230,19 @@ Para cumplirlo, el trabajo se reparte en **tres líneas en paralelo**, con una p
 
 | Día | Fecha | Línea A: histórico | Línea B: extracción y remediación | Línea C: base común, calidad y otros repos |
 |---|---|---|---|---|
-| 1 | Mar 17 nov | SCD-01, SCD-03 y SCD-04: que el histórico no se pierda por un error de lectura y que no queden registros duplicados ni vacíos | EXT-01, EXT-04, EXT-06 y COD-06: que una reanudación no mezcle periodos, que un registro no se lea dos veces, conteos de control y fallar si falta un parámetro | COD-03, COD-05 y COD-07: módulo común (lectura y escritura en S3, contrato entre procesos y códigos de error). Se envían las preguntas a BA y los pedidos a DevOps |
-| 2 | Mié 18 nov | SCD-05, SCD-06, SCD-07 y SCD-08: cuadre antes de guardar, guardado en dos pasos con verificación, conteos de control y detalle cuando actúa el freno | EXT-08, EXT-09 y EXT-10: columnas explícitas, límite de control y limpieza | COD-02: pruebas automáticas con los escenarios ya simulados y cobertura activada en Sonar |
-| 3 | Jue 19 nov | SCD-09, SCD-10, COD-01 y COD-04 en `scd.py`: cálculo una sola vez y separación en funciones que se puedan probar | EXT-03 y EXT-07: guardar Bronce y Silver base por lote, más el script que migra los datos existentes | COD-01 y COD-04 en extracción, remediación y validación. Se reciben las respuestas de BA |
-| 4 | Vie 20 nov | SCD-02: comparar por periodo, según la respuesta de BA | EXT-02 y EXT-05: traer cambios del origen según BA, y estado por ejecución | ARL-02 (Silver de ARL), ARL-04 (correo con totales vacíos) y ajuste de configuración de ARL-01 y ARL-03 |
-| 5 | Lun 23 nov | Todas las líneas: prueba completa del flujo en local con todos los escenarios, cobertura de pruebas y prueba en DEV con Primas ARL y Auxilios Funerarios | | |
-| 6 | Mar 24 nov | Todas las líneas: un paquete por repo para DevOps, con archivos, instrucciones, plan de reversa y lista de pruebas para QA | | |
+| 1 | Mar 17 nov | Red de pruebas: se fija la salida actual del histórico para compararla después | Red de pruebas: se fija la salida actual de extracción y remediación. Consulta de llaves duplicadas en Silver y Gold de las 7 mallas | Esqueleto de la estructura modular, sin cambiar la lógica. Prueba de la cadena completa con la configuración de cada malla. Se envían las preguntas a BA y los pedidos a DevOps |
+| 2 | Mié 18 nov | SCD-01, SCD-03 y SCD-04: que el histórico no se pierda por un error de lectura y que no queden registros duplicados ni vacíos | EXT-01, EXT-04, EXT-06 y COD-06: que una reanudación no mezcle periodos, que un registro no se lea dos veces, conteos de control y fallar si falta un parámetro | COD-03, COD-05 y COD-07: módulo común (lectura y escritura en S3, contrato entre procesos y códigos de error) |
+| 3 | Jue 19 nov | SCD-05, SCD-06, SCD-07 y SCD-08: cuadre antes de guardar, guardado en dos pasos con verificación, conteos de control y detalle cuando actúa el freno | EXT-08, EXT-09 y EXT-10: columnas explícitas, límite de control y limpieza | COD-02: pruebas automáticas con los escenarios ya simulados y cobertura activada en Sonar |
+| 4 | Vie 20 nov | SCD-09, SCD-10, COD-01 y COD-04 en `scd.py`: cálculo una sola vez y separación en funciones que se puedan probar | EXT-03 y EXT-07: guardar Bronce y Silver base por lote, más el script que migra los datos existentes | COD-01 y COD-04 en extracción, remediación y validación. Se reciben las respuestas de BA |
+| 5 | Lun 23 nov | SCD-02: comparar por periodo, según la respuesta de BA | EXT-02 y EXT-05: traer cambios del origen según BA, y estado por ejecución | ARL-02 (Silver de ARL), ARL-04 (correo con totales vacíos) y ajuste de configuración de ARL-01 y ARL-03 |
+| 6 | Mar 24 nov | Todas las líneas: prueba completa del flujo en local con todos los escenarios y cobertura de pruebas. En DEV, prueba de equivalencia con las 7 mallas: la versión nueva escribe Gold en una ruta alterna y se compara con el Gold de la versión actual | | |
+| 7 | Mié 25 nov | Todas las líneas: un paquete por repo para DevOps, con archivos, instrucciones, plan de reversa y lista de pruebas para QA. Los scripts actuales no se borran hasta que QA apruebe | | |
+
+**Reglas para no romper lo que existe:**
+
+- La migración a la estructura modular no cambia la lógica: la salida debe ser idéntica a la actual, y la red de pruebas del día 1 lo comprueba.
+- Los cambios de comportamiento van en commits separados del refactor, y cada commit queda con las pruebas en verde.
+- Se mantienen las rutas de S3, los nombres de tablas, las claves del estado entre procesos y los argumentos de los jobs.
 
 Después de la entrega, los paquetes pasan a DevOps para el despliegue en QA.
 
