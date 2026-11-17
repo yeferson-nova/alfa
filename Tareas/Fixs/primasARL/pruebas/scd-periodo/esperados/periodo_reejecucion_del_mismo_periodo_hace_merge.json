@@ -1,0 +1,276 @@
+[
+  {
+    "control_periodo_scd": {
+      "cambio_de_periodo": false,
+      "periodo_activo_anterior": null,
+      "periodo_negocio": "202511",
+      "total_reactivados_desde_historico": 0
+    },
+    "estado_gold_scd": "SUCCESS",
+    "gold": {
+      "filas": [
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 1,
+          "PER": "202511",
+          "VLR": "10.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 10,
+          "PER": "202511",
+          "VLR": "100.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 2,
+          "PER": "202511",
+          "VLR": "20.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 3,
+          "PER": "202511",
+          "VLR": "30.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 4,
+          "PER": "202511",
+          "VLR": "40.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 5,
+          "PER": "202511",
+          "VLR": "50.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 6,
+          "PER": "202511",
+          "VLR": "60.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 7,
+          "PER": "202511",
+          "VLR": "70.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 8,
+          "PER": "202511",
+          "VLR": "80.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 9,
+          "PER": "202511",
+          "VLR": "90.00",
+          "VRS_REG": 1
+        }
+      ],
+      "vigencias": [
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta"
+      ]
+    },
+    "metricas_gold_scd": {
+      "total_entrada_silver_preparada": 10,
+      "total_gold_anterior": 0,
+      "total_gold_final": 10,
+      "total_insertados_nuevos": 10,
+      "total_nuevas_versiones_por_cambio": 0,
+      "total_registros_apagados_por_ausencia": 0,
+      "total_registros_sin_cambio": 0,
+      "total_versiones_cerradas_por_cambio": 0
+    },
+    "periodo_activo_guardado": "202511",
+    "resultado": "OK"
+  },
+  {
+    "control_periodo_scd": {
+      "cambio_de_periodo": false,
+      "periodo_activo_anterior": "202511",
+      "periodo_negocio": "202511",
+      "total_reactivados_desde_historico": 0
+    },
+    "estado_gold_scd": "SUCCESS",
+    "gold": {
+      "filas": [
+        {
+          "ACT_REG": 0,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 1,
+          "PER": "202511",
+          "VLR": "10.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 0,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 10,
+          "PER": "202511",
+          "VLR": "100.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 2,
+          "PER": "202511",
+          "VLR": "20.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 3,
+          "PER": "202511",
+          "VLR": "30.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 4,
+          "PER": "202511",
+          "VLR": "40.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 5,
+          "PER": "202511",
+          "VLR": "50.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 6,
+          "PER": "202511",
+          "VLR": "60.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 7,
+          "PER": "202511",
+          "VLR": "70.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 8,
+          "PER": "202511",
+          "VLR": "80.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 9,
+          "PER": "202511",
+          "VLR": "90.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 2,
+          "NUM": 1,
+          "PER": "202511",
+          "VLR": "11.00",
+          "VRS_REG": 2
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 2,
+          "NUM": 11,
+          "PER": "202511",
+          "VLR": "110.00",
+          "VRS_REG": 1
+        }
+      ],
+      "vigencias": [
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "abierta",
+        "cerrada",
+        "cerrada"
+      ]
+    },
+    "metricas_gold_scd": {
+      "total_entrada_silver_preparada": 10,
+      "total_gold_anterior": 10,
+      "total_gold_final": 12,
+      "total_insertados_nuevos": 1,
+      "total_nuevas_versiones_por_cambio": 1,
+      "total_registros_apagados_por_ausencia": 1,
+      "total_registros_sin_cambio": 8,
+      "total_versiones_cerradas_por_cambio": 1
+    },
+    "periodo_activo_guardado": "202511",
+    "resultado": "OK"
+  }
+]

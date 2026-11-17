@@ -36,14 +36,15 @@ IDs locales de esta nota: `PR-1` a `PR-5`, sin ID `ARQ` asignado todavía.
 ## 3. Causa (comparación del SQL V2.1 con el job, 2026-11-13)
 Job: `alfa-repos\glue\data-datalake-niif-primas-rentas-glue-job\src\jobs\silver-primas-rentas.py`. Es la traducción a Spark del SQL: las mismas 7 tablas, los mismos joins, el `max(nid_calculo)` por renta y el filtro `cod_concepto = 1`. Corresponde a una versión **anterior** a la V2.1.
 
-- **PR-1 (causa, alta confianza).** El join con `prv_rentas` es distinto:
+- **PR-1 (causa, CONFIRMADA en QA el 2026-11-17).** El join con `prv_rentas` es distinto:
   - SQL V2.1, línea 320, marcado `-- Ajuste`: `prvrnts.fec_expedicion between fecha_inicio_periodo_pago_renta and fecha_fin_periodo_pago_renta`. Las dos fechas no vienen de Oracle: se calculan en las líneas 65 y 66 desde `periodo_pago` (el día 1 y el último día del mes). Para 202606 quedan 01/06/2026 y 30/06/2026, así que **solo pasan las rentas expedidas en junio: 401**.
   - Job, línea 464: `FECHA_FIN_PERIODO_PAGO_RENTA >= FEC_EXPEDICION`. **Le falta el límite inferior** (`>= fecha_inicio`) y deja pasar todas las rentas expedidas antes: **75.181**. El job ya calcula las dos fechas (líneas 431 a 446), pero no usa la de inicio.
   - **Por qué tantas (usuario, 2026-11-13):** una renta vigente paga una mesada cada mes, así que todas las vigentes aparecen en `anp_movimientos_pago` todos los meses. El job cuenta las vigentes que cobraron en junio (cerca de 75 mil, el universo de pensionados); el SQL cuenta las nuevas del mes, que traen la prima única (`VLR_PRIMA_UNICA`). No hay duplicados ni datos corruptos: el job mide otra cosa.
   - El filtro de pagos `fec_inicial` en junio (línea 34 del SQL, línea 430 del job) es igual en los dos y no explica la diferencia.
   - Prueba opcional en Oracle: la V2.1 con la línea 320 cambiada a `and prvrnts.fec_expedicion <= anpmvmntspg.fecha_fin_periodo_pago_renta` debería dar cerca de 75.181.
+- **Evidencia en QA (2026-11-17, Athena, solo lectura, script `revisar-gold.sh` en CloudShell):** Gold `niif-qa-gold-catalog-db.scd_primas_rentas` con `act_reg = 1` tiene un solo periodo, **202606**, con **75.189 activas**, de las cuales **401** cumplen `per_expedicion_renta = per_pago_renta` (exacto al SQL de Victor) y **75.189 rentas distintas**: no hay duplicados. Victor reportó 75.181; la diferencia de 8 no está explicada (otra corrida o ambiente).
 - **PR-2.** Falta la columna `RAMO`. El SQL saca `prvrnts.ramo_point as ramo` y el job no la tiene.
-- **PR-3.** El job agrupa también por `LOTE_CARGUE_ID` (línea 506) y el SQL no. Si `lotes_segmento` junta los lotes de respaldo con el actual (el fix de INC-5), una renta podría salir repetida.
+- **PR-3.** El job agrupa también por `LOTE_CARGUE_ID` (línea 506) y el SQL no. Si `lotes_segmento` junta los lotes de respaldo con el actual (el fix de INC-5), una renta podría salir repetida. **En QA no ocurre** (0 llaves duplicadas); se mantiene como riesgo y limpieza.
 - **Coincide con el SQL:**
   - el filtro `FEC_INICIAL` del mes con el extremo 23:59:59;
   - la condición sobre saldos `fin_periodo >= fec_corte_calculo`;
@@ -61,7 +62,7 @@ Job: `alfa-repos\glue\data-datalake-niif-primas-rentas-glue-job\src\jobs\silver-
 ## 5. Por qué la línea sola no basta (PR-4 y PR-5, deducido del código y sin probar)
 | # | Problema | Qué pasaría si solo se corrige la línea 464 |
 |---|---|---|
-| PR-5 | **El Gold actual de prod** tiene cerca de 75 mil rentas activas | En la primera corrida llegan 401 y el SCD apagaría unas 74.800 por ausencia. El freno del 20 % detiene la malla; sin freno se borra lo activo, como en ARL |
+| PR-5 | **El Gold actual** tiene cerca de 75 mil rentas activas. QA: 75.189 activas, todas de 202606 | En la primera corrida llegan 401 y el SCD apagaría **74.788 (99,5 %)** en QA. Prod: por medir con la misma consulta. El freno del 20 % detiene la malla; sin freno se borra lo activo, como en ARL |
 | PR-4 | **La llave del SCD es solo `NID_RENTA`, sin periodo.** El SCD hace full join y apaga por ausencia ([[inprod-primas-arl-202606]], INC-2) | En julio llegan unas 500 nuevas y el SCD apaga las 401 de junio. El freno detiene la malla **todos los meses** |
 | PR-3 | `groupBy` por `LOTE_CARGUE_ID` | Una renta podría salir dos veces si los pagos vienen en varios lotes |
 | PR-2 | Falta `RAMO` | No cambia el conteo. Agregarla obliga a cambiar el JSON del SCD y el esquema de Gold, así que puede ir aparte |
@@ -103,6 +104,15 @@ GROUP BY per_pago_renta;
 Lectura: `expedidas_en_el_periodo` cerca de 401 confirma PR-1; `rentas_distintas` menor que `total_job` indica PR-3.
 
 **Mensaje a Victor y Julio (Teams, redactado, sin confirmar envío):** el SQL V2.1 cuenta solo las rentas expedidas en junio, mientras el job cuenta todas las que recibieron pago en junio (todas las vigentes); se pide confirmar que lo correcto es contar solo las expedidas en el periodo.
+
+## 7. Regla de Gold: un solo periodo activo (2026-11-17, decisión del usuario)
+- En Gold solo queda activo el último periodo cargado; los anteriores pasan a histórico (`ACT_REG = 0`). Ver [[fix-scd-freno-periodo]].
+- PR-4 se replantea: que julio apague las 401 de junio es lo **esperado**. Lo que falla es el freno, que hay que medir solo sobre el mismo periodo.
+- PR-5: re-ejecutar 202606 con el job corregido apaga 74.788 del **mismo** periodo (99,5 %). El freno saltaría con razón, así que hace falta una excepción controlada de una sola vez (por ejemplo `umbral_apagado_pct: 100` solo en esa corrida, y devolverlo).
+- Columna de periodo para rentas: `PER_PAGO_RENTA` (decidido; con el fix coincide con `PER_EXPEDICION_RENTA`).
+
+## Hallazgo lateral: Primas Endosos (fuera de este fix)
+- En QA, `scd_primas_endosos` tiene **1 llave duplicada** entre los vigentes (llave `nid_renta`) y 0 llaves vacías. Una renta puede tener varios endosos, así que `nid_renta` sola podría no ser la llave correcta. Por revisar: el JSON del SCD de endosos y qué renta está duplicada. Las otras 5 tablas de Gold de QA tienen 0 duplicados y 0 llaves vacías.
 
 ## Pendiente de la reunión
 - Sesión en la tarde con Julio para revisar el tema de notificación.

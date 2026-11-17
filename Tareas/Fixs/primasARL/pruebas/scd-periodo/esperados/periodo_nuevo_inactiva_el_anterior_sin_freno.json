@@ -1,0 +1,106 @@
+[
+  {
+    "control_periodo_scd": {
+      "cambio_de_periodo": false,
+      "periodo_activo_anterior": null,
+      "periodo_negocio": "202511",
+      "total_reactivados_desde_historico": 0
+    },
+    "estado_gold_scd": "SUCCESS",
+    "gold": {
+      "filas": [
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 1,
+          "PER": "202511",
+          "VLR": "10.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 2,
+          "PER": "202511",
+          "VLR": "20.00",
+          "VRS_REG": 1
+        }
+      ],
+      "vigencias": [
+        "abierta",
+        "abierta"
+      ]
+    },
+    "metricas_gold_scd": {
+      "total_entrada_silver_preparada": 2,
+      "total_gold_anterior": 0,
+      "total_gold_final": 2,
+      "total_insertados_nuevos": 2,
+      "total_nuevas_versiones_por_cambio": 0,
+      "total_registros_apagados_por_ausencia": 0,
+      "total_registros_sin_cambio": 0,
+      "total_versiones_cerradas_por_cambio": 0
+    },
+    "periodo_activo_guardado": "202511",
+    "resultado": "OK"
+  },
+  {
+    "control_periodo_scd": {
+      "cambio_de_periodo": true,
+      "periodo_activo_anterior": "202511",
+      "periodo_negocio": "202512",
+      "total_reactivados_desde_historico": 0
+    },
+    "estado_gold_scd": "SUCCESS",
+    "gold": {
+      "filas": [
+        {
+          "ACT_REG": 0,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 1,
+          "PER": "202511",
+          "VLR": "10.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 0,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 1,
+          "NUM": 2,
+          "PER": "202511",
+          "VLR": "20.00",
+          "VRS_REG": 1
+        },
+        {
+          "ACT_REG": 1,
+          "AP": "A",
+          "LOTE_CARGUE_ID": 2,
+          "NUM": 3,
+          "PER": "202512",
+          "VLR": "30.00",
+          "VRS_REG": 1
+        }
+      ],
+      "vigencias": [
+        "abierta",
+        "cerrada",
+        "cerrada"
+      ]
+    },
+    "metricas_gold_scd": {
+      "total_entrada_silver_preparada": 1,
+      "total_gold_anterior": 2,
+      "total_gold_final": 3,
+      "total_insertados_nuevos": 1,
+      "total_nuevas_versiones_por_cambio": 0,
+      "total_registros_apagados_por_ausencia": 2,
+      "total_registros_sin_cambio": 0,
+      "total_versiones_cerradas_por_cambio": 0
+    },
+    "periodo_activo_guardado": "202512",
+    "resultado": "OK"
+  }
+]

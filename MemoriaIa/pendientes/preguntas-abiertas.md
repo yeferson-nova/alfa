@@ -72,7 +72,8 @@ Al resolver una, moverla a la nota correspondiente y borrarla de aquí.
 
 ## Flujo de las mallas por periodo y SCD (Slowly Changing Dimension, dimensión de cambio lento) (2026-11-12, ver [[inprod-primas-arl-202606]] 3e)
 - **Preguntar al equipo/dueños del flujo:** en cada malla, ¿cada corrida trae la **foto acumulada** (todos los periodos hasta el actual, como el `WHERE PERIODO <= X` de ARL en prod) o **solo el periodo cargado** (Auxilios Funerarios filtra por fechas en Silver)?
-- ¿Al cargar un periodo nuevo, los registros de periodos anteriores deben **seguir activos** en Gold (`ACT_REG = 1`) o cerrarse? ¿Cómo se vuelve a certificar un periodo anterior?
+- ~~¿Al cargar un periodo nuevo, los registros de periodos anteriores deben seguir activos en Gold?~~ **Resuelta (2026-11-17, decisión del usuario): en Gold hay un solo periodo activo; al cargar otro, los anteriores quedan inactivos (`ACT_REG = 0`, histórico).** Consecuencia: el SCD sí debe cerrar el periodo anterior y lo que se ajusta es el **freno**, que debe medir el 20 % solo sobre los activos del mismo periodo. 
+- **Regla del SCD por periodo y las 12 dudas abiertas del fix (2026-11-17):** ver [[fix-scd-freno-periodo]], secciones "Regla del SCD por periodo" y "Dudas abiertas del fix".
 - ¿Por qué el `WHERE` de ARL en QA es `PERIODO = '202509'` y en prod `<= '202606'`? ¿Cuál es el oficial?
 - Auxilios Funerarios en prod: ¿Gold ya tiene cerrados los periodos anteriores? (consulta de solo lectura por `per_envio_tesoreria`). ¿Se detectó antes algún reclamo?
 - Primas Rentas y Endosos, Reserva Matemática ARP y RVI: ¿tienen el mismo patrón (solo el periodo en Silver)?
