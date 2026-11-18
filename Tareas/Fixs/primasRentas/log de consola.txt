@@ -1,0 +1,63 @@
+== parametros_extraccion.json
+periodo_negocio: "202605"
+lote_cargue_id: 1782948057
+estado_validacion: "SUCCESS"
+estado_remediacion: "SUCCESS"
+estado_disponibilizacion_silver: "SUCCESS"
+estado_preparacion_silver: "SUCCESS"
+total_registros_silver_preparada: 74201
+fecha_preparacion_silver: "2026-07-01T23:48:17"
+lotes_usados_preparacion_silver: {"general/anp_movimientos_pago": [1782948057], "general/anp_distribucion_vig_pension": [1782948057], "general/anp_pensiones": [1782948057], "prv/prv_rentas": [1782948057], "prv/prv_saldos_matematica": [1782948057], "general/cgr_origenes": [1782948057], "general/cgr_conceptos": [1782948057]}
+estado_gold_scd: "SUCCESS"
+motivo_gold_scd: null
+metricas_gold_scd: {"total_entrada_silver_preparada": 74201, "total_gold_anterior": 0, "total_gold_final": 74201, "total_insertados_nuevos": 74201, "total_registros_sin_cambio": 0, "total_registros_apagados_por_ausencia": 0, "total_versiones_cerradas_por_cambio": 0, "total_nuevas_versiones_por_cambio": 0}
+control_periodo_scd: null
+== Archivo de control del SCD
+no existe
+
+== Gold activos por periodo de pago (per_pago_renta activos expedidas_en_el_periodo)
+per_pago_renta _col1 _col2
+== Gold llaves duplicadas activas (debe ser 0)
+_col0 0
+~ $ 
+~ $ bash probar-silver-rentas-dev.sh todo
+
+== Cuenta 533267035849 | job niif-dev-silver-primas-rentas
+ScriptLocation: s3://niif-dev-assets/glue-resources/primas-rentas/silver-primas-rentas.py
+El script desplegado TRAE el fix.
+== parametros_extraccion.json
+periodo_negocio: "202605"
+lote_cargue_id: 1782948057
+estado_validacion: "SUCCESS"
+estado_remediacion: "SUCCESS"
+estado_disponibilizacion_silver: "SUCCESS"
+estado_preparacion_silver: "SUCCESS"
+total_registros_silver_preparada: 74201
+fecha_preparacion_silver: "2026-07-01T23:48:17"
+lotes_usados_preparacion_silver: {"general/anp_movimientos_pago": [1782948057], "general/anp_distribucion_vig_pension": [1782948057], "general/anp_pensiones": [1782948057], "prv/prv_rentas": [1782948057], "prv/prv_saldos_matematica": [1782948057], "general/cgr_origenes": [1782948057], "general/cgr_conceptos": [1782948057]}
+estado_gold_scd: "SUCCESS"
+motivo_gold_scd: null
+metricas_gold_scd: {"total_entrada_silver_preparada": 74201, "total_gold_anterior": 0, "total_gold_final": 74201, "total_insertados_nuevos": 74201, "total_registros_sin_cambio": 0, "total_registros_apagados_por_ausencia": 0, "total_versiones_cerradas_por_cambio": 0, "total_nuevas_versiones_por_cambio": 0}
+control_periodo_scd: null
+== Archivo de control del SCD
+no existe
+
+== Gold activos por periodo de pago (per_pago_renta activos expedidas_en_el_periodo)
+per_pago_renta _col1 _col2
+== Gold llaves duplicadas activas (debe ser 0)
+_col0 0
+Sin archivo de control que respaldar
+Respaldo en s3://niif-dev-assets/primas-rentas/respaldos_fix_rentas/20261118T161348Z/
+Corrida jr_37cb11edf10ed66a1e22c73681263e7175ee445ca34c9192b318a04a54dcfe14 de niif-dev-silver-primas-rentas
+Estado: FAILED
+AnalysisException: Path does not exist: s3://alfa-datalake-dev-silver/niif/ALFAPRD/general/alfaprd_general_anp_movimientos_pago
+periodo_negocio: 202605
+estado_preparacion_silver: SUCCESS
+total_registros_silver_preparada: 74201
+
+Revise el total de Silver. Para llevarlo a Gold:
+  bash probar-silver-rentas-dev.sh scd                (si frena por el apagado de las rentas que sobran:)
+  PERMITIR=true bash probar-silver-rentas-dev.sh scd
+  bash probar-silver-rentas-dev.sh crawler && bash probar-silver-rentas-dev.sh foto
+~ $ 
+~ $ 
