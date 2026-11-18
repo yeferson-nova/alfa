@@ -1,0 +1,157 @@
+~ $ AMB=qa
+
+~ $ JOB=$(aws glue list-jobs --query 'JobNames' --output text | tr '\t' '\n' | grep -x "niif-${AMB}-scd")
+
+~ $ echo "== Cuenta: $(aws sts get-caller-identity --query Account --output text) | Job: ${JOB:-NO ENCONTRADO}"
+
+== Cuenta: 533267205627 | Job: niif-qa-scd
+
+~ $ aws glue list-jobs --query 'JobNames' --output text | tr '\t' '\n' | grep -i scd
+
+niif-qa-files-gold-scd
+
+niif-qa-gold-scd
+
+niif-qa-scd
+
+niif-qa-scd-dataops
+
+~ $ echo "== 1. Script desplegado del SCD"
+
+== 1. Script desplegado del SCD
+
+~ $ SCRIPT=$(aws glue get-job --job-name "$JOB" --query Job.Command.ScriptLocation --output text)
+
+~ $ echo "$SCRIPT"
+
+s3://niif-qa-assets/glue-resources/estandar/scd.py
+
+~ $ aws s3 ls "$SCRIPT"
+
+2026-11-18 14:14:21      25802 scd.py
+
+~ $ echo "Lineas con _control_scd: $(aws s3 cp "$SCRIPT" - | grep -c _control_scd)"
+
+Lineas con _control_scd: 1
+
+~ $ echo "Lineas con cambio_de_periodo: $(aws s3 cp "$SCRIPT" - | grep -c cambio_de_periodo)"
+
+Lineas con cambio_de_periodo: 6
+
+~ $ echo "== 2. Archivo de control en Gold"
+
+== 2. Archivo de control en Gold
+
+~ $ aws s3 ls "s3://alfa-datalake-${AMB}-gold/niif/_control_scd/" --recursive || echo "no existe o sin permiso"
+
+no existe o sin permiso
+
+~ $ aws s3 cp "s3://alfa-datalake-${AMB}-gold/niif/_control_scd/scd_primas_arl/periodo_activo.json" - 2>&1
+
+download failed: s3://alfa-datalake-qa-gold/niif/_control_scd/scd_primas_arl/periodo_activo.json to - An error occurred (404) when calling the HeadObject operation: Not Found
+
+~ $ echo "== 3. parametros_extraccion.json (campos del SCD)"
+
+== 3. parametros_extraccion.json (campos del SCD)
+
+~ $ aws s3 cp "s3://niif-${AMB}-assets/primas-arl/parametros_extraccion.json" - | python3 -c '
+> import json, sys
+> p = json.load(sys.stdin)
+> for k in ("periodo_negocio","lote_cargue_id","estado_extraccion","estado_gold_scd","metricas_gold_scd","control_periodo_scd","ruta_silver_preparada"):
+>     print(f"{k}: {json.dumps(p.get(k), ensure_ascii=False)}")
+> print("motivo_gold_scd:", str(p.get("motivo_gold_scd"))[:400])
+> def buscar(n, r=""):
+>     if isinstance(n, dict):
+>         for k, v in n.items():
+>             if k == "lotes_segmento": print(f"lotes_segmento {r}: {v}")
+>             elif k == "where": print(f"where {r}: {v}")
+>             else: buscar(v, f"{r}/{k}")
+>     elif isinstance(n, list):
+>         for i, v in enumerate(n): buscar(v, f"{r}[{i}]")
+> buscar(p)'
+
+periodo_negocio: "202606"
+
+lote_cargue_id: 1794777967
+
+estado_extraccion: "SUCCESS"
+
+estado_gold_scd: "SUCCESS"
+
+metricas_gold_scd: {"total_entrada_silver_preparada": 1202077, "total_gold_anterior": 2099, "total_gold_final": 1202077, "total_insertados_nuevos": 1199978, "total_registros_sin_cambio": 2099, "total_registros_apagados_por_ausencia": 0, "total_versiones_cerradas_por_cambio": 0, "total_nuevas_versiones_por_cambio": 0}
+
+control_periodo_scd: null
+
+ruta_silver_preparada: "s3://alfa-datalake-qa-silver/niif/t_data_domain/primas_arl/silver_preparado_primas-arl/"
+
+motivo_gold_scd: None
+
+lotes_segmento /datasets_extraidos[0]/segmentacion_horizontal: [1794758974]
+
+lotes_segmento /datasets_extraidos[0]: [1794758974]
+
+lotes_segmento /datasets_extraidos[1]/segmentacion_horizontal: [1794758974]
+
+lotes_segmento /datasets_extraidos[1]: [1794758974]
+
+lotes_segmento /datasets_extraidos[2]/segmentacion_horizontal: [1794758974]
+
+lotes_segmento /datasets_extraidos[2]: [1794758974]
+
+lotes_segmento /datasets_extraidos[3]/segmentacion_horizontal: [1794777967]
+
+lotes_segmento /datasets_extraidos[3]: [1794777967]
+
+lotes_segmento /datasets_extraidos[4]/segmentacion_horizontal: [1794777967]
+
+lotes_segmento /datasets_extraidos[4]: [1794777967]
+
+lotes_segmento /datasets_extraidos[5]/segmentacion_horizontal: [1794777967]
+
+lotes_segmento /datasets_extraidos[5]: [1794777967]
+
+lotes_segmento /datasets_extraidos[6]/segmentacion_horizontal: [1794758974]
+
+lotes_segmento /datasets_extraidos[6]: [1794758974]
+
+lotes_segmento /datasets_extraidos[7]/segmentacion_horizontal: [1794758974]
+
+lotes_segmento /datasets_extraidos[7]: [1794758974]
+
+lotes_segmento /segmentos_preparacion[0]: [1794758974]
+
+lotes_segmento /segmentos_preparacion[1]: [1794758974]
+
+lotes_segmento /segmentos_preparacion[2]: [1794758974]
+
+lotes_segmento /segmentos_preparacion[3]: [1794758974]
+
+lotes_segmento /segmentos_preparacion[4]: [1794758974]
+
+~ $ echo "== 4. Ultimas 3 corridas del SCD"
+
+== 4. Ultimas 3 corridas del SCD
+
+~ $ aws glue get-job-runs --job-name "$JOB" --max-items 3 \
+>   --query 'JobRuns[].[Id,StartedOn,JobRunState,Arguments."--PERMITIR_APAGADO_MASIVO",ErrorMessage]' --output text | cut -c1-400
+
+jr_3af46a6a651d3109707531cb9c958c51460c847c26a93ed4783069e05fdbbc11     2026-11-18T16:26:35.005000+00:00        FAILED  None    FrenoApagadoMasivo: SCD_APAGADO_MASIVO: se apagarian 73790 de 73790 registros activos de Gold (100.00% > umbral 20.0%). Gold no se modifico.
+
+jr_3c52cc04ee07f66e749f8ea6615753acf49f2f6154e0863b42d4dc4bdbbd3905     2026-11-18T16:26:32.431000+00:00        FAILED  None    FrenoApagadoMasivo: SCD_APAGADO_MASIVO: se apagarian 90 de 90 registros activos de Gold (100.00% > umbral 20.0%). Gold no se modifico.
+
+jr_831b044e177ccab3a49810a3714cb969fd873ad15d850686edf478a3c160e603     2026-11-17T20:38:20.205000+00:00        FAILED  None    FrenoApagadoMasivo: SCD_APAGADO_MASIVO: se apagarian 73790 de 73790 registros activos de Gold (100.00% > umbral 20.0%). Gold no se modifico.
+
+None
+
+~ $ echo "== 5. Log de la ultima corrida (periodo y freno)"
+
+== 5. Log de la ultima corrida (periodo y freno)
+
+~ $ RUN=$(aws glue get-job-runs --job-name "$JOB" --max-items 1 --query 'JobRuns[0].Id' --output text | head -1)
+
+~ $ for G in /aws-glue/jobs/output /aws-glue/jobs/error /aws-glue/jobs/logs-v2; do
+>   aws logs filter-log-events --log-group-name "$G" --log-stream-name-prefix "$RUN" \
+>     --filter-pattern '?"Periodo activo anterior" ?"Periodo de esta ejecucion" ?"Porcentaje apagado" ?"apagados por ausencia" ?"Cambio de periodo" ?SCD_APAGADO_MASIVO ?SCD_GOLD_ILEGIBLE' \
+>     --query 'events[].message' --output text 2>/dev/null | tr '\t' '\n' | cut -c1-300
+> done
+ 
