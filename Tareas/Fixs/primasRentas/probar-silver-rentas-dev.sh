@@ -5,7 +5,6 @@ export AWS_PAGER=""
 AMB="${AMB:-dev}"
 WG="${WG:-primary}"
 OUT="${OUT:-}"
-SCRIPT_LOCAL="${SCRIPT_LOCAL:-./silver-primas-rentas.py}"
 JOB_SILVER="niif-${AMB}-silver-primas-rentas"
 JOB_SCD="${JOB_SCD:-niif-${AMB}-scd}"
 DB="niif-${AMB}-gold-catalog-db"
@@ -67,7 +66,8 @@ script() {
   if aws s3 cp "$ruta" - 2>/dev/null | grep -qF "$MARCA_FIX"; then
     echo "El script desplegado TRAE el fix."
   else
-    echo "El script desplegado NO trae el fix."
+    echo "El script desplegado NO trae el fix. Falta el PR a develop y el despliegue de Jenkins."
+    return 1
   fi
 }
 
@@ -93,21 +93,11 @@ for k in ("periodo_negocio", "lote_cargue_id", "estado_validacion", "estado_reme
 
 respaldo() {
   local destino="${RUTA_RESPALDOS}/$(date -u +%Y%m%dT%H%M%SZ)"
-  aws s3 cp "$(ruta_script)" "${destino}/silver-primas-rentas.py" --only-show-errors || return 1
   aws s3 cp "$RUTA_PARAMETROS" "${destino}/parametros_extraccion.json" --only-show-errors || return 1
   aws s3 sync "$RUTA_SILVER" "${destino}/silver_preparado/" --only-show-errors || return 1
   aws s3 sync "$RUTA_GOLD" "${destino}/gold/" --only-show-errors || return 1
   aws s3 cp "$RUTA_CONTROL" "${destino}/periodo_activo.json" --only-show-errors 2>/dev/null || echo "Sin archivo de control que respaldar"
   echo "Respaldo en ${destino}/"
-}
-
-subir() {
-  local ruta
-  [ -f "$SCRIPT_LOCAL" ] || { echo "No existe $SCRIPT_LOCAL. Suba el archivo a CloudShell (Actions > Upload file)."; return 1; }
-  grep -qF "$MARCA_FIX" "$SCRIPT_LOCAL" || { echo "$SCRIPT_LOCAL no trae el fix."; return 1; }
-  ruta=$(ruta_script)
-  aws s3 cp "$SCRIPT_LOCAL" "$ruta" --only-show-errors && echo "Script subido a $ruta"
-  script
 }
 
 silver() {
@@ -152,7 +142,6 @@ crawler() {
 restaurar() {
   local origen="${1:?Uso: restaurar ${RUTA_RESPALDOS}/<fecha>}"
   origen="${origen%/}"
-  aws s3 cp "${origen}/silver-primas-rentas.py" "$(ruta_script)" --only-show-errors && echo "Script restaurado"
   aws s3 cp "${origen}/parametros_extraccion.json" "$RUTA_PARAMETROS" --only-show-errors && echo "parametros_extraccion.json restaurado"
   aws s3 sync "${origen}/silver_preparado/" "$RUTA_SILVER" --delete --only-show-errors && echo "Silver preparada restaurada"
   aws s3 sync "${origen}/gold/" "$RUTA_GOLD" --delete --only-show-errors && echo "Gold restaurado"
@@ -164,10 +153,9 @@ restaurar() {
 }
 
 todo() {
-  script
+  script || return 1
   foto
   respaldo || { echo "Falló el respaldo; no se sigue."; return 1; }
-  subir || return 1
   silver
   echo
   echo "Revise el total de Silver. Para llevarlo a Gold:"
@@ -180,11 +168,10 @@ case "${1:-}" in
   script) script ;;
   foto) foto ;;
   respaldo) respaldo ;;
-  subir) subir ;;
   silver) silver ;;
   scd) scd ;;
   crawler) crawler ;;
   restaurar) shift; restaurar "$@" ;;
   todo) todo ;;
-  *) echo "Uso: [SCRIPT_LOCAL=./silver-primas-rentas.py] [PERMITIR=true] bash $0 {todo|script|foto|respaldo|subir|silver|scd|crawler|restaurar <ruta>}" ;;
+  *) echo "Uso: [PERMITIR=true] bash $0 {todo|script|foto|respaldo|silver|scd|crawler|restaurar <ruta>}" ;;
 esac

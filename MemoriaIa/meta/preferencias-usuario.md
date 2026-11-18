@@ -1,7 +1,7 @@
 ---
 tipo: preferencia
 estado: vigente
-actualizado: 2026-11-11
+actualizado: 2026-11-18
 ---
 # Preferencias del usuario
 
@@ -17,7 +17,7 @@ actualizado: 2026-11-11
 
 - **Alcance (2026-11-05):** nuestra tarea es solo el sistema de jobs de Glue y las lambdas de notificación; lo demás es contexto. Lineamientos en la skill `.claude\skills\niif17-alfa\`.
 - **Acceso (2026-11-05, aclarado por el usuario):** Desarrollo solo tiene acceso a **DEV**. QA y PRD se despliegan por un **release manual** de otro equipo. Todo cambio de prod se entrega como paquete (diff mínimo, pruebas, rollback, runbook) y lo ejecuta ese equipo; lo que antes se anotó como "el usuario opera prod" aplica solo a quien trae la evidencia. Los scripts para prod son de solo lectura y los corre el equipo de prod.
-- **Release (2026-11-05):** el artefacto (script o paquete) se entrega a DevOps, que lo sube a QA; ahí se prueba. Todavía no hay flujo Git autorizado para el despliegue. QA y PRD siguen por release manual.
+- **Despliegue (2026-11-18, aclarado por el usuario; reemplaza la nota de release del 2026-11-05):** DEV, QA y PRD se despliegan igual: el código por PR a la rama del ambiente (`develop`, `quality`, `main`) y Jenkins lo sube; la infraestructura la actualiza el IaC. Nada de código ni infraestructura se sube a mano, ni siquiera en DEV: los scripts de prueba solo comprueban el despliegue, respaldan datos, corren jobs y verifican.
 - **Roles (2026-11-05):** nosotros somos Desarrollo y construimos todo el pipeline para entregarlo a Analítica (quien lo recibe y opera). La tarea y el incidente en prod ([[inprod-primas-arl-202606]]) son nuestros: los arreglamos nosotros antes de entregar, no se delegan a Analítica.
 - **ETL (2026-11-05):** cuidar especialmente los cálculos de montos y valores, el rendimiento y el costo de cómputo y de consultas (Athena). Detalle en `references\montos-rendimiento-costos.md` de la skill.
 

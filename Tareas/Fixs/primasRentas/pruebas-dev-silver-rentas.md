@@ -2,24 +2,20 @@
 
 Guía para probar en DEV el fix del job `niif-dev-silver-primas-rentas` (rama `fix/primas-rentas-periodo-expedicion` de `alfa-repos`, commit `172b17c`). El fix deja en Silver solo las rentas expedidas en el periodo, igual que el SQL de arquitectura V2.1 (401 en lugar de 75.181 en 202606).
 
-Script: `probar-silver-rentas-dev.sh` (esta carpeta). Solo corre en DEV.
+El script del job **no se sube a mano**: llega a DEV por PR a `develop` y Jenkins lo despliega en `s3://niif-dev-assets/glue-resources/primas-rentas/`. El script de pruebas `probar-silver-rentas-dev.sh` (esta carpeta) solo comprueba el despliegue, respalda los datos, corre los jobs y verifica. Solo corre en DEV.
+
+## Paso 0. Despliegue por PR (antes de las pruebas)
+
+1. Push de la rama `fix/primas-rentas-periodo-expedicion` al repo `data-datalake-niif-primas-rentas-glue-job`.
+2. PR a `develop`, revisión y merge.
+3. Esperar que el pipeline de Jenkins termine en verde.
 
 ## Antes de empezar
 
 1. Entrar a la consola de AWS de DEV y abrir CloudShell (región us-east-1).
-2. Subir dos archivos con **Actions > Upload file**:
-   - `probar-silver-rentas-dev.sh` (esta carpeta).
-   - `silver-primas-rentas.py` de `alfa-repos\glue\data-datalake-niif-primas-rentas-glue-job\src\jobs\`, con la rama `fix/primas-rentas-periodo-expedicion` activa.
-3. Comprobar que están los dos:
+2. Subir `probar-silver-rentas-dev.sh` con **Actions > Upload file**.
 
-```bash
-ls -l probar-silver-rentas-dev.sh silver-primas-rentas.py
-grep -c 'col("r.FEC_EXPEDICION").between(' silver-primas-rentas.py
-```
-
-El `grep` debe dar `1`.
-
-## Paso 1. Revisar el estado actual
+## Paso 1. Revisar el despliegue y el estado actual
 
 ```bash
 bash probar-silver-rentas-dev.sh script
@@ -28,28 +24,27 @@ bash probar-silver-rentas-dev.sh foto
 
 | Qué mirar | Qué debe salir |
 |---|---|
-| `El script desplegado ... el fix` | `NO trae el fix` (todavía no se sube) |
+| `El script desplegado ... el fix` | `TRAE el fix`. Si dice `NO trae el fix`, Jenkins no ha desplegado: volver al paso 0 |
 | `periodo_negocio` | El periodo de la última corrida de Rentas en DEV |
 | `estado_validacion` | `SUCCESS` o `FAILED` |
 | `estado_remediacion`, `estado_disponibilizacion_silver` | `SUCCESS` |
-| `total_registros_silver_preparada` | Total con el job viejo (anotarlo) |
+| `total_registros_silver_preparada` | Total de la última corrida, con el job viejo (anotarlo) |
 | Gold activos por periodo | Activos y expedidas del periodo (anotarlos) |
 
 Si `parametros_extraccion.json` no existe o los estados no están en `SUCCESS`, primero hay que correr la malla de Rentas en DEV; el job de Silver no arranca sin eso.
 
-## Paso 2. Respaldar, subir el fix y correr Silver
+## Paso 2. Respaldar y correr Silver
 
 ```bash
 bash probar-silver-rentas-dev.sh todo
 ```
 
-Hace, en orden: revisa el script, toma la foto, respalda (script, parámetros, Silver preparada, Gold y archivo de control), sube el script nuevo y corre el job de Silver. Si el respaldo falla, se detiene.
+Hace, en orden: comprueba que el script desplegado trae el fix (si no, se detiene), toma la foto, respalda los datos (parámetros, Silver preparada, Gold y archivo de control) y corre el job de Silver. Si el respaldo falla, se detiene.
 
 **Anotar la ruta del respaldo** que imprime (`Respaldo en s3://niif-dev-assets/primas-rentas/respaldos_fix_rentas/<fecha>/`); se usa para volver atrás.
 
 | Qué mirar | Qué debe salir |
 |---|---|
-| `El script desplegado TRAE el fix.` | Después de subir |
 | `Estado:` | `SUCCEEDED` |
 | `total_registros_silver_preparada` | Menor que el del paso 1: solo las rentas expedidas en el periodo |
 
@@ -84,13 +79,16 @@ Guardar la salida de los pasos 1 a 4 en `EvidenciasAws\dev-pruebas-fix-rentas\` 
 
 ## Volver atrás
 
+Datos:
+
 ```bash
 bash probar-silver-rentas-dev.sh restaurar s3://niif-dev-assets/primas-rentas/respaldos_fix_rentas/<fecha>
 bash probar-silver-rentas-dev.sh crawler
-bash probar-silver-rentas-dev.sh script
 ```
 
-Restaura el script viejo, `parametros_extraccion.json`, Silver preparada, Gold y el archivo de control. `script` debe decir `NO trae el fix`.
+Restaura `parametros_extraccion.json`, Silver preparada, Gold y el archivo de control.
+
+Código: el script del job se revierte por PR a `develop` (revert del merge) y Jenkins vuelve a desplegar. No se cambia a mano en S3.
 
 ## Comandos del script
 
@@ -98,12 +96,11 @@ Restaura el script viejo, `parametros_extraccion.json`, Silver preparada, Gold y
 |---|---|
 | `script` | Muestra el script desplegado y si trae el fix |
 | `foto` | Parámetros, archivo de control y Gold en Athena |
-| `respaldo` | Copia script, parámetros, Silver, Gold y control a `respaldos_fix_rentas/<fecha>/` |
-| `subir` | Sube `silver-primas-rentas.py` (solo si trae el fix) |
+| `respaldo` | Copia parámetros, Silver, Gold y control a `respaldos_fix_rentas/<fecha>/` |
 | `silver` | Corre `niif-dev-silver-primas-rentas` |
 | `scd` | Corre `niif-dev-scd`; con `PERMITIR=true` libera el freno |
 | `crawler` | Corre `niif-dev-crawler-gold` |
-| `restaurar <ruta>` | Vuelve todo al respaldo |
-| `todo` | `script`, `foto`, `respaldo`, `subir` y `silver` |
+| `restaurar <ruta>` | Vuelve los datos al respaldo |
+| `todo` | `script`, `foto`, `respaldo` y `silver` |
 
-Variables opcionales: `SCRIPT_LOCAL` (ruta del `.py`, por defecto `./silver-primas-rentas.py`), `WG` (workgroup de Athena, por defecto `primary`), `OUT` (salida de Athena si el workgroup no la tiene).
+Variables opcionales: `WG` (workgroup de Athena, por defecto `primary`), `OUT` (salida de Athena si el workgroup no la tiene).
