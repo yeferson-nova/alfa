@@ -1,0 +1,9 @@
+~ $ DB=niif-qa-gold-catalog-db
+~ $ q(){ id=$(aws athena start-query-execution --work-group primary --query-execution-context Database=$DB --query-string "$1" --query QueryExecutionId --output text); while :; do s=$(aws athena get-query-execution --query-execution-id $id --query QueryExecution.Status.State --output text); [ "$s" = RUNNING -o "$s" = QUEUED ] || break; sleep 2; done; echo "== $s"; aws athena get-query-results --query-execution-id $id --output text --query 'ResultSet.Rows[].Data[].VarCharValue' | tr '\t' ' '; }
+~ $ q "SELECT per_corte, act_reg, COUNT(*) FROM scd_reserva_matematica_rvi GROUP BY 1,2 ORDER BY 1,2"
+ 
+== SUCCEEDED
+per_corte act_reg _col2 202511 1 73790
+~ $ q "SELECT substr(cast(fec_envio_tesoreria AS varchar),1,7), act_reg, COUNT(*) FROM scd_auxilios_funerarios GROUP BY 1,2 ORDER BY 1,2"
+== SUCCEEDED
+_col0 act_reg _col2 2025-11 1 90
