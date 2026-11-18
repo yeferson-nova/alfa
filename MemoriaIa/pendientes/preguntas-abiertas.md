@@ -1,7 +1,7 @@
 ---
 tipo: pendiente
 estado: vigente
-actualizado: 2026-11-13
+actualizado: 2026-11-18
 ---
 # Preguntas abiertas
 
@@ -48,7 +48,7 @@ Al resolver una, moverla a la nota correspondiente y borrarla de aquí.
 ## Incidente en prod Primas ARL 202606 ([[inprod-primas-arl-202606]]) - 2026-11-05
 - ¿El job `niif-prd-extraccion-estandar-optimized` desplegado es la misma versión que el código de DEV del repo? ¿QA ya conserva `lotes_segmento` con los lotes de respaldo? (hipótesis INC-5)
 - ¿De qué lote(s) vienen los 1.203.789 registros excluidos? (el campo `lotes_respaldo_exclusion` está vacío en prod)
-- ¿Gold de prod tiene versionado de S3 o respaldo anterior al 2 nov? ¿Quién autoriza restaurarlo?
+- ¿Gold de prod tiene versionado de S3 o respaldo anterior al 2 nov? ¿Quién autoriza restaurarlo? Versionado: **sí**, Enabled en los tres ambientes y sin Lifecycle (DevOps, 2026-11-18). Sigue abierto quién autoriza restaurar.
 - ¿Por qué entraron registros de 202610 con `WHERE PERIODO <= '202606'`? ¿`PERIODO` y `FEC_PROCESO_POINT` difieren?
 - ¿Por qué el 91 % de Gold (1.100.009) tiene `per_proceso_point` nulo? ¿Es esperado?
 - ¿El SCD debe apagar por ausencia en cargas incrementales, o la extracción debe entregar siempre la foto completa? (decisión de diseño)
