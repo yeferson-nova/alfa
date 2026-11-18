@@ -49,6 +49,57 @@ bash probar-silver-rentas-dev.sh foto
 
 Si el SCD frena por el apagado de las rentas que sobran, correr `PERMITIR=true bash probar-silver-rentas-dev.sh scd`, luego `crawler` y `foto`. Esperado: en el periodo, activos de Gold iguales a `total_registros_silver_preparada`, todos expedidos en el periodo, y 0 duplicados.
 
+### Segunda corrida: malla completa (2026-11-18, 14:28 a 15:33 hora Colombia)
+
+Antes, la ejecución `279cd303` había fallado en la extracción: el rol `niif-dev-extraccion-estandar-optimized` no tenía `glue:GetConnection` sobre `datalake-dev-alfaprd-dev-connection`. El IaC lo declara, pero lo aplicado en DEV no lo tenía. Corregido el permiso, se lanzó la ejecución `ad0b75f2` de `niif-dev-primas-rentas` desde la consola.
+
+| Paso de la Step Function | Duración | Resultado |
+|---|---|---|
+| ExtraccionEstandar | 48 min 48 s | OK |
+| CrawlerBronze | 4 min 26 s | OK |
+| ValidacionTecnica | 1 min 57 s | OK (`estado_validacion: FAILED` en el JSON, no bloqueante: siguió a remediación) |
+| Remediacion | 3 min 07 s | OK |
+| SilverJob (con el fix) | 2 min 56 s | OK |
+| CrawlerSilver | 1 min 01 s | OK |
+| GoldSCD | 2 min 11 s | OK, sin freno |
+| CrawlerGold | 41 s | OK |
+| SuccessEsperandoComposite | | **FAILED**: `$.ejcPK` no existe porque se lanzó desde la consola con entrada `{}`. No afecta los datos; lanzada por la lambda no pasa |
+
+Foto después de la corrida:
+
+| Qué mirar | Antes (2026-07-01, job viejo) | Después (fix) |
+|---|---|---|
+| `periodo_negocio` | `202605` | `202605` |
+| `lote_cargue_id` | `1782948057` | `1795030139` |
+| `total_registros_silver_preparada` | 74.201 | **770** |
+| Gold activos del periodo | sin filas en Athena | 770 |
+| Expedidas en el periodo | | 770 (todas) |
+| Llaves duplicadas activas | 0 | 0 |
+| Archivo de control del SCD | no existía | `periodo_negocio: 202605` |
+| `metricas_gold_scd` | | 770 insertados nuevos, 0 apagados (Gold estaba vacío) |
+
+**Lectura:** el fix hace lo esperado en DEV: Silver deja solo las rentas expedidas en el periodo y una fila por renta, y Gold queda igual a Silver.
+
+### Tercera corrida: cuadre con el SQL en 202606 (2026-11-18, 15:48 a 16:26 hora Colombia)
+
+La base NIIF 17 de DEV tiene los mismos datos de PRD en 202606, así que se corrió ese periodo para comparar con el SQL de arquitectura V2.1 (401). La lambda toma el periodo de PRG (`niif-dev-prg-programaciones`, `PROGRAMACION#PRIMAS_RENTAS`), que estaba en `202512`: se cambió a `202606` con condición sobre el valor anterior y se lanzó la lambda con `{"publicar":true,"ejecutar":true}`. Ejecución `rentas-202606-auto-20261118T204806Z-7b63db5f`: **SUCCEEDED** en 38 min 23 s (por la lambda, el registro final en `niif-dev-ejc-ejecuciones` funciona).
+
+| Qué mirar | Resultado |
+|---|---|
+| `periodo_negocio` | `202606` |
+| `total_registros_silver_preparada` | **401, igual al SQL V2.1** (PRD con el job anterior: 75.181) |
+| Gold activos | solo `202606`: 401, todas expedidas en el periodo |
+| Llaves duplicadas activas | 0 |
+| `metricas_gold_scd` | 401 insertados, 770 de 202605 apagados, sin freno |
+| `control_periodo_scd` | `cambio_de_periodo: true`, anterior `202605` |
+
+**Conclusión:** el fix cuadra con el SQL de arquitectura y el SCD deja un solo periodo activo. Listo para el PR `develop` → `quality`.
+
+Pendientes de DEV:
+- Devolver PRG a `202512` (`update-item` con `:p` = `202512` y condición `:v` = `202606`).
+- `estado_validacion: FAILED` en las dos corridas (no bloqueante, siguió a remediación); no lo causa el fix, revisar qué regla falla.
+- La lambda desplegada lee PRG y exige `publicar` y `ejecutar` en `true`; lanzada desde la consola con `{}` la Step Function usa el último JSON publicado y termina en `FAILED` en `SuccessEsperandoComposite` por falta de `$.ejcPK`.
+
 ## Paso 0. Despliegue por PR (antes de las pruebas)
 
 1. Push de la rama `fix/primas-rentas-periodo-expedicion` al repo `data-datalake-niif-primas-rentas-glue-job`.

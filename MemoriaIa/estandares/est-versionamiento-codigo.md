@@ -21,3 +21,4 @@ Fuente: `Docs\02-estandares-banco\versionamiento-seguro\VERSIONAMIENTODECODIGOV3
 - Todo cambio de las tareas ([[tareas-aws]]) debe ir en repositorio con este flujo. Lambdas del paso 3: tipo `sc` (serverless) o `data` según [[hu-devops]].
 - "Sin código quemado" respalda la brecha de secretos en código ([[brechas-seguridad]] #9).
 - Commits de este proyecto: `feat-<TICKET>-...` (falta conocer el ticket Jira, ver [[preguntas-abiertas]]).
+- Formato de los PR del equipo: [[est-pull-requests]].

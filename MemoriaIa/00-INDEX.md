@@ -23,6 +23,7 @@ actualizado: 2026-11-13
 | Brechas de seguridad, costos o arquitectura (IDs `SEG`, `COS`, `ARQ`, `CUM`) | `auditorias\`: [[brechas-seguridad]], [[auditoria-pipeline-2026-11]], [[notificaciones-vs-arquitectura]], [[auditoria-repos-2026-11]] |
 | Qué falta por hacer, o dudas sin resolver | [[pendientes]], [[preguntas-abiertas]] |
 | Cómo escribir código (estructura, errores, logs, pruebas, nombres) | [[est-desarrollo-hexagonal]] y [[est-gobierno-devops-niif]] |
+| Formato de un PR (título, base, plantilla de descripción) | [[est-pull-requests]] |
 | Qué exige un estándar o una historia de usuario | `estandares\` y `hu\` |
 | Cómo prefiere trabajar el usuario | [[preferencias-usuario]] |
 | Crear la ficha de un repo | [[plantilla-ficha-repo]] |
@@ -81,7 +82,7 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 
 **reuniones:** [[reunion-diseno-pcr]]
 
-**estandares:** [[est-etl]] · [[est-datastage]] · [[est-versionamiento-codigo]] · [[est-codigo-seguro]] · [[est-databrew]] · [[est-nuevos-cargues]] · [[est-gobierno-devops-niif]] · [[est-desarrollo-hexagonal]]
+**estandares:** [[est-etl]] · [[est-datastage]] · [[est-versionamiento-codigo]] · [[est-codigo-seguro]] · [[est-databrew]] · [[est-nuevos-cargues]] · [[est-gobierno-devops-niif]] · [[est-desarrollo-hexagonal]] · [[est-pull-requests]]
 
 **hu:** [[hu-gobierno-ingestas]] · [[hu-linaje]] · [[hu-trazabilidad]] · [[hu-devops]] · [[hu-remediacion]] · [[hu-seguridad-acceso]]
 
