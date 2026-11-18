@@ -4,6 +4,28 @@ Guía para probar en DEV el fix del job `niif-dev-silver-primas-rentas` (rama `f
 
 El script del job **no se sube a mano**: llega a DEV por PR a `develop` y Jenkins lo despliega en `s3://niif-dev-assets/glue-resources/primas-rentas/`. El script de pruebas `probar-silver-rentas-dev.sh` (esta carpeta) solo comprueba el despliegue, respalda los datos, corre los jobs y verifica. Solo corre en DEV.
 
+## Resultado de la ejecución del 2026-11-18
+
+Log completo: `log de consola.txt` (esta carpeta).
+
+| Paso | Resultado |
+|---|---|
+| 0. Despliegue | Hecho. `script` dice `El script desplegado TRAE el fix.` (`glue-resources/primas-rentas/silver-primas-rentas.py`) |
+| 1. Estado inicial | Última corrida de Rentas en DEV del 2026-07-01, periodo `202605`, lote `1782948057`. Todos los estados en `SUCCESS`. Silver preparada 74.201 con el job viejo. El SCD reportó 74.201 insertados en Gold, pero Athena no devuelve filas en `scd_primas_rentas`. Sin archivo de control. 0 llaves duplicadas |
+| 2. Respaldo | Hecho en `s3://niif-dev-assets/primas-rentas/respaldos_fix_rentas/20261118T161348Z/` (sin archivo de control, no existía) |
+| 2. Silver | **FAILED** antes de procesar: `AnalysisException: Path does not exist: s3://alfa-datalake-dev-silver/niif/ALFAPRD/general/alfaprd_general_anp_movimientos_pago` |
+| 3 y 4 | No se ejecutaron |
+
+**Lectura:** el fallo no es del fix. El job no encontró la Silver base de la corrida de julio (la carpeta de `anp_movimientos_pago` ya no existe en DEV), así que falló al leer, antes de escribir: Silver preparada, Gold y `parametros_extraccion.json` quedaron como estaban (el JSON sigue mostrando 74.201 de la corrida anterior). No hace falta restaurar.
+
+**Para seguir:** correr la malla completa de Rentas en DEV (Step Function `niif-dev-primas-rentas`, que regenera la Silver base) con el fix ya desplegado. La Step Function corre Silver, SCD y crawler; después:
+
+```bash
+bash probar-silver-rentas-dev.sh foto
+```
+
+Si el SCD frena por el apagado de las rentas que sobran, correr `PERMITIR=true bash probar-silver-rentas-dev.sh scd`, luego `crawler` y `foto`. Esperado: en el periodo, activos de Gold iguales a `total_registros_silver_preparada`, todos expedidos en el periodo, y 0 duplicados.
+
 ## Paso 0. Despliegue por PR (antes de las pruebas)
 
 1. Push de la rama `fix/primas-rentas-periodo-expedicion` al repo `data-datalake-niif-primas-rentas-glue-job`.
