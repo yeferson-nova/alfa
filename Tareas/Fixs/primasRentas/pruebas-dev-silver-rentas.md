@@ -18,7 +18,30 @@ Log completo: `log de consola.txt` (esta carpeta).
 
 **Lectura:** el fallo no es del fix. El job no encontró la Silver base de la corrida de julio (la carpeta de `anp_movimientos_pago` ya no existe en DEV), así que falló al leer, antes de escribir: Silver preparada, Gold y `parametros_extraccion.json` quedaron como estaban (el JSON sigue mostrando 74.201 de la corrida anterior). No hace falta restaurar.
 
-**Para seguir:** correr la malla completa de Rentas en DEV (Step Function `niif-dev-primas-rentas`, que regenera la Silver base) con el fix ya desplegado. La Step Function corre Silver, SCD y crawler; después:
+**Para seguir:** correr la malla completa de Rentas en DEV con el fix ya desplegado. Regenera la Silver base y corre Silver, SCD y crawler.
+
+| Recurso | Nombre en DEV |
+|---|---|
+| Step Function | `niif-dev-primas-rentas` |
+| Lambda que la arranca | `niif-dev-configuration-primas-rentas` (lee el periodo de la programación `PROGRAMACION#PRIMAS_RENTAS`, publica `config_extraccion_primas_rentas.json` y arranca la Step Function) |
+
+Forma normal, por la lambda (toma el periodo programado):
+
+```bash
+export AWS_PAGER=""
+aws lambda invoke --function-name niif-dev-configuration-primas-rentas --payload '{}' \
+  --cli-binary-format raw-in-base64-out /tmp/respuesta.json && cat /tmp/respuesta.json
+```
+
+Seguir la ejecución:
+
+```bash
+SF_ARN=$(aws stepfunctions list-state-machines --query "stateMachines[?name=='niif-dev-primas-rentas'].stateMachineArn" --output text)
+aws stepfunctions list-executions --state-machine-arn "$SF_ARN" --max-items 3 \
+  --query 'executions[].[name,status,startDate]' --output table
+```
+
+Cuando termine en `SUCCEEDED`:
 
 ```bash
 bash probar-silver-rentas-dev.sh foto
