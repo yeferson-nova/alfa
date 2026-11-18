@@ -1,14 +1,14 @@
 ---
 tipo: repo
 estado: vigente
-actualizado: 2026-11-12
+actualizado: 2026-11-18
 repo: sc-datalake-niif-primas-arl
 categoria: lambda
 paso: "2 · Bodega NIIF 17 (configura y arranca la malla)"
 malla: primas-arl
 ---
 # sc-datalake-niif-primas-arl
-> Lambda configuradora de la malla Primas ARL: reconstruye los JSON de configuración desde DynamoDB, los valida contra las plantillas de S3, los publica y puede iniciar la Step Function.
+> Lambda configuradora de la malla Primas ARL: reconstruye los JSON de configuración desde DynamoDB, los publica y puede iniciar la Step Function (el README dice que los compara con plantillas; el código no lo hace).
 
 ## Rol en el flujo
 - La invoca EventBridge Scheduler (el `manager-configuration` crea los schedules desde el stream de `niif-{env}-prg-programaciones`); no la dispara un stream. Es la `configuration-<malla>` de [[inventario-lambdas]].
@@ -21,7 +21,7 @@ malla: primas-arl
 
 ## Recursos AWS que toca
 - DynamoDB: `niif-{env}-cnf-mallas` (lee 8 registros y persiste el periodo), `niif-{env}-prs-estructuras`, `niif-{env}-prg-programaciones`, `niif-{env}-ejc-ejecuciones` (escribe).
-- S3: lee plantillas y escribe los archivos activos; las URIs vienen de CNF (bucket `niif-{env}-assets`, por confirmar).
+- S3: escribe los archivos activos en `archivoActivoUri` y solo lee una plantilla, la de remediación (`plantillaUri`), que publica tal cual. `comparar` existe pero no se llama (`comparaciones = []`). Las URIs vienen de CNF; su valor real no está en el repo (las pruebas usan `extraccion_activo.json`), por confirmar. Verificado en `main` 2026-11-18.
 - Step Functions `niif-{env}-primas-arl`. Función `niif-{env}-configuration-primas-arl`.
 
 ## Código
