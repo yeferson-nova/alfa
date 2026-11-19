@@ -3,12 +3,13 @@ set -uo pipefail
 export AWS_PAGER=""
 
 AMB="${AMB:-qa}"
+MALLA="${MALLA:-rentas}"
 N="${N:-6}"
 WG="${WG:-primary}"
-SF_NOMBRE="niif-${AMB}-primas-rentas"
+SF_NOMBRE="niif-${AMB}-primas-${MALLA}"
 DB="niif-${AMB}-gold-catalog-db"
-TABLA="scd_primas_rentas"
-RUTA_PARAMETROS="s3://niif-${AMB}-assets/primas-rentas/parametros_extraccion.json"
+TABLA="scd_primas_${MALLA}"
+RUTA_PARAMETROS="s3://niif-${AMB}-assets/primas-${MALLA}/parametros_extraccion.json"
 RUTA_SCD="s3://niif-${AMB}-assets/glue-resources/estandar/scd.py"
 
 consultar() {
@@ -106,9 +107,28 @@ for paso in ("ExtraccionEstandar", "CrawlerBronze", "ValidacionTecnica", "Remedi
 PY
 }
 
+cruce() {
+  echo "== Ejecuciones de Rentas y Endosos en orden de inicio (para ver si se cruzaron)"
+  for m in rentas endosos; do
+    local sf
+    sf=$(aws stepfunctions list-state-machines --query "stateMachines[?name=='niif-${AMB}-primas-${m}'].stateMachineArn" --output text)
+    aws stepfunctions list-executions --state-machine-arn "$sf" --max-items "$N" --output json | python3 -c '
+import json, sys
+for e in json.load(sys.stdin)["executions"]:
+    print("{}|{}|{}|{}|{}".format(e["startDate"][:19], e.get("stopDate", "en curso")[:19], sys.argv[1], e["status"], e["name"]))' "$m"
+  done | sort | python3 -c '
+import sys
+filas = [l.rstrip("\n").split("|") for l in sys.stdin]
+print("   {:19}  {:19}  {:8} {:10} {}".format("inicio", "fin", "malla", "estado", "ejecucion"))
+for i, (ini, fin, malla, estado, nombre) in enumerate(filas):
+    cruza = [f[2] for f in filas[:i] if f[1] == "en curso" or f[1] > ini]
+    marca = "  <- cruza con " + ", ".join(sorted(set(cruza))) if cruza else ""
+    print(f"   {ini:19}  {fin:19}  {malla:8} {estado:10} {nombre}{marca}")'
+}
+
 corridas_glue() {
   local job="$1" filtro="$2"
-  echo "== ${job} (solo corridas de Rentas): inicio | estado | segundos | DPU-segundos"
+  echo "== ${job} (solo corridas de ${MALLA}): inicio | estado | segundos | DPU-segundos"
   aws glue get-job-runs --job-name "$job" --max-items 50 --output json | python3 -c '
 import json, sys
 filtro, n = sys.argv[1], int(sys.argv[2])
@@ -136,11 +156,12 @@ for k in ("periodo_negocio", "total_registros_silver_preparada", "estado_gold_sc
 
 case "${1:-todo}" in
   comparar) shift; comparar "$@" ;;
+  cruce) cruce ;;
   todo)
     pasos_por_ejecucion
-    corridas_glue "niif-${AMB}-extraccion-estandar-optimized" "primas-rentas"
-    corridas_glue "niif-${AMB}-silver-primas-rentas" "primas_rentas"
-    corridas_glue "niif-${AMB}-scd" "primas-rentas"
+    corridas_glue "niif-${AMB}-extraccion-estandar-optimized" "primas-${MALLA}"
+    corridas_glue "niif-${AMB}-silver-primas-${MALLA}" "primas_${MALLA}"
+    corridas_glue "niif-${AMB}-scd" "primas-${MALLA}"
     estado_gold ;;
-  *) echo "Uso: [AMB=qa] [N=6] bash $0 {todo|comparar [ejecucion_anterior ejecucion_nueva]}" ;;
+  *) echo "Uso: [AMB=qa] [MALLA=rentas|endosos] [N=6] bash $0 {todo|comparar [anterior nueva]|cruce}" ;;
 esac
