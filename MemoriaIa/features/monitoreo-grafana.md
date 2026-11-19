@@ -1,18 +1,18 @@
 ---
 tipo: feature
 estado: vigente
-actualizado: 2026-11-10
+actualizado: 2026-11-19
 ---
 # Monitoreo continuo a Grafana (en iteración)
 
-Humano: `Docs\06-brechas\monitoreo-continuo-grafana.md`.
+Humano: `Docs\06-brechas\monitoreo-continuo-grafana.md` (reemplazado). **Plan vigente (2026-11-19): [[roadmap-observabilidad]]**; las secciones de abajo quedan como historial de decisiones.
 
 ## Decisiones del usuario
 - **Cambio de alcance (2026-11-10, manda sobre lo de abajo):**
   - Grafana **ya no es tarea nuestra**. Entregamos el ciclo de observabilidad completo en logs JSON, métricas EMF y alarmas de CloudWatch, listo para conectar un Grafana si se requiere.
   - Las alertas técnicas salen por el **mismo SES** que el correo de negocio, al grupo de soporte (pendiente: cuál es ese grupo).
   - Lo que falte en la arquitectura se le sugiere al arquitecto (ARQ-31 en [[notificaciones-vs-arquitectura]]).
-- Soporte **no** se entera por email: la tarea 1c ([[tareas-aws]]) pasa a ser un ciclo de monitoreo continuo con logs hacia Grafana.
+- ~~Soporte no se entera por email~~ (superado el 2026-11-10 por la decisión de arriba): la tarea 1c ([[tareas-aws]]) pasa a ser un ciclo de monitoreo continuo con logs hacia Grafana.
 - Alcance: toda la solución NIIF 17, **solo del lado AWS**.
 - Grafana: **no definido** (dónde corre, quién lo administra).
 - Origen de logs: sin decidir. El usuario preguntó si aplica Elastic: sí, Grafana consulta Elasticsearch/OpenSearch.
@@ -28,7 +28,7 @@ Humano: `Tareas\T1-notificaciones\propuesta-observabilidad-eventos.md`. Esta pro
 - **Costos:** nunca `ejecucion_id` como dimensión de métrica; nivel de log por ambiente (D-13); Parquet particionado + workgroup con tope (HU-SG-11).
 - **Por validar:** SNS+Firehose o EventBridge; Dashboards o Grafana; módulos de ServiceNow, conector, grupo de asignación, salida a internet; ticket al No certificar; dónde se guarda la evidencia de certificación (7 años); aval de SES y Grafana.
 
-## Opciones de almacenamiento de logs (sin decidir)
+## Opciones de almacenamiento de logs (propuesta 2026-11-19: A + copia a S3/Athena, ver [[roadmap-observabilidad]])
 - A. CloudWatch Logs directo (recomendada para empezar).
 - B. CloudWatch -> OpenSearch -> Grafana.
 - C. Elastic corporativo, si existe.

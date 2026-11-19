@@ -1,11 +1,11 @@
 ---
 tipo: contexto
 estado: vigente
-actualizado: 2026-11-12
+actualizado: 2026-11-19
 ---
 # Arquitectura propuesta (segunda arquitectura, nuestra)
 
-> `Docs\05-arquitectura\diagramas\NIIF17_ModeloSolucion_V1.0-propuesta.drawio` es **nuestra** propuesta, hecha el 2026-11-11 sobre la aprobada ([[arquitectura-niif17]]). Solo cambia la hoja `Página-2` (paso 3); las otras 7 hojas son idénticas. **Regla del usuario (2026-11-12): al tocar las piezas donde las dos difieren, tener en cuenta ambas arquitecturas.** La aprobada manda; la propuesta es lo que pedimos agregar (ARQ-21) y está sujeta a decisión.
+> `Docs\05-arquitectura\diagramas\NIIF17_ModeloSolucion_V1.0-propuesta.drawio` es **nuestra** propuesta, hecha el 2026-11-11 sobre la aprobada ([[arquitectura-niif17]]). Cambia la hoja `Página-2` (paso 3) y, desde el 2026-11-19, la `Página-1` (solo la observabilidad); las otras 6 hojas son idénticas. **Regla del usuario (2026-11-12): al tocar las piezas donde las dos difieren, tener en cuenta ambas arquitecturas.** La aprobada manda; la propuesta es lo que pedimos agregar (ARQ-21) y está sujeta a decisión.
 
 ## Qué agrega la propuesta (hoja `Página-2`)
 Se compara contra el XML de las dos hojas: 24 elementos nuevos, ninguno borrado ni modificado. Numeración nueva 72 a 78.
@@ -19,6 +19,12 @@ Se compara contra el XML de las dos hojas: 24 elementos nuevos, ninguno borrado 
 | **Quién envía el correo** | El diagrama dibuja Lambda (Notificación) → Mensaje (SES) | El texto de la nota dice que lo envía el **Job Notificación**, no la lambda (ARQ-22). La flecha original sigue dibujada | [[data-datalake-niif-notification-certification-glue-job]] |
 | **postLogin()** | `postLogin()` → Cognito | Se renombra `niif-{env}-post-login`; recibe al usuario autenticado y llama a certificar o no certificar | [[sc-datalake-niif-post-login]] |
 | **Entrada del API (66)** | API → Lambda (Notificación) y Zona Certificación | Se agregan API → Lambda (Certificación) y API → Lambda (Enlace corto); **pendiente D7**: la propuesta quiere que la pieza expuesta a internet no tenga permisos de Glue ni de transporte | [[sc-datalake-niif-certification]] |
+
+## Observabilidad (agregada el 2026-11-19, `Página-1` y `Página-2`)
+Elementos 79 a 84 con el mismo estilo de la propuesta (círculos verdes, íconos AWS y una nota punteada por hoja); detalle en [[roadmap-observabilidad]].
+- **`Página-2`:** íconos nuevos CloudWatch (Logs y Métricas), X-Ray (Trazas) y Modelo Trazabilidad, abajo a la izquierda. Flechas desde la Malla Ejecución: 80 a CloudWatch, 81 a X-Ray y 79 al Modelo Trazabilidad. La nota dice que todos los componentes de la hoja emiten ahí.
+- **`Página-1`:** se conectan el CloudWatch y el Modelo Trazabilidad que ya existían sueltos, y se agrega X-Ray. Desde el grupo Malla: 82 a CloudWatch, 83 al Modelo Trazabilidad y 84 a X-Ray.
+- No se dibujan Firehose, S3 de logs ni EventBridge + SNS: son opcionales y quedan solo en la nota.
 
 Sin diferencia: Lambda (SFTP) → Transit Gateway → FIS, y todo el medallón, la programación y los pasos 1 a 12 ([[sc-datalake-niif-send-via-sftp-lambda]]).
 

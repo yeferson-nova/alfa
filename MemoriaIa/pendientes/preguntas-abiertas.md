@@ -21,7 +21,10 @@ actualizado: 2026-11-19
 - ¿Cuál generación del gestor es la oficial: G3 (`configurador-*`) o G4 (`configuration-*`, Terraform)? ¿G1 y G2 se pueden retirar?
 - Definición funcional de las validaciones de reserva matemática. ([[tareas-aws]], tarea 3)
 
-## Monitoreo ([[monitoreo-grafana]])
+## Monitoreo ([[monitoreo-grafana]], decisiones de la fase 0 en [[roadmap-observabilidad]] §9)
+- ~~¿Qué son los "tres niveles"?~~ **Resuelta (2026-11-19):** logs, métricas y trazas.
+- ¿Instrumentación mínima en los Silver por malla o esperar a reescribirlos?
+- ~~¿Quién arma los tableros?~~ **Resuelta (2026-11-19):** fuera de nuestro alcance; entregamos los orígenes listos y documentados para cualquier herramienta.
 - ¿Dónde corre Grafana y quién lo administra? (no definido)
 - ¿Existe un Elastic u OpenSearch corporativo?
 - ¿Retención mínima exigida para los logs?

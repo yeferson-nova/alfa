@@ -7,6 +7,9 @@ actualizado: 2026-11-19
 
 > **PAUSA DE LA MIGRACIÓN (2026-11-11, decisión del usuario).** Se detiene la migración de la cadena de notificación y certificación. No se avanza con el roadmap ni se lanza nada en DEV hasta que el usuario lo reanude. El estado congelado y la forma de retomar están en [[traspaso-sesion]] §Pausa.
 
+## Observabilidad (2026-11-19)
+- [ ] Aprobar el roadmap de [[roadmap-observabilidad]] (fases 0 a 6) y las decisiones de su §9. Sin orden explícita no se toca código. Brechas nuevas en [[auditoria-observabilidad-2026-11]].
+
 ## Organización (plan por fases)
 - [x] Fase 1: reorganizar carpetas, corregir rutas e índice (2026-11-03).
 - [x] Borrar `MemoriaIa\CLAUDE.md` duplicado (lo hizo el usuario, 2026-11-03).

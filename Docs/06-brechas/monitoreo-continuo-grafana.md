@@ -1,7 +1,7 @@
 # Monitoreo continuo de la solución NIIF 17 en Grafana (borrador en iteración)
 
 **Fecha:** 2026-10-30
-**Estado:** borrador. Faltan decisiones, ver sección 4.
+**Estado:** **reemplazado el 2026-11-19 por `roadmap-observabilidad.md`.** Se conserva como historial. Dos puntos ya no valen: la sección 1 (el 2026-11-10 se decidió que las alertas técnicas sí salen por SES al grupo de soporte) y la "opción sin decidir" de la sección 2 (la propuesta vigente es CloudWatch + copia a S3/Athena).
 
 ## 1. Qué se busca
 Soporte no recibirá correos cuando un proceso falle. En su lugar, la solución NIIF 17 debe cumplir un **ciclo de monitoreo continuo**: sus logs llegan a Grafana y desde ahí se vigila todo. El alcance es toda la solución NIIF 17, **solo lo que corre en AWS**.
