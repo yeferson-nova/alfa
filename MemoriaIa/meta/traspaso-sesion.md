@@ -1,7 +1,7 @@
 ---
 tipo: contexto
 estado: vigente
-actualizado: 2026-11-12
+actualizado: 2026-11-18
 ---
 # Traspaso entre sesiones (leer primero en una sesión nueva o remota)
 
@@ -36,7 +36,7 @@ Empieza por `MemoriaIa\00-INDEX.md`. Ahora hay una carpeta por tipo (`repos`, `f
 3. Correr las pruebas de los 3 componentes y `verificar_copias_comunes.py`, y comprobar que siguen en verde.
 4. Seguir con las pruebas en DEV (certificación etapa 3 con Primas ARL y orquestadora), confirmando cada paso. Luego el Paso 5.
 
-**Entrega SNS → SES a QA (2026-11-11, en pausa):**
+**Entrega SNS → SES (1a) y HTML (1b): CERRADAS el 2026-11-18, en QA y en paso a PRD.** Queda solo llevar `--SES_SENDER` y `ses:SendEmail` a IaC ([[pendientes]]). Historial:
 - Se entrega la versión actual (el script de `Tareas\paquete-release-notificaciones\`), sin la optimización. El checklist está en el historial de la sesión y se resume en [[inprod-enlaces-cognito-9411325]] y [[job-notificacion-ses]].
 - **Ya hay acceso al Git de Alfa.** El usuario va a bajar los repos de los componentes afectados:
   - el job `niif-<amb>-notification-certification`;

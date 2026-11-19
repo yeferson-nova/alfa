@@ -2,7 +2,7 @@
 
 **Roadmap para completar la cadena con la nueva arquitectura (2026-11-10):** ver `roadmap-notificaciones.md` en esta carpeta.
 
-**Estado:** en análisis; **1a (SES) implementado en local, no desplegado**: `Backend\notificacion\jobs-glue\niif-dev-notification-certification\`. **Depende de:** T2 (formato de logs y taxonomía de errores comunes).
+**Estado (2026-11-18):** **1a (SES) y 1b (HTML) cerradas**: en QA y en paso a PRD, entregadas sobre el job desplegado `notification_certification.py`. Queda para DevOps llevar `--SES_SENDER` y el permiso `ses:SendEmail` a Terraform y retirar SNS. 1c y 1d siguen abiertas. **Depende de:** T2 (formato de logs y taxonomía de errores comunes).
 
 ## Qué se pidió
 - **1a.** Cambiar el servicio SNS por SES.

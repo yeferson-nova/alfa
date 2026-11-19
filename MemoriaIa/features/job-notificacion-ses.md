@@ -1,9 +1,11 @@
 ---
 tipo: feature
 estado: vigente
-actualizado: 2026-11-11
+actualizado: 2026-11-18
 ---
 # Job de notificación con SES (T1, punto 1a)
+
+> **1a CERRADA (2026-11-18):** el job desplegado ya envía por SES (`sesv2.send_email`, `SES_SENDER`), está en QA y pasa a PRD. Lo que sigue en esta nota sobre la reescritura hexagonal queda como trabajo posterior. Brecha abierta: el Terraform de quality aún pasa `--SNS_TOPIC_ARN`, no pasa `--SES_SENDER` ni da `ses:SendEmail` (se pusieron a mano), ver [[pendientes]].
 
 Cambio de SNS a SES en el job de Glue `niif-dev-notification-certification`, que es quien arma y envía el correo de certificación. **La lambda de T2 no envía correos** (solo configura y arranca la malla), y la Step Function tampoco: ver [[tareas-aws]] y [[arquitectura-niif17]].
 

@@ -63,8 +63,8 @@ Brechas citadas: `Docs\06-brechas\notificaciones-vs-arquitectura.md`, `limpieza-
 ✅ = hecho y comprobado · ⬜ = pendiente. Actualizada el 2026-11-11.
 
 **Ya hecho (antes y durante el refinamiento)**
-- ✅ Correo por SES (T1a) sobre el job desplegado: en QA llega a la bandeja.
-- ✅ Plantillas HTML (T1b): 6 plantillas en QA y en `Backend\notificacion\email-template\`.
+- ✅ Correo por SES (T1a) sobre el job desplegado: en QA llega a la bandeja. **Cerrada el 2026-11-18, en paso a PRD.**
+- ✅ Plantillas HTML (T1b), **cerrada el 2026-11-18, en paso a PRD**: 6 plantillas en QA y en `Backend\notificacion\email-template\`.
 - ✅ Código actual bajado de AWS y validado contra nuestras copias (`EvidenciasAws\dev-codigo-actual\`).
 - ✅ Evidencia de uso de DEV y clasificación de recursos (`Docs\06-brechas\limpieza-dev-recursos.md`).
 - ✅ Auditoría del job nuevo frente al desplegado (`Docs\06-brechas\auditoria-job-notificacion-nuevo-vs-actual.md`).

@@ -1,9 +1,11 @@
 ---
 tipo: feature
 estado: vigente
-actualizado: 2026-11-09
+actualizado: 2026-11-18
 ---
 # Correo de notificación de certificación
+
+> **1b CERRADA (2026-11-18):** correo HTML con `templatePath` y `$avisoHtml`, en QA y en paso a PRD.
 
 Ejemplo en `Docs\05-arquitectura\ejemplo-correo-certificacion.png`. Es el objetivo de la tarea 1b ([[tareas-aws]]). El correo no lleva adjuntos, solo enlaces a datos y acciones.
 
