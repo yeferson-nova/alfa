@@ -1,11 +1,11 @@
 ---
 tipo: inprod
 estado: vigente
-actualizado: 2026-11-13
+actualizado: 2026-11-19
 ---
 # Incidente: Primas Rentas 202606 con 75.181 registros en Silver frente a 401 del SQL de composición
 
-> La Silver preparada de Primas Rentas trae todas las rentas vigentes que cobraron en el mes (75.181) en vez de solo las expedidas en el periodo (401). Causa: al join con `prv_rentas` le falta el límite inferior del "Ajuste" de la V2.1 (línea 464 del job, línea 320 del SQL), y así está en prod. El fix de una línea no puede salir solo: requiere el SCD por periodo y un plan para el Gold actual de prod.
+> La Silver preparada de Primas Rentas trae todas las rentas vigentes que cobraron en el mes (75.181) en vez de solo las expedidas en el periodo (401). Causa: al join con `prv_rentas` le falta el límite inferior del "Ajuste" de la V2.1 (línea 464 del job, línea 320 del SQL), y así está en prod. El fix de una línea no puede salir solo: requiere el SCD por periodo y un plan para el Gold actual de prod. **Estado 2026-11-19: corregido y validado en DEV y QA (401); falta salir a prod junto con el SCD por periodo. La lentitud de QA es de Oracle o de la red, no del fix (§8).**
 
 Relacionado: [[data-datalake-niif-primas-rentas-glue-job]], [[familia-mallas-alfaprd]], [[inprod-primas-arl-202606]] (SCD que apaga por ausencia y freno del 20 %), [[pendientes]], [[preguntas-abiertas]]. Tarea humana: `Tareas\T4-primas-rentas-composicion\`.
 
@@ -111,6 +111,28 @@ Lectura: `expedidas_en_el_periodo` cerca de 401 confirma PR-1; `rentas_distintas
 - PR-4 se replantea: que julio apague las 401 de junio es lo **esperado**. Lo que falla es el freno, que hay que medir solo sobre el mismo periodo.
 - PR-5: re-ejecutar 202606 con el job corregido apaga 74.788 del **mismo** periodo (99,5 %). El freno saltaría con razón, así que hace falta una excepción controlada de una sola vez: argumento `--PERMITIR_APAGADO_MASIVO true` del job SCD solo en esa corrida (ya existe en `scd.py`).
 - Verificado en código (2026-11-18): Rentas usa el SCD genérico `niif-{env}-scd` (`glue-resources/estandar/scd.py`, repo [[data-datalake-niif-rmd-ext-estandar-glue-job]]). La rama `bugfix/scd-freno-periodo` (commit `2337531`) ya cierra el periodo anterior sin freno usando `periodo_negocio` y `periodo_activo.json` en Gold; no requiere `columna_periodo` ni cambiar `config_scd_primas_rentas.json`. Lo único propio de Rentas es el job Silver (línea 464 y `groupBy`) y sus pruebas.
+
+## 8. QA (2026-11-18 y 19, corridas de Julio)
+- **Fix validado en QA:** Gold `scd_primas_rentas` con 401 activos en 202606, control del SCD en 202606, sin apagado masivo. Igual a DEV y al SQL V2.1. No hubo que limpiar datos.
+- **Fallo de remediación (18 nov):** faltaba el lote de `cgr_origenes` porque Endosos sobrescribió la tabla general compartida en Bronze un minuto antes. Rentas y Endosos no se pueden correr en paralelo con seguridad (antes funcionaba por suerte de horarios).
+- **Fallo en `RegistrarFallo_CrawlerBronze` (19 nov, `rentas-202606-auto-20261119T133217Z-f16afefa`):** el crawler terminó bien. Falló `ConsultarCrawlerBronze` por `Glue.ThrottlingException` (límite de API de Glue de la cuenta), sin `Retry`. Luego el registro del fallo reventó porque lee `$.error_crawler_bronze` y los `Catch` guardan en `$.crawler_start_error` o `$.crawler_bronze_error`. Igual en las 6 Step Functions de primas. Es IaC (DevOps). El crawler de Bronze es uno solo para todas las mallas y no admite corridas en paralelo.
+- **Lentitud (de ~35 a ~70 min), causa comprobada: Oracle QA (o la red) entrega las tablas grandes más lento.**
+  - Silver Rentas (~2 min) y SCD (~2 min) tardan lo mismo que en octubre. Todo el aumento está en `ExtraccionEstandar`.
+  - Descartado con evidencia: cambio de código (la huella de `extraccion_estandar_optimized.py` es la misma el 15 nov y hoy), cambio del job (sin cambios desde el 22 oct), volumen en Oracle (`LAST_DDL_TIME` del 20 ago, sin DML, `ANP_MOVIMIENTOS_PAGO` = 22.904.074), lotes desalineados en S3 (llaves, Bronze y Silver en el lote 1795038161), relecturas (log de Spark: 30.738.359 filas de Oracle en las dos corridas). La métrica `recordsRead` de CloudWatch (45,8 M) engañaba.
+  - Log de Spark, 15 nov frente a 19 nov (mismas 30.738.359 filas de Oracle y mismos ~123 M de Parquet):
+
+    | Tabla | Tiempo | CPU de Glue | Espera de Oracle | Filas/s |
+    |---|---|---|---|---|
+    | `ANP_MOVIMIENTOS_PAGO` | 516 → 2312 s | 225 → 234 s | 288 → 2076 s | 44.398 → 9.909 |
+    | `PRV_SALDOS_MATEMATICA` | 114 → 365 s | - | - | 60.632 → 18.954 |
+
+    Lectura: Glue procesa igual; el tiempo extra es espera de datos de Oracle (de 3 a 4,5 veces más lento).
+  - Cómo se midió: `medir-tiempos-rentas.sh qa comparar` (duración por paso de dos corridas SUCCEEDED), tiempos por tabla del `parametros_extraccion.json` (versiones de S3), huella md5 del script (`e923dc57…`, igual el 15 nov y hoy, diff vacío) y etapas del log de Spark (CPU frente a espera por tarea).
+  - Hipótesis descartadas en el camino (no repetir): "la exclusión relee Oracle", "velocidad de Oracle × relecturas" y "lotes desalineados".
+  - La lectura de Oracle va sin filtro (`where: null`) y por una sola conexión (sin particiones), así que cualquier lentitud de Oracle o de la red se traslada completa.
+  - Falta: saber si es el servidor o la red. Julio: `COUNT(*)` con `FULL` y `SET TIMING ON` durante una corrida. DBA: eventos de espera ASH (`dba_hist_active_sess_history`) del 19 nov 09:44–10:25 hora Colombia. El usuario de Julio no tiene acceso a `v$` ni a `DBA_HIST`.
+- Scripts y comandos: `Tareas\Fixs\primasRentas\medir-tiempos-rentas.sh` (`{dev|qa} {todo|comparar|cruce}`). Los logs de Spark del job están en `sparkHistoryLogs/` del bucket de assets de Glue (`--enable-spark-ui` activo) y el bucket `niif-qa-assets` tiene versionado, que guarda el `parametros_extraccion.json` de cada corrida.
+- **Propuestas de brecha (sin ID, falta la confirmación del usuario):** `Retry` ante throttling en los `Consultar*`; `ResultPath` del registro de fallos; tablas generales compartidas que se sobrescriben entre mallas; lectura de Oracle por una sola conexión y sin filtro (costo y tiempo).
 
 ## Hallazgo lateral: Primas Endosos (fuera de este fix)
 - En QA, `scd_primas_endosos` tiene **1 llave duplicada** entre los vigentes (llave `nid_renta`) y 0 llaves vacías. Una renta puede tener varios endosos, así que `nid_renta` sola podría no ser la llave correcta. Por revisar: el JSON del SCD de endosos y qué renta está duplicada. Las otras 5 tablas de Gold de QA tienen 0 duplicados y 0 llaves vacías.

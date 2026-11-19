@@ -1,7 +1,7 @@
 ---
 tipo: repo
 estado: vigente
-actualizado: 2026-11-18
+actualizado: 2026-11-19
 repo: sc-datalake-niif-primas-arl
 categoria: lambda
 paso: "2 · Bodega NIIF 17 (configura y arranca la malla)"
@@ -21,7 +21,7 @@ malla: primas-arl
 
 ## Recursos AWS que toca
 - DynamoDB: `niif-{env}-cnf-mallas` (lee 8 registros y persiste el periodo), `niif-{env}-prs-estructuras`, `niif-{env}-prg-programaciones`, `niif-{env}-ejc-ejecuciones` (escribe).
-- S3: escribe los archivos activos en `archivoActivoUri` y solo lee una plantilla, la de remediación (`plantillaUri`), que publica tal cual. `comparar` existe pero no se llama (`comparaciones = []`). Las URIs vienen de CNF; su valor real no está en el repo (las pruebas usan `extraccion_activo.json`), por confirmar. Verificado en `main` 2026-11-18.
+- S3: escribe los archivos activos en `archivoActivoUri` y solo lee una plantilla, la de remediación (`plantillaUri`), que publica tal cual. `comparar` existe pero no se llama (`comparaciones = []`). Las URIs vienen de CNF; en QA `archivoActivoUri` es `niif-qa-assets/primas-arl/config_extraccion_primas_arl.json` (confirmado 2026-11-19: cada corrida lo sobrescribe desde `cnf-mallas`, el `where` sale de ahí con su operador). Verificado en `main` 2026-11-18.
 - Step Functions `niif-{env}-primas-arl`. Función `niif-{env}-configuration-primas-arl`.
 
 ## Código
