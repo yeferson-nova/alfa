@@ -2,7 +2,11 @@
 set -uo pipefail
 export AWS_PAGER=""
 
-AMB="${AMB:-qa}"
+AMB="${1:-}"
+case "$AMB" in
+  dev|qa) shift ;;
+  *) echo "Uso: [MALLA=rentas|endosos] [N=6] bash $0 {dev|qa} {todo|comparar [anterior nueva]|cruce}"; exit 1 ;;
+esac
 MALLA="${MALLA:-rentas}"
 N="${N:-6}"
 WG="${WG:-primary}"
@@ -163,5 +167,5 @@ case "${1:-todo}" in
     corridas_glue "niif-${AMB}-silver-primas-${MALLA}" "primas_${MALLA}"
     corridas_glue "niif-${AMB}-scd" "primas-${MALLA}"
     estado_gold ;;
-  *) echo "Uso: [AMB=qa] [MALLA=rentas|endosos] [N=6] bash $0 {todo|comparar [anterior nueva]|cruce}" ;;
+  *) echo "Uso: [MALLA=rentas|endosos] [N=6] bash $0 {dev|qa} {todo|comparar [anterior nueva]|cruce}" ;;
 esac
