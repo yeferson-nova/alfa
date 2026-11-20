@@ -9,6 +9,7 @@ Esta carpeta reúne el trabajo asignado sobre la plataforma AWS de NIIF 17. Aqu�
 | `T1-notificaciones\` | Cambio de SNS a SES, correo HTML, alertas de fallo y escenarios de notificación. |
 | `T2-lambdas-gestor-configuracion\` | Unificar el modelo de programación de las lambdas. |
 | `T3-validaciones-reserva-matematica\` | Validaciones de consistencia de los datos procesados. |
+| `Modularizacion\` | Tarea transversal (2026-11-20): pasar los jobs genéricos a código modular, cerrar su deuda técnica junto con la configuración y dejar la observabilidad. Primer componente: `Extraccion\`. |
 | `T1-notificaciones\propuesta-observabilidad-eventos.md` | Propuesta pendiente de validar: plano técnico (alertas a ServiceNow) y plano de negocio (eventos a SES y Power BI). |
 | `riesgos-flujo-glue-notificacion.md` | Análisis transversal (T1, T2 y T3): riesgos del paso de datos de Glue a la Lambda de Notificación y patrón propuesto de manifiesto + Step Functions. |
 

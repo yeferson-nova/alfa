@@ -7,6 +7,7 @@ Al iniciar o al perder contexto: leer `MemoriaIa\00-INDEX.md` y abrir solo las n
 ## Contexto de trabajo
 - Todo el stack es AWS. Contexto: estándares bancarios colombianos; el marco normativo se toma de los documentos entregados ([[marco-normativo]]).
 - Todo análisis busca brechas de **seguridad**, **costos** (en especial Athena) y **arquitectura**, contra los estándares de `Docs\02-estandares-banco\`.
+- **No negociable:** al corregir deuda técnica se revisan y evolucionan también los archivos de configuración del componente (JSON de `cfg-datalake-niif-config-s3`, DynamoDB `cnf-mallas` y lo que publica la lambda configuradora), en el mismo cambio. Detalle en [[preferencias-usuario]].
 
 ## Skill del proyecto (cargar al perder contexto)
 - Skill `niif17-alfa` en `.claude\skills\niif17-alfa\SKILL.md`: lineamientos de arquitectura, calidad, código seguro, patrones de seguros, montos y costos (Glue/Athena) y uso de esta memoria. Sin código; las referencias se cargan por tema.
@@ -40,7 +41,7 @@ Al iniciar o al perder contexto: leer `MemoriaIa\00-INDEX.md` y abrir solo las n
   ---
   ```
 - Fichas de `estandares\` y `hu\`: reglas verificables (qué exige el documento), 10 a 20 líneas, con la ruta del archivo fuente.
-- Brechas con ID único: `SEG-xx` (seguridad), `COS-xx` (costos), `ARQ-xx` (arquitectura), `CUM-xx` (cumplimiento). Mismo ID en la nota IA y en `Docs\06-brechas\`. Último usado: SEG-17, COS-10, ARQ-56, CUM-01.
+- Brechas con ID único: `SEG-xx` (seguridad), `COS-xx` (costos), `ARQ-xx` (arquitectura), `CUM-xx` (cumplimiento). Mismo ID en la nota IA y en `Docs\06-brechas\`. Último usado: SEG-17, COS-11, ARQ-60, CUM-01.
 - Un repo = una ficha en `MemoriaIa/repos/<nombre-del-repo>.md`, con la plantilla [[plantilla-ficha-repo]]. Una carpeta por tipo de nota: cambios nuestros en `features`, incidentes en `inprod`, brechas en `auditorias`.
 - Validar antes de cerrar: `python C:\Users\rdpuser\Git\alfa-repos\scripts\validar-memoria.py` (frontmatter, enlaces, índice y fichas).
 - Al aprender algo nuevo: actualizar la nota existente antes de crear otra. Si es un tema nuevo, crear la nota y agregarla al índice.

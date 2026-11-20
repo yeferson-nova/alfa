@@ -100,8 +100,7 @@ Se usa **arquitectura hexagonal (puertos y adaptadores)**: la lógica de negocio
   2. **Viaja dentro del dato:** desde la certificación, el ID se escribe en el registro de DynamoDB. Así cada evento del stream (trigger, copy, move) y cada enlace lo llevan sin depender de que alguien lo pase.
   3. **Una prueba automática lo comprueba antes de entregar:** un script recorre las definiciones de las Step Functions y falla si alguna tarea no lleva `--EJECUCION_ID`. Las pruebas de cada componente verifican que el ID entra, sale y aparece en el log.
   4. **No hay entrada lateral:** los jobs y las lambdas del flujo solo se arrancan desde la Step Function o desde el registro; para reprocesar también se usa la Step Function.
-  5. Como red de seguridad, si aun así faltara el ID, el componente emite una alarma clasificada. Esto debe ser imposible si se cumplen los cuatro puntos anteriores. Hoy no se cumple: ver ARQ-32 en `Docs-brechas
-otificaciones-vs-arquitectura.md`.
+  5. Como red de seguridad, si aun así faltara el ID, el componente emite una alarma clasificada. Esto debe ser imposible si se cumplen los cuatro puntos anteriores. Hoy no se cumple: ver ARQ-32 en `Docs\06-brechas\notificaciones-vs-arquitectura.md`.
 - **Métricas en formato EMF**, sin llamadas extra a la API: como mínimo, éxito, fallo (por dominio) y duración.
 - Nivel de log por variable (`NIVEL_LOG`, `INFO` por defecto). Formato de log de Lambda: `Text`, porque las líneas ya son JSON.
 

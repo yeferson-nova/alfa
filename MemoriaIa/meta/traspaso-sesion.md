@@ -1,11 +1,29 @@
 ---
 tipo: contexto
 estado: vigente
-actualizado: 2026-11-18
+actualizado: 2026-11-20
 ---
 # Traspaso entre sesiones (leer primero en una sesión nueva o remota)
 
 Este es el estado al 2026-11-11 para que otra sesión de Claude (local o remota) siga sin perder contexto. **La memoria local de Claude (`~/.claude/...`) está vacía; todo vive en este repo.** Hay que leer `CLAUDE.md` (el índice), esta nota y la skill `.claude\skills\niif17-alfa\`. **Ojo:** `.claude` está en `.gitignore`, así que la skill solo existe en la máquina del usuario. Una sesión remota no la tiene y se guía por esta nota y por [[est-desarrollo-hexagonal]].
+
+## Sesión 2026-11-20: modularización de la extracción
+- **Tarea nueva:** `Tareas\Modularizacion\` (transversal, abierta a más componentes) con `Extraccion\`. Memoria: [[modularizacion]] y [[modularizacion-extraccion]]. El objetivo es modularizar, cerrar la deuda técnica con su configuración y avanzar la observabilidad (fase 2a).
+- **Reunión con Víctor sobre la extracción:** [[reunion-extraccion-victor]]. Consultas base `M1`-`M4` en `Docs-arquitectura\Reuniones\Extraccion\`: son la referencia de resultados.
+- **Decisiones del usuario:** sin ODS (la Oracle actual no cambia); una conexión de servicio y el pool es nuestro; el tope de unidades se aprende midiendo; estrategia D (rangos de llave + semijoin) en refinamiento; no se usa DMS (no está en la arquitectura). No quedan preguntas para Víctor; las de Oracle van a Julio ([[preguntas-abiertas]]).
+- **Brechas nuevas:** ARQ-57, COS-11, ARQ-58 y ARQ-59 ([[auditoria-extraccion-2026-11]]). Evidencia interna: `EvidenciasAws\dev-extraccion\`.
+- **Repos afectados y tanda 3 en DEV** (tablas y rol IAM): en [[modularizacion-extraccion]]. El rol del extractor sí puede escribir en `ejc-ejecuciones` (política común) y lleva 13 políticas fuera de `alfa-repos`. Corregido el mismo día: primero se dijo que no tenía DynamoDB.
+- **Sync de `quality` (2026-11-20, main `3d5f623`):** extractor sin cambios; el fix del SCD ya está en `quality` (rebasar la rama modular sobre main); son 6 mallas con el extractor estándar (PCR Vida pasó a Emisiones); ARQ-59 corregida (la configuradora general sí fija `MALLA_PK`). Las 13 políticas del rol no están en ninguna `quality`: **el lunes 2026-11-23 se pregunta a DevOps** (no se buscan más ni se suponen; los `iac-*` son de solo lectura).
+- **Alcance y entregable (usuario, 2026-11-20):** los dos extractores son nuestros (Glue, pasos 2 y 3); el entregable es cerrar la deuda técnica y optimizar la extracción existente, no "las 99 tablas para Víctor". Error corregido: el de Emisiones se había anotado como de otro equipo (ahora ARQ-60 para sus copias).
+- **Qué falta para empezar** (validado contra el código): sección en [[modularizacion-extraccion]]. El estándar solo espera la orden; Emisiones necesita antes su red de pruebas y su línea base; la llave del checkpoint sale de `conf_arl.py:530-542`.
+- **Lección:** antes de proponer un hallazgo, buscarlo en la memoria. Esta sesión se repitieron RYC-01 y COS-05, y una hipótesis ya descartada en [[inprod-primas-rentas-202606]] §8.
+
+## Sesión 2026-11-19/20: observabilidad y propuesta de arquitectura
+- **Entregado (solo documentación, sin código):** informe técnico `Docs\06-brechas\roadmap-observabilidad.md` (fases 0 a 6, contrato de log v1, recorrido del `ejecucion_id` en Mermaid). Resumen y hechos verificados en DEV en [[roadmap-observabilidad]]; brechas ARQ-51 a ARQ-56, SEG-17 y COS-10 en [[auditoria-observabilidad-2026-11]].
+- **Decisiones del usuario:** 3 niveles = logs, métricas y trazas; los tableros no son nuestro alcance (dejamos todo listo); retención por ambiente en IaC, PRD empieza en 180 días; la fase 6 reutiliza `PipelineObserver` y los SNS de plataforma. Los comandos y resultados de consola son internos (`EvidenciasAws\dev-observabilidad\`) y no van al informe.
+- **Diagrama propuesta** (`NIIF17_ModeloSolucion_V1.0-propuesta.drawio`): observabilidad agregada en Página-2 (79 a 81) y Página-1 (82 a 84), en el estilo existente. Ver [[arquitectura-propuesta-niif17]].
+- **Reunión con Víctor (2026-11-19):** pidió enlace corto dentro de postLogin, un Modelo de Identidades (enlaces y quién puede usarlos), corte por `id_token` y un modelo de segregación de eventos. Validado en código qué existe hoy ([[arquitectura-propuesta-niif17]]); puntos abiertos en [[preguntas-abiertas]]; redibujo de Página-2 en [[pendientes]].
+- **Lecciones:** fijar `us-east-1` en todo comando de CloudShell; antes de decir "no existe", buscar en la memoria, Docs y el código.
 
 ## Memoria reorganizada (2026-11-12)
 Empieza por `MemoriaIa\00-INDEX.md`. Ahora hay una carpeta por tipo (`repos`, `features`, `inprod`, `auditorias`, `pendientes`…) y una ficha por cada repo de Alfa (35, con su rol en el flujo, en `repos\`). Las rutas `Backend\...` de las notas son históricas: el código vive en el repo `alfa-repos` ([[repo-alfa-repos]]). Hallazgos nuevos del barrido de repos: [[auditoria-repos-2026-11]] (SEG-16, ARQ-45 a ARQ-49). Validar con `alfa-repos\scripts\validar-memoria.py`.

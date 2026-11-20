@@ -1,7 +1,7 @@
 ---
 tipo: preferencia
 estado: vigente
-actualizado: 2026-11-18
+actualizado: 2026-11-20
 ---
 # Preferencias del usuario
 
@@ -38,9 +38,11 @@ actualizado: 2026-11-18
 - **Misma estructura de carpetas en todos los componentes, en inglés:** `domain`, `application`, `adapters/inbound`, `adapters/outbound`, `config`, `test/`. **Un solo `README.md`** por componente: argumentos, claves del JSON, salidas y qué hay en cada módulo.
 - **Commits:** mensaje **muy corto en español**, sin coautor. El commit y el push los pide el usuario, normalmente al terminar una tarea ("al terminar haz commit push").
 - **Orden explícita:** "aprobado, ejecuta los cambios" cuenta como orden para escribir código. Aprobar una recomendación (por ejemplo, O-2) no da permiso para crear recursos en AWS: lo de Terraform se pide a DevOps.
+- **IaC y DevOps (2026-11-20):** nuestra tarea no es de DevOps. Los repos `iac-*` son de solo lectura para nosotros: los leemos para entender contratos y permisos, y lo que falte se le pregunta o se le pide a DevOps. No suponer de dónde sale un recurso que no está en nuestros repos: puede venir de un repo de DevOps que no tenemos.
 - **Sesiones remotas:** todo lo necesario debe quedar en el repo (`MemoriaIa\`, `CLAUDE.md` y la skill), porque la memoria local de Claude no viaja. Al cerrar un bloque de trabajo, actualizar [[traspaso-sesion]].
 - **Siglas (2026-11-12):** siempre que se escriba SCD, poner entre paréntesis lo que significa: *(Slowly Changing Dimension, dimensión de cambio lento: guarda el historial de cada registro sin sobrescribirlo)*. Aplica también a otras siglas técnicas poco conocidas si el usuario lo pide.
 - **Entregables (2026-11-13):** **nunca publicar como URL** (artifact ni enlace externo); todo entregable es un `.md` local en el repo. Los fixes van en `Tareas\Fixs\<nombre-del-fix>\`, una carpeta por fix, con el informe técnico, las auditorías, las pruebas y demás elementos (ejemplo: `Tareas\Fixs\primasARL\`).
 - **Ramas en documentos (2026-11-13):** la rama de trabajo se nombra una sola vez, al inicio (ejemplo: `bugfix/scd-freno-periodo`, creada desde `develop` actualizado, es la de la corrección completa). En el resto del texto no usar frases como "esta rama", "se corrigen en esta rama" o "en esta rama:"; nombrar el archivo o componente (por ejemplo, "en `scd.py`").
 - **Ajustes acotados (2026-11-13):** si el usuario pide ajustar algo puntual (por ejemplo, los tiempos de un plan), se ajusta solo eso. No agregar secciones, condiciones, riesgos ni contenido que no estaba en el documento.
+- **Deuda técnica con la configuración (2026-11-20, no negociable):** al corregir deuda técnica se revisan y evolucionan también los archivos de configuración de ese componente, en el mismo cambio: los JSON de `cfg-datalake-niif-config-s3`, el registro de DynamoDB `cnf-mallas` y lo que publica la lambda configuradora (que sobrescribe el JSON de S3 y descarta claves que no conoce, como pasó con `umbral_apagado_pct` y el `where` de ARL; ver [[fix-scd-freno-periodo]]). Código y configuración avanzan juntos; un fix que solo toca código no se da por cerrado.
 - **Código sin comentarios (2026-11-17):** el código que escribamos no lleva comentarios ni docstrings; los nombres deben explicar la intención. Aplica a `src/` y a `tests/`.

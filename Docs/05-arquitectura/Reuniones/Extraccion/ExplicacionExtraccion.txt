@@ -1,0 +1,1146 @@
+
+Yeferson Nova Almanza empezó la transcripción
+V
+
+Victor Daniel Cortes Restrepo
+0 minutos 4 segundos0:04
+Victor Daniel Cortes Restrepo 0 minutos 4 segundos
+Eso está muy bien.
+Victor Daniel Cortes Restrepo 0 minutos 7 segundos
+Eso está muy bien, parce.
+Victor Daniel Cortes Restrepo 0 minutos 11 segundos
+Venga, a ver, yo abro esto.
+
+Yeferson Nova Almanza
+0 minutos 11 segundos0:11
+Yeferson Nova Almanza 0 minutos 11 segundos
+Y su compita.
+V
+
+Victor Daniel Cortes Restrepo
+0 minutos 13 segundos0:13
+Victor Daniel Cortes Restrepo 0 minutos 13 segundos
+Entonces nosotros nos tenemos que enfocar muchos en el.
+Victor Daniel Cortes Restrepo 0 minutos 19 segundos
+Realmente es en el componente de extracción listo.
+Victor Daniel Cortes Restrepo 0 minutos 24 segundos
+Ese componente.
+Victor Daniel Cortes Restrepo 0 minutos 27 segundos
+Tiene varias características. Yo no sé si eso yo te lo expliqué en algún momento, pero ese corponente tiene unas características muy bravas. Entonces yo lo yo lo voy a hacer de manera muy.
+Victor Daniel Cortes Restrepo 0 minutos 39 segundos
+Un poquito gráfica, explicativa, fresca para que tú lo vayas entendiendo listo.
+Victor Daniel Cortes Restrepo 0 minutos 45 segundos
+Ese componente se divide en varios momentos, uno de esos momentos son los ciclos de extracción, ¿cierto?
+
+Yeferson Nova Almanza
+0 minutos 54 segundos0:54
+Yeferson Nova Almanza 0 minutos 54 segundos
+What is the weather?
+V
+
+Victor Daniel Cortes Restrepo
+0 minutos 55 segundos0:55
+Victor Daniel Cortes Restrepo 0 minutos 55 segundos
+¿Y realmente qué es un ciclo de extracción? Un ciclo de extracción es un ejercicio de esfuerzo.
+Victor Daniel Cortes Restrepo 1 minuto 3 segundos
+Que tiene que ser acondicionado a la infraestructura que yo estoy impactando. ¿Sí, cómo se mide ese esfuerzo? Ese esfuerzo se miden por algo que se llaman unidades de costo.
+Victor Daniel Cortes Restrepo 1 minuto 19 segundos
+De la extracción.
+Victor Daniel Cortes Restrepo 1 minuto 22 segundos
+Esas unidades, cómo se calculan, se calculan por la cantidad de filas.
+Victor Daniel Cortes Restrepo 1 minuto 29 segundos
+Por la cantidad de columnas.
+Victor Daniel Cortes Restrepo 1 minuto 34 segundos
+¿Que yo voy a extraer listo?
+Victor Daniel Cortes Restrepo 1 minuto 39 segundos
+Esa es la medida que nosotros vamos a tener como costo de extracción listo cuando qué es lo que pasa y por qué están tan relacionados o porque esto prácticamente es una relación de Línea Directa porque resulta que cuando tú estás haciendo un ciclo de extracción y Tú empiezas a pegarle
+
+Yeferson Nova Almanza
+1 minuto 45 segundos1:45
+Yeferson Nova Almanza 1 minuto 45 segundos
+Sí.
+V
+
+Victor Daniel Cortes Restrepo
+2 minutos 3 segundos2:03
+Victor Daniel Cortes Restrepo 2 minutos 3 segundos
+A la base, a la infraestructura, cierto, a la infraestructura fuente, que en este caso sería Axely, pues él debe despegarse, sí.
+Victor Daniel Cortes Restrepo 2 minutos 18 segundos
+Él debe despegarse, entonces esa despegada hace que el que tenga que soltar la conexión, sí, porque la suelta.
+Victor Daniel Cortes Restrepo 2 minutos 29 segundos
+Por las características del integrador y las características de la base, sí, generalmente, cómo se balancea eso en la infraestructura por la banda que tenga.
+Victor Daniel Cortes Restrepo 2 minutos 43 segundos
+¿E Internet, cierto, entonces por qué? ¿Por qué te digo que esas son las arquitecturas? Porque resulta que los integradores trabajan con una arquitectura que.
+Victor Daniel Cortes Restrepo 2 minutos 54 segundos
+¿Es de muy rápida consulta, cierto?
+Victor Daniel Cortes Restrepo 3 minutos
+Entonces ellos tienen esa capa de consulta muy optimizada, incluso esa capa de consulta tienen unas unas maneras de administración de administrativas que manejan unos pool muy grandes de peticiones.
+Victor Daniel Cortes Restrepo 3 minutos 17 segundos
+¿Cierto?
+Victor Daniel Cortes Restrepo 3 minutos 19 segundos
+Y ese pul tan grande de peticiones no es algo que manejen generalmente las fuentes.
+Victor Daniel Cortes Restrepo 3 minutos 27 segundos
+Sí, las fuentes están preparadas para eventos, no están preparadas para que te llegue una petición para sacar de una tabla tantas columnas y tantos registros. Ellos están preparados es para que tú vayas e insertes un registro y vengas. Y si vas a alistar algo, generalmente ellos tienen unas capas de persistencia que se llaman transformadores, que se pegan a las capas de aplicaciones y ahí tienen como unas.
+Victor Daniel Cortes Restrepo 3 minutos 51 segundos
+Preso resoluciones o una data pre resuelta para las capas de aplicación, pero cuando tú le estás pegando al core directamente, tú lo que haces es pegarle al sistema de persistencia puro, cierto, al modelo relacional y los modelos relacionales no están dispuestos para eso, listo.
+
+Yeferson Nova Almanza
+4 minutos 4 segundos4:04
+Yeferson Nova Almanza 4 minutos 4 segundos
+Thank you.
+Yeferson Nova Almanza 4 minutos 5 segundos
+Y.
+Yeferson Nova Almanza 4 minutos 10 segundos
+hay ahí compita tengo unas dudas y es que dentro de los fix que que han surgido en arl y rentas nos hemos dado cuenta que los tiempos de extracción sí varían Y ayer hicimos unas pruebas con Julio y en el Oracle no vimos eh partición por columna o o o o o partición en el Oracle
+Yeferson Nova Almanza 4 minutos 29 segundos
+Y vimos ahí como unas columnas que faltaban con índices, esas esos temas que afectan la velocidad de la lectura en la base de datos de Oracle. Nosotros los trabajamos o los podemos entregar como como una como un cambio para acelerar un poquito
+Victor Daniel Cortes Restrepo
+4 minutos 41 segundos4:41
+Victor Daniel Cortes Restrepo 4 minutos 41 segundos
+No.
+Victor Daniel Cortes Restrepo 4 minutos 44 segundos
+Tú los puedes entregar como recomendaciones.
+
+Yeferson Nova Almanza
+4 minutos 48 segundos4:48
+Yeferson Nova Almanza 4 minutos 48 segundos
+Okay.
+V
+Victor Daniel Cortes Restrepo
+4 minutos 49 segundos4:49
+Victor Daniel Cortes Restrepo 4 minutos 49 segundos
+Sí podemos pegar como recomendaciones.
+
+Yeferson Nova Almanza
+4 minutos 50 segundos4:50
+Yeferson Nova Almanza 4 minutos 50 segundos
+¿Y se los entregaría a vos o a quién se le entregan o Andrés?
+V
+Victor Daniel Cortes Restrepo
+4 minutos 53 segundos4:53
+Victor Daniel Cortes Restrepo 4 minutos 53 segundos
+Sí, a mí a mí me los entregas. Los hallazgos me los puedes entregar a mí y hablamos con el arquitecto Yair. El arquitecto Yair es el arquitecto transversal de datos y el arquitecto realmente va, confirma eso y se lo tiene que pasar a la célula de seguridad social. La célula de seguridad social es la que tiene.
+
+Yeferson Nova Almanza
+4 minutos 56 segundos4:56
+Yeferson Nova Almanza 4 minutos 56 segundos
+Mhm.
+Yeferson Nova Almanza 5 minutos 1 segundo
+súper listo.
+V
+Victor Daniel Cortes Restrepo
+5 minutos 14 segundos5:14
+Victor Daniel Cortes Restrepo 5 minutos 14 segundos
+Todo el bagaje, cierto, para mirar a ver si conviene o no crear ese índice. Sí, porque te lo digo, porque tú puedes tener los índices optimizados a modelo relacional y el hecho de que yo te solicite un índice orientado a una consulta de peticiones, cierto de pool de peticiones.
+
+Yeferson Nova Almanza
+5 minutos 21 segundos5:21
+Yeferson Nova Almanza 5 minutos 21 segundos
+Actually.
+V
+Victor Daniel Cortes Restrepo
+5 minutos 34 segundos5:34
+Victor Daniel Cortes Restrepo 5 minutos 34 segundos
+Pues hace que hay veces se estrelle.
+Victor Daniel Cortes Restrepo 5 minutos 37 segundos
+Y no resuelva la base, que por eso es que se empieza a ralentizar. Sí, porque tú le envías la consulta y el man está aquí insertando de a un hito y cuando menos pinzas le robas toda la infraestructura, toda toda la capacidad de infraestructura se la roba la consulta del de peticiones.
+
+Yeferson Nova Almanza
+5 minutos 45 segundos5:45
+Yeferson Nova Almanza 5 minutos 45 segundos
+Yeah.
+Yeferson Nova Almanza 5 minutos 49 segundos
+Easy total.
+Yeferson Nova Almanza 5 minutos 54 segundos
+Sí, todo el cómputo.
+V
+Victor Daniel Cortes Restrepo
+5 minutos 56 segundos5:56
+Victor Daniel Cortes Restrepo 5 minutos 56 segundos
+¿Sí, entonces cómo se?
+
+Yeferson Nova Almanza
+5 minutos 58 segundos5:58
+Yeferson Nova Almanza 5 minutos 58 segundos
+de eso tenía otra duda Perdón interrumpo es que aprovecho que estás en ese pedacito para aclarar unas duitas que ya tenía
+V
+Victor Daniel Cortes Restrepo
+6 minutos6:00
+Victor Daniel Cortes Restrepo 6 minutos
+Señor.
+
+Yeferson Nova Almanza
+6 minutos 8 segundos6:08
+Yeferson Nova Almanza 6 minutos 8 segundos
+Yo veo que cuando se hace la extracción, cuando se hace la extracción estándar, cada una de las tablas que se lee del Oracle se lee por una sola conexión. De ahí tenemos un pool de conexiones máximo a usar o siempre va a ser una sola conexión.
+Yeferson Nova Almanza 6 minutos 28 segundos
+¿Por qué lo digo? Porque en algún momento empezamos a experimentar tiempos de lectura lentos y cuando pasaba de x segundos, la conexión del JDBC se perdía. Entonces quería saber si había un pool de conexiones o para trabajar. Entonces, cuando se pierda la conexión por tiempo, hacer un reintento o buscar alguna estrategia.
+V
+Victor Daniel Cortes Restrepo
+6 minutos 48 segundos6:48
+Victor Daniel Cortes Restrepo 6 minutos 48 segundos
+No tienes una sola conexión de servicio, pero tienes el pool de peticiones, sí, solamente una de servicio.
+
+Yeferson Nova Almanza
+6 minutos 52 segundos6:52
+Yeferson Nova Almanza 6 minutos 52 segundos
+Una sola ya está definida.
+V
+Victor Daniel Cortes Restrepo
+6 minutos 58 segundos6:58
+Victor Daniel Cortes Restrepo 6 minutos 58 segundos
+¿Por qué? Porque cuando intentaron hacer las 2 se tumbaron la base.
+Victor Daniel Cortes Restrepo 7 minutos 6 segundos
+Listo.
+Victor Daniel Cortes Restrepo 7 minutos 8 segundos
+Eso fue lo que ocurrió. Analítica ya intentó abrir 2 pool de conexiones y les fue fatal. Se tumbaron con la base.
+
+Yeferson Nova Almanza
+7 minutos 13 segundos7:13
+Yeferson Nova Almanza 7 minutos 13 segundos
+Okay.
+V
+Victor Daniel Cortes Restrepo
+7 minutos 17 segundos7:17
+Victor Daniel Cortes Restrepo 7 minutos 17 segundos
+¿Entonces, qué dijo infraestructura de la base de datos? No les vamos a dar más de conexiones, trabajen con una sola conexión de servicio listo.
+Victor Daniel Cortes Restrepo 7 minutos 26 segundos
+Tenemos es el pool de peticiones, ese sí lo puedes manejar listo.
+
+Yeferson Nova Almanza
+7 minutos 27 segundos7:27
+Yeferson Nova Almanza 7 minutos 27 segundos
+No.
+Yeferson Nova Almanza 7 minutos 30 segundos
+De una.
+V
+Victor Daniel Cortes Restrepo
+7 minutos 33 segundos7:33
+Victor Daniel Cortes Restrepo 7 minutos 33 segundos
+¿Entonces, qué es lo que va a pasar? Yo lo que le explicaba a mano es que cuando ocurre eso, que yo ya tengo una infraestructura muy robusta a un lado y me genera un desbalance en la infraestructura que tiene el negocio, pues uno lo que hace es obligar a la conexión a cerrarla.
+Victor Daniel Cortes Restrepo 7 minutos 51 segundos
+Sí.
+Victor Daniel Cortes Restrepo 7 minutos 52 segundos
+Y a esperar un momentico y ese momentico de espera para que es que generalmente esos momenticos pueden estar entre 1 y 7 minutos. Ese momentico de espera se hace es para que la base de datos.
+Victor Daniel Cortes Restrepo 8 minutos 7 segundos
+Cierre la conexión de cómo termina esa petición o esa o esa o esa resolución, ese result set. Una vez que la como terminada, hace un nuevo, una nueva gestión de la infraestructura, revisa cuáles son las peticiones que tiene por eventos, vuelve y gestiona toda esa infraestructura y ahí otra vez.
+Victor Daniel Cortes Restrepo 8 minutos 27 segundos
+Cuando uno la tome, ya va a estar fresca para retomar la sol la siguiente solicitud, sí me hago entender.
+Yeferson Nova Almanza
+8 minutos 35 segundos8:35
+Yeferson Nova Almanza 8 minutos 35 segundos
+Do.
+V
+Victor Daniel Cortes Restrepo
+8 minutos 35 segundos8:35
+Victor Daniel Cortes Restrepo 8 minutos 35 segundos
+Eso es lo que deberíamos hacer cuando nosotros tenemos estos riesgos. Esto ocurre porque le estamos pegando a Fuentes principales. O sea, si tú miras, está en un datagard o le está pegando directamente al sistema productivo, porque aquí no hay o DS. Sí, la falla en la arquitectura de alfa a nivel de datos.
+
+Yeferson Nova Almanza
+8 minutos 38 segundos8:38
+Yeferson Nova Almanza 8 minutos 38 segundos
+Okay.
+Yeferson Nova Almanza 8 minutos 40 segundos
+A los.
+Yeferson Nova Almanza 8 minutos 52 segundos
+Eso te iba a preguntar.
+V
+Victor Daniel Cortes Restrepo
+8 minutos 54 segundos8:54
+Victor Daniel Cortes Restrepo 8 minutos 54 segundos
+Es que no hay ODS y nunca lo han permitido, sí, por más de que.
+
+Yeferson Nova Almanza
+8 minutos 57 segundos8:57
+Yeferson Nova Almanza 8 minutos 57 segundos
+Okey, te iba a preguntar que.
+V
+Victor Daniel Cortes Restrepo
+9 minutos9:00
+Victor Daniel Cortes Restrepo 9 minutos
+Dale, dale.
+
+Yeferson Nova Almanza
+9 minutos 1 segundo9:01
+Yeferson Nova Almanza 9 minutos 1 segundo
+No, te voy a preguntar eso, una estrategia de no sé, tener una base de datos de tipo eventos que fuera trasladando información de del core, hacia una base de datos ya propia de la extracción, o sea, solo lectura. Sí, es alto que podamos nosotros optimizar a nuestra forma.
+V
+Victor Daniel Cortes Restrepo
+9 minutos 15 segundos9:15
+Victor Daniel Cortes Restrepo 9 minutos 15 segundos
+Me consulta.
+Victor Daniel Cortes Restrepo 9 minutos 17 segundos
+Exactamente, pero no.
+Victor Daniel Cortes Restrepo 9 minutos 20 segundos
+No, nunca la han permitido. Eso se ha peleado por varios arquitectos, incluyendo el arquitecto Yair, mi persona, y siempre nos dicen que eso es un gasto de infraestructura innecesario, que porque se replican los datos. Entonces, al ver esa posición, pues nos toca tomarnos otra posición y es tratar de no impactar las infraestructuras, ¿cierto?
+Victor Daniel Cortes Restrepo 9 minutos 39 segundos
+O sea, ya la compañía decide, ya nosotros hacemos caso, listo.
+
+Yeferson Nova Almanza
+9 minutos 39 segundos9:39
+Yeferson Nova Almanza 9 minutos 39 segundos
+Sí.
+V
+Victor Daniel Cortes Restrepo
+9 minutos 45 segundos9:45
+Victor Daniel Cortes Restrepo 9 minutos 45 segundos
+Pero tienes toda la razón, eso debería ser así.
+Victor Daniel Cortes Restrepo 9 minutos 49 segundos
+¿Entonces, qué es lo que va a pasar? Esto resulta siento crucial. ¿Qué es lo que yo noté en las revisiones que le hice que hice que le que hice a al desarrollo que actualmente que le hizo mal? Yo le decía, no lo estamos manejando. Entonces, claro, como esta vaina es tan rápida, glue es tan rápido, pues él suelta la conexión, va, genera el Jason allá.
+Victor Daniel Cortes Restrepo 10 minutos 13 segundos
+Y después de generar el Jason o el punto parquet, entonces viene y se pega y no la dejó descansar ni 1 minuto. Entonces tú no, tú no le estás aliviando los recursos.
+Victor Daniel Cortes Restrepo 10 minutos 24 segundos
+No estás dejando que ella en claro, no la sueltas. Es como si la conexión hubiera estado permanente. Entonces esa falla toca corregirla. Listo, este timer lo mejor es que lo metan allá en la base de configuraciones que están dynam. Listo. ¿Cuántos tiempos? ¿Cuánto tiempo esa malla debería en cada ciclo soltar? Sí.
+
+Yeferson Nova Almanza
+10 minutos 25 segundos10:25
+Yeferson Nova Almanza 10 minutos 25 segundos
+Está soltando.
+V
+Victor Daniel Cortes Restrepo
+10 minutos 44 segundos10:44
+Victor Daniel Cortes Restrepo 10 minutos 44 segundos
+Porque las bases de datos, dependiendo de la volumetría, de la normalización del modelo, de las tablas que yo esté tocando, pues van a tener una variación, que es de esto de una a 7 minutos. Yo digo que Axel I debe estar por ahí en unos 3 minuticos, listo, más o menos que cada conexión suelte 3 minutos.
+Victor Daniel Cortes Restrepo 11 minutos 4 segundos
+Para que Excel y pueda hacer su reconfiguración. Listo, puedes partir de ese número de espera 3 minutos. Yo sé que se va a alargar los tiempos de extracción, pero cuando tú mires las extracciones van a ser mucho más rápidas. Listo, eso es lo que debemos hacer, que si yo el timing, el timing que yo estoy manejando va de 3 minutos.
+
+Yeferson Nova Almanza
+11 minutos 8 segundos11:08
+Yeferson Nova Almanza 11 minutos 8 segundos
+Star.
+Yeferson Nova Almanza 11 minutos 20 segundos
+Okay.
+V
+Victor Daniel Cortes Restrepo
+11 minutos 25 segundos11:25
+Victor Daniel Cortes Restrepo 11 minutos 25 segundos
+Y va de 1 minuto, por ejemplo, y la extracción de la tabla se demoró los 10 minutos, pero si yo el timer le coloco los 3 minutos y ya la extracción se me demoró, ya no se me demoró los 10 minutos, sino que se me demoró 3 minutos, pues entre el balance del timer y el balance de la extracción ya estoy ganando tiempo, sí, y eso es y eso es exponencial. ¿Qué quiere decir que entre más?
+Victor Daniel Cortes Restrepo 11 minutos 47 segundos
+Entre más datos yo voy a extraer, más diferencia me tiene que hacer el timer listo.
+Victor Daniel Cortes Restrepo 11 minutos 55 segundos
+Ustedes son ejemplo, si yo voy a extraer 284000000 de registros y yo sé que los extraigo en 12 horas, si yo modifico el timer en una escala de 4 minutos, un ejemplo, pues esa escala mínimo mínimo me debe bajar el 40%. Si me hago entender, así funciona este ejercicio.
+
+Yeferson Nova Almanza
+11 minutos 55 segundos11:55
+Yeferson Nova Almanza 11 minutos 55 segundos
+Yeah.
+V
+Victor Daniel Cortes Restrepo
+12 minutos 16 segundos12:16
+Victor Daniel Cortes Restrepo 12 minutos 16 segundos
+Y debería funcionar listo.
+Victor Daniel Cortes Restrepo 12 minutos 19 segundos
+Y eso es lo que tú debes revisar cuando lo ejecutes, si se cumple o no se cumple, si me hago entender.
+Yeferson Nova Almanza
+12 minutos 19 segundos12:19
+Yeferson Nova Almanza 12 minutos 19 segundos
+Siri.
+V
+Victor Daniel Cortes Restrepo
+12 minutos 29 segundos12:29
+Victor Daniel Cortes Restrepo 12 minutos 29 segundos
+Hasta ahí vamos bien de este ejercicio como se debería plantear.
+
+Yeferson Nova Almanza
+12 minutos 33 segundos12:33
+Yeferson Nova Almanza 12 minutos 33 segundos
+Sí, hasta ahí vamos bien compa hoy.
+V
+Victor Daniel Cortes Restrepo
+12 minutos 35 segundos12:35
+Victor Daniel Cortes Restrepo 12 minutos 35 segundos
+Listo, vale, entonces viene el siguiente ejercicio. Resulta que los ciclos tienen otros compañeritos que van internos, que son los conjuntos de extracción. Realmente los conjuntos de extracción son un grupo de tablas.
+Victor Daniel Cortes Restrepo 12 minutos 52 segundos
+Sí.
+Victor Daniel Cortes Restrepo 12 minutos 54 segundos
+Esos conjuntos.
+Victor Daniel Cortes Restrepo 12 minutos 57 segundos
+Tienen ese grupito de tablas.
+Victor Daniel Cortes Restrepo 13 minutos 1 segundo
+Y esos conjuntos son acompañados por otra otro asunto, otro contexto que es la forma.
+Victor Daniel Cortes Restrepo 13 minutos 9 segundos
+¿Por qué la forma?
+Victor Daniel Cortes Restrepo 13 minutos 12 segundos
+Porque la forma es la que me dice la manera en que yo voy a interactuar con la infraestructura, entonces la forma es cascada.
+Victor Daniel Cortes Restrepo 13 minutos 21 segundos
+Paralela.
+Victor Daniel Cortes Restrepo 13 minutos 25 segundos
+O segmentada.
+Victor Daniel Cortes Restrepo 13 minutos 28 segundos
+¿Sí, entonces qué me tiene que decir a este grupito de tablas? Yo en un ciclo puedo tener varios grupitos de tablas, sí, yo puedo tener varios grupitos de tablas, los conjuntos se ejecutan en orden o paralelos, no, los conjuntos se ejecutan en cascada. Sí, si tú tienes en un ciclo los conjuntos, ejecutas primero el conjunto uno y después ejecutas el conjunto 2.
+Victor Daniel Cortes Restrepo 13 minutos 48 segundos
+Listo.
+Victor Daniel Cortes Restrepo 13 minutos 50 segundos
+¿Pero qué tienen las características de los conjuntos que tú puedes tener? Las primeras 3 tablitas en cascada y la las siguientes 5 tablitas en otro grupo las tienes paralela y todavía me está dando el ciclo en ese peso de esos conjuntos de las unidades de costo. Todavía me da para que yo no tenga que soltar un timer, si me hago entender, sino que por esa misma conexión.
+
+Yeferson Nova Almanza
+14 minutos 9 segundos14:09
+Yeferson Nova Almanza 14 minutos 9 segundos
+Sí.
+V
+Victor Daniel Cortes Restrepo
+14 minutos 11 segundos14:11
+Victor Daniel Cortes Restrepo 14 minutos 11 segundos
+Todavía me está permitiendo hacer todo ese movimiento, sí.
+
+Yeferson Nova Almanza
+14 minutos 15 segundos14:15
+Yeferson Nova Almanza 14 minutos 15 segundos
+Sí, tengo todavía unidades de costo para gastar, por decirlo.
+V
+Victor Daniel Cortes Restrepo
+14 minutos 18 segundos14:18
+Victor Daniel Cortes Restrepo 14 minutos 18 segundos
+Exactamente para que la para decirlo las unidades de costo. Yo te recomiendo que como tú no sabes en qué momento se generan un ejercicio, por ejemplo, de solicitud grande de del negocio. Sí, porque Axel y tiene algunos procesos que son masivos.
+Victor Daniel Cortes Restrepo 14 minutos 37 segundos
+Yo lo que le recomendaba a Manuel en su momento es que las unidades de costo, si tú sabes que el máximo de unidades de costos, no sé, son 1000 millones de unidades de costos, maneja solamente como máximo el 65%, o sea, colócale 6565 650000 millones, listo.
+
+Yeferson Nova Almanza
+14 minutos 58 segundos14:58
+Yeferson Nova Almanza 14 minutos 58 segundos
+Mhm.
+V
+Victor Daniel Cortes Restrepo
+14 minutos 58 segundos14:58
+Victor Daniel Cortes Restrepo 14 minutos 58 segundos
+¿Por qué se hace así? Porque como no sabes en qué momento entren en los procesos de Axel y los robustos, entonces con eso cubres ese 35% que posiblemente la base de datos te va a solicitar. Mientras ella va llenando y va analizando y va haciendo, pues tú vas terminando el proceso. Una vez que le das tiempo al proceso, ¿para qué? Para que suelte.
+Victor Daniel Cortes Restrepo 15 minutos 21 segundos
+Sí, para que se balancee bien.
+
+Yeferson Nova Almanza
+15 minutos 25 segundos15:25
+Yeferson Nova Almanza 15 minutos 25 segundos
+Listo.
+V
+Victor Daniel Cortes Restrepo
+15 minutos 26 segundos15:26
+Victor Daniel Cortes Restrepo 15 minutos 26 segundos
+Listo, entonces ese debería ser como el ejercicio y aquí ya teniendo la forma, ya teniendo los conjuntos, ya sabes que aquí son grupos de tablas, ya sabes cómo son los ciclos de extracción. Entonces viene la parte de refinamiento. Yo que le decía a mano, parce, sumerce me tiene ya refinamientos como si ya conociéramos toda la integridad de la base.
+Victor Daniel Cortes Restrepo 15 minutos 50 segundos
+Pero su merced no la conoce, sí.
+Victor Daniel Cortes Restrepo 15 minutos 54 segundos
+No la conoce porque está aprendiendo con los datos volumétricos. Todavía su mercé no está consciente de toda la volumetría, sí, y está optimizando.
+
+Yeferson Nova Almanza
+16 minutos 3 segundos16:03
+Yeferson Nova Almanza 16 minutos 3 segundos
+¿Para conocer las filas te refieres?
+V
+Victor Daniel Cortes Restrepo
+16 minutos 6 segundos16:06
+Victor Daniel Cortes Restrepo 16 minutos 6 segundos
+Claro para conocer las unidades de costo.
+
+Yeferson Nova Almanza
+16 minutos 7 segundos16:07
+Yeferson Nova Almanza 16 minutos 7 segundos
+Sí, te iba a preguntar eso, ¿cómo estimo en la unidad de costos si no conozco las filas? Si había un conteo, una tabla de conteos o algo así.
+V
+Victor Daniel Cortes Restrepo
+16 minutos 15 segundos16:15
+Victor Daniel Cortes Restrepo 16 minutos 15 segundos
+Exacto, entonces, ¿qué es lo que pasa? Que este ejercicio yo le decía, cada tabla me cada cada cada vez que yo termino un ciclo, cada vez que yo termino un conjunto hay algo que se llaman dependencias.
+Victor Daniel Cortes Restrepo 16 minutos 32 segundos
+¿Esas dependencias qué son cuando tú terminas la extracción? El ejercicio de dependencia es lo que tiene que ir a hacer es tomarme de cada tabla los atributos que yo voy a necesitar para el siguiente conjunto de tablas. ¿Sí, eso cómo se ve?
+Victor Daniel Cortes Restrepo 16 minutos 51 segundos
+Cuando un ejemplo, yo traigo extraigo la context operation, listo.
+Victor Daniel Cortes Restrepo 16 minutos 57 segundos
+¿Qué pasa con la context operation? La context operation. Yo extraje mi grupito y me dice que son 4000000 generalmente por como por cuatro cuatro atributos. Sí, entonces realmente son 16000000 las unidades de costo, pero la context operation, la siguiente, el siguiente conjunto de tablas me trae, no sé, una póliza de C o y yo necesito solamente los IDs únicos de la context operation. Entonces yo me.
+Victor Daniel Cortes Restrepo 17 minutos 22 segundos
+Una dependencia de y de únicos de context operation, cierto, y de ahí esos entran como si.
+Victor Daniel Cortes Restrepo 17 minutos 29 segundos
+En el web de el atributo que viene para la siguiente grupo de conjuntos. Sí me hago entender.
+Victor Daniel Cortes Restrepo 17 minutos 39 segundos
+Esa te queda clara.
+Yeferson Nova Almanza
+17 minutos 39 segundos17:39
+Yeferson Nova Almanza 17 minutos 39 segundos
+O K Te entiendo.
+V
+Victor Daniel Cortes Restrepo
+17 minutos 40 segundos17:40
+Victor Daniel Cortes Restrepo 17 minutos 40 segundos
+¿Sí, porque por qué se debe manejar así?
+
+Yeferson Nova Almanza
+17 minutos 42 segundos17:42
+Yeferson Nova Almanza 17 minutos 42 segundos
+Sí.
+V
+Victor Daniel Cortes Restrepo
+17 minutos 45 segundos17:45
+Victor Daniel Cortes Restrepo 17 minutos 45 segundos
+Porque eso me Evita que vaya y consulte tablas de de muchos millones de miles de millones de registros. ¿Qué es lo que sucede? ¿Tú ya notaste algo?
+Victor Daniel Cortes Restrepo 17 minutos 54 segundos
+De mala normalización en el sistema cipren.
+Victor Daniel Cortes Restrepo 17 minutos 57 segundos
+Sí.
+Victor Daniel Cortes Restrepo 17 minutos 59 segundos
+Eso está peor en axely hay tablas que ni siquiera están para todos los particionadas y tú tienes miles de millones de registros.
+Victor Daniel Cortes Restrepo 18 minutos 8 segundos
+Sí.
+Victor Daniel Cortes Restrepo 18 minutos 10 segundos
+Pese al tener esa esa posible exposición que hace uno, pues genera las dependencias y deja las dependencias como si fuera un ciclo estándar.
+Victor Daniel Cortes Restrepo 18 minutos 18 segundos
+No, en momentos clave, no.
+Victor Daniel Cortes Restrepo 18 minutos 20 segundos
+O sea, cada vez que yo termine un conjunto me genera unas dependencias de las tablas los atributos que yo voy a reutilizar de esa tabla yo llego y los dejo ahí en un s 3 que es el de cadena de abastecimiento y en SS 3, lo que debería ser el siguiente proceso. Glúesira corroborarme que esas dependencias existan para que me las tome para las tablas como si fuera un in si.
+Victor Daniel Cortes Restrepo 18 minutos 40 segundos
+Me hago entender.
+Victor Daniel Cortes Restrepo 18 minutos 42 segundos
+Por el atributo.
+Victor Daniel Cortes Restrepo 18 minutos 44 segundos
+Entonces es como si yo tuviera una lista de valores.
+
+Yeferson Nova Almanza
+18 minutos 45 segundos18:45
+Yeferson Nova Almanza 18 minutos 45 segundos
+Sí, te entiendo.
+V
+Victor Daniel Cortes Restrepo
+18 minutos 48 segundos18:48
+Victor Daniel Cortes Restrepo 18 minutos 48 segundos
+Sí, esas dependencias se pueden particionar. Sí, yo le explicaba a manu. Sí, claro, porque pueden haber tablas muy grandes.
+Victor Daniel Cortes Restrepo 18 minutos 57 segundos
+Tú puedes pasar de un conjunto de tablas que vienes en cascada y te toca segmentarlos y te toca sacar a otro ciclo.
+Victor Daniel Cortes Restrepo 19 minutos 4 segundos
+¿Sí, qué tienes que hacer?
+Victor Daniel Cortes Restrepo 19 minutos 5 segundos
+Pues dejar la dependencia segmentada.
+Victor Daniel Cortes Restrepo 19 minutos 7 segundos
+Si tú sabes que que como máximo en ese ciclo, no sé, tienes cuatro 4000000 de registros, los que puedes hacer, pues tú le dices, oiga, Genéreme 4000000.
+Victor Daniel Cortes Restrepo 19 minutos 19 segundos
+Sí y no.
+Victor Daniel Cortes Restrepo 19 minutos 22 segundos
+Seguramente en el primer ejercicio no lo vas a tener tan claro, por eso el primer ejercicio se hace, créeme, un solo conjunto que vaya en un solo ciclo que vaya en la forma cascada y que tenga una sola tabla.
+Victor Daniel Cortes Restrepo 19 minutos 37 segundos
+Sí.
+Victor Daniel Cortes Restrepo 19 minutos 38 segundos
+¿Por qué se hace eso?
+Victor Daniel Cortes Restrepo 19 minutos 40 segundos
+¿Porque tú no lo conoces, entonces cómo vas a optimizar las las dependencias segmentadas? ¿Cómo le vas a decir a él que me las Segmente?
+
+Yeferson Nova Almanza
+19 minutos 41 segundos19:41
+Yeferson Nova Almanza 19 minutos 41 segundos
+O K.
+V
+Victor Daniel Cortes Restrepo
+19 minutos 48 segundos19:48
+Victor Daniel Cortes Restrepo 19 minutos 48 segundos
+En tanto que el promedio es tanto, no, no conoce esos datos.
+Victor Daniel Cortes Restrepo 19 minutos 52 segundos
+Sí.
+Victor Daniel Cortes Restrepo 19 minutos 53 segundos
+El orquestador, no conoce esos datos y esos datos dónde deben quedar en la configuración para que el repositorio vaya tomando qué más o menos datos de cuál es el número de dependencias que me genera el ciclo, uno, el número de dependencias que me se genera, el ciclo 2, y así sucesivamente.
+Victor Daniel Cortes Restrepo 20 minutos 9 segundos
+Sí, porque con eso entonces él ya sabe más o menos que dar directrices de balanceo.
+Victor Daniel Cortes Restrepo 20 minutos 15 segundos
+Entonces yo ya sé que me van a generar un ejemplo, la.
+Victor Daniel Cortes Restrepo 20 minutos 18 segundos
+La TIR Palismo que te genera como 200 y punto de millones de registros.
+Victor Daniel Cortes Restrepo 20 minutos 22 segundos
+Cada vez que tú la consultas.
+Victor Daniel Cortes Restrepo 20 minutos 24 segundos
+Para un solo mes.
+Victor Daniel Cortes Restrepo 20 minutos 26 segundos
+Sí, entonces lo lo que va a hacer es que te va a decir o k.
+Victor Daniel Cortes Restrepo 20 minutos 32 segundos
+260000000 de registros me genera latir Party moment, pero yo las dependencias no me sirven así tener 260000000 de de atributos únicos.
+Victor Daniel Cortes Restrepo 20 minutos 43 segundos
+¿Si me hago entender qué, qué tengo que hacer?
+Victor Daniel Cortes Restrepo 20 minutos 46 segundos
+Pues yo manejo, yo sé que los atributos únicos, no sé, me van a generar 100000000 y en esos 6000000, yo sé que 30000000, sí lo puede manejar la consulta que yo envío, entonces le digo.
+Victor Daniel Cortes Restrepo 20 minutos 55 segundos
+Como el promedio es 100000000, pues le manejo unas escalas de partición. Sí, y esas particiones son las que él me va a generar listo y él me tiene que marcar.
+Victor Daniel Cortes Restrepo 21 minutos 5 segundos
+¿Qué dependencias ha usado y qué dependencias donde no se quedó?
+Victor Daniel Cortes Restrepo 21 minutos 8 segundos
+Porque la extracción, al ser tan grande volumétricamente a nivel de costos, él me debería permitir una reanudación.
+Victor Daniel Cortes Restrepo 21 minutos 16 segundos
+Sí entonces, cada vez que él termine y genere una dependencia, es como una especie de check point.
+Victor Daniel Cortes Restrepo 21 minutos 21 segundos
+Sí, yo le decía a manu. Eso debe marcarse allá en Dynamo.
+Victor Daniel Cortes Restrepo 21 minutos 25 segundos
+Tú haces el checkpoint, tú dices, ah, yo ya la generé y yo ya la leí y la marcas, Pum.
+Victor Daniel Cortes Restrepo 21 minutos 33 segundos
+Sí, porque si no, no vamos a poder hacer.
+Victor Daniel Cortes Restrepo 21 minutos 38 segundos
+¿Una retoma del ejercicio? Sí, porque en cualquier momento se nos puede caer.
+Victor Daniel Cortes Restrepo 21 minutos 42 segundos
+Y ahí que es tener en cuenta que esto no tiene ni multizona ni nada. ¿El data Lake?
+Victor Daniel Cortes Restrepo 21 minutos 47 segundos
+Está orquestado y orquestado como una solución años 90, en donde no existía nada de contingencia. Nada de eso.
+Victor Daniel Cortes Restrepo 21 minutos 54 segundos
+No tiene un multisona, no tiene nada de eso.
+Victor Daniel Cortes Restrepo 21 minutos 58 segundos
+Si tú lo miras en el diagrama, si es que no hay nada de contingencia.
+Yeferson Nova Almanza
+21 minutos 59 segundos21:59
+Yeferson Nova Almanza 21 minutos 59 segundos
+O K.
+Yeferson Nova Almanza 22 minutos 3 segundos
+Y no tiene nada.
+V
+Victor Daniel Cortes Restrepo
+22 minutos 5 segundos22:05
+Victor Daniel Cortes Restrepo 22 minutos 5 segundos
+Esa contingencia está dada para los datos. Sí que tú ves que hay servicios.
+Victor Daniel Cortes Restrepo 22 minutos 9 segundos
+Pues, que los repositorios que tal cosa pero pal proceso como tal no nos toca manejarlo. Manualito listo.
+Victor Daniel Cortes Restrepo 22 minutos 18 segundos
+Entonces, ya con esto hasta ahí vamos bien.
+Victor Daniel Cortes Restrepo 22 minutos 21 segundos
+Vamos bien con el con el con la explicación.
+
+Yeferson Nova Almanza
+22 minutos 23 segundos22:23
+Yeferson Nova Almanza 22 minutos 23 segundos
+Ahí vamos bien.
+V
+Victor Daniel Cortes Restrepo
+22 minutos 24 segundos22:24
+Victor Daniel Cortes Restrepo 22 minutos 24 segundos
+¿Listo, que tú ya me preguntabas, cómo ha cesar? Retoma. Esa retoma es esta.
+Victor Daniel Cortes Restrepo 22 minutos 29 segundos
+Y entonces yo lo que le explicaba a manu, parce, vaya, vaya agregando una tabla de un ciclo y dependiendo cómo usted va ya tiene la extracción, pero usted ya puede decir, Ah, esta tabla me sirve todavía para este ciclo.
+Victor Daniel Cortes Restrepo 22 minutos 40 segundos
+Entonces ya la mueve para acá.
+Victor Daniel Cortes Restrepo 22 minutos 41 segundos
+Sí.
+Victor Daniel Cortes Restrepo 22 minutos 42 segundos
+¿Pero el ejercicio de optimización no es tratar de gestionar?
+Victor Daniel Cortes Restrepo 22 minutos 47 segundos
+Todo el ejercicio completo de configuración de una, porque si no, no vas a conocer cómo se van extrayendo. ¿Si me hago entender?
+Victor Daniel Cortes Restrepo 22 minutos 56 segundos
+Entonces, un tú deberías es tomar y extraer una tabla a la vez, y ahí vas viendo.
+Victor Daniel Cortes Restrepo 23 minutos 2 segundos
+¿Listo?
+
+Yeferson Nova Almanza
+23 minutos 4 segundos23:04
+Yeferson Nova Almanza 23 minutos 4 segundos
+¿Okey?
+V
+Victor Daniel Cortes Restrepo
+23 minutos 7 segundos23:07
+Victor Daniel Cortes Restrepo 23 minutos 7 segundos
+Y ya una vez este ejercicio tiene alrededor de.
+Victor Daniel Cortes Restrepo 23 minutos 16 segundos
+Tiene alrededor de 99 tablas listo a extraer.
+Victor Daniel Cortes Restrepo 23 minutos 21 segundos
+¿Para que tú lo tengas en cuenta, vale?
+
+Yeferson Nova Almanza
+23 minutos 25 segundos23:25
+Yeferson Nova Almanza 23 minutos 25 segundos
+O K.
+V
+Victor Daniel Cortes Restrepo
+23 minutos 28 segundos23:28
+Victor Daniel Cortes Restrepo 23 minutos 28 segundos
+Qué va a pasar estas fasecitas que yo ya las entregué, lo que te dicen es mire, oiga, use uno el tronco que está común. Genéreme esta tabla esta tabla y esta tabla.
+Victor Daniel Cortes Restrepo 23 minutos 39 segundos
+¿Ah, estas tienen dependencias? Ah, sí.
+Victor Daniel Cortes Restrepo 23 minutos 42 segundos
+Esta es la tabla principal que debe tener el periodo.
+Victor Daniel Cortes Restrepo 23 minutos 45 segundos
+Esta tabla debería retomar.
+Victor Daniel Cortes Restrepo 23 minutos 49 segundos
+El el ID de esta esta tabla también tiene ahí unas dependencias que es agriated Policy Event Policy Prepolicy productive 2.
+Victor Daniel Cortes Restrepo 23 minutos 59 segundos
+Y esos son los que van a venir acá, pero eso es un análisis hecho desde el modelo de consulta. ¿Listo?
+Victor Daniel Cortes Restrepo 24 minutos 7 segundos
+Ese modelo de consulta debería ser igual al modelo, digamos, óptimo, de de de de de extracción.
+Victor Daniel Cortes Restrepo 24 minutos 17 segundos
+Digamos que sí debería tener la relación, pero no necesariamente quiere decir que vayan a tener el mismo orden, si me hago entender.
+Victor Daniel Cortes Restrepo 24 minutos 26 segundos
+¿Porque?
+Victor Daniel Cortes Restrepo 24 minutos 27 segundos
+Como es una consulta, él no sabe los valores volumétricos.
+Victor Daniel Cortes Restrepo 24 minutos 31 segundos
+Tú no sabes si esto que él está aquí diciendo que esto es cascada, pues tengas que volverlo segmentado en algún momento, sí.
+Victor Daniel Cortes Restrepo 24 minutos 37 segundos
+¿O sí, definitivamente tú miras y tú dices, oiga, no? Esto se puede paralizar. Sí, me hago entender.
+Victor Daniel Cortes Restrepo 24 minutos 45 segundos
+Porque él no tiene datos volumétricos, él tiene datos que a nivel de consulta el trazo de consulta, sí.
+Victor Daniel Cortes Restrepo 24 minutos 52 segundos
+Yo siempre, manu, porque me pidió ese ese apoyo gráfico, sí, pero yo generalmente no trabajo con apoyos gráficos.
+Victor Daniel Cortes Restrepo 25 minutos
+Yo trabajo desde las desde las consultas, sí.
+Victor Daniel Cortes Restrepo 25 minutos 6 segundos
+Es que es lo que yo le decía, mire.
+Victor Daniel Cortes Restrepo 25 minutos 9 segundos
+¿Usted tiene aquí?
+Victor Daniel Cortes Restrepo 25 minutos 10 segundos
+Esta, que es la primera pivote y aquí hice.
+Victor Daniel Cortes Restrepo 25 minutos 13 segundos
+¿P fecha de inicio? YP fecha fin.
+Victor Daniel Cortes Restrepo 25 minutos 16 segundos
+Sí, esa es fecha de inicio y esa es fecha. ¿Fin, si usted mira los atributos como son ellas, vienen qué?
+Victor Daniel Cortes Restrepo 25 minutos 23 segundos
+¿Ellas cómo vienen ellas vienen, es por fecha y hora, fecha YY un formato de 24 horas listo?
+Victor Daniel Cortes Restrepo 25 minutos 32 segundos
+Si tú miras los codis originales, que son los que ya tiene manu, ya metidos. ¿Sí entonces yo le decía, mire, como usted ya conoce que eso es fecha y hora, pues usted le coloca la fecha de inicio y la fecha fin que usted quiere? Sí, ahora esa fecha inicio esa fecha. ¿Fin debe ser configurada un periodo? Sí, yo le explicaba a él cuando uno maneja las tablas de control.
+Victor Daniel Cortes Restrepo 25 minutos 53 segundos
+Pues usted no le va a configurar en la tabla de control.
+Victor Daniel Cortes Restrepo 25 minutos 56 segundos
+Es que lo quiero desde el primero de septiembre hasta el 30 de septiembre. ¿Usted le configura?
+Victor Daniel Cortes Restrepo 26 minutos 1 segundo
+Yo tengo el periodo de septiembre.
+Victor Daniel Cortes Restrepo 26 minutos 3 segundos
+Sí, qué es lo que él debe hacer, pues internamente él va a coger la fecha de inicio y la fecha fin del periodo.
+Victor Daniel Cortes Restrepo 26 minutos 11 segundos
+Sí como las necesita Axel.
+
+Yeferson Nova Almanza
+26 minutos 12 segundos26:12
+Yeferson Nova Almanza 26 minutos 12 segundos
+Sí.
+V
+Victor Daniel Cortes Restrepo
+26 minutos 14 segundos26:14
+Victor Daniel Cortes Restrepo 26 minutos 14 segundos
+Sí, entonces usted puede manejar eso como una tabla de de tiempo, como usted lo quiera manejar, pero él debe saber que ese periodo de inicio, ese periodo fin es el que usted debe tomar en cuenta.
+Victor Daniel Cortes Restrepo 26 minutos 26 segundos
+Sí.
+Victor Daniel Cortes Restrepo 26 minutos 29 segundos
+Esa es la esa es la la situación.
+Yeferson Nova Almanza
+26 minutos 35 segundos26:35
+Yeferson Nova Almanza 26 minutos 35 segundos
+Es tu compita. Tengo unas preguntas para que las tenía por acá.
+Yeferson Nova Almanza 26 minutos 40 segundos
+Yo he visto que hay unos movimientos de datos entre bronce y silver que no, no entiendo cuál es el sentido y son movimientos que suben la latencia del proceso porque son movimientos de red entre la WS.
+Yeferson Nova Almanza 26 minutos 54 segundos
+Un ejemplo que tenía que tenía era, por ejemplo, en la Remediación cuando se pasa de de copia los datos, mejor dicho, desde el desde el bronce sirven sin cambiar absolutamente nada.
+V
+Victor Daniel Cortes Restrepo
+26 minutos 55 segundos26:55
+Victor Daniel Cortes Restrepo 26 minutos 55 segundos
+O K.
+
+Yeferson Nova Almanza
+27 minutos 5 segundos27:05
+Yeferson Nova Almanza 27 minutos 5 segundos
+¿O sea, no, no hay nada que cambie, entonces no entiendo si es una deuda técnica desde un momento o existe una un por qué?
+V
+Victor Daniel Cortes Restrepo
+27 minutos 16 segundos27:16
+Victor Daniel Cortes Restrepo 27 minutos 16 segundos
+Son activables.
+Victor Daniel Cortes Restrepo 27 minutos 18 segundos
+¿Entonces ya yo ya te explico cuál es el activable de eso?
+Victor Daniel Cortes Restrepo 27 minutos 23 segundos
+En abrimos.
+Victor Daniel Cortes Restrepo 27 minutos 26 segundos
+Emisiones.
+Victor Daniel Cortes Restrepo 27 minutos 31 segundos
+Con el lo solución 1.2, yo creo que va a ser este.
+Victor Daniel Cortes Restrepo 27 minutos 47 segundos
+¿Es que ya voy refinando el asunto, qué es lo que sucede?
+Victor Daniel Cortes Restrepo 27 minutos 50 segundos
+Resulta que al principio a nosotros no nos dieron permiso para hacer remediaciones capa media.
+Victor Daniel Cortes Restrepo 27 minutos 55 segundos
+Digo al principio porque no estaba ni ni gobierno.
+Victor Daniel Cortes Restrepo 27 minutos 59 segundos
+Y estaba la arquitectura de datos, yair lleva como 6 meses acá.
+Victor Daniel Cortes Restrepo 28 minutos 3 segundos
+Sí.
+Victor Daniel Cortes Restrepo 28 minutos 4 segundos
+Test al no al no haber ese Gobierno, pues no había quien definiera, cierto.
+Victor Daniel Cortes Restrepo 28 minutos 11 segundos
+Entonces lo que nos dijeron ustedes no van a hacer remediación capa media.
+Victor Daniel Cortes Restrepo 28 minutos 15 segundos
+Sin embargo, nosotros sí necesitamos un componente de remediación.
+Victor Daniel Cortes Restrepo 28 minutos 20 segundos
+¿Entonces yo les dije o k cuál es el alcance de ese componente?
+Victor Daniel Cortes Restrepo 28 minutos 23 segundos
+Entonces nos pasaron una serie como de reglas de negocio para remediar entre esas hay caracteres especiales.
+Victor Daniel Cortes Restrepo 28 minutos 31 segundos
+Hay espacios al al final al inicio.
+Victor Daniel Cortes Restrepo 28 minutos 36 segundos
+Hay.
+Victor Daniel Cortes Restrepo 28 minutos 38 segundos
+¿Formatos o o máscaras de números cierto?
+Victor Daniel Cortes Restrepo 28 minutos 43 segundos
+Esas son como las reglas más tradicionales que tiene el modelo de remediación. No es, pero nosotros no tenemos un modelo de remediación robusto.
+
+Yeferson Nova Almanza
+28 minutos 50 segundos28:50
+Yeferson Nova Almanza 28 minutos 50 segundos
+¿Ah o K?
+V
+Victor Daniel Cortes Restrepo
+28 minutos 53 segundos28:53
+Victor Daniel Cortes Restrepo 28 minutos 53 segundos
+Entonces yo les dije, mire yo para no dejar a Gobierno.
+Victor Daniel Cortes Restrepo 28 minutos 59 segundos
+Pues ya que no nos dejan remediar, capa media para no dejarlo loco, lo que vamos a hacer es una etapa de validación. ¿Qué tiene que hacer? La etapa de validación coge los datos.
+Victor Daniel Cortes Restrepo 29 minutos 9 segundos
+De la tapa oro 11 y de acuerdo a las reglas de negocio que ustedes nos den, que nos diga qué atributos cumplen o no cumplen con esas reglas.
+Victor Daniel Cortes Restrepo 29 minutos 19 segundos
+Entonces, si yo digo no, puede tener espacios al inicio, pues entonces él me va a decir, Ah, este atributo en esta en esta pila para esta fila no cumple.
+Victor Daniel Cortes Restrepo 29 minutos 30 segundos
+Y me lo va a llevar y me lo va a marcar como si no cumpliera cierto.
+Victor Daniel Cortes Restrepo 29 minutos 34 segundos
+Y eso me debería generar un un reporte, pero cuando ustedes habiliten un modelo de remediación, pues el modelo de remediación va a tomar ese diagnóstico y va a venir y va a coger ese dato y le hace la trazabilidad.
+Victor Daniel Cortes Restrepo 29 minutos 47 segundos
+Estado a Estado B le quité el espacio al final se lo removió.
+Victor Daniel Cortes Restrepo 29 minutos 52 segundos
+Mire cómo quedó. Mire cómo se remedió.
+Victor Daniel Cortes Restrepo 29 minutos 54 segundos
+Sí, y ese estado final es el que debería retomar quién la zona de consolidación no, no.
+Victor Daniel Cortes Restrepo 29 minutos 59 segundos
+La no el estado anterior, sino el estado final.
+Victor Daniel Cortes Restrepo 30 minutos 2 segundos
+Sí, entonces yo les decía, pero eso es un activador, porque como ustedes me están diciendo.
+Victor Daniel Cortes Restrepo 30 minutos 8 segundos
+Ustedes no pueden remediar en capa media, pues uno saca solamente la validación. Si ustedes quieren sacar después en gobierno, en reporte o lo que quieran, pues sáquenlo.
+Victor Daniel Cortes Restrepo 30 minutos 15 segundos
+Pero si usted no me dejan remediar, pues yo no activo. Las validaciones de remediación. Eso debería ser lo que pasa.
+Victor Daniel Cortes Restrepo 30 minutos 21 segundos
+Entonces, por eso tú ves que para NIF pues no se toca nada.
+Victor Daniel Cortes Restrepo 30 minutos 25 segundos
+Entonces, manu debe tener por ahí el activador, con uno y cero en la lógica de cuándo sí debe pasar por el flujo de Remediación. Y cuándo debería llegar directamente así, sanito al otro lado.
+
+Yeferson Nova Almanza
+30 minutos 37 segundos30:37
+Yeferson Nova Almanza 30 minutos 37 segundos
+O K ya entiendo el el por qué el movimiento.
+V
+Victor Daniel Cortes Restrepo
+30 minutos 38 segundos30:38
+Victor Daniel Cortes Restrepo 30 minutos 38 segundos
+¿Listo?
+Victor Daniel Cortes Restrepo 30 minutos 41 segundos
+¿Y por qué dices que se sube la latencia? ¿Cuánto se está subiendo?
+
+Yeferson Nova Almanza
+30 minutos 45 segundos30:45
+Yeferson Nova Almanza 30 minutos 45 segundos
+Lo que pasa es que con el con el fix de lo de rentas.
+Yeferson Nova Almanza 30 minutos 52 segundos
+Como yo nos dimos cuenta que habían.
+Yeferson Nova Almanza 30 minutos 56 segundos
+Ejecuciones que se hicieron antes, como en octubre, que estaban durando más o menos, 130% menos que las ejecuciones que él hizo.
+Victor Daniel Cortes Restrepo
+31 minutos31:00
+Victor Daniel Cortes Restrepo 31 minutos
+Sí.
+
+Yeferson Nova Almanza
+31 minutos 6 segundos31:06
+Yeferson Nova Almanza 31 minutos 6 segundos
+Antier y ayer, entonces yo le dije, pues es que yo noto que el componente de extracción o sea del tiempo debería ser el mismo porque yo no, o sea el fix no toca esa parte.
+V
+Victor Daniel Cortes Restrepo
+31 minutos 7 segundos31:07
+Victor Daniel Cortes Restrepo 31 minutos 7 segundos
+O K.
+
+Yeferson Nova Almanza
+31 minutos 17 segundos31:17
+Yeferson Nova Almanza 31 minutos 17 segundos
+Y el fix Directl es tampoco entonces, si quieres saquémosle los tiempos a cada una de las ejecuciones lánzala y empezamos a ver cuánto está jalando un crawler en en tiempos por segundo. ¿Cuántas filas está trayendo? Empezamos a medir.
+Yeferson Nova Almanza 31 minutos 31 segundos
+Y empezamos a mirar en qué parte es donde se está subiendo el tiempo. Ahí encontramos que el que es la el oráculo que no está teniendo.
+Yeferson Nova Almanza 31 minutos 40 segundos
+Como la misma velocidad constante y una posible latencia entre de red. ¿Entre entre el oráculo y a WS no? No pudimos comprobar el orl porque no teníamos permiso para consultar el historial de estadísticas de la base de datos.
+Yeferson Nova Almanza 31 minutos 54 segundos
+No, no, él no tenía permisos en cu.
+Yeferson Nova Almanza 31 minutos 57 segundos
+A entonces, pues lo dejamos como hipótesis, pero no, no lo pudimos comprobar.
+Yeferson Nova Almanza 32 minutos 1 segundo
+Lo que sí comprobamos fue que que habían unos movimientos porque ya existían, o sea, no deberían, no debieron de haber subido el tiempo porque esos movimientos de.
+Yeferson Nova Almanza 32 minutos 11 segundos
+De red ya existían.
+Yeferson Nova Almanza 32 minutos 13 segundos
+Entonces no conocía el por qué, pero lo que le avistor ve a a Julio es es muy bonito. Ya existían, no debería, porque subir el el tiempo y los datos la cantidad, prácticamente es la misma entonces.
+Yeferson Nova Almanza 32 minutos 24 segundos
+No deberían de por qué pasar entonces, es por eso que que te preguntaba esos movimientos.
+Yeferson Nova Almanza 32 minutos 31 segundos
+¿Por qué eran? ¿Si había una justificación, ahora ya la entiendo el el por qué?
+V
+Victor Daniel Cortes Restrepo
+32 minutos 36 segundos32:36
+Victor Daniel Cortes Restrepo 32 minutos 36 segundos
+¿Listo?
+Victor Daniel Cortes Restrepo 32 minutos 38 segundos
+Sí, es que no tiene sentido, porque nosotros le estamos pegando una base de datos que es nuestra, o sea, no igual si necesitas en algún momento o o o juli lo puedes solicitar. Eso se puede subir y visitar a los DB a s no los reportes.
+
+Yeferson Nova Almanza
+32 minutos 43 segundos32:43
+Yeferson Nova Almanza 32 minutos 43 segundos
+Y tal cual.
+V
+Victor Daniel Cortes Restrepo
+32 minutos 51 segundos32:51
+Victor Daniel Cortes Restrepo 32 minutos 51 segundos
+**** en el monitoreo y te los envíen.
+
+Yeferson Nova Almanza
+32 minutos 52 segundos32:52
+Yeferson Nova Almanza 32 minutos 52 segundos
+No, bueno.
+V
+Victor Daniel Cortes Restrepo
+32 minutos 54 segundos32:54
+Victor Daniel Cortes Restrepo 32 minutos 54 segundos
+¿Listo? O sea, eso no.
+
+Yeferson Nova Almanza
+32 minutos 54 segundos32:54
+Yeferson Nova Almanza 32 minutos 54 segundos
+Ah, bueno, sí, sí. Yo le pasé como el cuerpo para consultar el historial de esos diítas.
+Yeferson Nova Almanza 32 minutos 59 segundos
+A ver cómo cómo estaba la base de datos en tiempos en esas consultas.
+Yeferson Nova Almanza 33 minutos 3 segundos
+Entonces yo lo lo termino de validar y salgo, entonces te escribo.
+V
+Victor Daniel Cortes Restrepo
+33 minutos 3 segundos33:03
+Victor Daniel Cortes Restrepo 33 minutos 3 segundos
+Ajá.
+
+Yeferson Nova Almanza
+33 minutos 6 segundos33:06
+Yeferson Nova Almanza 33 minutos 6 segundos
+O le escribo a Julio que lo pidamos al DV a.
+V
+Victor Daniel Cortes Restrepo
+33 minutos 8 segundos33:08
+Victor Daniel Cortes Restrepo 33 minutos 8 segundos
+Sí, sí, sí que lo lo pueden pedir por medio de Andrés y Andrés levanta el casito y ellos se lo envían.
+Victor Daniel Cortes Restrepo 33 minutos 14 segundos
+De los monitoreos.
+
+Yeferson Nova Almanza
+33 minutos 16 segundos33:16
+Yeferson Nova Almanza 33 minutos 16 segundos
+De una.
+V
+Victor Daniel Cortes Restrepo
+33 minutos 18 segundos33:18
+Victor Daniel Cortes Restrepo 33 minutos 18 segundos
+¿Listo?
+Victor Daniel Cortes Restrepo 33 minutos 21 segundos
+¿Entonces, dónde íbamos?
+Victor Daniel Cortes Restrepo 33 minutos 25 segundos
+Por acá.
+Victor Daniel Cortes Restrepo 33 minutos 29 segundos
+Entonces yo lo que recomiendo es eso que vayan pegando de una tabla y ya ustedes la van acomodando dependiendo de cómo se comporte y las dependencias cómo salgan.
+Victor Daniel Cortes Restrepo 33 minutos 36 segundos
+¿Si me hago entender porque qué puede pasar?
+Victor Daniel Cortes Restrepo 33 minutos 40 segundos
+Yo te digo una vez la TIR Party moment la.
+Victor Daniel Cortes Restrepo 33 minutos 44 segundos
+Que es una tabla muy grande, te va a votar 200 y punto. ¿Millones de registros, vale?
+Victor Daniel Cortes Restrepo 33 minutos 49 segundos
+Entonces, obviamente, cuando tú vas a generar las dependencias, pues vas a tener que mirar cuáles de verdad son las únicas que necesitas. ¿Sí me hago entender, y cuál es el promedio de esas únicas? ¿Entonces, una vez te genere el Jason el perdón, el punto parket, pues tú has consultas el punto parket y le dices, venga, cuántas? ¿Si yo miro el distinto de este atributo, cuántas filas distintas? ¿Usted me está trayendo? Ah.
+Victor Daniel Cortes Restrepo 34 minutos 10 segundos
+No es que los 200 usted me va a traer un ejemplo, no sé.
+Victor Daniel Cortes Restrepo 34 minutos 16 segundos
+¿100000000 cierto?
+Victor Daniel Cortes Restrepo 34 minutos 17 segundos
+Distintos, pues yo tú ya más o menos configuras eso para que tú sepas. ¿Quería generar qué 3?
+Victor Daniel Cortes Restrepo 34 minutos 26 segundos
+33 dependencias listo.
+Victor Daniel Cortes Restrepo 34 minutos 29 segundos
+Pero es por lo que es la primera ejecución y estás conociendo los datos ya después, cuando él empiece a llenar los asuntos, pues tú ya dices, y lo mismo, o sea, si tú dices hijo de Pucha es que 280 por no sé.
+Victor Daniel Cortes Restrepo 34 minutos 41 segundos
+20 atributos 280000000 de registros por por 30 atributos. Yo no, yo no debo enviar esto con nadie más.
+Victor Daniel Cortes Restrepo 34 minutos 48 segundos
+No es mejor que se vaya así solito o lo mejor que yo puedo hacer es segmentarlo y que me que me lo hagan 2 bloques.
+Victor Daniel Cortes Restrepo 34 minutos 54 segundos
+Sí.
+Victor Daniel Cortes Restrepo 34 minutos 57 segundos
+Y esos y esos 4000000 que yo tengo, pues divídamelo en 2000000 en una dependencia 2000000 en la otra, para que me quede la marca de cuál dependencia cogió y cuál dependencia.
+Yeferson Nova Almanza
+34 minutos 58 segundos34:58
+Yeferson Nova Almanza 34 minutos 58 segundos
+Edwin.
+V
+Victor Daniel Cortes Restrepo
+35 minutos 6 segundos35:06
+Victor Daniel Cortes Restrepo 35 minutos 6 segundos
+Porque muchas veces la gente me dice.
+Victor Daniel Cortes Restrepo 35 minutos 9 segundos
+¿Parque, pero yo cómo manejo yo? ¿Cómo sé que debo ir? Pues con la dependencia anterior. Si usted sabe que debe crear una dependencia anterior, pues créela y pártela de la mitad.
+Victor Daniel Cortes Restrepo 35 minutos 19 segundos
+Ah, pero esa dependencia es muy pequeñita, no importa porque al fin y al cabo, la dependencia debe tener un promedio de filas normal.
+Victor Daniel Cortes Restrepo 35 minutos 24 segundos
+Normativo que en algunos va a tener un poquito más, un poquito menos dependiendo de los productos y demás, pues sí, pero pues la validación no va a ser de.
+Victor Daniel Cortes Restrepo 35 minutos 33 segundos
+De que un producto tenga 3, un ejemplo, que una cobertura tenga tenga 6 productos de cobertura y la otra venga solo con uno, pues eso es muy raro.
+Victor Daniel Cortes Restrepo 35 minutos 44 segundos
+Sí, y si es mínimo, ellos, ellos generalmente generan un balance de algunos productos, tendrán 3 y otros 3 y así.
+Victor Daniel Cortes Restrepo 35 minutos 51 segundos
+Pero las compañías se balancean.
+Victor Daniel Cortes Restrepo 35 minutos 53 segundos
+Sí, y los datos también entran en un balance.
+Victor Daniel Cortes Restrepo 35 minutos 56 segundos
+Sí, entonces es muy raro. Uno colocar una dependencia de 7525, por ejemplo.
+Victor Daniel Cortes Restrepo 36 minutos 2 segundos
+No, generalmente, lo lo que hace es manejar unos bloques de segmento bien.
+Victor Daniel Cortes Restrepo 36 minutos 6 segundos
+¿Entonces, ese tipo de decisiones son las que el hecho de manejarla una a una en este momento, en este instante donde estamos para que tú vayas optimizando el proceso?
+Victor Daniel Cortes Restrepo 36 minutos 14 segundos
+¿Es la mejor manera para que conozcas bien cómo son las tablas, si me hago entender?
+Victor Daniel Cortes Restrepo 36 minutos 19 segundos
+¿Y cuánto te afecta la latencia y cuánto te afecta todo? Pero es porque tú ya tienes el tiempo, entonces lo puedes hacer, sí.
+Victor Daniel Cortes Restrepo 36 minutos 26 segundos
+Yo por eso te digo, este proceso debe ser de 2 semanitas.
+Victor Daniel Cortes Restrepo 36 minutos 30 segundos
+Sí, con bien juicioso 2 semanitas.
+Victor Daniel Cortes Restrepo 36 minutos 34 segundos
+Listo mientras tú, tú, tú, tú debes tu, tú, ya entiendes el asunto y mientras midas todo.
+Victor Daniel Cortes Restrepo 36 minutos 41 segundos
+Pero hasta aquí bien.
+Victor Daniel Cortes Restrepo 36 minutos 42 segundos
+O ha dicho, cosa que de pronto tú desconozcas en este momento.
+
+Yeferson Nova Almanza
+36 minutos 47 segundos36:47
+Yeferson Nova Almanza 36 minutos 47 segundos
+No, por ahora bien, cuando ya esté ahí, si, si, si no entiendo algo pasa algo, te te te escribo grito.
+V
+Victor Daniel Cortes Restrepo
+36 minutos 54 segundos36:54
+Victor Daniel Cortes Restrepo 36 minutos 54 segundos
+¿Listo?
+
+Yeferson Nova Almanza
+36 minutos 55 segundos36:55
+Yeferson Nova Almanza 36 minutos 55 segundos
+Pero hasta ahora bien.
+V
+Victor Daniel Cortes Restrepo
+36 minutos 56 segundos36:56
+Victor Daniel Cortes Restrepo 36 minutos 56 segundos
+Listo, perfecto. Entonces la recomendación mía toma los querys listo y ahí vas a ver.
+Victor Daniel Cortes Restrepo 37 minutos 3 segundos
+¿Todas las dependencias cuándo? ¿Cuándo él las toma cuándo él no las toma, porque mira, por ejemplo acá él vuelve y toma la la context operation ya anotó toma los IDS, entonces estos querys aún pueden ser un poquito más optimizados, vale?
+Victor Daniel Cortes Restrepo 37 minutos 19 segundos
+¿Para que no los tragues tampoco enteros listo?
+
+Yeferson Nova Almanza
+37 minutos 22 segundos37:22
+Yeferson Nova Almanza 37 minutos 22 segundos
+¿Ah o K?
+V
+Victor Daniel Cortes Restrepo
+37 minutos 23 segundos37:23
+Victor Daniel Cortes Restrepo 37 minutos 23 segundos
+Pero tú ya lo vas aprendiendo y ya lo vas consultando, y son sencillos. Yo los dejé lo más sencillos posible. Pues porque.
+Victor Daniel Cortes Restrepo 37 minutos 31 segundos
+Esto fue el detalle que me dio Jorge y yo llegué lo optimicé.
+Victor Daniel Cortes Restrepo 37 minutos 35 segundos
+Una vez optimizado, le pedí el favor a a.
+Victor Daniel Cortes Restrepo 37 minutos 39 segundos
+A una I a que me ayudara, más bien es a orquestarlos y ya ella me los orquestó un poquito mejor y listo para dejarlos como lines.
+Victor Daniel Cortes Restrepo 37 minutos 46 segundos
+Listo este todo es el proceso de de emisiones.
+Victor Daniel Cortes Restrepo 37 minutos 49 segundos
+Entonces, este es el seguro, te va a dar más más lata.
+Victor Daniel Cortes Restrepo 37 minutos 53 segundos
+¿Listo para hacer las optimizaciones?
+Victor Daniel Cortes Restrepo 37 minutos 56 segundos
+¿Cuántas filas son hablando de todo?
+Victor Daniel Cortes Restrepo 37 minutos 59 segundos
+5157 filas.
+Victor Daniel Cortes Restrepo 38 minutos 5 segundos
+Listo, pero esta es la misma preparación que va a ser mano. ¿Entonces debería ser coherente, vale?
+
+Yeferson Nova Almanza
+38 minutos 12 segundos38:12
+Yeferson Nova Almanza 38 minutos 12 segundos
+¿Listo?
+V
+Victor Daniel Cortes Restrepo
+38 minutos 13 segundos38:13
+Victor Daniel Cortes Restrepo 38 minutos 13 segundos
+¿Listo?
+Victor Daniel Cortes Restrepo 38 minutos 14 segundos
+¿Entonces, pero ahí tú ya la vas ya la vas puliendo? ¿Dónde se encuentra esto? Esto yo lo subí ayer, espérate.
+Victor Daniel Cortes Restrepo 38 minutos 21 segundos
+¿Uy, esto, qué planes?
+
+Yeferson Nova Almanza
+38 minutos 22 segundos38:22
+Yeferson Nova Almanza 38 minutos 22 segundos
+¿Sí ya le había preguntado a Manuel, eso dónde anda?
+V
+Victor Daniel Cortes Restrepo
+38 minutos 29 segundos38:29
+Victor Daniel Cortes Restrepo 38 minutos 29 segundos
+Yo le Subí la última revisión ayer para que él pudiera guiarse.
+Victor Daniel Cortes Restrepo 38 minutos 34 segundos
+Implementación. Me ignores.
+Victor Daniel Cortes Restrepo 38 minutos 38 segundos
+Entregables, primas, casos de uso.
+Victor Daniel Cortes Restrepo 38 minutos 42 segundos
+Alimentación.
+Victor Daniel Cortes Restrepo 38 minutos 44 segundos
+Arquitectura divox gestión operativa.
+Victor Daniel Cortes Restrepo 38 minutos 51 segundos
+Y aquí debería estar algo que dice ingeniería.
+Victor Daniel Cortes Restrepo 38 minutos 57 segundos
+Ingenierías.
+Victor Daniel Cortes Restrepo 39 minutos 4 segundos
+Copiar vínculo.
+Victor Daniel Cortes Restrepo 39 minutos 7 segundos
+Ahí está alguien, abrió el raulvio.
+Victor Daniel Cortes Restrepo 39 minutos 13 segundos
+De pronto fui yo.
+Victor Daniel Cortes Restrepo 39 minutos 14 segundos
+Según lo que veo ahí.
+Victor Daniel Cortes Restrepo 39 minutos 18 segundos
+Ahí te queda listo parce.
+Victor Daniel Cortes Restrepo 39 minutos 20 segundos
+Y ese es el ejercicio que yo te recomiendo, vale, hazlo descansado, hazlo tranquilo.
+Victor Daniel Cortes Restrepo 39 minutos 26 segundos
+Ve moviendo y ve, tomando las decisiones, y yo creo que que lo vas a hacer muy rápido y avísame. ¿Cuál fue el resultado, vale?
+Victor Daniel Cortes Restrepo 39 minutos 35 segundos
+¿Tanto de la ejecución uno a uno como de la ejecución que tú creas que pudiste optimizar, vale?
+Victor Daniel Cortes Restrepo 39 minutos 40 segundos
+O sea, cuando ya tenga las 2 para emisiones solito.
+Victor Daniel Cortes Restrepo 39 minutos 43 segundos
+Son 99 tablas en total en emisiones, deben ser unas 30 y algo 40 y algo.
+Victor Daniel Cortes Restrepo 39 minutos 48 segundos
+Listo para que su merced no se asuste tampoco.
+Yeferson Nova Almanza
+39 minutos 54 segundos39:54
+Yeferson Nova Almanza 39 minutos 54 segundos
+¿Listo?
+Yeferson Nova Almanza 39 minutos 58 segundos
+¿Me escuchas?
+V
+Victor Daniel Cortes Restrepo
+39 minutos 59 segundos39:59
+Victor Daniel Cortes Restrepo 39 minutos 59 segundos
+Sí, cualquier cosa. Quedamos súper súper atentos, parce.
+
+Yeferson Nova Almanza
+40 minutos 4 segundos40:04
+Yeferson Nova Almanza 40 minutos 4 segundos
+Listo, listo de una. Yo cualquier cosa ahí, entonces les quedamos, no te escribo a TI.
+V
+Victor Daniel Cortes Restrepo
+40 minutos 10 segundos40:10
+Victor Daniel Cortes Restrepo 40 minutos 10 segundos
+Cuna, Jefferson.
+Victor Daniel Cortes Restrepo 40 minutos 11 segundos
+¿Cualquier cosa me estás avisando?
+Victor Daniel Cortes Restrepo 40 minutos 13 segundos
+Muchas gracias por todo Jefferson.
+
+Yeferson Nova Almanza
+40 minutos 15 segundos40:15
+Yeferson Nova Almanza 40 minutos 15 segundos
+A ti, muchas gracias, compita.
+V
+Victor Daniel Cortes Restrepo
+40 minutos 18 segundos40:18
+Victor Daniel Cortes Restrepo 40 minutos 18 segundos
+Estamos hablando, pase todo bien.

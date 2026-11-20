@@ -1,7 +1,7 @@
 ---
 tipo: tarea
 estado: vigente
-actualizado: 2026-11-10
+actualizado: 2026-11-20
 ---
 # Reunión: explicación del diseño PCR (2026-11-10)
 
@@ -75,6 +75,7 @@ Todo lo de abajo es **dato del expositor**; lo que yo deduzco va marcado "propue
 2. **De la preparación**: la dicta el framework (ver arriba).
 3. **De la extracción:** compleja porque en Alfa **no hay réplica ni infraestructura de contingencia**: se le pega **directo a producción de los core** (ej. Acsel-e). Antes, integradores (Glue, DataStage) **arrebataban recursos** al core y lo ralentizaban o lo tumbaban (ancharon la banda y se desbalanceó el otro lado).
    - **Ciclo:** conjunto de grupos administrados con la infraestructura; al terminar se **suelta la conexión y se deja descansar la fuente** (ej. 5 minutos) antes del siguiente. Similar a un pool.
+   - **Conexión y pool (Víctor, confirmado por el usuario 2026-11-20):** hay **1 conexión de servicio** por origen y **el pool de conexiones lo manejamos nosotros** en el job de extracción (cuántas lecturas a la vez, liberar y reposar). Hoy no está en el código: el extractor estándar lee por una sola conexión y en cascada, sin pool ni pausa (RYC-01). Va en la modularización de la extracción.
    - **Conjunto (grupo):** grupo de tablas con una forma. Ej. grupo 1 con 6 tablas, grupo 2 con 3, grupo 3 con 1, grupo 4 con 1.
    - **Forma:** **paralela** (extrae a la vez), **cascada** (una tras otra) o **segmentada** (una tabla partida en varios conjuntos, ejecutados "de a uno").
    - **Unidad de costo = filas × columnas** de la tabla (10 filas × 10 columnas = 100). El **límite del ciclo** se fija en unidades de costo (ej. "máximo 12.000 millones por ciclo contra Acsel-e"); si los conjuntos lo superan, se parte.
@@ -84,7 +85,7 @@ Todo lo de abajo es **dato del expositor**; lo que yo deduzco va marcado "propue
 - **Para ti:** pedirle a **Manuel** que explique cómo configuró esto en los servicios y los pasos de desarrollo, para trabajar igual; llevar aportes a Ingeniería.
 
 ## Validación contra lo que tenemos
-**Extracción (nuevo, 2026-11-10; `extraccion_estandar_optimized.py`):** el job **ya tiene** el modelo: lee `ciclos` ordenados (línea 1033), con segmentos, `forma` y `dependencia` (tabla origen y llaves) por tabla, y checkpoint de ciclo/segmento. **Diferencias:** (a) solo ejecuta en **CASCADA**; si la forma es otra, avisa y la trata como cascada (líneas 1136-1140); la **paralela no está implementada** (coincide con RYC-01); (b) **no encontré unidades de costo** ni límite por ciclo; (c) **no encontré pausa/reposo ni cierre de conexión** entre ciclos (propuesta: confirmar con Manuel). Falta ver si las 6 mallas ALFAPRD configuran ciclos y dependencias en su JSON o van planas.
+**Extracción (nuevo, 2026-11-10; `extraccion_estandar_optimized.py`):** el job **ya tiene** el modelo: lee `ciclos` ordenados (línea 1033), con segmentos, `forma` y `dependencia` (tabla origen y llaves) por tabla, y checkpoint de ciclo/segmento. **Diferencias:** (a) solo ejecuta en **CASCADA**; si la forma es otra, avisa y la trata como cascada (líneas 1136-1140); la **paralela no está implementada** (coincide con RYC-01); (b) ~~no encontré unidades de costo~~ **corregido 2026-11-20:** sí las calcula (filas × columnas, línea 1456), pero por tabla, después de leer y con un tope que solo avisa; no hay límite por ciclo (ARQ-57); (c) **no hay pausa ni cierre de conexión** entre ciclos (confirmado 2026-11-20, ARQ-57). Continuación: [[reunion-extraccion-victor]]. Falta ver si las 6 mallas ALFAPRD configuran ciclos y dependencias en su JSON o van planas.
 
 **Notificación:** coincide con lo desplegado: 3 tipos de consulta (`summary`, `total`, `detail`), SES, HTML5, botones certificar/no certificar y SFTP a FIS. Pendiente: ¿"no certifico" reprograma realmente el modelo de configuración? Hoy no lo he visto en el código (verificar).
  (propuesta, 2026-11-10)

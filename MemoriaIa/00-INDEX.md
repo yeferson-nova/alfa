@@ -1,7 +1,7 @@
 ---
 tipo: contexto
 estado: vigente
-actualizado: 2026-11-13
+actualizado: 2026-11-20
 ---
 # Índice de la memoria de IA
 
@@ -23,6 +23,7 @@ actualizado: 2026-11-13
 | Brechas de seguridad, costos o arquitectura (IDs `SEG`, `COS`, `ARQ`, `CUM`) | `auditorias\`: [[brechas-seguridad]], [[auditoria-pipeline-2026-11]], [[notificaciones-vs-arquitectura]], [[auditoria-repos-2026-11]] |
 | Qué falta por hacer, o dudas sin resolver | [[pendientes]], [[preguntas-abiertas]] |
 | Observabilidad: logs, ID de punta a punta, duraciones, tableros y alertas | [[roadmap-observabilidad]] |
+| Modularizar un componente (extracción, remediación, validación, SCD) y cerrar su deuda técnica | [[modularizacion]], luego la nota del componente (ej. [[modularizacion-extraccion]]) |
 | Cómo escribir código (estructura, errores, logs, pruebas, nombres) | [[est-desarrollo-hexagonal]] y [[est-gobierno-devops-niif]] |
 | Formato de un PR (título, base, plantilla de descripción) | [[est-pull-requests]] |
 | Qué exige un estándar o una historia de usuario | `estandares\` y `hu\` |
@@ -73,16 +74,18 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 - [[correo-notificacion]]: formato del correo de certificación
 - [[monitoreo-grafana]]: observabilidad (Grafana fuera de alcance)
 - [[roadmap-observabilidad]]: roadmap de logs, trazas y duración de punta a punta (2026-11-19, propuesta)
+- [[modularizacion]]: tarea transversal de modularizar componentes, cerrar deuda y observabilidad (2026-11-20)
+- [[modularizacion-extraccion]]: modelo de ciclos de Víctor y lectura de dependencias por rangos (opción D, en diseño)
 - [[diseno-propuesto]]: cambios propuestos en el paso 3 (sin confirmar)
 - [[fix-scd-freno-periodo]]: fix completo de Primas ARL (SCD por periodo, extracción, calidad del código), 33 hallazgos y plan de 7 días
 
 **inprod:** [[inprod-primas-arl-202606]] · [[inprod-primas-rentas-202606]] · [[inprod-enlaces-cognito-9411325]]
 
-**auditorias:** [[brechas-seguridad]] · [[auditoria-pipeline-2026-11]] · [[notificaciones-vs-arquitectura]] · [[riesgos-glue-notificacion]] · [[auditoria-repos-2026-11]] · [[auditoria-observabilidad-2026-11]]
+**auditorias:** [[brechas-seguridad]] · [[auditoria-pipeline-2026-11]] · [[notificaciones-vs-arquitectura]] · [[riesgos-glue-notificacion]] · [[auditoria-repos-2026-11]] · [[auditoria-observabilidad-2026-11]] · [[auditoria-extraccion-2026-11]]
 
 **pendientes:** [[pendientes]] · [[preguntas-abiertas]]
 
-**reuniones:** [[reunion-diseno-pcr]]
+**reuniones:** [[reunion-diseno-pcr]] · [[reunion-extraccion-victor]]
 
 **estandares:** [[est-etl]] · [[est-datastage]] · [[est-versionamiento-codigo]] · [[est-codigo-seguro]] · [[est-databrew]] · [[est-nuevos-cargues]] · [[est-gobierno-devops-niif]] · [[est-desarrollo-hexagonal]] · [[est-pull-requests]]
 

@@ -1,14 +1,33 @@
 ---
 tipo: pendiente
 estado: vigente
-actualizado: 2026-11-19
+actualizado: 2026-11-20
 ---
 # Pendientes
 
 > **PAUSA DE LA MIGRACIÓN (2026-11-11, decisión del usuario).** Se detiene la migración de la cadena de notificación y certificación. No se avanza con el roadmap ni se lanza nada en DEV hasta que el usuario lo reanude. El estado congelado y la forma de retomar están en [[traspaso-sesion]] §Pausa.
 
+## Fechas de entrega
+- [ ] **PCR Cedidas: entregar el 2026-12-05** (fecha dada por el usuario el 2026-11-20). Flujo PCR en [[reunion-diseno-pcr]].
+
+## Modularización: extracción (2026-11-20, ver [[modularizacion-extraccion]])
+- [ ] Cerrar el diseño de la opción D (`Tareas\Modularizacion\Extraccion\diseno-lectura-por-rangos.md`).
+- [ ] Con Julio, en Oracle: tipo e índice de cada columna de join; acceso a `ALL_TABLES.NUM_ROWS`; `FLASHBACK` y `UNDO_RETENTION`; lectura de `acsele_alfa_bi.em_*` ([[preguntas-abiertas]]).
+- [ ] Red de caracterización y línea base en DEV del extractor de Emisiones (no existen), antes de modularizarlo.
+- [ ] Confirmar con el usuario: dónde se escriben los tramos (*propuesta* zona temporal) y la referencia de equivalencia para ALFAPRD (*propuesta* salida del job actual).
+- [ ] Rebasar `feature/modular-rmd-ext-estandar` sobre el `main` nuevo de `alfa-repos` (`3d5f623`, ya trae el fix del SCD) y llevar la red de caracterización a verde.
+- [ ] Modularizar el extractor con pausa por ciclo, tramos, medición real y log v1, junto con la configuración (JSON, `cnf-mallas`, configurador sin conteos fijos y `MALLA_PK` obligatorio). Brechas ARQ-57, COS-11, ARQ-58 y ARQ-59 ([[auditoria-extraccion-2026-11]]).
+- [ ] Medir en DEV una tabla por ciclo, la línea base frente a la versión nueva y la equivalencia, en los dos extractores (estándar y Emisiones). Mostrar a Víctor los resultados, tabla por tabla y optimizados.
+- [ ] Recomendaciones de índices de Oracle: a Víctor, no directo a la base ([[reunion-extraccion-victor]]).
+- [x] Permisos del rol del extractor revisados en DEV (2026-11-20): DynamoDB sobre `ejc-ejecuciones` por la política común; 13 políticas fuera de `alfa-repos` ([[modularizacion-extraccion]]).
+- [ ] Preparar para DevOps el cambio de IaC: `--EJECUCION_ID` en las 6 Step Functions del extractor y en `niif-snf-emisiones`. Sale junto con el despliegue del código (el job lo exigirá).
+- [ ] **Lunes 2026-11-23: preguntar a DevOps** de qué repo salen las 13 políticas del rol del extractor (no están en la `quality` de los 33 repos que tenemos). No suponer: puede ser un repo de DevOps que no tenemos. No las buscamos ni las corregimos nosotros ([[preferencias-usuario]]).
+
 ## Observabilidad (2026-11-19)
 - [ ] Aprobar el roadmap de [[roadmap-observabilidad]] (fases 0 a 6) y las decisiones de su §9. Sin orden explícita no se toca código. Brechas nuevas en [[auditoria-observabilidad-2026-11]].
+- [x] Verificación de observabilidad en DEV **con `AWS_REGION=us-east-1`** (tandas 3 a 5, 2026-11-19; las tandas 1 y 2 corrieron en `us-east-2` y se descartaron). Resultados internos en `EvidenciasAws\dev-observabilidad\LEEME.md`; conclusiones en [[roadmap-observabilidad]].
+- [ ] Confirmar si el creador del stack `stack-cf-observability` (`PipelineObserver`) es de nuestro equipo o de plataforma; ajusta la fase 6 ([[preguntas-abiertas]]).
+- [ ] **Página-2 de la propuesta (comentarios de Víctor, 2026-11-19):** cuando él confirme los puntos abiertos ([[preguntas-abiertas]]), redibujar en el mismo estilo: enlace corto dentro de postLogin; el Modelo Enlaces cortos (75) reemplazado por un **Modelo de Identidades de postLogin** (enlaces y quién puede usarlos; propuesta sobre la tabla existente `use-case-approvers`); corte si la identidad del `id_token` no es válida; modelo de segregación de eventos. Actualizar también la nota del diagrama. Detalle en [[arquitectura-propuesta-niif17]].
 
 ## Organización (plan por fases)
 - [x] Fase 1: reorganizar carpetas, corregir rutas e índice (2026-11-03).

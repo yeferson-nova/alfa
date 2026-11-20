@@ -1,7 +1,7 @@
 ---
 tipo: pendiente
 estado: vigente
-actualizado: 2026-11-19
+actualizado: 2026-11-20
 ---
 # Preguntas abiertas
 
@@ -16,18 +16,33 @@ actualizado: 2026-11-19
 - ¿Cuál es el ticket Jira del proyecto? Es obligatorio en ramas y commits ([[est-versionamiento-codigo]]).
 - ~~¿El CSV de certificación tiene datos personales?~~ **Resuelta (2026-11-10, usuario): no.** Los de DEV y QA son datos de ejemplo. Matiz: el CSV de Primas trae `NID_NUMERO_IDENTIFICACION_TERCERO` y `NOM_TERCERO`; en la muestra son NIT de empresas, pero en prod podría haber personas naturales. Revisarlo antes de producción.
 
+## Extracción (2026-11-20, para Julio en Oracle; no son para Víctor, ver [[modularizacion-extraccion]])
+- Scripts listos para entregar, uno por base (solo diccionario): `Tareas/Modularizacion/Extraccion/consultas-oracle-alfaprd.sql` (40 tablas de los 6 JSON; flashback) y `consultas-oracle-acsele.sql` (93 tablas de M1-M4; `em_*`; flashback). Resultados, en CSV, a `EvidenciasAws/dev-extraccion/`.
+- ¿Qué tipo de dato tiene cada columna de join (`ALL_TAB_COLUMNS`) y cuáles tienen índice (`ALL_IND_COLUMNS`)? Define si la tabla va por rangos o por `IN`.
+- ¿El usuario de servicio puede leer `ALL_TABLES.NUM_ROWS` y `LAST_ANALYZED`? ¿Qué tan recientes son las estadísticas?
+- ¿Hay permiso de `FLASHBACK` y suficiente `UNDO_RETENTION` para leer todos los tramos en la misma foto (`AS OF SCN`)?
+- ¿En qué instancia están `acsele_alfa_bi.em_*` y se pueden leer para la prueba de equivalencia?
+- (DevOps, preguntar el lunes 2026-11-23) ¿De qué repo salen las 13 políticas del rol del extractor (9 en línea: `...-gestor-configuracion` y `pcr-vida-*`; 4 administradas: `satelites-assets`, `validacion-oracle-emisiones`, `extraccion-estandar-emisiones-s3`, `glue-read-acsele-connections`)? No están en la `quality` (2026-11-20) de ninguno de los 33 repos que tenemos; puede ser un repo de DevOps que no tenemos. Ojo: el rol lo comparten 4 componentes y acumula permisos (mínimo privilegio).
+- (DevOps o arquitecto) ¿Las tablas vacías `datalake-{env}-adm-extraccion-costo`, `-parametro` y `-ejecucion` tienen un uso previsto o se pueden retirar?
+
 ## Paso 3
 - El inventario sugiere respuestas a tres preguntas: endpoint de certificación, canal del correo y qué pasa sin certificación. Ver [[inventario-lambdas]]. Falta confirmarlas con el equipo.
 - ¿Cuál generación del gestor es la oficial: G3 (`configurador-*`) o G4 (`configuration-*`, Terraform)? ¿G1 y G2 se pueden retirar?
 - Definición funcional de las validaciones de reserva matemática. ([[tareas-aws]], tarea 3)
 
+## Propuesta Página-2: comentarios de Víctor (2026-11-19, ver [[arquitectura-propuesta-niif17]])
+- ¿Qué activa la lambda de movimiento en el "modelo de segregación de eventos"? La frase de Víctor quedó cortada ("se activa cuando...").
+- ¿"Frena la notificación" significa cortar en postLogin (no llamar a Certificación) o detener todo el flujo de notificación del caso? Hoy el corte (403) está en `niif-dev-certification`.
+- ¿El Modelo de Identidades se monta sobre `use-case-approvers` (existe en IaC y en DEV, sin uso en el código) o es una tabla nueva? Propuesta: reutilizarla y extenderla con los enlaces.
+
 ## Monitoreo ([[monitoreo-grafana]], decisiones de la fase 0 en [[roadmap-observabilidad]] §9)
 - ~~¿Qué son los "tres niveles"?~~ **Resuelta (2026-11-19):** logs, métricas y trazas.
 - ¿Instrumentación mínima en los Silver por malla o esperar a reescribirlos?
+- ¿Quién administra `ALFA-DEV-DATALAKE-PipelineObserver` y los SNS `ALFA-DEV-DATALAKE-Critical`/`-Warning`? **Parcial (2026-11-19):** stack `stack-cf-observability` ("Plataforma de Observabilidad Data Platform"), creado el 2026-10-15 y actualizado el 2026-10-20 por un mismo usuario (correo no guardado aquí), sin etiquetas; cada SNS con una sola suscripción por correo. Falta confirmar si es de nuestro equipo o de plataforma. La fase 6 de [[roadmap-observabilidad]] los reutiliza.
 - ~~¿Quién arma los tableros?~~ **Resuelta (2026-11-19):** fuera de nuestro alcance; entregamos los orígenes listos y documentados para cualquier herramienta.
 - ¿Dónde corre Grafana y quién lo administra? (no definido)
 - ¿Existe un Elastic u OpenSearch corporativo?
-- ¿Retención mínima exigida para los logs?
+- ~~¿Retención mínima exigida para los logs?~~ **Resuelta (2026-11-19):** configurable por ambiente, PRD 180 días; los 7 años aplican al registro de ejecución (HU-GI-05).
 - ¿El alcance incluye otros servicios AWS además de los pasos 2 y 3?
 - Soporte usa **ServiceNow** (resuelto). Falta saber: ¿tienen ITOM Event Management o solo ITSM? ¿Ya está instalado el AWS Service Management Connector? ¿Cuál es el grupo de asignación? ¿Se permite salida a internet desde las lambdas (NAT o proxy)?
 

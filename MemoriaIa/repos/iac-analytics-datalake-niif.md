@@ -1,7 +1,7 @@
 ---
 tipo: repo
 estado: vigente
-actualizado: 2026-11-12
+actualizado: 2026-11-20
 repo: iac-analytics-datalake-niif
 categoria: iac
 paso: "2 y 3 · Bodega NIIF 17 y Certificación Cifras (infraestructura base)"
@@ -20,7 +20,7 @@ malla: transversal
 
 ## Recursos AWS que declara (un stack por carpeta en `stacks/`)
 - `storage`: buckets de certificación, `ss`, `pcr`, `con`, `prm`, landing de Prophet y `niif-{env}-accountingtool`; en prd solo certificación y accountingtool.
-- `database`: DynamoDB `datalake-{env}-use-case-emails/queries/certification/approvers`, tablas de artefactos, conceptos y notas, y `adm-*` (cargues, periodos, extracción, malla-ejecución); en prd la lista está vacía.
+- `database`: DynamoDB `datalake-{env}-use-case-emails/queries/certification/approvers`, tablas de artefactos, conceptos y notas, y `adm-*` (cargues, periodos, extracción, malla-ejecución); en prd la lista está vacía. En DEV las tres `datalake-dev-adm-extraccion-*` existen vacías desde 2025-09-21 y ningún código las usa (2026-11-20, [[modularizacion-extraccion]]).
 - `security`: secretos JDBC (varios Oracle) y de credenciales SFTP, y el user pool de Cognito con su dominio y cliente (callbacks a dos API Gateway).
 - `analytics`: catálogo de Glue, conexiones, 13 crawlers, unos 28 jobs de Glue (bronce, plata, oro y certificación, con roles IAM por capa) y parámetros SSM.
 - `application/api_gateway`: `datalake-{env}-niif-api-gtw` con WAF y rutas `/r`, `/redirect`, `/certify`, `/not_certify`, `/post_login`; definiciones OpenAPI por ambiente.

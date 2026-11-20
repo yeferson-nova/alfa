@@ -1,7 +1,7 @@
 ---
 tipo: contexto
 estado: vigente
-actualizado: 2026-11-19
+actualizado: 2026-11-20
 ---
 # Arquitectura propuesta (segunda arquitectura, nuestra)
 
@@ -25,6 +25,14 @@ Elementos 79 a 84 con el mismo estilo de la propuesta (círculos verdes, íconos
 - **`Página-2`:** íconos nuevos CloudWatch (Logs y Métricas), X-Ray (Trazas) y Modelo Trazabilidad, abajo a la izquierda. Flechas desde la Malla Ejecución: 80 a CloudWatch, 81 a X-Ray y 79 al Modelo Trazabilidad. La nota dice que todos los componentes de la hoja emiten ahí.
 - **`Página-1`:** se conectan el CloudWatch y el Modelo Trazabilidad que ya existían sueltos, y se agrega X-Ray. Desde el grupo Malla: 82 a CloudWatch, 83 al Modelo Trazabilidad y 84 a X-Ray.
 - No se dibujan Firehose, S3 de logs ni EventBridge + SNS: son opcionales y quedan solo en la nota.
+
+## Comentarios de Víctor (2026-11-19, en revisión) y lo que existe en código
+- Pide: el enlace corto dentro de postLogin; un "modelo de identidades" de postLogin que guarde los enlaces; validar la identidad con el `id_token` y frenar ahí si no corresponde; un "modelo de segregación de eventos" que active la lambda de movimiento (frase incompleta, por confirmar).
+- **Validado en código (DEV, `EvidenciasAws\dev-codigo-actual\lambdas\`):**
+  - `niif-post-login` desplegada: solo devuelve una página que toma `id_token` y `state` y llama al API de certificación con `Bearer id_token`. Sin DynamoDB ni validación propia.
+  - La validación de identidad hoy está en `niif-dev-certification`: correo del token de Cognito contra `approvers.users` del JSON del caso en S3; si no está, 403. Cada voto se audita en `approval-audit-log`.
+  - Existe la tabla `use-case-approvers` (IaC base, `useCaseId`) y la lambda tiene la variable `APPROVERS_TABLE`, pero el código no la usa. Candidata a ser el "modelo de identidades" (propuesta).
+  - `short-links`: token → URL, la usa `niif-dev-short-link-redirect`.
 
 Sin diferencia: Lambda (SFTP) → Transit Gateway → FIS, y todo el medallón, la programación y los pasos 1 a 12 ([[sc-datalake-niif-send-via-sftp-lambda]]).
 

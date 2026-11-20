@@ -1,7 +1,7 @@
 ---
 tipo: repo
 estado: vigente
-actualizado: 2026-11-12
+actualizado: 2026-11-20
 repo: data-datalake-niif-pcr-emisiones-glue-job
 categoria: glue
 paso: "2 · Bronce (extracción)"
@@ -30,6 +30,7 @@ malla: transversal
 - En Alfa: `origin/quality`, commit 900fe44 (2026-11-06). Desplegado: por confirmar.
 - `quality` frente a `main` (medido en GitHub el 2026-11-12): 8 commits solo en `quality`, 0 solo en `main`, 14 archivos distintos; `quality` va 14 archivos por delante de `main`: lo de QA no se ha promovido a PRD. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno.
+- **Modularización (2026-11-20):** está en nuestro alcance (job de Glue, pasos 2 y 3). Entra en [[modularizacion-extraccion]]; sus copias en DEV son ARQ-60 ([[auditoria-extraccion-2026-11]]).
 
 ## Brechas y relacionadas
 - Misma exposición que el extractor estándar a exclusión de llaves y Silver parcial: [[inprod-primas-arl-202606]]. PCR sin documento funcional: [[reunion-diseno-pcr]].
