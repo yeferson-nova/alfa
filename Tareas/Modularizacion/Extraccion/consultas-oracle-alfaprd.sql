@@ -1,7 +1,7 @@
 -- =====================================================================
 -- Consultas de diccionario para Julio (Oracle): ALFAPRD (esquemas ARPPROD, GENERAL y PRV).
 -- Extracción NIIF 17, opción D (lectura por rangos de llave). Generado el 2026-11-20.
--- Origen de la lista de tablas: los 6 config_extraccion_*.json de cfg-datalake-niif-config-s3 (alfa-repos main 3d5f623): 40 tablas, 53 columnas de llave.
+-- Origen de la lista de tablas: los 6 config_extraccion_*.json de cfg-datalake-niif-config-s3 (rama quality, commit a345332): 40 tablas, 53 columnas de llave.
 --
 -- SOLO LECTURA. Todo consulta el diccionario (ALL_*): no lee datos de negocio.
 -- La única excepción es la prueba 3c, comentada, opcional y de una sola fila.

@@ -1,8 +1,8 @@
 # Roadmap de cambios: modularización de la extracción
 
-Orden de los cambios por repo, como lista de verificación. Cada paso dice en qué repo va (o si es una consulta sin repo), de qué tipo es y qué lo bloquea. El objetivo es que cada commit tenga un solo tema, se pueda revertir solo y se lea limpio en el historial.
+Orden de los cambios por repo, como lista de verificación. Las historias para Jira salen de aquí: [backlog.md](backlog.md). Cada paso dice en qué repo va (o si es una consulta sin repo), de qué tipo es y qué lo bloquea. El objetivo es que cada commit tenga un solo tema, se pueda revertir solo y se lea limpio en el historial.
 
-Elaborado el 2026-11-20 sobre la rama `quality` de los repos (commit `3d5f623`, estado del 2026-11-18 al 20). Lo que no está verificado aparece como **decisión** o **por verificar**.
+Elaborado el 2026-11-20 sobre la rama `quality` de cada repo (estado del 2026-11-18 al 20; por ejemplo, `data-datalake-niif-rmd-ext-estandar-glue-job` en `0af0ca8` y `cfg-datalake-niif-config-s3` en `a345332`). Lo que no está verificado aparece como **decisión** o **por verificar**.
 
 ## Índice
 - [Piezas](#piezas)
@@ -96,7 +96,7 @@ Patrón: **ampliar → poblar → usar**. Así cada pieza se puede revertir sin 
 - [ ] **0.2 ORA, Consulta Oracle:** QA corre `consultas-oracle-alfaprd.sql` y `consultas-oracle-acsele.sql`. Va en paralelo: solo bloquea la fase 5.
 - [ ] **0.3 DEV, Consulta DEV:** línea base del extractor estándar en las 4 mallas sin medir (Endosos, ARP, RVI y Auxilios), con el método de `medir-tiempos-rentas.sh`. ARL y Rentas ya están medidas (tanda 1).
 - [ ] **0.4 DEV, Consulta DEV:** línea base del extractor de Emisiones (duración, filas y unidades por tabla).
-- [ ] **0.5 R1, `chore`:** rebasar `feature/modular-rmd-ext-estandar` (commit `5676ef5`) sobre `main` `3d5f623` y dejar la red de caracterización en verde.
+- [ ] **0.5 R1, `chore`:** rebasar la rama `feature/modular-rmd-ext-estandar` (red de caracterización y esqueleto modular) sobre `quality` (`0af0ca8`, que ya trae el fix del SCD) y dejar la red de caracterización en verde.
 - [ ] **0.6 R4, `chore`, commit `test`:** red de caracterización del extractor de Emisiones (solo pruebas, sin tocar `src/`).
 - [ ] **0.7 R1 y R4, por verificar en el código:** quién lee cada campo de `parametros_extraccion.json` (validación, SCD, remediación). Antes del paso 2.3, que cambia sus duraciones.
 
@@ -159,6 +159,28 @@ Patrón: **ampliar → poblar → usar**. Así cada pieza se puede revertir sin 
 - [ ] **6.1 DEV, Consulta DEV:** medición final frente a la línea base en todas las mallas. Mostrar a Víctor los resultados tabla por tabla y optimizados.
 - [ ] **6.2 R5, pedido a DevOps:** ajustar el número de workers del extractor según la medición. La lectura sigue siendo secuencial por la única conexión, así que el resto de workers se paga sin usarse (RYC-01).
 - [ ] **6.3 Memoria y Docs:** cerrar las brechas ARQ-57, ARQ-58, ARQ-59, ARQ-60, COS-05 y COS-11 con su evidencia.
+
+## Qué va en secuencia y qué en paralelo
+El roadmap **no es una sola fila**. Las fases marcan el orden de las dependencias, y dentro de ellas hay carriles que avanzan a la vez.
+
+**Siempre en secuencia (cadenas que no se pueden saltar):**
+- En cada clave nueva de configuración: R3 → DDB → R2 → R1/R4 (ampliar → poblar → usar). Pasa en 2.4, 4.x y 5.x.
+- En cada extractor: red de pruebas → refactor → fixes → observabilidad → ciclos → tramos. R1: 0.5 → 1.1 → 2.3 → 3.4 → 4.5 → 5.5. R4: 0.6 → 1.3 → 3.5 → 4.7 → 5.7.
+- Cada cambio de código se compara contra la línea base antes del siguiente (1.2, 1.4, 4.6, 5.6).
+- 3.2 (IaC) → 3.3 (confirmar en DEV) → 3.4 (código que exige el argumento).
+- 2.1 (ciclos sin conteo fijo) → 4.2 → 4.6 (una tabla por ciclo).
+- La opción D va después de los ciclos (5.5 después de 4.5), porque el presupuesto de cada ciclo se gasta por tramos.
+
+**En paralelo (no se esperan entre sí):**
+| Carril | Pasos | Puede empezar |
+|---|---|---|
+| Oracle | 0.2 | Ya. Solo bloquea la fase 5 |
+| Líneas base en DEV | 0.3, 0.4 | Ya |
+| Extractor estándar (R1) | 0.5 → 1.1 → … | Ya |
+| Extractor de Emisiones (R4) | 0.6 → 1.3 → … | Ya. Su carril va en paralelo al de R1, pero cada fase de R4 sigue el patrón probado antes en R1 |
+| Configurador (R3) | 2.1 → 2.2 | Ya: es otro repo y no depende del refactor de R1 |
+| Pedidos a DevOps | 2.5.2, 3.2 | Después de 0.1 y 2.5.1. 3.2 se puede pedir pronto, porque Glue ignora el argumento mientras no se use |
+| Decisiones | 0.1, 2.4.1, 3.1, 4.1, 5.1 | Cada una antes de su paso, no antes de la fase |
 
 ## Vista por repo (cuándo se toca cada uno)
 | Repo o pieza | Pasos, en orden |

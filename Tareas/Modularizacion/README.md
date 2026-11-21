@@ -16,7 +16,7 @@ Cada componente que se modulariza sale con tres cosas, sin dejar ninguna para de
 - **DevOps despliega.** Nosotros entregamos el código y la configuración en un zip con el nombre del recurso.
 
 ## Componentes
-Repo base: `alfa-repos\glue\data-datalake-niif-rmd-ext-estandar-glue-job\` (jobs genéricos que usan las 6 mallas ALFAPRD). Rama de trabajo: `feature/modular-rmd-ext-estandar` (por ahora solo la red de caracterización y las carpetas vacías).
+Repo base: `data-datalake-niif-rmd-ext-estandar-glue-job` (jobs genéricos que usan las 6 mallas ALFAPRD). Rama de trabajo: `feature/modular-rmd-ext-estandar` (por ahora solo la red de caracterización y las carpetas vacías).
 
 | Componente | Carpeta | Estado |
 |---|---|---|

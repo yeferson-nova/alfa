@@ -11,7 +11,7 @@ La extracción lee las fuentes Oracle (ALFAPRD y Acsel-e) directamente, **sin OD
 ## Fuentes
 - Reunión con Víctor (2026-11-20): `Docs\05-arquitectura\Reuniones\Extraccion\ExplicacionExtraccion.txt` (transcripción de Teams, no es manual) y 2 imágenes.
 - Consultas base de PCR: `M1_EMISIONES.sql`, `M2_PRIMAS_CEDIDAS.sql`, `M3_REASEGUROS.sql` y `M4_PRIMAS_PCR.sql`, en la misma carpeta. **Son la referencia de resultados:** se pueden afinar en rendimiento, pero sus resultados no pueden cambiar.
-- Código: `alfa-repos\glue\data-datalake-niif-rmd-ext-estandar-glue-job\src\jobs\extraccion_estandar_optimized.py` (estándar, 6 mallas ALFAPRD) y `alfa-repos\glue\data-datalake-niif-pcr-emisiones-glue-job\src\jobs\extraccion_estandar_emisiones.py` (PCR sobre Acsel-e).
+- Código: `data-datalake-niif-rmd-ext-estandar-glue-job`, `src\jobs\extraccion_estandar_optimized.py` (estándar, 6 mallas ALFAPRD), y `data-datalake-niif-pcr-emisiones-glue-job`, `src\jobs\extraccion_estandar_emisiones.py` (Acsel-e).
 
 ## Modelo de extracción (lineamiento de Víctor, 2026-11-20)
 | Concepto | Qué es | Transcripción |
@@ -64,7 +64,7 @@ Se rozan:
 
 Verificado en DEV el 2026-11-20:
 - El rol del extractor ya puede leer y escribir en `niif-{env}-ejc-ejecuciones` (y en `pipeline-estado`) por la política común de los jobs, que está en la IaC. El checkpoint por tramo no necesita permisos nuevos. No tiene acceso a `cnf-mallas` ni lo necesita, porque la configuración le llega en el JSON.
-- El rol tiene 16 políticas y 13 no están en `alfa-repos`: 9 en línea y 4 administradas, de PCR Vida, Emisiones y Satélites. Se preguntó a DevOps quién las creó.
+- El rol tiene 16 políticas y 13 no están en ninguno de los repos que tiene Desarrollo (rama `quality`): 9 en línea y 4 administradas, de PCR Vida, Emisiones y Satélites. Se preguntó a DevOps quién las creó.
 - Las tablas `datalake-dev-adm-extraccion-*` existen, pero están vacías desde 2025-09-21 y ningún código las usa. No se adoptan sin aval.
 
 ## Qué falta para empezar (validado contra el código, 2026-11-20)
@@ -78,11 +78,11 @@ Verificado en DEV el 2026-11-20:
 Checkpoint de cada tramo (*propuesta*): en `ejc-ejecuciones`, con la misma `PK` que ya arma el configurador (`EJC#<MALLA>#<periodo>`) y `SK = EJECUCION#<execution_name>#TRAMO#<tabla>#<n>`. No choca con el ítem de la ejecución y el rol ya tiene permiso.
 
 ## Plan
-Orden detallado por repo, separado por fix, refactor, observabilidad y features, en [roadmap-cambios.md](roadmap-cambios.md). Resumen:
+Orden detallado por repo, separado por fix, refactor, observabilidad y features, en [roadmap-cambios.md](roadmap-cambios.md). Backlog para Jira (épica EXT, 23 ítems y 41 subtareas): [backlog.md](backlog.md) y `backlog-jira.csv`. Resumen:
 
 1. Diseño de la opción D cerrado y validado con datos (este README y el documento de diseño).
 2. Datos de Oracle con QA ([consultas-oracle-alfaprd.sql](consultas-oracle-alfaprd.sql) y [consultas-oracle-acsele.sql](consultas-oracle-acsele.sql)): tipos e índices de las llaves foráneas, estadísticas de tamaño y acceso de lectura a `acsele_alfa_bi.em_*`.
-3. Rebasar `feature/modular-rmd-ext-estandar` sobre el `main` nuevo de `alfa-repos` (ya trae el fix del SCD) y llevar la red de caracterización a verde.
+3. Rebasar `feature/modular-rmd-ext-estandar` sobre `quality` (`0af0ca8`, ya trae el fix del SCD) y llevar la red de caracterización a verde.
 4. Red de pruebas y línea base del extractor de Emisiones.
 5. Modularizar los dos extractores (primero el estándar): pausa por ciclo, lectura por tramos, medición real y contrato de log v1. En el mismo cambio, la configuración: JSON, `cnf-mallas` y configurador sin conteos fijos.
 6. Medir en DEV: una tabla por ciclo, línea base frente a la versión nueva y comparación de equivalencia.

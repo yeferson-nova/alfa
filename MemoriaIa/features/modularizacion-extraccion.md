@@ -38,6 +38,8 @@ Humano: `Tareas\Modularizacion\Extraccion\README.md` y `diseno-lectura-por-rango
 - `Tareas\Modularizacion\Extraccion\roadmap-cambios.md`: fases 0 (preparación) → 1 (refactor) → 2 (fixes) → 3 (observabilidad) → 4 (ciclos) → 5 (opción D) → 6 (cierre), con una rama por tema y el mismo nombre de rama en cada repo.
 - Orden de despliegue verificado: **ampliar → poblar → usar.** El configurador primero conoce la clave sin exigirla (lista fija de campos por tabla en `construir_ciclos`; `fuente` se copia entera), después se carga `cnf-mallas` (ningún repo la carga) y al final el job la exige. El extractor no valida el esquema y la versión vieja ignora las claves nuevas. El repo de Emisiones no tiene pruebas.
 
+- Backlog Scrum para Jira: `Tareas/Modularizacion/Extraccion/backlog.md` y `backlog-jira.csv` (épica EXT, 23 ítems, 41 subtareas; IDs provisionales hasta tener el ticket). Una sola épica y roles "operador de la malla" y "desarrollador" son *propuesta*.
+
 ## Qué falta para empezar (validado contra el código, 2026-11-20)
 - **Extractor estándar:** solo la orden del usuario. La rama `feature/modular-rmd-ext-estandar` (un commit, `5676ef5`) no contiene el `main` `3d5f623`: rebasarla. Su red de caracterización (`test_flujo_arl.py`, `test_scd*.py`) cubre el flujo ARL de punta a punta.
 - **Extractor de Emisiones:** no tiene red de caracterización ni línea base en DEV (la tanda 1 solo midió ARL y Rentas). Construirlas antes de tocarlo. Orden: primero el estándar.
