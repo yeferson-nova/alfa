@@ -2,20 +2,50 @@
 
 Orden de los cambios por repo, como lista de verificación. Cada paso dice en qué repo va (o si es una consulta sin repo), de qué tipo es y qué lo bloquea. El objetivo es que cada commit tenga un solo tema, se pueda revertir solo y se lea limpio en el historial.
 
-Elaborado el 2026-11-20 sobre `alfa-repos` main `3d5f623` (quality del 2026-11-18 al 20). Lo que no está verificado aparece como **decisión** o **por verificar**.
+Elaborado el 2026-11-20 sobre la rama `quality` de los repos (commit `3d5f623`, estado del 2026-11-18 al 20). Lo que no está verificado aparece como **decisión** o **por verificar**.
+
+## Índice
+- [Piezas](#piezas)
+- [Glosario de brechas](#glosario-de-brechas)
+- [Análisis en tres órdenes](#análisis-en-tres-órdenes)
+  - [Orden 1: dependencias (qué necesita qué)](#orden-1-dependencias-qué-necesita-qué)
+  - [Orden 2: tipo de cambio (para separar ramas y commits)](#orden-2-tipo-de-cambio-para-separar-ramas-y-commits)
+  - [Orden 3: despliegue y reversa (por pieza)](#orden-3-despliegue-y-reversa-por-pieza)
+- [Roadmap (lista de verificación)](#roadmap-lista-de-verificación)
+  - [Fase 0. Preparación (sin cambio de comportamiento)](#fase-0-preparación-sin-cambio-de-comportamiento)
+  - [Fase 1. Refactor hexagonal (mismos resultados)](#fase-1-refactor-hexagonal-mismos-resultados)
+  - [Fase 2. Fixes (una rama bugfix/ por brecha)](#fase-2-fixes-una-rama-bugfix-por-brecha)
+  - [Fase 3. Observabilidad (rama feature/obs-extraccion)](#fase-3-observabilidad-rama-featureobs-extraccion)
+  - [Fase 4. Modelo de ciclos (rama feature/ciclos-extraccion, ARQ-57)](#fase-4-modelo-de-ciclos-rama-featureciclos-extraccion-arq-57)
+  - [Fase 5. Lectura por tramos, opción D (rama feature/lectura-rangos, COS-11)](#fase-5-lectura-por-tramos-opción-d-rama-featurelectura-rangos-cos-11)
+  - [Fase 6. Cierre](#fase-6-cierre)
+- [Vista por repo (cuándo se toca cada uno)](#vista-por-repo-cuándo-se-toca-cada-uno)
 
 ## Piezas
 | Clave | Pieza | Qué es | Quién la cambia |
 |---|---|---|---|
-| R1 | `data-datalake-niif-rmd-ext-estandar-glue-job` | Extractor estándar (6 mallas ALFAPRD) | Nosotros |
-| R2 | `cfg-datalake-niif-config-s3` | JSON de extracción en Git (copia coherente; la de S3 la sobrescribe el configurador) | Nosotros |
-| R3 | `sc-datalake-niif-configuration-general` | Configurador: lee `cnf-mallas` y publica el JSON | Nosotros |
-| R4 | `data-datalake-niif-pcr-emisiones-glue-job` | Extractor de Emisiones (Acsel-e) | Nosotros |
-| R5 | `iac-analytics-datalake-niif-operations-manager` | Step Functions, jobs e IAM | DevOps (solo lectura para nosotros) |
-| DDB | DynamoDB `niif-{env}-cnf-mallas` | Configuración de origen. **Ningún repo la carga** | Script nuestro en DEV; en QA y PRD, DevOps |
-| ORA | Consulta Oracle | Diccionario de Oracle, sin repo | Julio |
-| DEV | Consulta DEV | CloudShell o corrida de prueba en DEV, sin repo | Nosotros |
-| ? | Decisión | Algo que hay que preguntar o decidir antes del paso | Usuario, DevOps o arquitecto |
+| R1 | `data-datalake-niif-rmd-ext-estandar-glue-job` | Extractor estándar (6 mallas ALFAPRD) | Desarrollo |
+| R2 | `cfg-datalake-niif-config-s3` | JSON de extracción en Git (copia coherente; la de S3 la sobrescribe el configurador) | Desarrollo |
+| R3 | `sc-datalake-niif-configuration-general` | Configurador: lee `cnf-mallas` y publica el JSON | Desarrollo |
+| R4 | `data-datalake-niif-pcr-emisiones-glue-job` | Extractor de Emisiones (Acsel-e) | Desarrollo |
+| R5 | `iac-analytics-datalake-niif-operations-manager` | Step Functions, jobs e IAM | DevOps (solo lectura para Desarrollo) |
+| DDB | DynamoDB `niif-{env}-cnf-mallas` | Configuración de origen. **Ningún repo la carga** | Script de Desarrollo en DEV; en QA y PRD, DevOps |
+| ORA | Consulta Oracle | Diccionario de Oracle, sin repo | QA |
+| DEV | Consulta DEV | CloudShell o corrida de prueba en DEV, sin repo | Desarrollo |
+| ? | Decisión | Algo que hay que preguntar o decidir antes del paso | Desarrollo, DevOps o Arquitectura |
+
+## Glosario de brechas
+Cada ID es una brecha registrada en `Docs\06-brechas\`. La ficha completa, con la evidencia y la línea del código, está en el documento fuente.
+
+| ID | Prioridad | Qué es | Fuente |
+|---|---|---|---|
+| ARQ-57 | Alta | El extractor no aplica el modelo de ciclos: no pausa entre ciclos, solo ejecuta en cascada y el tope de unidades de costo solo avisa. | `auditoria-extraccion-2026-11.md` |
+| ARQ-58 | Media | Las duraciones de la extracción engañan: la "lectura" se mide al crear el DataFrame (Spark lee después, en el conteo) y la duración total se cierra antes del último paso. | `auditoria-extraccion-2026-11.md` |
+| ARQ-59 | Media | El configurador no deja evolucionar la extracción: exige un número fijo de ciclos y de registros, y tiene valores por defecto que apuntan a algo concreto. | `auditoria-extraccion-2026-11.md` |
+| ARQ-60 | Media | El extractor de Emisiones tiene copias: varios jobs y al menos 4 copias del script en S3, sin saber cuál es la vigente. | `auditoria-extraccion-2026-11.md` |
+| COS-05 | — | La extracción no lee en paralelo (sin `partitionColumn`/`numPartitions`), tiene un `ReadTimeout` de 30 s y puede leer la fuente dos veces (conteo y escritura). | `auditoria-pipeline-datos-vs-arquitectura.md` |
+| COS-11 | Alta | Las dependencias entre tablas son solo metadata: las tablas hijas se leen completas aunque solo se necesite una parte. | `auditoria-extraccion-2026-11.md` |
+| RYC-01 | Alta | La extracción lee cada tabla con una sola conexión y una tabla tras otra: se pagan 4 workers y solo uno lee. | `rendimiento-y-costos.md` |
 
 ## Análisis en tres órdenes
 
@@ -39,7 +69,7 @@ Hechos verificados en el código que fijan el orden:
 | Feature de rendimiento | `feature/ciclos-…` y `feature/lectura-rangos-…` | `feat`, `perf` | Pausa y presupuesto (ARQ-57); lectura por tramos (COS-11) |
 
 Reglas:
-- Una rama por tema. Se usa **el mismo nombre de rama en cada repo que el tema toque**: así `generar-parches.ps1` saca un parche por repo y cada repo se revierte solo.
+- Una rama por tema. Se usa **el mismo nombre de rama en cada repo que el tema toque**: así cada repo recibe su propio cambio y se revierte solo.
 - Un tema por PR, con menos de 400 líneas sin contar pruebas ([[est-pull-requests]]).
 - El ticket de Jira va en el nombre de la rama y del commit (V3 5.5 y 5.8). **Todavía no lo tenemos (decisión 0.1).**
 - **No se mezclan tipos en un commit:** un `refactor` no corrige nada, y un `fix` no reestructura.
@@ -63,7 +93,7 @@ Patrón: **ampliar → poblar → usar**. Así cada pieza se puede revertir sin 
   - qué configurador corre en QA y PRD (la general, las por malla o T2);
   - quién carga `cnf-mallas` en QA y PRD (ningún repo lo hace);
   - de dónde salen las 13 políticas del rol.
-- [ ] **0.2 ORA, Consulta Oracle:** Julio corre `consultas-oracle-alfaprd.sql` y `consultas-oracle-acsele.sql`. Va en paralelo: solo bloquea la fase 5.
+- [ ] **0.2 ORA, Consulta Oracle:** QA corre `consultas-oracle-alfaprd.sql` y `consultas-oracle-acsele.sql`. Va en paralelo: solo bloquea la fase 5.
 - [ ] **0.3 DEV, Consulta DEV:** línea base del extractor estándar en las 4 mallas sin medir (Endosos, ARP, RVI y Auxilios), con el método de `medir-tiempos-rentas.sh`. ARL y Rentas ya están medidas (tanda 1).
 - [ ] **0.4 DEV, Consulta DEV:** línea base del extractor de Emisiones (duración, filas y unidades por tabla).
 - [ ] **0.5 R1, `chore`:** rebasar `feature/modular-rmd-ext-estandar` (commit `5676ef5`) sobre `main` `3d5f623` y dejar la red de caracterización en verde.
@@ -88,7 +118,7 @@ Patrón: **ampliar → poblar → usar**. Así cada pieza se puede revertir sin 
   - [ ] 2.4.5 **R4:** lo mismo con sus timeouts fijos (`120000` y `21600000`).
 - [ ] **2.5 ARQ-60:**
   - [ ] 2.5.1 **DEV, Consulta DEV:** qué copia del script usa cada uno de los 8 jobs de Emisiones.
-  - [ ] 2.5.2 **R5, pedido a DevOps:** dejar una sola versión por pipeline y retirar las copias. Sin código nuestro.
+  - [ ] 2.5.2 **R5, pedido a DevOps:** dejar una sola versión por pipeline y retirar las copias. Sin código de Desarrollo.
 
 ### Fase 3. Observabilidad (rama `feature/obs-extraccion`)
 - [ ] **3.1 ? Decisión:**

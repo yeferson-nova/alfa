@@ -35,7 +35,7 @@ La extracción lee las fuentes Oracle (ALFAPRD y Acsel-e) directamente, **sin OD
 - **La duración de la lectura está mal medida:** Spark no lee hasta el conteo (9 s de lectura frente a 583 s de conteo en `anp_movimientos_pago`). Además, la duración total no incluye la reconciliación final (*hipótesis*: 214 s en el JSON frente a 746 s del job).
 - **Configurador:** `Ciclos esperados=N` y `CNF esperada=8` están fijos, así que no deja agregar ciclos. La configuradora general fija `MALLA_PK` por malla antes de importar el módulo, así que ahí no aplica el valor por defecto `MALLA#PRIMAS_ARL` del módulo. Ese defecto, y el ambiente que cae a `dev`, se quitan igual.
 - **Línea base en DEV (ALFAPRD):** entre 0,6 y 1,1 millones de unidades por segundo con una conexión. Con la misma configuración, ARL tardó entre 266 y 1172 s y Rentas entre 1115 y 2716 s.
-- Brechas: ARQ-57, ARQ-58, ARQ-59 y COS-11 en `Docs\06-brechas\auditoria-extraccion-2026-11.md`. Las conocidas de antes: RYC-01 y COS-05.
+- Brechas: ARQ-57, ARQ-58, ARQ-59 y COS-11 en `Docs\06-brechas\auditoria-extraccion-2026-11.md`. Las conocidas de antes: RYC-01 y COS-05. Qué es cada una: [glosario de brechas](roadmap-cambios.md#glosario-de-brechas).
 
 ## Estrategia para aplicar las dependencias
 | Opción | Qué hace | Decisión |
@@ -50,12 +50,12 @@ AWS DMS no está en la arquitectura (ni en el diagrama ni en la IaC). Se citó s
 ## Repos afectados
 | Repo | Qué cambia | Quién |
 |---|---|---|
-| `data-datalake-niif-rmd-ext-estandar-glue-job` | El extractor estándar: modular, pausa, tramos, medición real, log v1 | Nosotros |
-| `data-datalake-niif-pcr-emisiones-glue-job` | El extractor de Emisiones: lo mismo, más una sola versión (ARQ-60) | Nosotros |
-| `cfg-datalake-niif-config-s3` | Los 6 `config_extraccion_*.json` de ALFAPRD (ARL, Rentas, Endosos, ARP, RVI y Auxilios) y los de Emisiones (`emisiones.json`, `pcr_vida`, `generales`, `satelites`) | Nosotros |
-| `sc-datalake-niif-configuration-general` | Los `conf_*.py` y `conf_emisiones.py`: sin conteos fijos, sin valores por defecto y las claves nuevas | Nosotros |
-| `sc-datalake-niif-configurador-mallas` (T2) | Las mismas claves nuevas, si es el configurador que queda | Nosotros |
-| `iac-analytics-datalake-niif-operations-manager` | `--EJECUCION_ID` en las 6 Step Functions y en `niif-snf-emisiones` | DevOps (nosotros entregamos el cambio) |
+| `data-datalake-niif-rmd-ext-estandar-glue-job` | El extractor estándar: modular, pausa, tramos, medición real, log v1 | Desarrollo |
+| `data-datalake-niif-pcr-emisiones-glue-job` | El extractor de Emisiones: lo mismo, más una sola versión (ARQ-60) | Desarrollo |
+| `cfg-datalake-niif-config-s3` | Los 6 `config_extraccion_*.json` de ALFAPRD (ARL, Rentas, Endosos, ARP, RVI y Auxilios) y los de Emisiones (`emisiones.json`, `pcr_vida`, `generales`, `satelites`) | Desarrollo |
+| `sc-datalake-niif-configuration-general` | Los `conf_*.py` y `conf_emisiones.py`: sin conteos fijos, sin valores por defecto y las claves nuevas | Desarrollo |
+| `sc-datalake-niif-configurador-mallas` (T2) | Las mismas claves nuevas, si es el configurador que queda | Desarrollo |
+| `iac-analytics-datalake-niif-operations-manager` | `--EJECUCION_ID` en las 6 Step Functions y en `niif-snf-emisiones` | DevOps (Desarrollo entrega el cambio) |
 
 Se rozan:
 - Las 6 configuradoras por malla tienen el mismo módulo copiado: si alguna corre, pisa las claves nuevas.
@@ -72,7 +72,7 @@ Verificado en DEV el 2026-11-20:
 |---|---|
 | Extractor estándar | Solo la orden. La rama modular (un commit) hay que rebasarla sobre el `main` nuevo; su red de pruebas ya cubre el flujo ARL |
 | Extractor de Emisiones | Su red de pruebas y su línea base en DEV: no existen. Por eso va después del estándar |
-| Opción D | Resultados de Julio; dónde se escriben los tramos (*propuesta:* zona temporal, Bronce igual que hoy); referencia de equivalencia para ALFAPRD (*propuesta:* la salida del job actual en el mismo periodo) |
+| Opción D | Resultados de QA; dónde se escriben los tramos (*propuesta:* zona temporal, Bronce igual que hoy); referencia de equivalencia para ALFAPRD (*propuesta:* la salida del job actual en el mismo periodo) |
 | Desplegar | `--EJECUCION_ID` en las Step Functions (DevOps), junto con el código: el job lo exigirá |
 
 Checkpoint de cada tramo (*propuesta*): en `ejc-ejecuciones`, con la misma `PK` que ya arma el configurador (`EJC#<MALLA>#<periodo>`) y `SK = EJECUCION#<execution_name>#TRAMO#<tabla>#<n>`. No choca con el ítem de la ejecución y el rol ya tiene permiso.
@@ -81,7 +81,7 @@ Checkpoint de cada tramo (*propuesta*): en `ejc-ejecuciones`, con la misma `PK` 
 Orden detallado por repo, separado por fix, refactor, observabilidad y features, en [roadmap-cambios.md](roadmap-cambios.md). Resumen:
 
 1. Diseño de la opción D cerrado y validado con datos (este README y el documento de diseño).
-2. Datos de Oracle con Julio ([consultas-oracle-alfaprd.sql](consultas-oracle-alfaprd.sql) y [consultas-oracle-acsele.sql](consultas-oracle-acsele.sql)): tipos e índices de las llaves foráneas, estadísticas de tamaño y acceso de lectura a `acsele_alfa_bi.em_*`.
+2. Datos de Oracle con QA ([consultas-oracle-alfaprd.sql](consultas-oracle-alfaprd.sql) y [consultas-oracle-acsele.sql](consultas-oracle-acsele.sql)): tipos e índices de las llaves foráneas, estadísticas de tamaño y acceso de lectura a `acsele_alfa_bi.em_*`.
 3. Rebasar `feature/modular-rmd-ext-estandar` sobre el `main` nuevo de `alfa-repos` (ya trae el fix del SCD) y llevar la red de caracterización a verde.
 4. Red de pruebas y línea base del extractor de Emisiones.
 5. Modularizar los dos extractores (primero el estándar): pausa por ciclo, lectura por tramos, medición real y contrato de log v1. En el mismo cambio, la configuración: JSON, `cnf-mallas` y configurador sin conteos fijos.

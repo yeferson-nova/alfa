@@ -49,6 +49,6 @@ Humano: `Tareas\Modularizacion\Extraccion\README.md` y `diseno-lectura-por-rango
 - Checkpoint: en `ejc-ejecuciones` (el rol ya puede escribir ahí). El configurador arma la llave de la ejecución `PK = EJC#<MALLA>#<periodo>`, `SK = EJECUCION#<execution_name>` (`conf_arl.py:530-542`) y la Step Function solo la actualiza. *Propuesta* para el tramo: misma `PK`, `SK = EJECUCION#<execution_name>#TRAMO#<tabla>#<n>`. `execution_name` ya es el `ejecucion_id` y viaja en la entrada de la Step Function.
 - Equivalencia en ALFAPRD: las `em_*` solo sirven para Acsel-e. *Propuesta:* comparar contra la salida del job actual en el mismo periodo (conteo, suma de control y `exceptAll` = 0). Falta la confirmación del usuario.
 
-## Por verificar (Julio, Oracle)
+## Por verificar (QA, Oracle)
 - Scripts: `Tareas/Modularizacion/Extraccion/consultas-oracle-alfaprd.sql` y `consultas-oracle-acsele.sql`.
 - Tipo e índice de cada columna de join; acceso a `ALL_TABLES.NUM_ROWS`; permiso `FLASHBACK` y `UNDO_RETENTION` (foto consistente entre tramos); acceso de lectura a `acsele_alfa_bi.em_*` para la prueba de equivalencia. Ver [[preguntas-abiertas]].

@@ -14,7 +14,7 @@ No asumas nada: todo se comprueba con el código, la arquitectura o una simulaci
 
 ## Proceso
 0. Contexto: lee CLAUDE.md, MemoriaIa\00-INDEX.md, traspaso-sesion, preferencias-usuario y las notas de la malla o del incidente. Carga la skill niif17-alfa.
-1. Código: ubica los archivos en alfa-repos (foto de la rama según VERSIONES.md) y confirma repo, rama y commit. Si hay copia de lo desplegado (QA o PRD), haz el diff ignorando finales de línea.
+1. Código: ubica los archivos en el repo del componente y confirma repo, rama y commit. Si hay copia de lo desplegado (QA o PRD), haz el diff ignorando finales de línea.
 2. Flujo: lee la Step Function de la malla (EvidenciasAws) y arma el mapa etapa → job → repo → archivo, con argumentos, reintentos, Catch y timeouts. Revisa el contrato entre jobs (parametros_extraccion.json), la config de la malla (cfg-datalake-niif-config-s3) y el configurador.
 3. Auditoría: separa el problema raíz de los demás hallazgos. Cada hallazgo lleva ID, severidad (Crítico, Alto, Medio o Bajo), qué pasa, a qué componente afecta, evidencia (archivo:líneas, QA o simulación) y una corrección sin sobreingeniería que no pierda lo que ya funciona. Mira cada archivo como parte del flujo: cómo afecta a las etapas anteriores y siguientes.
 4. Validación con código: ejecuta los scripts reales, sin modificarlos, con PySpark local (entorno con uv: Python 3.11 + pyspark 3.5.5) y Glue, S3 y Oracle simulados en memoria.
@@ -23,7 +23,7 @@ No asumas nada: todo se comprueba con el código, la arquitectura o una simulaci
    - Si la simulación contradice una hipótesis, corrige el hallazgo y dilo.
 5. Estructura del código: mide líneas, lógica fuera de funciones, anidamiento, función más larga, imports dentro de funciones, funciones copiadas entre jobs, pruebas existentes y configuración de Sonar y tox. Los hallazgos van como COD-xx.
 6. Informe: escribe Tareas\Fixs\<carpeta>\informe-tecnico.md. Los scripts de medición y simulación van en Tareas\Fixs\<carpeta>\pruebas\.
-7. Memoria: actualiza pendientes, rutas-workspace y la nota del incidente o de la malla. Corre el validador de la memoria (alfa-repos\scripts\validar-memoria.py) y busca caracteres de control en lo que edites.
+7. Memoria: actualiza pendientes, rutas-workspace y la nota del incidente o de la malla. Corre el validador de la memoria (indicado en CLAUDE.md) y busca caracteres de control en lo que edites.
 
 ## Estructura del informe
 - Título, Para (equipo de desarrollo, BA y líder técnico), Fecha y Alcance.

@@ -18,6 +18,15 @@ Al iniciar o al perder contexto: leer `MemoriaIa\00-INDEX.md` y abrir solo las n
 - **Para IA (memoria):** `C:\Users\rdpuser\Git\MemoriaIa\`. Notas cortas y enlazadas, según el estándar de abajo.
 - Si un tema tiene ambas, la nota de IA resume y apunta al documento humano (ejemplo: [[brechas-seguridad]]). No copiar el contenido completo.
 
+## Proceso personal ↔ corporativo: solo nuestro, invisible para Alfa
+- El paso de código entre el equipo personal y el equipo corporativo es **solo nuestro**. Incluye:
+  - el repo `alfa-repos` (el segundo Git);
+  - los scripts `exportar.ps1`, `generar-parches.ps1`, `aplicar-parches.ps1` y `sincronizar-repos.ps1`;
+  - la carpeta `parches/`, `VERSIONES.md` y las etiquetas `enviado/*`.
+- Para Alfa es transparente: **ningún entregable puede referenciarlo**. Esto aplica a `.md`, README, roadmaps, guías de prueba, prompts, diagramas y zips en `Tareas\`, `Docs\` o en los repos corporativos.
+- En los entregables se nombra solo el repo corporativo (`data-datalake-niif-*`, `sc-datalake-niif-*`…), su ruta interna (`src\jobs\...`) y la rama o el commit **de ese repo**. Nunca `alfa-repos\...`, sus ramas, sus commits ni los dos Git.
+- Ese proceso solo se documenta en `MemoriaIa\` ([[repo-alfa-repos]]) y en `alfa-repos\README.md`.
+
 ## Estructura
 - `Tareas\`: tareas asignadas para humanos. `00-LEEME.md` (contexto del proyecto) y una carpeta por asignación (`T1-notificaciones`, `T2-lambdas-gestor-configuracion`, `T3-validaciones-reserva-matematica`) con `README.md` y sus entregables.
 - `Docs\`: `02-estandares-banco` (solo lectura, nombres originales), `03-historias-usuario`, `04-manuales`, `05-arquitectura`, `06-brechas`, `07-entregables`, `08-estandares-desarrollo` (estándar propio de código, ver [[est-desarrollo-hexagonal]]).
