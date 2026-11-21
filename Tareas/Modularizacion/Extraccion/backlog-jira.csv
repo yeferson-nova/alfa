@@ -1,19 +1,19 @@
-Issue Id,Parent Id,Issue Type,Summary,Description,Priority,Labels,Labels,Labels,Bloqueada por,Bloqueada por,Bloqueada por,Bloqueada por
-1,,Epic,Modularización de la extracción,"Cerrar la deuda técnica y optimizar la extracción existente (extractor estándar y de Emisiones): Python con estándares de industria, observabilidad y menos carga en Oracle, con los mismos resultados.",High,extraccion,modularizacion,,,,,
+Issue Id,Parent Id,Issue Type,Summary,Description,Priority,Labels,Labels,Labels,Sprint,Due Date,Bloqueada por,Bloqueada por,Bloqueada por,Bloqueada por
+1,,Epic,Modularización de la extracción,"Cerrar la deuda técnica y optimizar la extracción existente (proceso de extracción estándar y de Emisiones): Python con estándares de industria, observabilidad y menos carga en Oracle, con los mismos resultados. Inicio 2026-11-23; cierre comprometido 2027-01-08 (aprobado en QA).",High,extraccion,modularizacion,,,2027-01-08,,,,
 2,1,Task,EXT-01 Decisiones de arranque con DevOps,"Como desarrollador quiero conocer el ticket, el configurador vigente, quién carga cnf-mallas y el origen de las políticas del rol para no suponer nada al empezar.
 
 Criterios de aceptación:
 - Ticket Jira definido para ramas y commits
 - Se sabe qué configurador corre en QA y PRD (general, por malla o T2)
 - Se sabe quién carga cnf-mallas en QA y PRD
-- Se sabe de qué repo salen las 13 políticas del rol del extractor
+- Se sabe de qué repo salen las 13 políticas del rol del proceso de extracción
 
 Piezas: R5 (consulta)
 Rama: -
 Brecha: -
 Roadmap: 0.1
 Orden: 01
-ID provisional: EXT-01",High,extraccion,chore,,,,,
+ID provisional: EXT-01",High,extraccion,chore,,EXT S1,2026-11-24,,,,
 3,1,Spike,EXT-02 Diccionario Oracle de las llaves de extracción,"Como desarrollador quiero el tipo, el índice y el tamaño de cada tabla y llave, y los permisos de flashback para decidir tabla por tabla cómo leer (A, C o D).
 
 Criterios de aceptación:
@@ -26,8 +26,8 @@ Rama: -
 Brecha: COS-11
 Roadmap: 0.2
 Orden: 02
-ID provisional: EXT-02",High,extraccion,spike,cos-11,,,,
-4,1,Story,EXT-03 Línea base del extractor estándar,"Como desarrollador quiero la duración, las filas y las unidades por tabla de las 6 mallas para comparar cada cambio contra el estado actual.
+ID provisional: EXT-02",High,extraccion,spike,cos-11,EXT S2,2026-12-18,,,,
+4,1,Story,EXT-03 Línea base del proceso de extracción estándar,"Como desarrollador quiero la duración, las filas y las unidades por tabla de las 6 mallas para comparar cada cambio contra el estado actual.
 
 Criterios de aceptación:
 - Endosos, ARP, RVI y Auxilios medidas (ARL y Rentas ya lo están)
@@ -39,8 +39,8 @@ Rama: chore/linea-base-extraccion
 Brecha: -
 Roadmap: 0.3
 Orden: 03
-ID provisional: EXT-03",High,extraccion,chore,,,,,
-5,1,Story,EXT-04 Línea base del extractor de Emisiones,"Como desarrollador quiero la duración, las filas y las unidades por tabla del extractor de Emisiones para comparar cada cambio contra el estado actual.
+ID provisional: EXT-03",High,extraccion,chore,,EXT S1,2026-11-23,,,,
+5,1,Story,EXT-04 Línea base del proceso de extracción de Emisiones,"Como desarrollador quiero la duración, las filas y las unidades por tabla del proceso de extracción de Emisiones para comparar cada cambio contra el estado actual.
 
 Criterios de aceptación:
 - Medidas las mallas que usa (Emisiones, PCR Vida, Generales y Satélites)
@@ -52,8 +52,8 @@ Rama: chore/linea-base-extraccion
 Brecha: -
 Roadmap: 0.4
 Orden: 04
-ID provisional: EXT-04",High,extraccion,chore,,,,,
-6,1,Story,EXT-05 Red de pruebas del extractor estándar al día,"Como desarrollador quiero la red de caracterización sobre la quality actual para refactorizar sin cambiar resultados.
+ID provisional: EXT-04",High,extraccion,chore,,EXT S1,2026-11-25,,,,
+6,1,Story,EXT-05 Red de pruebas del proceso de extracción estándar al día,"Como desarrollador quiero la red de caracterización sobre la quality actual para refactorizar sin cambiar resultados.
 
 Criterios de aceptación:
 - La rama de trabajo parte de quality (0af0ca8, con el fix del SCD)
@@ -64,8 +64,8 @@ Rama: feature/modular-rmd-ext-estandar
 Brecha: -
 Roadmap: 0.5
 Orden: 05
-ID provisional: EXT-05",High,extraccion,chore,,,,,
-7,1,Story,EXT-06 Red de pruebas del extractor de Emisiones,"Como desarrollador quiero pruebas que fijen el comportamiento actual del extractor de Emisiones para poder cambiarlo sin romper resultados.
+ID provisional: EXT-05",High,extraccion,chore,,EXT S1,2026-11-25,,,,
+7,1,Story,EXT-06 Red de pruebas del proceso de extracción de Emisiones,"Como desarrollador quiero pruebas que fijen el comportamiento actual del proceso de extracción de Emisiones para poder cambiarlo sin romper resultados.
 
 Criterios de aceptación:
 - Pruebas de caracterización de la lectura, las dependencias y la escritura
@@ -77,7 +77,7 @@ Rama: chore/red-pruebas-emisiones
 Brecha: -
 Roadmap: 0.6
 Orden: 06
-ID provisional: EXT-06",High,extraccion,test,,,,,
+ID provisional: EXT-06",High,extraccion,test,,EXT S1,2026-11-27,,,,
 8,1,Spike,EXT-07 Quién lee parametros_extraccion.json,"Como desarrollador quiero saber qué jobs leen cada campo de parametros_extraccion.json para cambiar las duraciones sin romper a nadie.
 
 Criterios de aceptación:
@@ -89,8 +89,8 @@ Rama: -
 Brecha: ARQ-58
 Roadmap: 0.7
 Orden: 07
-ID provisional: EXT-07",Medium,extraccion,spike,arq-58,,,,
-9,1,Story,EXT-08 Extractor estándar en módulos hexagonales,"Como desarrollador quiero el extractor estándar separado en dominio, puertos y adaptadores para corregir y mejorar cada parte sin tocar las demás.
+ID provisional: EXT-07",Medium,extraccion,spike,arq-58,EXT S1,2026-11-27,,,,
+9,1,Story,EXT-08 Proceso de extracción estándar en módulos hexagonales,"Como desarrollador quiero el proceso de extracción estándar separado en dominio, puertos y adaptadores para corregir y mejorar cada parte sin tocar las demás.
 
 Criterios de aceptación:
 - Mismas salidas: red en verde
@@ -102,13 +102,13 @@ Rama: feature/modular-rmd-ext-estandar
 Brecha: -
 Roadmap: 1.1, 1.2
 Orden: 08
-ID provisional: EXT-08",High,extraccion,refactor,,4,6,,
-100,9,Sub-task,EXT-08.1 Módulo de configuración,"Subtarea 1 de EXT-08, en orden.",High,extraccion,refactor,,,,,
-101,9,Sub-task,EXT-08.2 Adaptador de lectura JDBC,"Subtarea 2 de EXT-08, en orden.",High,extraccion,refactor,,,,,
-102,9,Sub-task,EXT-08.3 Adaptador de escritura,"Subtarea 3 de EXT-08, en orden.",High,extraccion,refactor,,,,,
-103,9,Sub-task,EXT-08.4 Control y parámetros de extracción,"Subtarea 4 de EXT-08, en orden.",High,extraccion,refactor,,,,,
-104,9,Sub-task,EXT-08.5 Equivalencia en DEV contra la línea base,"Subtarea 5 de EXT-08, en orden.",High,extraccion,refactor,,,,,
-10,1,Story,EXT-09 Extractor de Emisiones en módulos hexagonales,"Como desarrollador quiero el extractor de Emisiones con la misma estructura que el estándar para mantener los dos extractores con un solo patrón.
+ID provisional: EXT-08",High,extraccion,refactor,,EXT S1,2026-12-02,4,6,,
+100,9,Sub-task,EXT-08.1 Módulo de configuración,"Subtarea 1 de EXT-08, en orden.",High,extraccion,refactor,,EXT S1,2026-12-02,,,,
+101,9,Sub-task,EXT-08.2 Adaptador de lectura JDBC,"Subtarea 2 de EXT-08, en orden.",High,extraccion,refactor,,EXT S1,2026-12-02,,,,
+102,9,Sub-task,EXT-08.3 Adaptador de escritura,"Subtarea 3 de EXT-08, en orden.",High,extraccion,refactor,,EXT S1,2026-12-02,,,,
+103,9,Sub-task,EXT-08.4 Control y parámetros de extracción,"Subtarea 4 de EXT-08, en orden.",High,extraccion,refactor,,EXT S1,2026-12-02,,,,
+104,9,Sub-task,EXT-08.5 Equivalencia en DEV contra la línea base,"Subtarea 5 de EXT-08, en orden.",High,extraccion,refactor,,EXT S1,2026-12-02,,,,
+10,1,Story,EXT-09 Proceso de extracción de Emisiones en módulos hexagonales,"Como desarrollador quiero el proceso de extracción de Emisiones con la misma estructura que el estándar para mantener los dos procesos de extracción con un solo patrón.
 
 Criterios de aceptación:
 - Mismas salidas: red en verde
@@ -119,9 +119,9 @@ Rama: feature/modular-pcr-emisiones
 Brecha: -
 Roadmap: 1.3, 1.4
 Orden: 09
-ID provisional: EXT-09",High,extraccion,refactor,,5,7,9,
-105,10,Sub-task,EXT-09.1 Módulos según el patrón de EXT-08,"Subtarea 1 de EXT-09, en orden.",High,extraccion,refactor,,,,,
-106,10,Sub-task,EXT-09.2 Equivalencia en DEV contra la línea base,"Subtarea 2 de EXT-09, en orden.",High,extraccion,refactor,,,,,
+ID provisional: EXT-09",High,extraccion,refactor,,EXT S2,2026-12-10,5,7,9,
+105,10,Sub-task,EXT-09.1 Módulos según el patrón de EXT-08,"Subtarea 1 de EXT-09, en orden.",High,extraccion,refactor,,EXT S2,2026-12-10,,,,
+106,10,Sub-task,EXT-09.2 Equivalencia en DEV contra la línea base,"Subtarea 2 de EXT-09, en orden.",High,extraccion,refactor,,EXT S2,2026-12-10,,,,
 11,1,Story,EXT-10 Configurador sin número fijo de ciclos,"Como operador de la malla quiero agregar o quitar ciclos y registros sin que falle el configurador para probar una tabla por ciclo y ajustar la malla sin desplegar.
 
 Criterios de aceptación:
@@ -134,7 +134,7 @@ Rama: bugfix/arq-59-conteos
 Brecha: ARQ-59
 Roadmap: 2.1
 Orden: 10
-ID provisional: EXT-10",Medium,extraccion,fix,arq-59,2,,,
+ID provisional: EXT-10",Medium,extraccion,fix,arq-59,EXT S1,2026-12-03,2,,,
 12,1,Story,EXT-11 Configurador sin valores por defecto,"Como operador de la malla quiero que el configurador falle si falta la malla o el ambiente para que nunca publique la configuración de otra malla u otro ambiente.
 
 Criterios de aceptación:
@@ -147,7 +147,7 @@ Rama: bugfix/arq-59-defectos
 Brecha: ARQ-59
 Roadmap: 2.2
 Orden: 11
-ID provisional: EXT-11",Medium,extraccion,fix,arq-59,2,11,,
+ID provisional: EXT-11",Medium,extraccion,fix,arq-59,EXT S1,2026-12-04,2,11,,
 13,1,Story,EXT-12 Duraciones reales en la extracción,"Como operador de la malla quiero que la duración de lectura y la total sean las reales para saber dónde se va el tiempo de la corrida.
 
 Criterios de aceptación:
@@ -160,7 +160,7 @@ Rama: bugfix/arq-58-medicion
 Brecha: ARQ-58
 Roadmap: 2.3
 Orden: 12
-ID provisional: EXT-12",Medium,extraccion,fix,arq-58,8,9,,
+ID provisional: EXT-12",Medium,extraccion,fix,arq-58,EXT S1,2026-12-04,8,9,,
 14,1,Story,EXT-13 Timeout de lectura configurable,"Como operador de la malla quiero fijar el timeout de lectura por configuración para que una lectura lenta no corte la extracción.
 
 Criterios de aceptación:
@@ -173,13 +173,13 @@ Rama: bugfix/cos-05-timeout
 Brecha: COS-05
 Roadmap: 2.4
 Orden: 13
-ID provisional: EXT-13",Medium,extraccion,fix,cos-05,4,5,9,10
-107,14,Sub-task,EXT-13.1 Decisión: valor según la lectura más larga medida,"Subtarea 1 de EXT-13, en orden.",Medium,extraccion,fix,,,,,
-108,14,Sub-task,EXT-13.2 cnf-mallas: clave en fuente (con respaldo),"Subtarea 2 de EXT-13, en orden.",Medium,extraccion,fix,,,,,
-109,14,Sub-task,EXT-13.3 cfg-datalake-niif-config-s3: clave en los JSON,"Subtarea 3 de EXT-13, en orden.",Medium,extraccion,fix,,,,,
-110,14,Sub-task,EXT-13.4 Extractor estándar lee la clave,"Subtarea 4 de EXT-13, en orden.",Medium,extraccion,fix,,,,,
-111,14,Sub-task,EXT-13.5 Extractor de Emisiones lee la clave,"Subtarea 5 de EXT-13, en orden.",Medium,extraccion,fix,,,,,
-15,1,Story,EXT-14 Una sola versión del extractor de Emisiones,"Como operador de la malla quiero una sola versión del extractor de Emisiones desplegada por pipeline para saber qué código corre en cada job.
+ID provisional: EXT-13",Medium,extraccion,fix,cos-05,EXT S2,2026-12-07,4,5,9,10
+107,14,Sub-task,EXT-13.1 Decisión: valor según la lectura más larga medida,"Subtarea 1 de EXT-13, en orden.",Medium,extraccion,fix,,EXT S2,2026-12-07,,,,
+108,14,Sub-task,EXT-13.2 cnf-mallas: clave en fuente (con respaldo),"Subtarea 2 de EXT-13, en orden.",Medium,extraccion,fix,,EXT S2,2026-12-07,,,,
+109,14,Sub-task,EXT-13.3 cfg-datalake-niif-config-s3: clave en los JSON,"Subtarea 3 de EXT-13, en orden.",Medium,extraccion,fix,,EXT S2,2026-12-07,,,,
+110,14,Sub-task,EXT-13.4 Proceso de extracción estándar lee la clave,"Subtarea 4 de EXT-13, en orden.",Medium,extraccion,fix,,EXT S2,2026-12-07,,,,
+111,14,Sub-task,EXT-13.5 Proceso de extracción de Emisiones lee la clave,"Subtarea 5 de EXT-13, en orden.",Medium,extraccion,fix,,EXT S2,2026-12-07,,,,
+15,1,Story,EXT-14 Una sola versión del proceso de extracción de Emisiones,"Como operador de la malla quiero una sola versión del proceso de extracción de Emisiones desplegada por pipeline para saber qué código corre en cada job.
 
 Criterios de aceptación:
 - Inventario en DEV de qué copia usa cada job
@@ -190,10 +190,10 @@ Rama: -
 Brecha: ARQ-60
 Roadmap: 2.5
 Orden: 14
-ID provisional: EXT-14",Medium,extraccion,fix,arq-60,2,,,
-112,15,Sub-task,EXT-14.1 Inventario en DEV,"Subtarea 1 de EXT-14, en orden.",Medium,extraccion,fix,,,,,
-113,15,Sub-task,EXT-14.2 Pedido a DevOps,"Subtarea 2 de EXT-14, en orden.",Medium,extraccion,fix,,,,,
-16,1,Story,EXT-15 ejecucion_id hasta los extractores,"Como operador de la malla quiero que cada corrida de extracción reciba el ejecucion_id para seguir una corrida de punta a punta.
+ID provisional: EXT-14",Medium,extraccion,fix,arq-60,EXT S2,2026-12-10,2,,,
+112,15,Sub-task,EXT-14.1 Inventario en DEV,"Subtarea 1 de EXT-14, en orden.",Medium,extraccion,fix,,EXT S2,2026-12-10,,,,
+113,15,Sub-task,EXT-14.2 Pedido a DevOps,"Subtarea 2 de EXT-14, en orden.",Medium,extraccion,fix,,EXT S2,2026-12-10,,,,
+16,1,Story,EXT-15 ejecucion_id hasta los procesos de extracción,"Como operador de la malla quiero que cada corrida de extracción reciba el ejecucion_id para seguir una corrida de punta a punta.
 
 Criterios de aceptación:
 - Las 6 Step Functions y niif-snf-emisiones pasan --EJECUCION_ID = $$.Execution.Name
@@ -204,10 +204,10 @@ Rama: -
 Brecha: ARQ-32
 Roadmap: 3.2, 3.3
 Orden: 15
-ID provisional: EXT-15",Medium,extraccion,obs,arq-32,2,,,
-114,16,Sub-task,EXT-15.1 Pedido a DevOps (IaC),"Subtarea 1 de EXT-15, en orden.",Medium,extraccion,obs,,,,,
-115,16,Sub-task,EXT-15.2 Confirmación en DEV,"Subtarea 2 de EXT-15, en orden.",Medium,extraccion,obs,,,,,
-17,1,Story,EXT-16 Log v1 en el extractor estándar,"Como operador de la malla quiero logs JSON por paso con ejecucion_id, duración, filas y unidades para ubicar una falla o una lentitud sin leer el código.
+ID provisional: EXT-15",Medium,extraccion,obs,arq-32,EXT S2,2026-12-10,2,,,
+114,16,Sub-task,EXT-15.1 Pedido a DevOps (IaC),"Subtarea 1 de EXT-15, en orden.",Medium,extraccion,obs,,EXT S2,2026-12-10,,,,
+115,16,Sub-task,EXT-15.2 Confirmación en DEV,"Subtarea 2 de EXT-15, en orden.",Medium,extraccion,obs,,EXT S2,2026-12-10,,,,
+17,1,Story,EXT-16 Log v1 en el proceso de extracción estándar,"Como operador de la malla quiero logs JSON por paso con ejecucion_id, duración, filas y unidades para ubicar una falla o una lentitud sin leer el código.
 
 Criterios de aceptación:
 - Eventos PASO_INICIO y PASO_FIN con duracion_ms, filas, unidades y densidad
@@ -219,10 +219,10 @@ Rama: feature/obs-extraccion
 Brecha: ARQ-53
 Roadmap: 3.1, 3.4
 Orden: 16
-ID provisional: EXT-16",Medium,extraccion,obs,arq-53,13,16,,
-116,17,Sub-task,EXT-16.1 Decisión: contrato v1 y dónde vive el módulo común,"Subtarea 1 de EXT-16, en orden.",Medium,extraccion,obs,,,,,
-117,17,Sub-task,EXT-16.2 Implementación en el extractor estándar,"Subtarea 2 de EXT-16, en orden.",Medium,extraccion,obs,,,,,
-18,1,Story,EXT-17 Log v1 en el extractor de Emisiones,"Como operador de la malla quiero los mismos logs v1 en el extractor de Emisiones para ver las dos extracciones de la misma forma.
+ID provisional: EXT-16",Medium,extraccion,obs,arq-53,EXT S2,2026-12-14,13,16,,
+116,17,Sub-task,EXT-16.1 Decisión: contrato v1 y dónde vive el módulo común,"Subtarea 1 de EXT-16, en orden.",Medium,extraccion,obs,,EXT S2,2026-12-14,,,,
+117,17,Sub-task,EXT-16.2 Implementación en el proceso de extracción estándar,"Subtarea 2 de EXT-16, en orden.",Medium,extraccion,obs,,EXT S2,2026-12-14,,,,
+18,1,Story,EXT-17 Log v1 en el proceso de extracción de Emisiones,"Como operador de la malla quiero los mismos logs v1 en el proceso de extracción de Emisiones para ver las dos extracciones de la misma forma.
 
 Criterios de aceptación:
 - Mismos eventos y campos que EXT-16
@@ -233,7 +233,7 @@ Rama: feature/obs-extraccion
 Brecha: ARQ-53
 Roadmap: 3.5
 Orden: 17
-ID provisional: EXT-17",Medium,extraccion,obs,arq-53,10,16,17,
+ID provisional: EXT-17",Medium,extraccion,obs,arq-53,EXT S2,2026-12-15,10,16,17,
 19,1,Story,EXT-18 Pausa y presupuesto por ciclo (estándar),"Como operador de la malla quiero una pausa y un presupuesto de unidades por ciclo, configurables para no saturar Oracle por la única conexión de servicio.
 
 Criterios de aceptación:
@@ -246,14 +246,14 @@ Rama: feature/ciclos-extraccion
 Brecha: ARQ-57
 Roadmap: 4.1 a 4.6
 Orden: 18
-ID provisional: EXT-18",High,extraccion,feat,arq-57,11,17,,
-118,19,Sub-task,EXT-18.1 Decisión: pausa de ALFAPRD y tamaño del pool,"Subtarea 1 de EXT-18, en orden.",High,extraccion,feat,,,,,
-119,19,Sub-task,EXT-18.2 Configurador conoce las claves sin exigirlas,"Subtarea 2 de EXT-18, en orden.",High,extraccion,feat,,,,,
-120,19,Sub-task,EXT-18.3 cnf-mallas: claves en CICLO# (con respaldo),"Subtarea 3 de EXT-18, en orden.",High,extraccion,feat,,,,,
-121,19,Sub-task,EXT-18.4 cfg-datalake-niif-config-s3: claves en los 6 JSON,"Subtarea 4 de EXT-18, en orden.",High,extraccion,feat,,,,,
-122,19,Sub-task,EXT-18.5 Extractor estándar aplica pausa y presupuesto,"Subtarea 5 de EXT-18, en orden.",High,extraccion,feat,,,,,
-123,19,Sub-task,EXT-18.6 Medición en DEV,"Subtarea 6 de EXT-18, en orden.",High,extraccion,feat,,,,,
-20,1,Story,EXT-19 Pausa y presupuesto por ciclo (Emisiones),"Como operador de la malla quiero el mismo modelo de ciclos en el extractor de Emisiones para no saturar Acsel-e por la única conexión de servicio.
+ID provisional: EXT-18",High,extraccion,feat,arq-57,EXT S2,2026-12-18,11,17,,
+118,19,Sub-task,EXT-18.1 Decisión: pausa de ALFAPRD y tamaño del pool,"Subtarea 1 de EXT-18, en orden.",High,extraccion,feat,,EXT S2,2026-12-18,,,,
+119,19,Sub-task,EXT-18.2 Configurador conoce las claves sin exigirlas,"Subtarea 2 de EXT-18, en orden.",High,extraccion,feat,,EXT S2,2026-12-18,,,,
+120,19,Sub-task,EXT-18.3 cnf-mallas: claves en CICLO# (con respaldo),"Subtarea 3 de EXT-18, en orden.",High,extraccion,feat,,EXT S2,2026-12-18,,,,
+121,19,Sub-task,EXT-18.4 cfg-datalake-niif-config-s3: claves en los 6 JSON,"Subtarea 4 de EXT-18, en orden.",High,extraccion,feat,,EXT S2,2026-12-18,,,,
+122,19,Sub-task,EXT-18.5 Proceso de extracción estándar aplica pausa y presupuesto,"Subtarea 5 de EXT-18, en orden.",High,extraccion,feat,,EXT S2,2026-12-18,,,,
+123,19,Sub-task,EXT-18.6 Medición en DEV,"Subtarea 6 de EXT-18, en orden.",High,extraccion,feat,,EXT S2,2026-12-18,,,,
+20,1,Story,EXT-19 Pausa y presupuesto por ciclo (Emisiones),"Como operador de la malla quiero el mismo modelo de ciclos en el proceso de extracción de Emisiones para no saturar Acsel-e por la única conexión de servicio.
 
 Criterios de aceptación:
 - Mismos criterios que EXT-18
@@ -264,11 +264,11 @@ Rama: feature/ciclos-extraccion
 Brecha: ARQ-57
 Roadmap: 4.7
 Orden: 19
-ID provisional: EXT-19",High,extraccion,feat,arq-57,18,19,,
-124,20,Sub-task,EXT-19.1 cnf-mallas de Emisiones,"Subtarea 1 de EXT-19, en orden.",High,extraccion,feat,,,,,
-125,20,Sub-task,EXT-19.2 JSON de Emisiones,"Subtarea 2 de EXT-19, en orden.",High,extraccion,feat,,,,,
-126,20,Sub-task,EXT-19.3 Extractor de Emisiones,"Subtarea 3 de EXT-19, en orden.",High,extraccion,feat,,,,,
-127,20,Sub-task,EXT-19.4 Medición en DEV,"Subtarea 4 de EXT-19, en orden.",High,extraccion,feat,,,,,
+ID provisional: EXT-19",High,extraccion,feat,arq-57,EXT S3,2026-12-21,18,19,,
+124,20,Sub-task,EXT-19.1 cnf-mallas de Emisiones,"Subtarea 1 de EXT-19, en orden.",High,extraccion,feat,,EXT S3,2026-12-21,,,,
+125,20,Sub-task,EXT-19.2 JSON de Emisiones,"Subtarea 2 de EXT-19, en orden.",High,extraccion,feat,,EXT S3,2026-12-21,,,,
+126,20,Sub-task,EXT-19.3 Proceso de extracción de Emisiones,"Subtarea 3 de EXT-19, en orden.",High,extraccion,feat,,EXT S3,2026-12-21,,,,
+127,20,Sub-task,EXT-19.4 Medición en DEV,"Subtarea 4 de EXT-19, en orden.",High,extraccion,feat,,EXT S3,2026-12-21,,,,
 21,1,Story,EXT-20 Lectura por tramos de llave (estándar),"Como operador de la malla quiero que las tablas hijas lean solo las llaves que necesitan, por tramos para no leer completas tablas de millones de filas.
 
 Criterios de aceptación:
@@ -281,14 +281,14 @@ Rama: feature/lectura-rangos
 Brecha: COS-11
 Roadmap: 5.1 a 5.6
 Orden: 20
-ID provisional: EXT-20",High,extraccion,feat,cos-11,3,19,,
-128,21,Sub-task,"EXT-20.1 Decisión: estrategia por tabla, foto consistente, zona temporal y referencia","Subtarea 1 de EXT-20, en orden.",High,extraccion,feat,,,,,
-129,21,Sub-task,EXT-20.2 Configurador conoce las claves,"Subtarea 2 de EXT-20, en orden.",High,extraccion,feat,,,,,
-130,21,Sub-task,EXT-20.3 cnf-mallas: claves por tabla,"Subtarea 3 de EXT-20, en orden.",High,extraccion,feat,,,,,
-131,21,Sub-task,EXT-20.4 cfg-datalake-niif-config-s3: claves,"Subtarea 4 de EXT-20, en orden.",High,extraccion,feat,,,,,
-132,21,Sub-task,EXT-20.5 Extractor estándar lee por tramos,"Subtarea 5 de EXT-20, en orden.",High,extraccion,feat,,,,,
-133,21,Sub-task,EXT-20.6 Equivalencia y medición en DEV,"Subtarea 6 de EXT-20, en orden.",High,extraccion,feat,,,,,
-22,1,Story,EXT-21 Lectura por tramos de llave (Emisiones),"Como operador de la malla quiero la misma lectura por tramos en el extractor de Emisiones para bajar la carga sobre Acsel-e.
+ID provisional: EXT-20",High,extraccion,feat,cos-11,EXT S3,2026-12-29,3,19,,
+128,21,Sub-task,"EXT-20.1 Decisión: estrategia por tabla, foto consistente, zona temporal y referencia","Subtarea 1 de EXT-20, en orden.",High,extraccion,feat,,EXT S3,2026-12-29,,,,
+129,21,Sub-task,EXT-20.2 Configurador conoce las claves,"Subtarea 2 de EXT-20, en orden.",High,extraccion,feat,,EXT S3,2026-12-29,,,,
+130,21,Sub-task,EXT-20.3 cnf-mallas: claves por tabla,"Subtarea 3 de EXT-20, en orden.",High,extraccion,feat,,EXT S3,2026-12-29,,,,
+131,21,Sub-task,EXT-20.4 cfg-datalake-niif-config-s3: claves,"Subtarea 4 de EXT-20, en orden.",High,extraccion,feat,,EXT S3,2026-12-29,,,,
+132,21,Sub-task,EXT-20.5 Proceso de extracción estándar lee por tramos,"Subtarea 5 de EXT-20, en orden.",High,extraccion,feat,,EXT S3,2026-12-29,,,,
+133,21,Sub-task,EXT-20.6 Equivalencia y medición en DEV,"Subtarea 6 de EXT-20, en orden.",High,extraccion,feat,,EXT S3,2026-12-29,,,,
+22,1,Story,EXT-21 Lectura por tramos de llave (Emisiones),"Como operador de la malla quiero la misma lectura por tramos en el proceso de extracción de Emisiones para bajar la carga sobre Acsel-e.
 
 Criterios de aceptación:
 - Mismos criterios que EXT-20
@@ -299,11 +299,11 @@ Rama: feature/lectura-rangos
 Brecha: COS-11
 Roadmap: 5.7, 5.8
 Orden: 21
-ID provisional: EXT-21",High,extraccion,feat,cos-11,20,21,,
-134,22,Sub-task,EXT-21.1 cnf-mallas de Emisiones,"Subtarea 1 de EXT-21, en orden.",High,extraccion,feat,,,,,
-135,22,Sub-task,EXT-21.2 JSON de Emisiones,"Subtarea 2 de EXT-21, en orden.",High,extraccion,feat,,,,,
-136,22,Sub-task,EXT-21.3 Extractor de Emisiones,"Subtarea 3 de EXT-21, en orden.",High,extraccion,feat,,,,,
-137,22,Sub-task,EXT-21.4 Equivalencia contra em_*,"Subtarea 4 de EXT-21, en orden.",High,extraccion,feat,,,,,
+ID provisional: EXT-21",High,extraccion,feat,cos-11,EXT S4,2027-01-04,20,21,,
+134,22,Sub-task,EXT-21.1 cnf-mallas de Emisiones,"Subtarea 1 de EXT-21, en orden.",High,extraccion,feat,,EXT S4,2027-01-04,,,,
+135,22,Sub-task,EXT-21.2 JSON de Emisiones,"Subtarea 2 de EXT-21, en orden.",High,extraccion,feat,,EXT S4,2027-01-04,,,,
+136,22,Sub-task,EXT-21.3 Proceso de extracción de Emisiones,"Subtarea 3 de EXT-21, en orden.",High,extraccion,feat,,EXT S4,2027-01-04,,,,
+137,22,Sub-task,EXT-21.4 Equivalencia contra em_*,"Subtarea 4 de EXT-21, en orden.",High,extraccion,feat,,EXT S4,2027-01-04,,,,
 23,1,Task,EXT-22 Recomendaciones de índices de Oracle,"Como desarrollador quiero recomendaciones de índices basadas en lo medido para que Arquitectura las evalúe con la célula dueña de la base.
 
 Criterios de aceptación:
@@ -315,7 +315,7 @@ Rama: -
 Brecha: COS-11
 Roadmap: 5.9
 Orden: 22
-ID provisional: EXT-22",Low,extraccion,chore,cos-11,3,21,,
+ID provisional: EXT-22",Low,extraccion,chore,cos-11,EXT S4,2027-01-04,3,21,,
 24,1,Story,EXT-23 Cierre: medición final y ajuste de workers,"Como operador de la malla quiero la medición final de las mallas y los workers ajustados a lo que se usa para mostrar la mejora y no pagar capacidad ociosa.
 
 Criterios de aceptación:
@@ -329,7 +329,7 @@ Rama: -
 Brecha: RYC-01
 Roadmap: 6.1 a 6.3
 Orden: 23
-ID provisional: EXT-23",Medium,extraccion,chore,ryc-01,22,,,
-138,24,Sub-task,EXT-23.1 Medición final en DEV,"Subtarea 1 de EXT-23, en orden.",Medium,extraccion,chore,,,,,
-139,24,Sub-task,EXT-23.2 Pedido a DevOps: workers,"Subtarea 2 de EXT-23, en orden.",Medium,extraccion,chore,,,,,
-140,24,Sub-task,EXT-23.3 Cierre de brechas,"Subtarea 3 de EXT-23, en orden.",Medium,extraccion,chore,,,,,
+ID provisional: EXT-23",Medium,extraccion,chore,ryc-01,EXT S4,2027-01-05,22,,,
+138,24,Sub-task,EXT-23.1 Medición final en DEV,"Subtarea 1 de EXT-23, en orden.",Medium,extraccion,chore,,EXT S4,2027-01-05,,,,
+139,24,Sub-task,EXT-23.2 Pedido a DevOps: workers,"Subtarea 2 de EXT-23, en orden.",Medium,extraccion,chore,,EXT S4,2027-01-05,,,,
+140,24,Sub-task,EXT-23.3 Cierre de brechas,"Subtarea 3 de EXT-23, en orden.",Medium,extraccion,chore,,EXT S4,2027-01-05,,,,

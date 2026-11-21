@@ -24,10 +24,10 @@ Elaborado el 2026-11-20 sobre la rama `quality` de cada repo (estado del 2026-11
 ## Piezas
 | Clave | Pieza | Qué es | Quién la cambia |
 |---|---|---|---|
-| R1 | `data-datalake-niif-rmd-ext-estandar-glue-job` | Extractor estándar (6 mallas ALFAPRD) | Desarrollo |
+| R1 | `data-datalake-niif-rmd-ext-estandar-glue-job` | Proceso de extracción estándar (6 mallas ALFAPRD) | Desarrollo |
 | R2 | `cfg-datalake-niif-config-s3` | JSON de extracción en Git (copia coherente; la de S3 la sobrescribe el configurador) | Desarrollo |
 | R3 | `sc-datalake-niif-configuration-general` | Configurador: lee `cnf-mallas` y publica el JSON | Desarrollo |
-| R4 | `data-datalake-niif-pcr-emisiones-glue-job` | Extractor de Emisiones (Acsel-e) | Desarrollo |
+| R4 | `data-datalake-niif-pcr-emisiones-glue-job` | Proceso de extracción de Emisiones (Acsel-e) | Desarrollo |
 | R5 | `iac-analytics-datalake-niif-operations-manager` | Step Functions, jobs e IAM | DevOps (solo lectura para Desarrollo) |
 | DDB | DynamoDB `niif-{env}-cnf-mallas` | Configuración de origen. **Ningún repo la carga** | Script de Desarrollo en DEV; en QA y PRD, DevOps |
 | ORA | Consulta Oracle | Diccionario de Oracle, sin repo | QA |
@@ -39,10 +39,10 @@ Cada ID es una brecha registrada en `Docs\06-brechas\`. La ficha completa, con l
 
 | ID | Prioridad | Qué es | Fuente |
 |---|---|---|---|
-| ARQ-57 | Alta | El extractor no aplica el modelo de ciclos: no pausa entre ciclos, solo ejecuta en cascada y el tope de unidades de costo solo avisa. | `auditoria-extraccion-2026-11.md` |
+| ARQ-57 | Alta | El proceso de extracción no aplica el modelo de ciclos: no pausa entre ciclos, solo ejecuta en cascada y el tope de unidades de costo solo avisa. | `auditoria-extraccion-2026-11.md` |
 | ARQ-58 | Media | Las duraciones de la extracción engañan: la "lectura" se mide al crear el DataFrame (Spark lee después, en el conteo) y la duración total se cierra antes del último paso. | `auditoria-extraccion-2026-11.md` |
 | ARQ-59 | Media | El configurador no deja evolucionar la extracción: exige un número fijo de ciclos y de registros, y tiene valores por defecto que apuntan a algo concreto. | `auditoria-extraccion-2026-11.md` |
-| ARQ-60 | Media | El extractor de Emisiones tiene copias: varios jobs y al menos 4 copias del script en S3, sin saber cuál es la vigente. | `auditoria-extraccion-2026-11.md` |
+| ARQ-60 | Media | El proceso de extracción de Emisiones tiene copias: varios jobs y al menos 4 copias del script en S3, sin saber cuál es la vigente. | `auditoria-extraccion-2026-11.md` |
 | COS-05 | — | La extracción no lee en paralelo (sin `partitionColumn`/`numPartitions`), tiene un `ReadTimeout` de 30 s y puede leer la fuente dos veces (conteo y escritura). | `auditoria-pipeline-datos-vs-arquitectura.md` |
 | COS-11 | Alta | Las dependencias entre tablas son solo metadata: las tablas hijas se leen completas aunque solo se necesite una parte. | `auditoria-extraccion-2026-11.md` |
 | RYC-01 | Alta | La extracción lee cada tabla con una sola conexión y una tabla tras otra: se pagan 4 workers y solo uno lee. | `rendimiento-y-costos.md` |
@@ -53,10 +53,10 @@ Cada ID es una brecha registrada en `Docs\06-brechas\`. La ficha completa, con l
 Hechos verificados en el código que fijan el orden:
 - **Una clave nueva de configuración viaja por tres piezas: DDB → R3 → JSON de S3 → job.** El configurador arma cada tabla con una lista fija de campos (`orden`, `schema`, `tabla`, `tabla_relativa`, `tipo_tabla`, `where`, `dependencia`, `segmentacion_horizontal`; `conf_arl.py`, `construir_ciclos`). **Una clave nueva por tabla o por ciclo se pierde si R3 no la conoce.** En cambio, el bloque `fuente` se copia entero (`construir_extraccion`), así que una clave nueva ahí pasa sin tocar R3.
 - **Emisiones copia `ciclos` entero** (`conf_emisiones.py`, `copy.deepcopy`). Ahí una clave nueva por ciclo o por tabla pasa sin tocar el configurador (*por verificar con una prueba* en su paso).
-- **El extractor estándar no valida el esquema del JSON:** lee claves puntuales con `.get`. La versión vieja ignora una clave nueva, así que la configuración puede ir **antes** que el código.
+- **El proceso de extracción estándar no valida el esquema del JSON:** lee claves puntuales con `.get`. La versión vieja ignora una clave nueva, así que la configuración puede ir **antes** que el código.
 - **Glue ignora los argumentos que el script no pide.** Por eso `--EJECUCION_ID` puede llegar desde la Step Function antes que el código que lo usa (*comportamiento de `getResolvedOptions`; se confirma en DEV en el paso 3.3*).
 - **Para probar "una tabla por ciclo"** (primera corrida del modelo de Víctor) hay que poder cambiar el número de ciclos, y hoy R3 lo exige fijo (ARQ-59). El arreglo de R3 va antes.
-- **El extractor de Emisiones no tiene pruebas** (`tests/` vacío). Su red de pruebas va antes de cualquier cambio en R4.
+- **El proceso de extracción de Emisiones no tiene pruebas** (`tests/` vacío). Su red de pruebas va antes de cualquier cambio en R4.
 - **La opción D necesita los datos de Oracle** (tipos e índices de las llaves) para decidir tabla por tabla entre A, C y D.
 
 ### Orden 2: tipo de cambio (para separar ramas y commits)
@@ -94,10 +94,10 @@ Patrón: **ampliar → poblar → usar**. Así cada pieza se puede revertir sin 
   - quién carga `cnf-mallas` en QA y PRD (ningún repo lo hace);
   - de dónde salen las 13 políticas del rol.
 - [ ] **0.2 ORA, Consulta Oracle:** QA corre `consultas-oracle-alfaprd.sql` y `consultas-oracle-acsele.sql`. Va en paralelo: solo bloquea la fase 5.
-- [ ] **0.3 DEV, Consulta DEV:** línea base del extractor estándar en las 4 mallas sin medir (Endosos, ARP, RVI y Auxilios), con el método de `medir-tiempos-rentas.sh`. ARL y Rentas ya están medidas (tanda 1).
-- [ ] **0.4 DEV, Consulta DEV:** línea base del extractor de Emisiones (duración, filas y unidades por tabla).
+- [ ] **0.3 DEV, Consulta DEV:** línea base del proceso de extracción estándar en las 4 mallas sin medir (Endosos, ARP, RVI y Auxilios), con el método de `medir-tiempos-rentas.sh`. ARL y Rentas ya están medidas (tanda 1).
+- [ ] **0.4 DEV, Consulta DEV:** línea base del proceso de extracción de Emisiones (duración, filas y unidades por tabla).
 - [ ] **0.5 R1, `chore`:** rebasar la rama `feature/modular-rmd-ext-estandar` (red de caracterización y esqueleto modular) sobre `quality` (`0af0ca8`, que ya trae el fix del SCD) y dejar la red de caracterización en verde.
-- [ ] **0.6 R4, `chore`, commit `test`:** red de caracterización del extractor de Emisiones (solo pruebas, sin tocar `src/`).
+- [ ] **0.6 R4, `chore`, commit `test`:** red de caracterización del proceso de extracción de Emisiones (solo pruebas, sin tocar `src/`).
 - [ ] **0.7 R1 y R4, por verificar en el código:** quién lee cada campo de `parametros_extraccion.json` (validación, SCD, remediación). Antes del paso 2.3, que cambia sus duraciones.
 
 ### Fase 1. Refactor hexagonal (mismos resultados)
@@ -157,7 +157,7 @@ Patrón: **ampliar → poblar → usar**. Así cada pieza se puede revertir sin 
 
 ### Fase 6. Cierre
 - [ ] **6.1 DEV, Consulta DEV:** medición final frente a la línea base en todas las mallas. Mostrar a Víctor los resultados tabla por tabla y optimizados.
-- [ ] **6.2 R5, pedido a DevOps:** ajustar el número de workers del extractor según la medición. La lectura sigue siendo secuencial por la única conexión, así que el resto de workers se paga sin usarse (RYC-01).
+- [ ] **6.2 R5, pedido a DevOps:** ajustar el número de workers del proceso de extracción según la medición. La lectura sigue siendo secuencial por la única conexión, así que el resto de workers se paga sin usarse (RYC-01).
 - [ ] **6.3 Memoria y Docs:** cerrar las brechas ARQ-57, ARQ-58, ARQ-59, ARQ-60, COS-05 y COS-11 con su evidencia.
 
 ## Qué va en secuencia y qué en paralelo
@@ -165,7 +165,7 @@ El roadmap **no es una sola fila**. Las fases marcan el orden de las dependencia
 
 **Siempre en secuencia (cadenas que no se pueden saltar):**
 - En cada clave nueva de configuración: R3 → DDB → R2 → R1/R4 (ampliar → poblar → usar). Pasa en 2.4, 4.x y 5.x.
-- En cada extractor: red de pruebas → refactor → fixes → observabilidad → ciclos → tramos. R1: 0.5 → 1.1 → 2.3 → 3.4 → 4.5 → 5.5. R4: 0.6 → 1.3 → 3.5 → 4.7 → 5.7.
+- En cada proceso de extracción: red de pruebas → refactor → fixes → observabilidad → ciclos → tramos. R1: 0.5 → 1.1 → 2.3 → 3.4 → 4.5 → 5.5. R4: 0.6 → 1.3 → 3.5 → 4.7 → 5.7.
 - Cada cambio de código se compara contra la línea base antes del siguiente (1.2, 1.4, 4.6, 5.6).
 - 3.2 (IaC) → 3.3 (confirmar en DEV) → 3.4 (código que exige el argumento).
 - 2.1 (ciclos sin conteo fijo) → 4.2 → 4.6 (una tabla por ciclo).
@@ -176,8 +176,8 @@ El roadmap **no es una sola fila**. Las fases marcan el orden de las dependencia
 |---|---|---|
 | Oracle | 0.2 | Ya. Solo bloquea la fase 5 |
 | Líneas base en DEV | 0.3, 0.4 | Ya |
-| Extractor estándar (R1) | 0.5 → 1.1 → … | Ya |
-| Extractor de Emisiones (R4) | 0.6 → 1.3 → … | Ya. Su carril va en paralelo al de R1, pero cada fase de R4 sigue el patrón probado antes en R1 |
+| Proceso de extracción estándar (R1) | 0.5 → 1.1 → … | Ya |
+| Proceso de extracción de Emisiones (R4) | 0.6 → 1.3 → … | Ya. Su carril va en paralelo al de R1, pero cada fase de R4 sigue el patrón probado antes en R1 |
 | Configurador (R3) | 2.1 → 2.2 | Ya: es otro repo y no depende del refactor de R1 |
 | Pedidos a DevOps | 2.5.2, 3.2 | Después de 0.1 y 2.5.1. 3.2 se puede pedir pronto, porque Glue ignora el argumento mientras no se use |
 | Decisiones | 0.1, 2.4.1, 3.1, 4.1, 5.1 | Cada una antes de su paso, no antes de la fase |

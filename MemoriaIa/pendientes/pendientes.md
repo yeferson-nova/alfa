@@ -13,15 +13,15 @@ actualizado: 2026-11-20
 ## Modularización: extracción (2026-11-20, ver [[modularizacion-extraccion]])
 - [ ] Cerrar el diseño de la opción D (`Tareas\Modularizacion\Extraccion\diseno-lectura-por-rangos.md`).
 - [ ] Con Julio, en Oracle: tipo e índice de cada columna de join; acceso a `ALL_TABLES.NUM_ROWS`; `FLASHBACK` y `UNDO_RETENTION`; lectura de `acsele_alfa_bi.em_*` ([[preguntas-abiertas]]).
-- [ ] Red de caracterización y línea base en DEV del extractor de Emisiones (no existen), antes de modularizarlo.
+- [ ] Red de caracterización y línea base en DEV del proceso de extracción de Emisiones (no existen), antes de modularizarlo.
 - [ ] Confirmar con el usuario: dónde se escriben los tramos (*propuesta* zona temporal) y la referencia de equivalencia para ALFAPRD (*propuesta* salida del job actual).
 - [ ] Rebasar `feature/modular-rmd-ext-estandar` sobre el `main` nuevo de `alfa-repos` (`3d5f623`, ya trae el fix del SCD) y llevar la red de caracterización a verde.
-- [ ] Modularizar el extractor con pausa por ciclo, tramos, medición real y log v1, junto con la configuración (JSON, `cnf-mallas`, configurador sin conteos fijos y `MALLA_PK` obligatorio). Brechas ARQ-57, COS-11, ARQ-58 y ARQ-59 ([[auditoria-extraccion-2026-11]]).
-- [ ] Medir en DEV una tabla por ciclo, la línea base frente a la versión nueva y la equivalencia, en los dos extractores (estándar y Emisiones). Mostrar a Víctor los resultados, tabla por tabla y optimizados.
+- [ ] Modularizar el proceso de extracción con pausa por ciclo, tramos, medición real y log v1, junto con la configuración (JSON, `cnf-mallas`, configurador sin conteos fijos y `MALLA_PK` obligatorio). Brechas ARQ-57, COS-11, ARQ-58 y ARQ-59 ([[auditoria-extraccion-2026-11]]).
+- [ ] Medir en DEV una tabla por ciclo, la línea base frente a la versión nueva y la equivalencia, en los dos procesos de extracción (estándar y Emisiones). Mostrar a Víctor los resultados, tabla por tabla y optimizados.
 - [ ] Recomendaciones de índices de Oracle: a Víctor, no directo a la base ([[reunion-extraccion-victor]]).
-- [x] Permisos del rol del extractor revisados en DEV (2026-11-20): DynamoDB sobre `ejc-ejecuciones` por la política común; 13 políticas fuera de `alfa-repos` ([[modularizacion-extraccion]]).
-- [ ] Preparar para DevOps el cambio de IaC: `--EJECUCION_ID` en las 6 Step Functions del extractor y en `niif-snf-emisiones`. Sale junto con el despliegue del código (el job lo exigirá).
-- [ ] **Lunes 2026-11-23: preguntar a DevOps** de qué repo salen las 13 políticas del rol del extractor (no están en la `quality` de los 33 repos que tenemos). No suponer: puede ser un repo de DevOps que no tenemos. No las buscamos ni las corregimos nosotros ([[preferencias-usuario]]).
+- [x] Permisos del rol del proceso de extracción revisados en DEV (2026-11-20): DynamoDB sobre `ejc-ejecuciones` por la política común; 13 políticas fuera de `alfa-repos` ([[modularizacion-extraccion]]).
+- [ ] Preparar para DevOps el cambio de IaC: `--EJECUCION_ID` en las 6 Step Functions del proceso de extracción y en `niif-snf-emisiones`. Sale junto con el despliegue del código (el job lo exigirá).
+- [ ] **Lunes 2026-11-23: preguntar a DevOps** de qué repo salen las 13 políticas del rol del proceso de extracción (no están en la `quality` de los 33 repos que tenemos). No suponer: puede ser un repo de DevOps que no tenemos. No las buscamos ni las corregimos nosotros ([[preferencias-usuario]]).
 
 ## Observabilidad (2026-11-19)
 - [ ] Aprobar el roadmap de [[roadmap-observabilidad]] (fases 0 a 6) y las decisiones de su §9. Sin orden explícita no se toca código. Brechas nuevas en [[auditoria-observabilidad-2026-11]].

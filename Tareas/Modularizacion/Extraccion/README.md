@@ -3,7 +3,7 @@
 Abierta el 2026-11-20. Forma parte de [`Tareas\Modularizacion\`](../README.md).
 
 ## Entregable
-Cerrar la deuda técnica y optimizar la extracción que ya existe, iterándola: código Python con estándares de industria (hexagonal, PEP 8), observabilidad y menos carga en Oracle, con los mismos resultados. Cubre **los dos extractores**: el estándar (6 mallas ALFAPRD) y `extraccion-estandar-emisiones` (Acsel-e: Emisiones, PCR Vida, Generales y Satélites). Los dos son jobs de Glue de los pasos 2 y 3, nuestro alcance.
+Cerrar la deuda técnica y optimizar la extracción que ya existe, iterándola: código Python con estándares de industria (hexagonal, PEP 8), observabilidad y menos carga en Oracle, con los mismos resultados. Cubre **los dos procesos de extracción**: el estándar (6 mallas ALFAPRD) y `extraccion-estandar-emisiones` (Acsel-e: Emisiones, PCR Vida, Generales y Satélites). Los dos son jobs de Glue de los pasos 2 y 3, nuestro alcance.
 
 ## Problema
 La extracción lee las fuentes Oracle (ALFAPRD y Acsel-e) directamente, **sin ODS ni bases de lectura, y eso no va a cambiar**. Hay **una sola conexión de servicio** por origen. El pool de peticiones (cuántas lecturas, de qué tamaño y cuándo reposar) es responsabilidad del job. Hoy el job no administra esa carga: lee tablas completas una tras otra, sin pausa, y el tiempo varía mucho entre corridas.
@@ -50,8 +50,8 @@ AWS DMS no está en la arquitectura (ni en el diagrama ni en la IaC). Se citó s
 ## Repos afectados
 | Repo | Qué cambia | Quién |
 |---|---|---|
-| `data-datalake-niif-rmd-ext-estandar-glue-job` | El extractor estándar: modular, pausa, tramos, medición real, log v1 | Desarrollo |
-| `data-datalake-niif-pcr-emisiones-glue-job` | El extractor de Emisiones: lo mismo, más una sola versión (ARQ-60) | Desarrollo |
+| `data-datalake-niif-rmd-ext-estandar-glue-job` | El proceso de extracción estándar: modular, pausa, tramos, medición real, log v1 | Desarrollo |
+| `data-datalake-niif-pcr-emisiones-glue-job` | El proceso de extracción de Emisiones: lo mismo, más una sola versión (ARQ-60) | Desarrollo |
 | `cfg-datalake-niif-config-s3` | Los 6 `config_extraccion_*.json` de ALFAPRD (ARL, Rentas, Endosos, ARP, RVI y Auxilios) y los de Emisiones (`emisiones.json`, `pcr_vida`, `generales`, `satelites`) | Desarrollo |
 | `sc-datalake-niif-configuration-general` | Los `conf_*.py` y `conf_emisiones.py`: sin conteos fijos, sin valores por defecto y las claves nuevas | Desarrollo |
 | `sc-datalake-niif-configurador-mallas` (T2) | Las mismas claves nuevas, si es el configurador que queda | Desarrollo |
@@ -59,19 +59,19 @@ AWS DMS no está en la arquitectura (ni en el diagrama ni en la IaC). Se citó s
 
 Se rozan:
 - Las 6 configuradoras por malla tienen el mismo módulo copiado: si alguna corre, pisa las claves nuevas.
-- Los dos extractores usan el mismo rol IAM: un cambio de permisos afecta a ambos.
+- Los dos procesos de extracción usan el mismo rol IAM: un cambio de permisos afecta a ambos.
 - La validación técnica y los crawlers leen Bronce: los tramos no deben cambiar esa salida.
 
 Verificado en DEV el 2026-11-20:
-- El rol del extractor ya puede leer y escribir en `niif-{env}-ejc-ejecuciones` (y en `pipeline-estado`) por la política común de los jobs, que está en la IaC. El checkpoint por tramo no necesita permisos nuevos. No tiene acceso a `cnf-mallas` ni lo necesita, porque la configuración le llega en el JSON.
+- El rol del proceso de extracción ya puede leer y escribir en `niif-{env}-ejc-ejecuciones` (y en `pipeline-estado`) por la política común de los jobs, que está en la IaC. El checkpoint por tramo no necesita permisos nuevos. No tiene acceso a `cnf-mallas` ni lo necesita, porque la configuración le llega en el JSON.
 - El rol tiene 16 políticas y 13 no están en ninguno de los repos que tiene Desarrollo (rama `quality`): 9 en línea y 4 administradas, de PCR Vida, Emisiones y Satélites. Se preguntó a DevOps quién las creó.
 - Las tablas `datalake-dev-adm-extraccion-*` existen, pero están vacías desde 2025-09-21 y ningún código las usa. No se adoptan sin aval.
 
 ## Qué falta para empezar (validado contra el código, 2026-11-20)
 | Para | Falta |
 |---|---|
-| Extractor estándar | Solo la orden. La rama modular (un commit) hay que rebasarla sobre el `main` nuevo; su red de pruebas ya cubre el flujo ARL |
-| Extractor de Emisiones | Su red de pruebas y su línea base en DEV: no existen. Por eso va después del estándar |
+| Proceso de extracción estándar | Solo la orden. La rama modular (un commit) hay que rebasarla sobre el `main` nuevo; su red de pruebas ya cubre el flujo ARL |
+| Proceso de extracción de Emisiones | Su red de pruebas y su línea base en DEV: no existen. Por eso va después del estándar |
 | Opción D | Resultados de QA; dónde se escriben los tramos (*propuesta:* zona temporal, Bronce igual que hoy); referencia de equivalencia para ALFAPRD (*propuesta:* la salida del job actual en el mismo periodo) |
 | Desplegar | `--EJECUCION_ID` en las Step Functions (DevOps), junto con el código: el job lo exigirá |
 
@@ -83,7 +83,7 @@ Orden detallado por repo, separado por fix, refactor, observabilidad y features,
 1. Diseño de la opción D cerrado y validado con datos (este README y el documento de diseño).
 2. Datos de Oracle con QA ([consultas-oracle-alfaprd.sql](consultas-oracle-alfaprd.sql) y [consultas-oracle-acsele.sql](consultas-oracle-acsele.sql)): tipos e índices de las llaves foráneas, estadísticas de tamaño y acceso de lectura a `acsele_alfa_bi.em_*`.
 3. Rebasar `feature/modular-rmd-ext-estandar` sobre `quality` (`0af0ca8`, ya trae el fix del SCD) y llevar la red de caracterización a verde.
-4. Red de pruebas y línea base del extractor de Emisiones.
-5. Modularizar los dos extractores (primero el estándar): pausa por ciclo, lectura por tramos, medición real y contrato de log v1. En el mismo cambio, la configuración: JSON, `cnf-mallas` y configurador sin conteos fijos.
+4. Red de pruebas y línea base del proceso de extracción de Emisiones.
+5. Modularizar los dos procesos de extracción (primero el estándar): pausa por ciclo, lectura por tramos, medición real y contrato de log v1. En el mismo cambio, la configuración: JSON, `cnf-mallas` y configurador sin conteos fijos.
 6. Medir en DEV: una tabla por ciclo, línea base frente a la versión nueva y comparación de equivalencia.
 7. Mostrar a Víctor los resultados: la corrida tabla por tabla y la optimizada.

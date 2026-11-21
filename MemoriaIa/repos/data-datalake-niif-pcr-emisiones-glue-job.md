@@ -8,7 +8,7 @@ paso: "2 · Bronce (extracción)"
 malla: transversal
 ---
 # data-datalake-niif-pcr-emisiones-glue-job
-> Extracción Oracle a Bronce de la familia PCR (Vida y emisiones, origen ACSELE): variante ampliada del extractor estándar con lectura relacional por dependencias.
+> Extracción Oracle a Bronce de la familia PCR (Vida y emisiones, origen ACSELE): variante ampliada del proceso de extracción estándar con lectura relacional por dependencias.
 
 ## Rol en el flujo
 - Primer job del flujo PCR Vida (caso `pcr_vida`). Paso 2 del diagrama. No pertenece a las 6 mallas ALFAPRD.
@@ -33,5 +33,5 @@ malla: transversal
 - **Modularización (2026-11-20):** está en nuestro alcance (job de Glue, pasos 2 y 3). Entra en [[modularizacion-extraccion]]; sus copias en DEV son ARQ-60 ([[auditoria-extraccion-2026-11]]).
 
 ## Brechas y relacionadas
-- Misma exposición que el extractor estándar a exclusión de llaves y Silver parcial: [[inprod-primas-arl-202606]]. PCR sin documento funcional: [[reunion-diseno-pcr]].
+- Misma exposición que el proceso de extracción estándar a exclusión de llaves y Silver parcial: [[inprod-primas-arl-202606]]. PCR sin documento funcional: [[reunion-diseno-pcr]].
 - Relacionado: [[familia-mallas-alfaprd]], [[arquitectura-niif17]], [[repo-alfa-repos]]

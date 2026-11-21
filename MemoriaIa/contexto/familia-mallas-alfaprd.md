@@ -11,7 +11,7 @@ Humano: `Docs\05-arquitectura\jobs-glue.md` (los 12 jobs). Relacionado: [[arquit
 - **6 mallas estándar** con origen Oracle **ALFAPRD** (esquemas arpprod/general/prv): Primas Rentas, Primas Endosos, **Primas ARL**, Auxilios Funerarios, Reserva Matemática ARP, Reserva Matemática RVI.
 - Comparten los **mismos jobs genéricos** (extracción, validación técnica, remediación, SCD, certificación, notificación); solo cambian el JSON de configuración y el job Silver (`niif-dev-silver-<malla>` ×6). Por eso un defecto en un job genérico afecta a las 6 ([[inprod-primas-arl-202606]], sección 4).
 - Step Function por malla: `niif-<amb>-<malla>`; configuración en `s3://niif-<amb>-assets/<malla>/` (ej. `primas-arl/`).
-- **Primas ARL:** ARL = Administradora de Riesgos Laborales; reporte de primas de ese ramo, certificado y transportado a FIS. Es la malla del incidente INC-5. El `job.json` del extractor optimizado apunta por defecto a `config_extraccion_primas_arl.json`.
+- **Primas ARL:** ARL = Administradora de Riesgos Laborales; reporte de primas de ese ramo, certificado y transportado a FIS. Es la malla del incidente INC-5. El `job.json` del proceso de extracción optimizado apunta por defecto a `config_extraccion_primas_arl.json`.
 - **No pertenecen a la familia:** los flujos PCR (PCR Tradicional, PCR Vida, Vida Deudores) vienen de **ACSELE**, otra familia, hoy con jobs de prueba en `Backend\Glue\pruebas-glue\`. Significado de PCR = "Pasivo por Cobertura Restante" es **inferido**, sin documento funcional (propuesta; ver [[preguntas-abiertas]]).
 
 ## Jobs: arquitectura vs desplegado (2026-11-06)

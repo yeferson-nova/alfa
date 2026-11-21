@@ -22,7 +22,7 @@ actualizado: 2026-11-20
 - ¿El usuario de servicio puede leer `ALL_TABLES.NUM_ROWS` y `LAST_ANALYZED`? ¿Qué tan recientes son las estadísticas?
 - ¿Hay permiso de `FLASHBACK` y suficiente `UNDO_RETENTION` para leer todos los tramos en la misma foto (`AS OF SCN`)?
 - ¿En qué instancia están `acsele_alfa_bi.em_*` y se pueden leer para la prueba de equivalencia?
-- (DevOps, preguntar el lunes 2026-11-23) ¿De qué repo salen las 13 políticas del rol del extractor (9 en línea: `...-gestor-configuracion` y `pcr-vida-*`; 4 administradas: `satelites-assets`, `validacion-oracle-emisiones`, `extraccion-estandar-emisiones-s3`, `glue-read-acsele-connections`)? No están en la `quality` (2026-11-20) de ninguno de los 33 repos que tenemos; puede ser un repo de DevOps que no tenemos. Ojo: el rol lo comparten 4 componentes y acumula permisos (mínimo privilegio).
+- (DevOps, preguntar el lunes 2026-11-23) ¿De qué repo salen las 13 políticas del rol del proceso de extracción (9 en línea: `...-gestor-configuracion` y `pcr-vida-*`; 4 administradas: `satelites-assets`, `validacion-oracle-emisiones`, `extraccion-estandar-emisiones-s3`, `glue-read-acsele-connections`)? No están en la `quality` (2026-11-20) de ninguno de los 33 repos que tenemos; puede ser un repo de DevOps que no tenemos. Ojo: el rol lo comparten 4 componentes y acumula permisos (mínimo privilegio).
 - (DevOps o arquitecto) ¿Las tablas vacías `datalake-{env}-adm-extraccion-costo`, `-parametro` y `-ejecucion` tienen un uso previsto o se pueden retirar?
 
 ## Paso 3
