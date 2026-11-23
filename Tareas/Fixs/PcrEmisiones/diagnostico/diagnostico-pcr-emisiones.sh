@@ -19,4 +19,6 @@ esac
 
 python3 -c "import boto3" 2>/dev/null || pip3 install --user --quiet boto3
 DIR="$(cd "$(dirname "$0")" && pwd)"
-python3 "$DIR/diagnostico_pcr_emisiones.py" --amb "$AMB" --periodo "$PERIODO" --workgroup "$WG"
+# Para repetir solo una parte: SECCIONES=configuracion,datos bash diagnostico-pcr-emisiones.sh qa
+SECCIONES="${SECCIONES:-codigo,orquestacion,configuracion,fuente,almacenamiento,datos,oracle}"
+python3 "$DIR/diagnostico_pcr_emisiones.py" --amb "$AMB" --periodo "$PERIODO" --workgroup "$WG" --secciones "$SECCIONES"

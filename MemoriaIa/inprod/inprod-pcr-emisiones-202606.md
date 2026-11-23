@@ -5,7 +5,7 @@ actualizado: 2026-11-23
 ---
 # Incidente: PCR Emisiones 202606, cifras de PRD distintas a las de QA
 
-> Negocio (correos del 10, 13 y 18 de nov, reenviados el 2026-11-23) pide que la extracción de junio 2026 cuadre con dos Excel; se reporta que PRD trae cifras distintas a QA. **No se sabe si PRD y QA tienen los mismos datos de origen: no se asume que el problema es nuestro.** Estado 2026-11-23: Excel validados con código; diagnóstico por capas listo para correr en QA y PRD (DevOps) y en Oracle (DBA). Sin evidencia de AWS todavía.
+> Negocio (correos del 10, 13 y 18 de nov, reenviados el 2026-11-23) pide que la extracción de junio 2026 cuadre con dos Excel; se reporta que PRD trae cifras distintas a QA. **No se sabe si PRD y QA tienen los mismos datos de origen: no se asume que el problema es nuestro.** Estado 2026-11-23 (tarde): corrido en DEV y QA + Q1-Q4 en Oracle QA. **QA extrae fiel a su Oracle** (18 conteos iguales al registro); DEV=QA en código, Step Function y PRG. Falta PRD, Q5-Q6 y repetir la sección de datos (montos) por errores del script.
 
 Tarea humana y scripts: `Tareas\Fixs\PcrEmisiones\` (`README.md`, carpeta `diagnostico\`). Relacionado: [[data-datalake-niif-pcr-emisiones-glue-job]], [[data-datalake-emisiones-vida-glue-job]], [[modularizacion-extraccion]], [[auditoria-extraccion-2026-11]] (ARQ-61 a ARQ-65), [[auditoria-repos-2026-11]] (ARQ-50).
 
@@ -26,6 +26,16 @@ H1 fuente Oracle distinta · H2 código distinto (ARQ-50, ARQ-62) · H3 PRG/CNF 
 - `conciliacion-oracle-acsele.sql`: Q1-Q6 fijas para QA y PRD (frescura, estados, compañía por producto, operaciones, movimientos por concepto, por día).
 - `comparar_ambientes.py`: veredicto por capa (Oracle → código → orquestación → configuración → extracción → Bronce → Silver) y Silver frente al Excel. Probado con evidencias sintéticas (detecta cada capa) y con evidencias iguales (todo IGUAL).
 - No probado contra AWS real (no hay acceso desde aquí).
+
+## Resultados DEV y QA (2026-11-23; evidencia en `Tareas\Fixs\PcrEmisiones\ResultadosAWS\`, commit `c949d0e`)
+- DEV y QA usan la **misma Oracle** (conexión `datalake-{env}-acsele-sop-connection`, servicio ACSSOP); Q1: datos hasta el 18/11/2026.
+- QA: contextoperation 3.928.778 = Q2; 48897 3.703.183, 52897 203.161, 54959 95, 55059 314, 54899 10.776/10.568, 54939 6.908, 54919 560, 55060 60, 55119 111 = Q4. Extracción fiel en filas.
+- 13 tablas no existen en ACSSOP (`ORA-00942`, `SKIPPED_NOT_AVAILABLE`): mascotas, decenal, `urproteccionfinanciera`, petlover, exequias tradicional, protección salud/vida (atributos, no montos). La fuente de QA no tiene la estructura de producción.
+- Código (7 jobs + lambda) y Step Function **iguales** DEV/QA; PRG con los mismos filtros. La SF desplegada **sí** pasa `--RUTA_CONFIG_SCD` → H10 descartada en DEV/QA (la IaC `77de48cb` estaba atrasada); la parte de ARQ-65 sobre ese argumento queda solo para confirmar en PRD.
+- DEV vs QA: misma Oracle, conteos distintos (DEV 4.006.114 operaciones, extraído 19-21 nov; QA 3.928.778, el 22): la base cambió entre fechas (*hipótesis: recarga; confirmar con DBA*). DEV tiene corridas manuales de otra persona (complementos Pymes, uniones de lotes): **no sirve de línea base**.
+- Conteo del Silver igual en DEV y QA (203.689 / 21.695 / 3.703.183) pese a Bronce distinto: sin explicar.
+- `silver_satelites.py:32` `PRODUCTOS` es una constante sin uso (el filtro real es compañía `50.0` + nombres de producto): no es brecha.
+- **Errores del diagnóstico (corregidos):** Silver sumaba `idproducto` (AMBIGUOUS_NAME) y en Satélites tomó `controles/`; Bronce tomó cargas completas viejas sin filtro (15 GB/consulta, CSV idénticos DEV=QA, inválidos). Ahora usa la tabla de la ruta exacta del runtime o no consulta. Repetir con `SECCIONES=configuracion,datos`.
 
 ## Cumplimiento
 - Los `.msg` y el RRC (hoja `Data` con nombres de tomadores) quedaron versionados en `alfa` (commit `ee37aa7`, ya en `origin/main`). Reincidencia de CUM-01: decisión del usuario sobre sacarlos ([[pendientes]]).

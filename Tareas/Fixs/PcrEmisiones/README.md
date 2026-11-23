@@ -39,6 +39,33 @@ Cada hipótesis sale de leer el código de la rama `quality` de cada repo (foto 
 | H9 | El Silver no usa los filtros del PRG | `silver_generales.py:20-21` tiene la lista de productos y la compañía fijas en el código; `:146` toma `status = 2` si el PRG no trae status | Sección `configuracion` (filtros efectivos) frente al código |
 | H10 | El Silver de Generales no recibe un argumento obligatorio | `silver_generales.py:1175-1181` exige `--RUTA_CONFIG_SCD`; en `iac-analytics-datalake-niif-operations-manager` (`77de48cb`) ni la Step Function `niif-snf-emisiones.json` (`PreparacionSilver_GENERALES`) ni el job (`stacks/analytics/glue_jobs/parameters.tf:909-935`) lo pasan | Alerta `ORQ-FALTA-ARGUMENTO` y corridas del job |
 
+## Resultados de la primera corrida: DEV y QA (2026-11-23)
+
+Evidencia: diagnóstico en DEV y en QA, y consultas Q1 a Q4 de `conciliacion-oracle-acsele.sql` en la Oracle de QA (capturas). Falta PRD y faltan Q5 y Q6.
+
+| Capa | Resultado | Evidencia |
+|---|---|---|
+| Fuente | DEV y QA leen **la misma Oracle** (misma conexión, servicio ACSSOP). La base llega hasta el 18/11/2026 (Q1) | `fuente/conexiones.json` de las dos evidencias; Q1 |
+| Extracción QA frente a Oracle QA | **Cuadra al registro** en 18 conteos: operaciones de junio con estado 2 (3.928.778, Q2), Vida Deudores (3.703.183), IncendioTerremotoDeudores (203.161), MiHogarSeguro (95), ProtecciónFinanciera (314), Practiseguro (10.776 operaciones y 10.568 pólizas), SalvaFactura (6.908), VidaAp (560), ProtecciónSalud (60), ProtecciónVida (111) | Runtime de QA frente a Q2 y Q4 |
+| Tablas que no existen en la fuente | 13 tablas dan `ORA-00942` y la extracción las omite (`SKIPPED_NOT_AVAILABLE`): en Generales `POMASCOTAS`, `PODECENAL`, `URMASCOTAS`, `URDECENAL`, `URPROTECCIONFINANCIERA`, `OAMASCOTAS`; en Satélites `POPETLOVER`, `URPETLOVER`, `UREXEQUIASTRADICIONAL`, `URPROTECCIONSALUD`, `URPROTECCIONVIDA`, `OAPETLOVER`, `OAEXEQUIASTRADICIONAL`. Son tablas de atributos (no de montos), pero muestran que esta Oracle **no tiene la misma estructura** que se espera de producción | Runtime, campo `motivo` |
+| Código | DEV y QA corren **exactamente el mismo código** (sha256 igual en los 7 jobs y en la lambda configuradora) | `codigo/` |
+| Orquestación | Misma Step Function. La desplegada **sí pasa** `--RUTA_CONFIG_SCD` al Silver de Generales: H10 no aplica en DEV ni en QA | `orquestacion/`, argumentos de las corridas |
+| Configuración | Mismos filtros en el PRG (status 2, mismos productos y compañías); ventana de junio | `configuracion/prg_programacion_emisiones.json` |
+| Extracción DEV frente a QA | Mismo periodo y misma Oracle, pero **conteos distintos** (DEV 4.006.114 operaciones, QA 3.928.778; unas tablas suben y otras bajan). DEV extrajo entre el 19 y el 21 de noviembre y QA el 22: el contenido de la Oracle cambió entre esas fechas (*hipótesis: recarga de la base; confirmar con el DBA*) | Runtime de las dos evidencias |
+| DEV como referencia | **No sirve como línea base**: tiene corridas manuales recientes con configuraciones de prueba (complementos de Pymes, uniones de lotes) | `orquestacion/corridas_glue.json` |
+| Montos (Silver y Bronce) | **Sin evidencia válida todavía**: la versión del diagnóstico que se corrió tenía dos errores (ver abajo). Hay que repetir solo la sección de datos | — |
+
+Errores del diagnóstico en esta corrida (ya corregidos en el script):
+- Silver: la consulta sumaba también `idproducto` y Athena la rechazó por nombre ambiguo; en Satélites tomó la tabla de la carpeta `controles`.
+- Bronce: tomó tablas de cargas completas antiguas (idénticas en DEV y QA) y las sumó sin filtro (15 GB por consulta). **Esos CSV no deben usarse.** Ahora el script consulta solo la tabla de la carpeta exacta del lote del runtime y, si no la encuentra, no consulta.
+
+Para repetir solo la parte de datos (rápido, sin volver a bajar código):
+```
+SECCIONES=configuracion,datos bash diagnostico-pcr-emisiones.sh qa 202606 primary
+```
+
+**Conclusión parcial:** en QA, la extracción reproduce fielmente la Oracle a la que está conectada. Si PRD da cifras distintas, lo primero es saber a qué Oracle se conecta PRD y si es la misma información que ACSSOP (que no tiene 13 tablas y cambia entre fechas). Eso se responde corriendo el diagnóstico en PRD y Q1 a Q6 en su Oracle.
+
 ## Cómo se ejecuta
 
 Todo es de solo lectura. La única escritura es la de Athena, que guarda el resultado de cada consulta en el bucket de resultados de su workgroup.
@@ -77,7 +104,7 @@ Si falta un permiso, esa sección queda anotada en `resumen.json` como error y l
 ## Datos personales
 
 - El diagnóstico no consulta columnas de personas: solo cuenta filas y suma montos por producto, concepto y periodo.
-- La evidencia trae nombres de recursos, rutas y la URL JDBC de la conexión: se guarda en la carpeta de evidencias, fuera del repositorio.
+- La evidencia trae nombres de recursos, rutas y la URL JDBC de la conexión (sin usuario ni clave).
 - El archivo `RRC SIN CONTABILIDAD ALFA 202606.xlsx` (hoja `Data`) trae nombres de tomadores, y los `.msg` traen nombres y correos. No deben quedar en el repositorio.
 
 ## Archivos

@@ -13,6 +13,8 @@ actualizado: 2026-11-23
 ## PCR Emisiones 202606: PRD frente a QA (2026-11-23, ver [[inprod-pcr-emisiones-202606]])
 - [ ] Pedir a DevOps correr `Tareas\Fixs\PcrEmisiones\diagnostico\diagnostico-pcr-emisiones.sh` en QA y en PRD (solo lectura) y traer los `.tar.gz` a `EvidenciasAws\qa-pcr-emisiones\` y `EvidenciasAws\prd-pcr-emisiones\`. Correrlo nosotros en DEV.
 - [ ] Pedir a Julio (o al DBA) `conciliacion-oracle-acsele.sql` en la Oracle ACSELE de QA y de PRD, más las SQL de `oracle\` que genera cada evidencia. CSV a `<evidencia>\oracle_resultados\`.
+- [ ] Repetir en DEV y QA solo la parte de datos con el script corregido: `SECCIONES=configuracion,datos bash diagnostico-pcr-emisiones.sh <amb> 202606 primary` (la primera corrida no dejó montos válidos).
+- [ ] Pedir Q5 y Q6 en la Oracle de QA y Q1-Q6 en la de PRD; preguntar al DBA si ACSSOP se recargó entre el 19 y el 22 de nov, y si las 13 tablas `ORA-00942` existen en producción.
 - [ ] Correr `comparar_ambientes.py` y decidir según la primera capa que difiera. No corregir código antes de eso.
 - [ ] Decidir qué hacer con los `.msg` y el RRC con nombres de tomadores versionados en `ee37aa7` (ya en `origin/main`): sacarlos del repo y del historial o dejarlos (CUM-01). Decisión del usuario.
 

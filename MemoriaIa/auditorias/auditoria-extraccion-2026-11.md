@@ -19,5 +19,5 @@ Humano: `Docs\06-brechas\auditoria-extraccion-2026-11.md`. Plan: [[modularizacio
   - **ARQ-62 (alta):** la configuradora general solo acepta `dev|qa|prod` (`lambda_function.py:21`, `conf_emisiones.py:35`) y PRD se llama `niif-prd-*` → PRD corre otro código (ARQ-50). Por confirmar con la huella de PRD.
   - **ARQ-63 (alta):** checkpoint `_control/_SUCCESS.json` del mismo periodo y lote → `REUSED` sin leer Oracle (`:607-611`); lote fijo en PRG (`conf_emisiones.py:172`); `SUCCESS` con `calidad_fuentes=INCOMPLETA` (`:768-776`).
   - **ARQ-64 (alta, hipótesis):** Silver Generales repite montos por fila (movimientos por operación-póliza, base unida a unidades de riesgo solo por operación: `silver_generales.py:184`, `:804`).
-  - **ARQ-65 (media):** Silver con productos/compañía fijos (`silver_generales.py:20-21`), `status` 2 por defecto (`:146`); exige `--RUTA_CONFIG_SCD` y la IaC no lo pasa.
+  - **ARQ-65 (media):** Silver con productos/compañía fijos (`silver_generales.py:20-21`), `status` 2 por defecto (`:146`); exige `--RUTA_CONFIG_SCD`: la IaC `77de48cb` no lo pasa, pero la SF desplegada en DEV y QA sí (2026-11-23); confirmar en PRD.
 - Descartado con evidencia (no repetir): "la exclusión relee Oracle tres veces", ver [[inprod-primas-rentas-202606]] §8.

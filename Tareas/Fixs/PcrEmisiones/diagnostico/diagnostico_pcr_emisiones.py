@@ -703,10 +703,26 @@ def _tablas_catalogo(ctx):
     return tablas
 
 
-def _buscar(tablas, contiene, bucket_contiene):
-    candidatas = [t for t in tablas if contiene in t["ubicacion"].lower() and bucket_contiene in t["ubicacion"].lower()]
-    candidatas.sort(key=lambda t: len(t["ubicacion"]))
-    return candidatas
+def _tabla_para_ruta(tablas, ruta):
+    """Tabla del catálogo para una ruta exacta del runtime.
+
+    Devuelve (tabla, filtro_path). Si hay una tabla con esa misma ubicación, no hace falta
+    filtro. Si solo hay una tabla "padre", se filtra por la pseudo-columna "$path" para leer
+    únicamente esa carpeta. Si no hay ninguna, devuelve (None, None) y NO se consulta: nunca
+    se suma una tabla completa sin filtro (en la versión anterior eso tomó cargas viejas).
+    """
+    if not ruta:
+        return None, None
+    objetivo = str(ruta).replace("s3a://", "s3://").rstrip("/")
+    exactas = [t for t in tablas if t["ubicacion"].lower() == objetivo.lower()]
+    if exactas:
+        return exactas[0], None
+    padres = [t for t in tablas if objetivo.lower().startswith(t["ubicacion"].lower() + "/")]
+    padres.sort(key=lambda t: -len(t["ubicacion"]))
+    if padres:
+        prefijo = objetivo.replace("'", "") + "/%"
+        return padres[0], f"\"$path\" LIKE '{prefijo}'"
+    return None, None
 
 
 def _consultar(ctx, base, sql, nombre):
@@ -715,7 +731,7 @@ def _consultar(ctx, base, sql, nombre):
         QueryString=sql, QueryExecutionContext={"Database": base}, WorkGroup=ctx.args.workgroup
     )
     ejecucion = respuesta["QueryExecutionId"]
-    for _ in range(180):
+    for _ in range(300):
         estado = ctx.athena.get_query_execution(QueryExecutionId=ejecucion)["QueryExecution"]
         actual = estado["Status"]["State"]
         if actual in {"SUCCEEDED", "FAILED", "CANCELLED"}:
@@ -741,104 +757,121 @@ def _filtro_texto(columna, valor):
     return f"CAST({columna} AS varchar) = '{str(valor).replace(chr(39), '')}'"
 
 
+def _es_llave(columna):
+    return columna.startswith(("id", "nro_", "codigo_", "cod_", "numero_")) or columna in {
+        "lote_cargue_id", "unidad_riesgo", "periodo_negocio", "periodo_fechaemision", "periodo_emision",
+    }
+
+
+def _dataset(runtime, sufijo):
+    for d in runtime.get("datasets_extraidos") or []:
+        relativa = str(d.get("tabla_relativa") or "").lower().strip("/")
+        if relativa == sufijo or relativa.endswith("/" + sufijo):
+            return d
+    return None
+
+
 @seccion("datos")
 def capturar_datos(ctx):
     if ctx.args.sin_athena:
         log("   Athena desactivado con --sin-athena")
         return
+    if not ctx.runtimes:
+        ctx.ev.error("datos", "No hay runtimes cargados: correr también la sección configuracion")
+        return
     tablas = _tablas_catalogo(ctx)
-    ctx.ev.json("datos/catalogo_tablas.json", [
-        {k: t[k] for k in ("base", "tabla", "ubicacion", "particiones")} for t in tablas
-        if any(p in t["ubicacion"].lower() for p in ("preparacion_emisiones", "acsele"))
-    ])
+    ctx.ev.json("datos/catalogo_tablas.json", [{k: t[k] for k in ("base", "tabla", "ubicacion", "particiones")} for t in tablas])
     resumen = {"silver": {}, "bronce": {}}
 
-    for caso in CASOS:
-        candidatas = _buscar(tablas, f"preparacion_emisiones/{caso}", f"-{ctx.amb}-silver")
-        if not candidatas:
-            resumen["silver"][caso] = "SIN_TABLA_EN_CATALOGO"
-            ctx.ev.alerta("DAT-SIN-CATALOGO", f"No hay tabla del catálogo sobre preparacion_emisiones/{caso}")
+    # ---- Silver preparada: la carpeta exacta que publicó el runtime de cada caso.
+    for caso, runtime in ctx.runtimes.items():
+        ruta = runtime.get("ruta_silver_preparada")
+        tabla, filtro_path = _tabla_para_ruta(tablas, ruta)
+        if not tabla:
+            resumen["silver"][caso] = {"ruta": ruta, "resultado": "SIN_TABLA_EN_CATALOGO_PARA_LA_RUTA"}
+            ctx.ev.alerta("DAT-SIN-CATALOGO", f"{caso}: ninguna tabla del catálogo cubre {ruta}")
             continue
-        tabla = candidatas[0]
         columnas = dict(tabla["columnas"] + tabla["particiones"])
         producto = next((c for c in COLUMNAS_PRODUCTO if c in columnas), None)
-        montos = [c for c, tipo in tabla["columnas"] if tipo.startswith(TIPOS_MONTO)]
-        grupos = [c for c in (producto, "periodo_fechaemision") if c and c in columnas]
-        grupos += [p for p, _ in tabla["particiones"] if p not in grupos and p != "periodo_negocio"]
-        filtro = _filtro_texto("periodo_negocio", ctx.periodo) if "periodo_negocio" in columnas else "1=1"
+        grupos = [c for c in (producto, "periodo_fechaemision", "periodo_emision") if c and c in columnas]
+        montos = [c for c, tipo in tabla["columnas"] if tipo.startswith(TIPOS_MONTO) and c not in grupos and not _es_llave(c)]
+        filtros = [f for f in (filtro_path,) if f]
+        if "periodo_negocio" in columnas:
+            filtros.append(_filtro_texto("periodo_negocio", ctx.periodo))
+        donde = " AND ".join(filtros) or "1=1"
         llaves = [c for c in ("idpoliza", "nro_operacion", "unidad_riesgo") if c in columnas]
-        extras = []
-        for c in ("lote_cargue_id", "id_ejecucion"):
-            if c in columnas:
-                extras.append(f"array_join(array_agg(DISTINCT CAST({c} AS varchar)), '|') AS {c}s")
+        extras = [f"array_join(array_agg(DISTINCT CAST({c} AS varchar)), '|') AS {c}s" for c in ("lote_cargue_id", "id_ejecucion") if c in columnas]
         if llaves:
             extras.append("COUNT(DISTINCT " + " || '#' || ".join(f"COALESCE(CAST({k} AS varchar), '')" for k in llaves) + ") AS filas_distintas_llave")
         sql = (
             "SELECT " + ", ".join(grupos + ["COUNT(*) AS filas"] + extras + [f"SUM({m}) AS {m}" for m in montos])
-            + f' FROM "{tabla["base"]}"."{tabla["tabla"]}" WHERE {filtro}'
+            + f' FROM "{tabla["base"]}"."{tabla["tabla"]}" WHERE {donde}'
             + (" GROUP BY " + ", ".join(grupos) + " ORDER BY " + ", ".join(grupos) if grupos else "")
         )
+        resumen["silver"][caso] = {"ruta": ruta, "tabla": f'{tabla["base"]}.{tabla["tabla"]}', "filtro": donde,
+                                   "columna_producto": producto, "montos": montos}
         try:
             _filas, escaneado = _consultar(ctx, tabla["base"], sql, f"silver_{caso}_totales")
-            resumen["silver"][caso] = {"tabla": f'{tabla["base"]}.{tabla["tabla"]}', "ubicacion": tabla["ubicacion"],
-                                        "columna_producto": producto, "montos": montos, "bytes_escaneados": escaneado}
+            resumen["silver"][caso]["bytes_escaneados"] = escaneado
         except Exception as exc:  # noqa: BLE001
             ctx.ev.error(f"datos:silver:{caso}", exc)
 
-        # Los montos salen de los movimientos agrupados por (operación, póliza). Si el Silver tiene
-        # varias filas por esa llave (p. ej. varias unidades de riesgo), sumar filas duplica montos.
-        # Esta consulta toma un solo valor por (producto, operación, póliza) y luego suma.
+        # Montos agrupados por (operación, póliza) en el job: si hay varias filas por llave,
+        # sumar filas repite montos. Se toma un valor por (producto, operación, póliza).
         if producto and {"nro_operacion", "idpoliza"}.issubset(columnas) and montos:
-            particion = [p for p, _ in tabla["particiones"] if p != "periodo_negocio"]
-            llave = [producto, "nro_operacion", "idpoliza"] + particion
+            llave = [producto, "nro_operacion", "idpoliza"]
             sql_llave = (
-                "SELECT " + ", ".join([producto] + particion + ["COUNT(*) AS llaves", "SUM(filas) AS filas"]
-                                     + [f"SUM({m}) AS {m}" for m in montos])
+                "SELECT " + ", ".join([producto, "COUNT(*) AS llaves", "SUM(filas) AS filas"] + [f"SUM({m}) AS {m}" for m in montos])
                 + " FROM (SELECT " + ", ".join(llave + ["COUNT(*) AS filas"] + [f"MAX({m}) AS {m}" for m in montos])
-                + f' FROM "{tabla["base"]}"."{tabla["tabla"]}" WHERE {filtro} GROUP BY ' + ", ".join(llave) + ") x"
-                + " GROUP BY " + ", ".join([producto] + particion) + " ORDER BY " + ", ".join([producto] + particion)
+                + f' FROM "{tabla["base"]}"."{tabla["tabla"]}" WHERE {donde} GROUP BY ' + ", ".join(llave) + ") x"
+                + f" GROUP BY {producto} ORDER BY {producto}"
             )
             try:
                 _consultar(ctx, tabla["base"], sql_llave, f"silver_{caso}_totales_por_operacion")
             except Exception as exc:  # noqa: BLE001
                 ctx.ev.error(f"datos:silver_llave:{caso}", exc)
 
-    tpm = _buscar(tablas, "/thirdpartymovementpolicy", f"-{ctx.amb}-bronce")
-    agp = _buscar(tablas, "/agregatedpolicy", f"-{ctx.amb}-bronce")
-    if not tpm or not agp:
-        resumen["bronce"] = "SIN_TABLAS_EN_CATALOGO (thirdpartymovementpolicy / agregatedpolicy)"
-    else:
-        t, a = tpm[0], agp[0]
-        ct, ca = dict(t["columnas"] + t["particiones"]), dict(a["columnas"] + a["particiones"])
-        requeridas = {"concept", "ammount", "policyid"}
-        if not requeridas.issubset(ct) or not {"agregatedpolicyid", "productid"}.issubset(ca):
-            resumen["bronce"] = {"error": "columnas esperadas no están en el catálogo", "tpm": sorted(ct), "ap": sorted(ca)}
-        else:
-            for caso, runtime in ctx.runtimes.items():
-                lote = runtime.get("lote_cargue_id")
-                filtros_t = [_filtro_texto("t.periodo_negocio", ctx.periodo)] if "periodo_negocio" in ct else []
-                filtros_a = [_filtro_texto("periodo_negocio", ctx.periodo)] if "periodo_negocio" in ca else []
-                if lote is not None and "lote_cargue_id" in ct:
-                    filtros_t.append(_filtro_texto("t.lote_cargue_id", lote))
-                if lote is not None and "lote_cargue_id" in ca:
-                    filtros_a.append(_filtro_texto("lote_cargue_id", lote))
-                if "caso_uso" in ct:
-                    filtros_t.append(_filtro_texto("t.caso_uso", caso))
-                sql = (
-                    "SELECT CAST(ap.productid AS varchar) AS productid, upper(t.concept) AS concepto, "
-                    "COUNT(*) AS filas, SUM(CAST(t.ammount AS decimal(38,6))) AS total "
-                    f'FROM "{t["base"]}"."{t["tabla"]}" t '
-                    f'JOIN (SELECT DISTINCT agregatedpolicyid, productid FROM "{a["base"]}"."{a["tabla"]}" '
-                    f"WHERE {' AND '.join(filtros_a) or '1=1'}) ap "
-                    "ON CAST(ap.agregatedpolicyid AS varchar) = CAST(t.policyid AS varchar) "
-                    f"WHERE {' AND '.join(filtros_t) or '1=1'} "
-                    "GROUP BY 1, 2 ORDER BY 1, 2"
-                )
-                try:
-                    _filas, escaneado = _consultar(ctx, t["base"], sql, f"bronce_{caso}_movimientos")
-                    resumen["bronce"][caso] = {"lote": lote, "bytes_escaneados": escaneado}
-                except Exception as exc:  # noqa: BLE001
-                    ctx.ev.error(f"datos:bronce:{caso}", exc)
+    # ---- Movimientos del lote de esta corrida (copia en Silver o Bronce, ruta exacta del runtime).
+    for caso, runtime in ctx.runtimes.items():
+        tpm, agp = _dataset(runtime, "thirdpartymovementpolicy"), _dataset(runtime, "agregatedpolicy")
+        if not tpm or not agp:
+            resumen["bronce"][caso] = "EL_RUNTIME_NO_TRAE_MOVIMIENTOS_O_POLIZAS"
+            continue
+        elegido = None
+        for clave in ("ruta_dataset_origen", "ruta_dataset_destino"):  # primero el Bronce exacto del lote
+            t, ft = _tabla_para_ruta(tablas, tpm.get(clave))
+            a, fa = _tabla_para_ruta(tablas, agp.get(clave))
+            if t and a:
+                elegido = (clave, t, ft, a, fa)
+                break
+        if not elegido:
+            resumen["bronce"][caso] = {"resultado": "SIN_TABLA_PARA_LA_RUTA_DEL_LOTE (no se consulta para no sumar otras cargas)",
+                                       "rutas": {k: tpm.get(k) for k in ("ruta_dataset_destino", "ruta_dataset_origen")}}
+            continue
+        clave, t, ft, a, fa = elegido
+        ct = dict(t["columnas"] + t["particiones"])
+        if not {"concept", "ammount", "policyid"}.issubset(ct):
+            resumen["bronce"][caso] = {"error": "la tabla elegida no tiene concept, ammount y policyid", "tabla": t["tabla"]}
+            continue
+        filtros_t = [f.replace('"$path"', 't."$path"') for f in (ft,) if f]
+        filtros_a = [f for f in (fa,) if f]
+        sql = (
+            "SELECT CAST(ap.productid AS varchar) AS productid, upper(t.concept) AS concepto, "
+            "COUNT(*) AS filas, SUM(CAST(t.ammount AS decimal(38,6))) AS total "
+            f'FROM "{t["base"]}"."{t["tabla"]}" t '
+            f'JOIN (SELECT DISTINCT agregatedpolicyid, productid FROM "{a["base"]}"."{a["tabla"]}" '
+            f"WHERE {' AND '.join(filtros_a) or '1=1'}) ap "
+            "ON CAST(ap.agregatedpolicyid AS varchar) = CAST(t.policyid AS varchar) "
+            f"WHERE {' AND '.join(filtros_t) or '1=1'} "
+            "GROUP BY 1, 2 ORDER BY 1, 2"
+        )
+        resumen["bronce"][caso] = {"origen": clave, "lote": runtime.get("lote_cargue_id"),
+                                   "tabla_movimientos": f'{t["base"]}.{t["tabla"]}', "tabla_polizas": f'{a["base"]}.{a["tabla"]}'}
+        try:
+            _filas, escaneado = _consultar(ctx, t["base"], sql, f"bronce_{caso}_movimientos")
+            resumen["bronce"][caso]["bytes_escaneados"] = escaneado
+        except Exception as exc:  # noqa: BLE001
+            ctx.ev.error(f"datos:bronce:{caso}", exc)
     ctx.ev.json("datos/resumen_datos.json", resumen)
 
 
