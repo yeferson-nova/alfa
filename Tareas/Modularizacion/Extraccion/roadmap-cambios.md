@@ -52,7 +52,13 @@ Cada ID es una brecha registrada en `Docs\06-brechas\`. La ficha completa, con l
 ### Orden 1: dependencias (qué necesita qué)
 Hechos verificados en el código que fijan el orden:
 - **Una clave nueva de configuración viaja por tres piezas: DDB → R3 → JSON de S3 → job.** El configurador arma cada tabla con una lista fija de campos (`orden`, `schema`, `tabla`, `tabla_relativa`, `tipo_tabla`, `where`, `dependencia`, `segmentacion_horizontal`; `conf_arl.py`, `construir_ciclos`). **Una clave nueva por tabla o por ciclo se pierde si R3 no la conoce.** En cambio, el bloque `fuente` se copia entero (`construir_extraccion`), así que una clave nueva ahí pasa sin tocar R3.
-- **Emisiones copia `ciclos` entero** (`conf_emisiones.py`, `copy.deepcopy`). Ahí una clave nueva por ciclo o por tabla pasa sin tocar el configurador (*por verificar con una prueba* en su paso).
+- **Emisiones copia `ciclos` entero** (`conf_emisiones.py:351`, `copy.deepcopy`). Ahí una clave nueva por ciclo o por tabla pasa sin tocar el configurador.
+- **El proceso de extracción de Emisiones fue reescrito en `quality` el 2026-11-20** (de 3392 a 819 líneas, más un `validacion_tecnica_emisiones.py` nuevo). La versión actual:
+  - **valida su configuración** (`validate_config`): rechaza un valor de `estrategia_lectura` que no conoce. En R4 el orden es **código primero, configuración después**;
+  - ya tiene la clave `estrategia_lectura` (`SQL_CONFIGURADA`, `SQL_CONFIGURADA_UNA_TABLA`, `DEPENDENCIA`): la opción D usa esa misma clave con un valor nuevo, no una paralela;
+  - aplica las dependencias en Oracle con `EXISTS` contra la tabla origen (opción B) y ya proyecta columnas explícitas (`oracle_projection`);
+  - tiene un checkpoint por tabla en S3 (`_control/_SUCCESS.json`) y exige `id_ejecucion`, que hoy sale de `conf_emisiones` (`idEjecucion` o uno generado);
+  - no tiene timeouts fijos. 2 tablas de PCR Vida tienen `lectura_paralela` habilitada (hasta 16 particiones).
 - **El proceso de extracción estándar no valida el esquema del JSON:** lee claves puntuales con `.get`. La versión vieja ignora una clave nueva, así que la configuración puede ir **antes** que el código.
 - **Glue ignora los argumentos que el script no pide.** Por eso `--EJECUCION_ID` puede llegar desde la Step Function antes que el código que lo usa (*comportamiento de `getResolvedOptions`; se confirma en DEV en el paso 3.3*).
 - **Para probar "una tabla por ciclo"** (primera corrida del modelo de Víctor) hay que poder cambiar el número de ciclos, y hoy R3 lo exige fijo (ARQ-59). El arreglo de R3 va antes.
@@ -80,7 +86,8 @@ Reglas:
 | R3 (lambda) | Jenkins (zip) | Versión anterior de la lambda | Va **antes** que DDB: primero sabe leer la clave nueva, sin exigirla |
 | DDB | Script con respaldo previo de los ítems | Restaurar el respaldo | Va después de R3 y antes que el job |
 | R2 (JSON en Git) | Jenkins (sync a S3) | Commit anterior | Igual que DDB. En S3 manda lo que publica R3 |
-| R1 / R4 (Glue) | Jenkins (script a S3) | Script anterior: la configuración nueva no le hace daño | Va **último** y exige las claves: si faltan, falla con un error clasificado, sin valores por defecto |
+| R1 (Glue estándar) | Jenkins (script a S3) | Script anterior: la configuración nueva no le hace daño | Va **último** y exige las claves: si faltan, falla con un error clasificado, sin valores por defecto |
+| R4 (Glue Emisiones) | Jenkins (script a S3) | Script anterior, siempre que la configuración nueva no tenga valores que no conozca | Valida su configuración: **el código va antes** y acepta las claves nuevas; después se cargan |
 | R5 (IaC) | DevOps | DevOps | Los argumentos nuevos van **antes** que el código que los usa |
 
 Patrón: **ampliar → poblar → usar**. Así cada pieza se puede revertir sin romper a las demás.
@@ -92,12 +99,13 @@ Patrón: **ampliar → poblar → usar**. Así cada pieza se puede revertir sin 
   - ticket Jira para ramas y commits;
   - qué configurador corre en QA y PRD (la general, las por malla o T2);
   - quién carga `cnf-mallas` en QA y PRD (ningún repo lo hace);
-  - de dónde salen las 13 políticas del rol.
+  - de dónde salen las 13 políticas del rol;
+  - quién reescribió el proceso de extracción de Emisiones en `quality` el 20 nov, para no cruzar cambios.
 - [ ] **0.2 ORA, Consulta Oracle:** QA corre `consultas-oracle-alfaprd.sql` y `consultas-oracle-acsele.sql`. Va en paralelo: solo bloquea la fase 5.
 - [ ] **0.3 DEV, Consulta DEV:** línea base del proceso de extracción estándar en las 4 mallas sin medir (Endosos, ARP, RVI y Auxilios), con el método de `medir-tiempos-rentas.sh`. ARL y Rentas ya están medidas (tanda 1).
 - [ ] **0.4 DEV, Consulta DEV:** línea base del proceso de extracción de Emisiones (duración, filas y unidades por tabla).
 - [ ] **0.5 R1, `chore`:** rebasar la rama `feature/modular-rmd-ext-estandar` (red de caracterización y esqueleto modular) sobre `quality` (`0af0ca8`, que ya trae el fix del SCD) y dejar la red de caracterización en verde.
-- [ ] **0.6 R4, `chore`, commit `test`:** red de caracterización del proceso de extracción de Emisiones (solo pruebas, sin tocar `src/`).
+- [ ] **0.6 R4, `chore`, commit `test`:** red de caracterización del proceso de extracción de Emisiones sobre la versión reescrita el 20 nov (solo pruebas, sin tocar `src/`). Necesita saber en 0.1 quién la está cambiando.
 - [ ] **0.7 R1 y R4, por verificar en el código:** quién lee cada campo de `parametros_extraccion.json` (validación, SCD, remediación). Antes del paso 2.3, que cambia sus duraciones.
 
 ### Fase 1. Refactor hexagonal (mismos resultados)
@@ -107,7 +115,7 @@ Patrón: **ampliar → poblar → usar**. Así cada pieza se puede revertir sin 
 - [ ] **1.4 DEV, Consulta DEV:** equivalencia de R4 frente a la línea base 0.4.
 
 ### Fase 2. Fixes (una rama `bugfix/` por brecha)
-- [ ] **2.1 R3, `bugfix/arq-59-conteos`:** validar la estructura y no el número de ciclos y registros en todos los `conf_*.py`, con pruebas. No toca configuración.
+- [ ] **2.1 R3, `bugfix/arq-59-conteos`:** validar la estructura y no el número de ciclos y registros en los 6 `conf_*.py` de ALFAPRD (`conf_emisiones` no tiene conteos fijos), con pruebas. No toca configuración.
 - [ ] **2.2 R3, `bugfix/arq-59-defectos`:** quitar los valores por defecto `MALLA_PK = MALLA#PRIMAS_ARL` y el ambiente `"dev"` (`lambda_function.py:248`). Si faltan, error clasificado. Si en 0.1 aparecen lambdas por malla desplegadas, también ellas (son otros repos).
 - [ ] **2.3 R1, `bugfix/arq-58-medicion`:** medir la lectura después de la acción que lee, y la duración total al final real del job. Necesita el paso 0.7.
 - [ ] **2.4 COS-05, `bugfix/cos-05-timeout`** (timeout de lectura configurable, en orden):
@@ -115,7 +123,7 @@ Patrón: **ampliar → poblar → usar**. Así cada pieza se puede revertir sin 
   - [ ] 2.4.2 **DDB:** agregar la clave en `fuente` del ítem `EXTRACCION`. R3 no cambia, porque `fuente` se copia entera.
   - [ ] 2.4.3 **R2:** la misma clave en los 6 JSON.
   - [ ] 2.4.4 **R1:** leer la clave en vez de los `30000` fijos.
-  - [ ] 2.4.5 **R4:** lo mismo con sus timeouts fijos (`120000` y `21600000`).
+  - El proceso de Emisiones no tiene timeout fijo en la versión actual: no aplica.
 - [ ] **2.5 ARQ-60:**
   - [ ] 2.5.1 **DEV, Consulta DEV:** qué copia del script usa cada uno de los 8 jobs de Emisiones.
   - [ ] 2.5.2 **R5, pedido a DevOps:** dejar una sola versión por pipeline y retirar las copias. Sin código de Desarrollo.
@@ -186,7 +194,7 @@ El roadmap **no es una sola fila**. Las fases marcan el orden de las dependencia
 | Repo o pieza | Pasos, en orden |
 |---|---|
 | R1 estándar | 0.5 → 1.1 → 2.3 → 2.4.4 → 3.4 → 4.5 → 5.5 |
-| R4 Emisiones | 0.6 → 1.3 → 2.4.5 → 3.5 → 4.7 → 5.7 |
+| R4 Emisiones | 0.6 → 1.3 → 3.5 → 4.7 → 5.7 |
 | R3 configurador | 2.1 → 2.2 → 4.2 → 5.2 |
 | R2 JSON | 2.4.3 → 4.4 → 5.4 (y los de Emisiones en 4.7 y 5.7) |
 | DDB `cnf-mallas` | 2.4.2 → 4.3 → 5.3 (y Emisiones en 4.7 y 5.7) |

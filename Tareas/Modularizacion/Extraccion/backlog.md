@@ -58,14 +58,14 @@ Backlog en formato Scrum para Jira. Sale del [roadmap de cambios](roadmap-cambio
 | 03 | EXT-03 | S1 | 23 nov | Historia (chore) | Línea base | Línea base del proceso de extracción estándar | — | - | Alta |
 | 04 | EXT-04 | S1 | 25 nov | Historia (chore) | Línea base | Línea base del proceso de extracción de Emisiones | — | - | Alta |
 | 05 | EXT-05 | S1 | 25 nov | Historia (chore) | Proceso de extracción estándar | Red de pruebas del proceso de extracción estándar al día | — | - | Alta |
-| 06 | EXT-06 | S1 | 27 nov | Historia (test) | Proceso de extracción de Emisiones | Red de pruebas del proceso de extracción de Emisiones | — | - | Alta |
+| 06 | EXT-06 | S1 | 27 nov | Historia (test) | Proceso de extracción de Emisiones | Red de pruebas del proceso de extracción de Emisiones | EXT-01 | - | Alta |
 | 07 | EXT-07 | S1 | 27 nov | Spike (spike) | Proceso de extracción estándar | Quién lee parametros_extraccion.json | — | ARQ-58 | Media |
 | 08 | EXT-08 | S1 | 2 dic | Historia (refactor) | Proceso de extracción estándar | Proceso de extracción estándar en módulos hexagonales | EXT-03, EXT-05 | - | Alta |
 | 09 | EXT-09 | S2 | 10 dic | Historia (refactor) | Proceso de extracción de Emisiones | Proceso de extracción de Emisiones en módulos hexagonales | EXT-04, EXT-06, EXT-08 | - | Alta |
 | 10 | EXT-10 | S1 | 3 dic | Historia (fix) | Configurador | Configurador sin número fijo de ciclos | EXT-01 | ARQ-59 | Media |
 | 11 | EXT-11 | S1 | 4 dic | Historia (fix) | Configurador | Configurador sin valores por defecto | EXT-01, EXT-10 | ARQ-59 | Media |
 | 12 | EXT-12 | S1 | 4 dic | Historia (fix) | Proceso de extracción estándar | Duraciones reales en la extracción | EXT-07, EXT-08 | ARQ-58 | Media |
-| 13 | EXT-13 | S2 | 7 dic | Historia (fix) | Fixes | Timeout de lectura configurable | EXT-03, EXT-04, EXT-08, EXT-09 | COS-05 | Media |
+| 13 | EXT-13 | S2 | 7 dic | Historia (fix) | Fixes | Timeout de lectura configurable | EXT-03, EXT-08 | COS-05 | Media |
 | 14 | EXT-14 | S2 | 10 dic | Historia (fix) | Fixes | Una sola versión del proceso de extracción de Emisiones | EXT-01 | ARQ-60 | Media |
 | 15 | EXT-15 | S2 | 10 dic | Historia (obs) | Observabilidad | ejecucion_id hasta los procesos de extracción | EXT-01 | ARQ-32 | Media |
 | 16 | EXT-16 | S2 | 14 dic | Historia (obs) | Observabilidad | Log v1 en el proceso de extracción estándar | EXT-12, EXT-15 | ARQ-53 | Media |
@@ -89,6 +89,7 @@ Criterios de aceptación:
 - [ ] Se sabe qué configurador corre en QA y PRD (general, por malla o T2)
 - [ ] Se sabe quién carga cnf-mallas en QA y PRD
 - [ ] Se sabe de qué repo salen las 13 políticas del rol del proceso de extracción
+- [ ] Se sabe quién reescribió el proceso de extracción de Emisiones en quality el 20 nov, para no cruzar cambios
 
 Piezas: R5 (consulta) · Bloqueada por: —
 
@@ -145,11 +146,11 @@ Piezas: R1 · Bloqueada por: —
 Como desarrollador quiero pruebas que fijen el comportamiento actual del proceso de extracción de Emisiones para poder cambiarlo sin romper resultados.
 
 Criterios de aceptación:
-- [ ] Pruebas de caracterización de la lectura, las dependencias y la escritura
-- [ ] No se toca src/
-- [ ] Corren en verde en local
+- [ ] Parten de la versión de quality del 20 nov (reescrita: 819 líneas, validación de configuración y checkpoint por tabla en S3)
+- [ ] Pruebas de caracterización de la lectura, las dependencias (EXISTS) y la escritura
+- [ ] No se toca src/; corren en verde en local
 
-Piezas: R4 · Bloqueada por: —
+Piezas: R4 · Bloqueada por: EXT-01
 
 ### EXT-07 · Quién lee parametros_extraccion.json
 **Spike** · S1, objetivo 27 nov · tipo `spike` · rama `-` · carril Proceso de extracción estándar · prioridad Media · brecha ARQ-58 · roadmap 0.7
@@ -203,7 +204,7 @@ Como operador de la malla quiero agregar o quitar ciclos y registros sin que fal
 
 Criterios de aceptación:
 - [ ] Valida la estructura, no el número de ciclos ni de registros
-- [ ] Aplica a todos los conf_*.py, con pruebas
+- [ ] Aplica a los 6 conf_*.py de ALFAPRD (conf_emisiones no tiene conteos fijos), con pruebas
 - [ ] Una malla con un ciclo más publica bien su JSON
 
 Piezas: R3 · Bloqueada por: EXT-01
@@ -239,17 +240,17 @@ Como operador de la malla quiero fijar el timeout de lectura por configuración 
 
 Criterios de aceptación:
 - [ ] Sin la clave, el job falla con un error clasificado
-- [ ] Con la clave, R1 y R4 usan ese valor
+- [ ] Con la clave, el proceso de extracción estándar usa ese valor (hoy 30000 ms fijos)
 - [ ] Equivalencia contra la línea base = 0 diferencias
+- [ ] El proceso de Emisiones no tiene timeout fijo en la versión actual: no aplica
 
 Subtareas (en orden):
 1. Decisión: valor según la lectura más larga medida
 2. cnf-mallas: clave en fuente (con respaldo)
 3. cfg-datalake-niif-config-s3: clave en los JSON
 4. Proceso de extracción estándar lee la clave
-5. Proceso de extracción de Emisiones lee la clave
 
-Piezas: DDB, R2, R1, R4 · Bloqueada por: EXT-03, EXT-04, EXT-08, EXT-09
+Piezas: DDB, R2, R1 · Bloqueada por: EXT-03, EXT-08
 
 ### EXT-14 · Una sola versión del proceso de extracción de Emisiones
 **Historia** · S2, objetivo 10 dic · tipo `fix` · rama `-` · carril Fixes · prioridad Media · brecha ARQ-60 · roadmap 2.5
@@ -304,7 +305,7 @@ Como operador de la malla quiero los mismos logs v1 en el proceso de extracción
 
 Criterios de aceptación:
 - [ ] Mismos eventos y campos que EXT-16
-- [ ] Una sola fuente del ID: se aclara el id_ejecucion que ya trae su JSON
+- [ ] Una sola fuente del ID: hoy conf_emisiones usa idEjecucion o genera EMISIONES-<periodo>-<hora>; se alinea con $$.Execution.Name
 
 Piezas: R4 · Bloqueada por: EXT-09, EXT-15, EXT-16
 
@@ -335,7 +336,9 @@ Como operador de la malla quiero el mismo modelo de ciclos en el proceso de extr
 
 Criterios de aceptación:
 - [ ] Mismos criterios que EXT-18
-- [ ] Se verifica que conf_emisiones deja pasar las claves
+- [ ] conf_emisiones copia los ciclos enteros (verificado): no necesita cambio
+- [ ] El job valida su configuración: primero acepta las claves nuevas y después se cargan
+- [ ] Se decide el pool de las 2 tablas de PCR Vida con lectura_paralela habilitada
 
 Subtareas (en orden):
 1. cnf-mallas de Emisiones
@@ -354,6 +357,7 @@ Criterios de aceptación:
 - [ ] Tramos BETWEEN en secuencia por la única conexión y semijoin exacto en Spark
 - [ ] Checkpoint por tramo para retomar
 - [ ] Equivalencia contra la referencia = 0 diferencias
+- [ ] Usa la misma clave estrategia_lectura del proceso de Emisiones, con un valor nuevo
 
 Subtareas (en orden):
 1. Decisión: estrategia por tabla, foto consistente, zona temporal y referencia
@@ -368,10 +372,12 @@ Piezas: R3, DDB, R2, R1 · Bloqueada por: EXT-02, EXT-18
 ### EXT-21 · Lectura por tramos de llave (Emisiones)
 **Historia** · S4, objetivo 4 ene · tipo `feat` · rama `feature/lectura-rangos` · carril Rendimiento · prioridad Alta · brecha COS-11 · roadmap 5.7, 5.8
 
-Como operador de la malla quiero la misma lectura por tramos en el proceso de extracción de Emisiones para bajar la carga sobre Acsel-e.
+Como operador de la malla quiero cambiar el EXISTS contra la tabla origen por tramos de llave para no repetir la tabla origen en cada consulta hija sobre Acsel-e.
 
 Criterios de aceptación:
 - [ ] Mismos criterios que EXT-20
+- [ ] Valor nuevo en su estrategia_lectura (hoy SQL_CONFIGURADA, SQL_CONFIGURADA_UNA_TABLA, DEPENDENCIA); el job lo acepta antes de cargarlo
+- [ ] Se decide si el checkpoint por tramo sigue su patrón actual en S3 (_control/_SUCCESS.json) o va a ejc-ejecuciones
 - [ ] Equivalencia contra acsele_alfa_bi.em_*, si hay acceso
 
 Subtareas (en orden):

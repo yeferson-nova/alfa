@@ -1,5 +1,7 @@
 # Diseño: lectura de dependencias por rangos de llave (opción D)
 
+> **Ajuste (2026-11-20, validado en código):** el proceso de extracción de Emisiones ya usa la clave `estrategia_lectura` (`SQL_CONFIGURADA`, `SQL_CONFIGURADA_UNA_TABLA`, `DEPENDENCIA`) y la valida. Los valores de este diseño (rangos, completa, `IN` en lotes) se agregan como valores nuevos de esa misma clave en los dos procesos; los nombres finales se fijan al implementar EXT-20.
+
 Estado: **propuesta en refinamiento** (2026-11-20). Nada de esto está implementado. Lo marcado *por verificar* no se ha comprobado.
 
 ## Idea
