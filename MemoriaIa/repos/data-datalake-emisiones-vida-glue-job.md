@@ -1,7 +1,7 @@
 ---
 tipo: repo
 estado: vigente
-actualizado: 2026-11-12
+actualizado: 2026-11-23
 repo: data-datalake-emisiones-vida-glue-job
 categoria: glue
 paso: "2 · Silver (preparación)"
@@ -23,6 +23,7 @@ malla: transversal
 - S3 (runtime, Silver preparada), cliente STS. Sin DynamoDB ni Athena. Se despliega a `glue-resources/emisiones-vida`.
 
 ## Código
+- **`quality` del 2026-11-20 (`bca5a4e9`):** el repo ya no tiene `silver_vida_deudores.py`; trae `src/jobs/silver_generales.py`, `silver_satelites.py` y `silver_vida.py` (jobs `niif-{env}-silver-<caso>` de la Step Function `niif-{env}-emisiones`). Generales y Vida escriben `periodo_negocio=<p>` con overwrite; Satélites, una carpeta `ejecucion_preparacion=<uuid>` nueva por corrida. Brechas ARQ-64 y ARQ-65 ([[inprod-pcr-emisiones-202606]]). Lo de abajo describe la versión del 2026-11-06.
 - `src/jobs/silver_vida_deudores.py` (~210 líneas): módulos SQL (base, movimientos, tomador, maestro, agente, asegurado, final); valida pivote sin IDs nulos o duplicados, periodo y conteos contra el runtime; trata cadena vacía como NULL (regla Oracle).
 - Bloquea la ejecución si la cuenta AWS no es la de DEV (cuenta fija en el código, mala práctica; no se reproduce aquí). Su docstring dice "versión de prueba, no certificada por QA".
 - Tiene `tests/` solo con `conftest.py` y paquetes vacíos; `Dockerfile` y `Makefile` de plantilla.

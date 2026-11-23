@@ -1,7 +1,7 @@
 ---
 tipo: pendiente
 estado: vigente
-actualizado: 2026-11-20
+actualizado: 2026-11-23
 ---
 # Preguntas abiertas
 
@@ -15,6 +15,12 @@ actualizado: 2026-11-20
 - ¿Trabajamos como proveedor externo? Si es así, aplica el reporte SonarQube inicial y final ([[est-codigo-seguro]] 5.2).
 - ¿Cuál es el ticket Jira del proyecto? Es obligatorio en ramas y commits ([[est-versionamiento-codigo]]).
 - ~~¿El CSV de certificación tiene datos personales?~~ **Resuelta (2026-11-10, usuario): no.** Los de DEV y QA son datos de ejemplo. Matiz: el CSV de Primas trae `NID_NUMERO_IDENTIFICACION_TERCERO` y `NOM_TERCERO`; en la muestra son NIT de empresas, pero en prod podría haber personas naturales. Revisarlo antes de producción.
+
+## PCR Emisiones 202606 ([[inprod-pcr-emisiones-202606]], 2026-11-23)
+- (Negocio, Javier González) ¿Contra cuál cifra se valida: el RRC sin contabilidad o el `E1-A1`? El propio Excel muestra que difieren (Generales IVA comisión recaudo 63.748.417,52).
+- (Negocio) "Lo emitido en junio" ¿es por mes de producción (como el resumen) o por fecha de la operación? El RRC trae 726 filas de meses anteriores dentro del corte de junio.
+- (Negocio) ¿Qué conceptos de ACSELE forman cada columna del Excel (prima emitida, comisión intermediario y su IVA, comisión recaudo y su IVA)? El mapeo actual es propuesta.
+- (DevOps) ¿La Oracle ACSELE de QA es copia de PRD? ¿De qué fecha? ¿PRD corre la rama `main` o `quality` de los repos de Emisiones?
 
 ## Extracción (2026-11-20, para Julio en Oracle; no son para Víctor, ver [[modularizacion-extraccion]])
 - Scripts listos para entregar, uno por base (solo diccionario): `Tareas/Modularizacion/Extraccion/consultas-oracle-alfaprd.sql` (40 tablas de los 6 JSON; flashback) y `consultas-oracle-acsele.sql` (93 tablas de M1-M4; `em_*`; flashback). Resultados, en CSV, a `EvidenciasAws/dev-extraccion/`.

@@ -1,7 +1,7 @@
 ---
 tipo: contexto
 estado: vigente
-actualizado: 2026-11-20
+actualizado: 2026-11-23
 ---
 # Índice de la memoria de IA
 
@@ -19,7 +19,7 @@ actualizado: 2026-11-20
 | Dónde está el código y cómo se pasa al PC corporativo | [[repo-alfa-repos]] (comandos en `COMANDOS-ALFA-REPOS.md`, raíz del repo) |
 | Dónde está cada archivo o carpeta | [[rutas-workspace]] (las rutas `Backend\` son históricas) |
 | Estado de un cambio nuestro (SES, orquestadora, certificación, T2, T3) | `features\`: empezar por [[tareas-aws]] y [[roadmap-notificaciones]] |
-| Un incidente en producción | `inprod\`: [[inprod-primas-arl-202606]] (su fix: [[fix-scd-freno-periodo]]), [[inprod-primas-rentas-202606]], [[inprod-enlaces-cognito-9411325]] |
+| Un incidente en producción | `inprod\`: [[inprod-primas-arl-202606]] (su fix: [[fix-scd-freno-periodo]]), [[inprod-primas-rentas-202606]], [[inprod-enlaces-cognito-9411325]], [[inprod-pcr-emisiones-202606]] |
 | Brechas de seguridad, costos o arquitectura (IDs `SEG`, `COS`, `ARQ`, `CUM`) | `auditorias\`: [[brechas-seguridad]], [[auditoria-pipeline-2026-11]], [[notificaciones-vs-arquitectura]], [[auditoria-repos-2026-11]] |
 | Qué falta por hacer, o dudas sin resolver | [[pendientes]], [[preguntas-abiertas]] |
 | Observabilidad: logs, ID de punta a punta, duraciones, tableros y alertas | [[roadmap-observabilidad]] |
@@ -79,7 +79,7 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 - [[diseno-propuesto]]: cambios propuestos en el paso 3 (sin confirmar)
 - [[fix-scd-freno-periodo]]: fix completo de Primas ARL (SCD por periodo, extracción, calidad del código), 33 hallazgos y plan de 7 días
 
-**inprod:** [[inprod-primas-arl-202606]] · [[inprod-primas-rentas-202606]] · [[inprod-enlaces-cognito-9411325]]
+**inprod:** [[inprod-primas-arl-202606]] · [[inprod-primas-rentas-202606]] · [[inprod-enlaces-cognito-9411325]] · [[inprod-pcr-emisiones-202606]] (PRD frente a QA, diagnóstico por capas)
 
 **auditorias:** [[brechas-seguridad]] · [[auditoria-pipeline-2026-11]] · [[notificaciones-vs-arquitectura]] · [[riesgos-glue-notificacion]] · [[auditoria-repos-2026-11]] · [[auditoria-observabilidad-2026-11]] · [[auditoria-extraccion-2026-11]]
 

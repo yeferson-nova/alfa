@@ -1,7 +1,7 @@
 ---
 tipo: repo
 estado: vigente
-actualizado: 2026-11-20
+actualizado: 2026-11-23
 repo: data-datalake-niif-pcr-emisiones-glue-job
 categoria: glue
 paso: "2 · Bronce (extracción)"
@@ -33,5 +33,6 @@ malla: transversal
 - **Modularización (2026-11-20):** está en nuestro alcance (job de Glue, pasos 2 y 3). Entra en [[modularizacion-extraccion]]; sus copias en DEV son ARQ-60 ([[auditoria-extraccion-2026-11]]).
 
 ## Brechas y relacionadas
+- **ARQ-61** rutas quemadas por ambiente (`:52-53`, `:581`) y **ARQ-63** checkpoint reutilizado / `SUCCESS` con fuentes `INCOMPLETA` (`:607-611`, `:768-776`), versión `quality` `e1a13ac2`. Caso: [[inprod-pcr-emisiones-202606]].
 - Misma exposición que el proceso de extracción estándar a exclusión de llaves y Silver parcial: [[inprod-primas-arl-202606]]. PCR sin documento funcional: [[reunion-diseno-pcr]].
 - Relacionado: [[familia-mallas-alfaprd]], [[arquitectura-niif17]], [[repo-alfa-repos]]

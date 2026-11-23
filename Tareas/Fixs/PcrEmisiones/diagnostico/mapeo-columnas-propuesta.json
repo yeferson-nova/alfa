@@ -1,0 +1,25 @@
+{
+  "_estado": "PROPUESTA. Sale de leer el código de los Silver (listas de conceptos), no de una definición del negocio. Se confirma con los totales por concepto (Oracle Q5 y bronce_<caso>_movimientos.csv) y con quien armó el Excel.",
+  "_nota": "Cada columna del Excel se compara con la suma de las columnas del Silver listadas. Una lista vacía significa que el Silver no produce ese valor.",
+  "generales": {
+    "Prima Emitida": ["prima"],
+    "Comision Intermediario": ["comision_total_interincter"],
+    "Iva Comision Intermediario": [],
+    "Comision Recaudo": ["costo_recaudacion"],
+    "Iva Comision Recaudo": ["iva_costo_recaudacion", "iva_costo_recaudo_inc", "iva_costo_recaudo_terr", "iva_costo_recaudo_rescivil"]
+  },
+  "satelites": {
+    "Prima Emitida": ["prima"],
+    "Comision Intermediario": ["comision_agente"],
+    "Iva Comision Intermediario": [],
+    "Comision Recaudo": ["costo_recaudacion"],
+    "Iva Comision Recaudo": ["iva_costo_recaudacion"]
+  },
+  "pcr_vida": {
+    "Prima Emitida": ["prima"],
+    "Comision Intermediario": ["comision"],
+    "Iva Comision Intermediario": [],
+    "Comision Recaudo": ["costo_recaudo"],
+    "Iva Comision Recaudo": ["iva_costo_recaudo"]
+  }
+}

@@ -1,7 +1,7 @@
 ---
 tipo: pendiente
 estado: vigente
-actualizado: 2026-11-20
+actualizado: 2026-11-23
 ---
 # Pendientes
 
@@ -9,6 +9,12 @@ actualizado: 2026-11-20
 
 ## Fechas de entrega
 - [ ] **PCR Cedidas: entregar el 2026-12-05** (fecha dada por el usuario el 2026-11-20). Flujo PCR en [[reunion-diseno-pcr]].
+
+## PCR Emisiones 202606: PRD frente a QA (2026-11-23, ver [[inprod-pcr-emisiones-202606]])
+- [ ] Pedir a DevOps correr `Tareas\Fixs\PcrEmisiones\diagnostico\diagnostico-pcr-emisiones.sh` en QA y en PRD (solo lectura) y traer los `.tar.gz` a `EvidenciasAws\qa-pcr-emisiones\` y `EvidenciasAws\prd-pcr-emisiones\`. Correrlo nosotros en DEV.
+- [ ] Pedir a Julio (o al DBA) `conciliacion-oracle-acsele.sql` en la Oracle ACSELE de QA y de PRD, más las SQL de `oracle\` que genera cada evidencia. CSV a `<evidencia>\oracle_resultados\`.
+- [ ] Correr `comparar_ambientes.py` y decidir según la primera capa que difiera. No corregir código antes de eso.
+- [ ] Decidir qué hacer con los `.msg` y el RRC con nombres de tomadores versionados en `ee37aa7` (ya en `origin/main`): sacarlos del repo y del historial o dejarlos (CUM-01). Decisión del usuario.
 
 ## Modularización: extracción (2026-11-20, ver [[modularizacion-extraccion]])
 - [ ] Cerrar el diseño de la opción D (`Tareas\Modularizacion\Extraccion\diseno-lectura-por-rangos.md`).
