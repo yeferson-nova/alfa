@@ -43,6 +43,7 @@ import boto3
 from boto3.dynamodb.conditions import Key
 from botocore.config import Config
 
+VERSION = "2026-11-23.2 (datos por ruta exacta del runtime)"
 REGION = "us-east-1"
 CONFIG_BOTO = Config(region_name=REGION, retries={"max_attempts": 5, "mode": "standard"})
 
@@ -955,7 +956,7 @@ def main():
         parser.error("--periodo debe ser AAAAMM")
 
     ctx = Contexto(args)
-    log(f"Diagnóstico Emisiones | ambiente={ctx.amb} periodo={ctx.periodo} región={REGION} salida={ctx.ev.raiz}")
+    log(f"Diagnóstico Emisiones v{VERSION} | ambiente={ctx.amb} periodo={ctx.periodo} región={REGION} salida={ctx.ev.raiz}")
     pedidas = {s.strip() for s in args.secciones.split(",")}
     pasos = [
         ("codigo", capturar_codigo), ("orquestacion", capturar_orquestacion),
@@ -967,6 +968,7 @@ def main():
             funcion(ctx)
 
     ctx.ev.json("resumen.json", {
+        "version_script": VERSION,
         "ambiente": ctx.amb,
         "periodo": ctx.periodo,
         "fecha_utc": datetime.now(timezone.utc).isoformat(),

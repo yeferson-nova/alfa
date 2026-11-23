@@ -19,6 +19,12 @@ esac
 
 python3 -c "import boto3" 2>/dev/null || pip3 install --user --quiet boto3
 DIR="$(cd "$(dirname "$0")" && pwd)"
+PY="$DIR/diagnostico_pcr_emisiones.py"
+VERSION_ESPERADA="2026-11-23.2"
+if ! grep -q "VERSION = \"$VERSION_ESPERADA" "$PY" 2>/dev/null; then
+  echo "ERROR: $PY no es la versión $VERSION_ESPERADA (o no existe). Subir el .py nuevo con ese nombre exacto."
+  exit 1
+fi
 # Para repetir solo una parte: SECCIONES=configuracion,datos bash diagnostico-pcr-emisiones.sh qa
 SECCIONES="${SECCIONES:-codigo,orquestacion,configuracion,fuente,almacenamiento,datos,oracle}"
 python3 "$DIR/diagnostico_pcr_emisiones.py" --amb "$AMB" --periodo "$PERIODO" --workgroup "$WG" --secciones "$SECCIONES"
