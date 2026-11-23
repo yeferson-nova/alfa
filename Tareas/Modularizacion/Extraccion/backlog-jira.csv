@@ -1,4 +1,4 @@
-Issue Id,Parent Id,Issue Type,Summary,Description,Priority,Labels,Labels,Labels,Sprint,Due Date,Bloqueada por,Bloqueada por,Bloqueada por
+﻿Issue Id,Parent Id,Issue Type,Summary,Description,Priority,Labels,Labels,Labels,Sprint,Due Date,Bloqueada por,Bloqueada por,Bloqueada por
 1,,Epic,Modularización de la extracción,"Cerrar la deuda técnica y optimizar la extracción existente (proceso de extracción estándar y de Emisiones): Python con estándares de industria, observabilidad y menos carga en Oracle, con los mismos resultados. Inicio 2026-11-23; cierre comprometido 2027-01-08 (aprobado en QA).",High,extraccion,modularizacion,,,2027-01-08,,,
 2,1,Task,EXT-01 Decisiones de arranque con DevOps,"Como desarrollador quiero conocer el ticket, el configurador vigente, quién carga cnf-mallas y el origen de las políticas del rol para no suponer nada al empezar.
 

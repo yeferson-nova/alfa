@@ -419,7 +419,7 @@ Piezas: DEV, R5 · Bloqueada por: EXT-21
 
 ## Importar a Jira
 
-- Archivo: `backlog-jira.csv` (UTF-8, separado por comas). Una fila por épica, historia, spike, tarea y subtarea.
+- Archivo: `backlog-jira.csv` (UTF-8 con BOM, separado por comas; en Jira elegir codificación UTF-8). Una fila por épica, historia, spike, tarea y subtarea.
 - `Issue Id` y `Parent Id` arman la jerarquía (épica → historia → subtarea). Las columnas `Bloqueada por` (repetidas) se mapean al enlace *is blocked by*.
 - `Sprint` lleva el nombre del sprint (`EXT S1` a `EXT S4`) y `Due Date` la fecha objetivo (AAAA-MM-DD). Los sprints deben existir en el tablero antes de importar.
 - **Por verificar al importar:** los nombres de los tipos de issue (`Epic`, `Story`, `Task`, `Sub-task` o su versión en español), el tipo `Spike` (si no existe, usar `Task` con la etiqueta `spike`), los valores de prioridad y el mapeo de los enlaces. Dependen de cómo está configurado el proyecto en Jira.

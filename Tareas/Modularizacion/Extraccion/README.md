@@ -78,7 +78,9 @@ Verificado en DEV el 2026-11-20:
 Checkpoint de cada tramo (*propuesta*): en `ejc-ejecuciones`, con la misma `PK` que ya arma el configurador (`EJC#<MALLA>#<periodo>`) y `SK = EJECUCION#<execution_name>#TRAMO#<tabla>#<n>`. No choca con el ítem de la ejecución y el rol ya tiene permiso.
 
 ## Plan
-Orden detallado por repo, separado por fix, refactor, observabilidad y features, en [roadmap-cambios.md](roadmap-cambios.md). Backlog para Jira (épica EXT, 23 ítems y 41 subtareas): [backlog.md](backlog.md) y `backlog-jira.csv`. Resumen:
+Vista para gerencia (temas, tiempos y dependencias en una página): [resumen-ejecutivo.md](resumen-ejecutivo.md).
+
+Orden detallado por repo, separado por fix, refactor, observabilidad y features, en [roadmap-cambios.md](roadmap-cambios.md). Backlog para Jira (épica EXT, 23 ítems y 40 subtareas): [backlog.md](backlog.md) y `backlog-jira.csv`. Resumen:
 
 1. Diseño de la opción D cerrado y validado con datos (este README y el documento de diseño).
 2. Datos de Oracle con QA ([consultas-oracle-alfaprd.sql](consultas-oracle-alfaprd.sql) y [consultas-oracle-acsele.sql](consultas-oracle-acsele.sql)): tipos e índices de las llaves foráneas, estadísticas de tamaño y acceso de lectura a `acsele_alfa_bi.em_*`.
