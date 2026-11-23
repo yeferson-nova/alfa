@@ -22,7 +22,7 @@ Tarea humana y scripts: `Tareas\Fixs\PcrEmisiones\` (`README.md`, carpeta `diagn
 H1 fuente Oracle distinta · H2 código distinto (ARQ-50, ARQ-62) · H3 PRG/CNF distintos · H4 rutas quemadas (ARQ-61) · H5 checkpoint reutilizado con lote fijo (ARQ-63) · H6 grano del Silver (ARQ-64) · H7 "emitido en junio" = mes de producción frente a `TIME_STAMP` · H8 columnas: Silver Generales no produce IVA comisión intermediario; mapeo **propuesta** · H9 filtros fijos en el Silver (ARQ-65) · H10 falta `--RUTA_CONFIG_SCD` (ARQ-65).
 
 ## Diagnóstico entregado
-- `diagnostico_pcr_emisiones.py` (+ `.sh`): solo lectura, por ambiente; huella del código, Step Function y corridas, PRG/CNF, JSON publicados, runtime, lotes y checkpoints en S3, Athena (Silver por producto, Silver por operación para H6, Bronce por producto y concepto) y genera las SQL de Oracle con la configuración del propio ambiente. Alertas automáticas.
+- `diag_emisiones_v2.py` (+ `.sh`): solo lectura, por ambiente; huella del código, Step Function y corridas, PRG/CNF, JSON publicados, runtime, lotes y checkpoints en S3, Athena (Silver por producto, Silver por operación para H6, Bronce por producto y concepto) y genera las SQL de Oracle con la configuración del propio ambiente. Alertas automáticas.
 - `conciliacion-oracle-acsele.sql`: Q1-Q6 fijas para QA y PRD (frescura, estados, compañía por producto, operaciones, movimientos por concepto, por día).
 - `comparar_ambientes.py`: veredicto por capa (Oracle → código → orquestación → configuración → extracción → Bronce → Silver) y Silver frente al Excel. Probado con evidencias sintéticas (detecta cada capa) y con evidencias iguales (todo IGUAL).
 - No probado contra AWS real (no hay acceso desde aquí).

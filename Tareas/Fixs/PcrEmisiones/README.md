@@ -61,7 +61,7 @@ Errores del diagnóstico en esta corrida (ya corregidos en el script):
 
 Para repetir solo la parte de datos (rápido, sin volver a bajar código):
 ```
-SECCIONES=configuracion,datos bash diagnostico-pcr-emisiones.sh qa 202606 primary
+SECCIONES=configuracion,datos bash diag-emisiones-v2.sh qa 202606 primary
 ```
 
 **Conclusión parcial:** en QA, la extracción reproduce fielmente la Oracle a la que está conectada. Si PRD da cifras distintas, lo primero es saber a qué Oracle se conecta PRD y si es la misma información que ACSSOP (que no tiene 13 tablas y cambia entre fechas). Eso se responde corriendo el diagnóstico en PRD y Q1 a Q6 en su Oracle.
@@ -74,10 +74,10 @@ Todo es de solo lectura. La única escritura es la de Athena, que guarda el resu
    ```
    python diagnostico/validar_referencia.py --rrc "RRC SIN CONTABILIDAD ALFA 202606.xlsx" --resumen "Resumen emision 202606.xlsx" --salida referencia_esperada.json
    ```
-2. **Diagnóstico en cada ambiente (CloudShell, us-east-1).** Desarrollo lo corre en DEV; DevOps lo corre en QA y en PRD. Se suben los dos archivos `diagnostico-pcr-emisiones.sh` y `diagnostico_pcr_emisiones.py` y se ejecuta:
+2. **Diagnóstico en cada ambiente (CloudShell, us-east-1).** Desarrollo lo corre en DEV; DevOps lo corre en QA y en PRD. Se suben los dos archivos `diag-emisiones-v2.sh` y `diag_emisiones_v2.py` y se ejecuta:
    ```
-   bash diagnostico-pcr-emisiones.sh qa 202606 primary
-   bash diagnostico-pcr-emisiones.sh prd 202606 primary
+   bash diag-emisiones-v2.sh qa 202606 primary
+   bash diag-emisiones-v2.sh prd 202606 primary
    ```
    Cada corrida deja `evidencia-pcr-emisiones-<ambiente>-<fecha>.tar.gz`. Si el ambiente de producción no se llama `prd` en los recursos, usar su nombre real.
 3. **Oracle (DBA, en la base ACSELE de QA y en la de PRD).**
@@ -112,7 +112,7 @@ Si falta un permiso, esa sección queda anotada en `resumen.json` como error y l
 | Archivo | Para qué |
 |---|---|
 | `diagnostico/validar_referencia.py` | Valida los Excel y genera los totales esperados |
-| `diagnostico/diagnostico-pcr-emisiones.sh` y `diagnostico_pcr_emisiones.py` | Diagnóstico de solo lectura por ambiente |
+| `diagnostico/diag-emisiones-v2.sh` y `diag_emisiones_v2.py` | Diagnóstico de solo lectura por ambiente |
 | `diagnostico/conciliacion-oracle-acsele.sql` | Comparación de la fuente Oracle entre QA y PRD |
 | `diagnostico/comparar_ambientes.py` | Veredicto por capa e informe |
 | `diagnostico/mapeo-columnas-propuesta.json` | Propuesta de equivalencia entre columnas del Excel y del Silver |

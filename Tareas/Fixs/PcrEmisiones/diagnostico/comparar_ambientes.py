@@ -5,7 +5,7 @@ Uso (local, sin AWS):
     python comparar_ambientes.py --a evidencia-pcr-emisiones-qa-... --b evidencia-pcr-emisiones-prd-... \
         --referencia referencia_esperada.json --mapeo mapeo-columnas-propuesta.json --salida informe.md
 
-Cada evidencia es la carpeta (descomprimida) que deja ``diagnostico_pcr_emisiones.py``.
+Cada evidencia es la carpeta (descomprimida) que deja ``diag_emisiones_v2.py``.
 Si el DBA corrió ``conciliacion-oracle-acsele.sql``, poner sus CSV en ``<evidencia>/oracle_resultados/``
 con el mismo nombre en los dos ambientes (p. ej. ``Q5.csv``) y se comparan también.
 

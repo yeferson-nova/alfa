@@ -7,8 +7,8 @@ una carpeta de evidencia para comparar los ambientes capa por capa con
 Get/List/Describe/Query, lee objetos de S3 y lanza consultas SELECT en Athena.
 
 Uso en CloudShell (región us-east-1):
-    python3 diagnostico_pcr_emisiones.py --amb qa --periodo 202606
-    python3 diagnostico_pcr_emisiones.py --amb prd --periodo 202606 --workgroup primary
+    python3 diag_emisiones_v2.py --amb qa --periodo 202606
+    python3 diag_emisiones_v2.py --amb prd --periodo 202606 --workgroup primary
 
 Secciones (cada una es independiente; si una falla por permisos, se anota y sigue):
   codigo         scripts de Glue y código de la lambda configuradora desplegados (sha256)
@@ -912,7 +912,7 @@ def generar_sql_oracle(ctx):
     for caso, config in ctx.configs_publicadas.items():
         esquema = (config.get("fuente") or {}).get("schema", "ACSELE_ALFA")
         encabezado = (
-            f"-- Generado por diagnostico_pcr_emisiones.py ({ctx.amb}, {caso}, periodo {config.get('periodo_negocio')}, "
+            f"-- Generado por diag_emisiones_v2.py ({ctx.amb}, {caso}, periodo {config.get('periodo_negocio')}, "
             f"lote {config.get('lote_cargue_id')}).\n"
             "-- Son las MISMAS consultas que usó la extracción en este ambiente (sin hints).\n"
             "-- Correr en la Oracle ACSELE de ESTE ambiente, solo lectura. Exportar el resultado a CSV.\n\n"
