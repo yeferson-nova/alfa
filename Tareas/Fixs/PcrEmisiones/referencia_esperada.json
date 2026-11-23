@@ -1,0 +1,298 @@
+{
+  "periodo": "202606",
+  "origen": "Excel de negocio (RRC sin contabilidad y Resumen emision)",
+  "nota": "Solo agregados por producto. Los nombres de columnas del Excel no equivalen 1 a 1 a las del Silver: ver mapeo-columnas-propuesta.json.",
+  "generales": {
+    "mes_produccion_periodo": {
+      "52897": {
+        "Prima Emitida": "6003596569.11",
+        "Prima Alfa": "6003596569.11",
+        "Comision Intermediario": "0.00",
+        "Iva Comision Intermediario": "0.00",
+        "Comision Recaudo": "3335746462.63",
+        "Iva Comision Recaudo": "633791830.29"
+      },
+      "54959": {
+        "Prima Emitida": "6253494.50",
+        "Prima Alfa": "6253494.50",
+        "Comision Intermediario": "327565.34",
+        "Iva Comision Intermediario": "304418.90",
+        "Comision Recaudo": "0.00",
+        "Iva Comision Recaudo": "0.00"
+      },
+      "54979": {
+        "Prima Emitida": "2485598.29",
+        "Prima Alfa": "2485598.29",
+        "Comision Intermediario": "306065.54",
+        "Iva Comision Intermediario": "116304.36",
+        "Comision Recaudo": "0.00",
+        "Iva Comision Recaudo": "0.00"
+      },
+      "55059": {
+        "Prima Emitida": "1339096617.72",
+        "Prima Alfa": "1339096617.72",
+        "Comision Intermediario": "0.00",
+        "Iva Comision Intermediario": "0.00",
+        "Comision Recaudo": "359954159.11",
+        "Iva Comision Recaudo": "68391290.21"
+      },
+      "55139": {
+        "Prima Emitida": "56404532.99",
+        "Prima Alfa": "56404532.99",
+        "Comision Intermediario": "0.00",
+        "Iva Comision Intermediario": "0.00",
+        "Comision Recaudo": "11280902.12",
+        "Iva Comision Recaudo": "2143371.37"
+      }
+    },
+    "todo_el_corte": {
+      "52897": {
+        "Prima Emitida": "6208372642.79",
+        "Prima Alfa": "6208372642.79",
+        "Comision Intermediario": "0.00",
+        "Iva Comision Intermediario": "0.00",
+        "Comision Recaudo": "3340647982.63",
+        "Iva Comision Recaudo": "634723119.09"
+      },
+      "54959": {
+        "Prima Emitida": "29106434.54",
+        "Prima Alfa": "29106434.54",
+        "Comision Intermediario": "327565.34",
+        "Iva Comision Intermediario": "304418.90",
+        "Comision Recaudo": "0.00",
+        "Iva Comision Recaudo": "0.00"
+      },
+      "54979": {
+        "Prima Emitida": "2485598.29",
+        "Prima Alfa": "2485598.29",
+        "Comision Intermediario": "306065.54",
+        "Iva Comision Intermediario": "116304.36",
+        "Comision Recaudo": "0.00",
+        "Iva Comision Recaudo": "0.00"
+      },
+      "55059": {
+        "Prima Emitida": "1339096617.72",
+        "Prima Alfa": "1339096617.72",
+        "Comision Intermediario": "0.00",
+        "Iva Comision Intermediario": "0.00",
+        "Comision Recaudo": "359954159.11",
+        "Iva Comision Recaudo": "68391290.21"
+      },
+      "55139": {
+        "Prima Emitida": "170567848.20",
+        "Prima Alfa": "170567848.20",
+        "Comision Intermediario": "0.00",
+        "Iva Comision Intermediario": "0.00",
+        "Comision Recaudo": "34113565.22",
+        "Iva Comision Recaudo": "6481577.36"
+      }
+    },
+    "filas_mes_produccion_periodo": {
+      "54979": 630,
+      "54959": 2319,
+      "55139": 68,
+      "52897": 703,
+      "55059": 32
+    },
+    "filas_todo_el_corte": {
+      "54979": 630,
+      "54959": 2963,
+      "55139": 102,
+      "52897": 751,
+      "55059": 32
+    },
+    "resumen": {
+      "52897": {
+        "Prima Emitida": "6003596569.11",
+        "Prima Alfa": "6003596569.11",
+        "Comision Intermediario": "0.00",
+        "Iva Comision Intermediario": "0.00",
+        "Comision Recaudo": "3335746462.63",
+        "Iva Comision Recaudo": "633791830.29"
+      },
+      "54959": {
+        "Prima Emitida": "6253494.50",
+        "Prima Alfa": "6253494.50",
+        "Comision Intermediario": "327565.34",
+        "Iva Comision Intermediario": "304418.90",
+        "Comision Recaudo": "0.00",
+        "Iva Comision Recaudo": "0.00"
+      },
+      "54979": {
+        "Prima Emitida": "2485598.29",
+        "Prima Alfa": "2485598.29",
+        "Comision Intermediario": "306065.54",
+        "Iva Comision Intermediario": "116304.36",
+        "Comision Recaudo": "0.00",
+        "Iva Comision Recaudo": "0.00"
+      },
+      "55059": {
+        "Prima Emitida": "1339096617.72",
+        "Prima Alfa": "1339096617.72",
+        "Comision Intermediario": "0.00",
+        "Iva Comision Intermediario": "0.00",
+        "Comision Recaudo": "359954159.11",
+        "Iva Comision Recaudo": "68391290.21"
+      },
+      "55139": {
+        "Prima Emitida": "56404532.99",
+        "Prima Alfa": "56404532.99",
+        "Comision Intermediario": "0.00",
+        "Iva Comision Intermediario": "0.00",
+        "Comision Recaudo": "11280902.12",
+        "Iva Comision Recaudo": "2143371.37"
+      }
+    }
+  },
+  "pymes": {
+    "55139": {
+      "Prima Emitida": "56404532.99",
+      "Prima Alfa": "56404532.99",
+      "Comision Intermediario": "0.00",
+      "Iva Comision Intermediario": "0.00",
+      "Comision Recaudo": "11280902.12",
+      "Iva Comision Recaudo": "2143371.37"
+    }
+  },
+  "vida": {
+    "48897": {
+      "Prima Emitida": "112802518236.08",
+      "Prima Alfa": "112802518236.08",
+      "Comision Intermediario": "1029916997.54",
+      "Iva Comision Intermediario": "195684248.11",
+      "Comision Recaudo": "44988176960.30",
+      "Iva Comision Recaudo": "8547753741.00"
+    },
+    "54899": {
+      "Prima Emitida": "1375645067.00",
+      "Prima Alfa": "1375645067.00",
+      "Comision Intermediario": "143895612.26",
+      "Iva Comision Intermediario": "27340162.69",
+      "Comision Recaudo": "397977407.90",
+      "Iva Comision Recaudo": "75615705.63"
+    },
+    "54919": {
+      "Prima Emitida": "9239329.00",
+      "Prima Alfa": "9239329.00",
+      "Comision Intermediario": "57720.10",
+      "Iva Comision Intermediario": "10966.84",
+      "Comision Recaudo": "369386.00",
+      "Iva Comision Recaudo": "70193.00"
+    },
+    "54939": {
+      "Prima Emitida": "1333761281.00",
+      "Prima Alfa": "1333761281.00",
+      "Comision Intermediario": "93363289.67",
+      "Iva Comision Intermediario": "17739020.73",
+      "Comision Recaudo": "614426762.95",
+      "Iva Comision Recaudo": "116741090.20"
+    },
+    "55039": {
+      "Prima Emitida": "75374230.00",
+      "Prima Alfa": "75374230.00",
+      "Comision Intermediario": "5276196.10",
+      "Iva Comision Intermediario": "1002476.88",
+      "Comision Recaudo": "22612269.00",
+      "Iva Comision Recaudo": "4296331.11"
+    },
+    "55060": {
+      "Prima Emitida": "230334814.68",
+      "Prima Alfa": "230334814.68",
+      "Comision Intermediario": "0.00",
+      "Iva Comision Intermediario": "0.00",
+      "Comision Recaudo": "46765398.19",
+      "Iva Comision Recaudo": "8885425.64"
+    },
+    "55099": {
+      "Prima Emitida": "43680717.50",
+      "Prima Alfa": "43680717.50",
+      "Comision Intermediario": "6823977.82",
+      "Iva Comision Intermediario": "1296553.74",
+      "Comision Recaudo": "0.00",
+      "Iva Comision Recaudo": "0.00"
+    },
+    "55119": {
+      "Prima Emitida": "411502130.99",
+      "Prima Alfa": "411502130.99",
+      "Comision Intermediario": "0.00",
+      "Iva Comision Intermediario": "0.00",
+      "Comision Recaudo": "117956208.36",
+      "Iva Comision Recaudo": "22411679.61"
+    }
+  },
+  "satelites": {
+    "54899": {
+      "Prima Emitida": "1375645067.00",
+      "Prima Alfa": "1375645067.00",
+      "Comision Intermediario": "143895612.26",
+      "Iva Comision Intermediario": "27340166.33",
+      "Comision Recaudo": "397977407.90",
+      "Iva Comision Recaudo": "75615705.63"
+    },
+    "54919": {
+      "Prima Emitida": "9239329.00",
+      "Prima Alfa": "9239329.00",
+      "Comision Intermediario": "53666.30",
+      "Iva Comision Intermediario": "10196.60",
+      "Comision Recaudo": "369386.00",
+      "Iva Comision Recaudo": "70193.00"
+    },
+    "54939": {
+      "Prima Emitida": "1333761281.00",
+      "Prima Alfa": "1333761281.00",
+      "Comision Intermediario": "93363289.67",
+      "Iva Comision Intermediario": "17739025.04",
+      "Comision Recaudo": "614426762.95",
+      "Iva Comision Recaudo": "116741090.20"
+    },
+    "55039": {
+      "Prima Emitida": "75374230.00",
+      "Prima Alfa": "75374230.00",
+      "Comision Intermediario": "5276196.10",
+      "Iva Comision Intermediario": "1002477.26",
+      "Comision Recaudo": "22612269.00",
+      "Iva Comision Recaudo": "4296331.11"
+    },
+    "55060": {
+      "Prima Emitida": "230334814.68",
+      "Prima Alfa": "230334814.68",
+      "Comision Intermediario": "0.00",
+      "Iva Comision Intermediario": "0.00",
+      "Comision Recaudo": "46765398.19",
+      "Iva Comision Recaudo": "8885425.64"
+    },
+    "55119": {
+      "Prima Emitida": "411502130.99",
+      "Prima Alfa": "411502130.99",
+      "Comision Intermediario": "0.00",
+      "Iva Comision Intermediario": "0.00",
+      "Comision Recaudo": "117956208.36",
+      "Iva Comision Recaudo": "22411679.61"
+    },
+    "55099": {
+      "Prima Emitida": "43680717.50",
+      "Prima Alfa": "43680717.50",
+      "Comision Intermediario": "6823977.82",
+      "Iva Comision Intermediario": "1296555.79",
+      "Comision Recaudo": "0.00",
+      "Iva Comision Recaudo": "0.00"
+    }
+  },
+  "diferencias_reportadas_en_el_archivo": {
+    "generales": {
+      "Prima Emitida": "-259.73",
+      "Prima Alfa": "-259.73",
+      "Comision Intermediario": "-0.08",
+      "Comision Recaudo": "-260.00",
+      "Iva Comision Recaudo": "63748417.52"
+    },
+    "vida": {
+      "Prima Emitida": "0.00",
+      "Prima Alfa": "0.00",
+      "Comision Intermediario": "4053.80",
+      "Iva Comision Intermediario": "778.45",
+      "Comision Recaudo": "-42900.00",
+      "Iva Comision Recaudo": "-8151.00"
+    }
+  }
+}

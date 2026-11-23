@@ -1,19 +1,3 @@
--- Conciliación de la fuente ACSELE (Oracle) para Emisiones, periodo 202606.
---
--- Objetivo: saber si la Oracle de QA y la de PRD tienen los mismos datos de junio de 2026,
--- SIN pasar por los jobs de Glue. Correr exactamente igual en las dos bases (solo lectura)
--- y exportar cada resultado a CSV con el nombre indicado en cada bloque:
---     oracle_<amb>_Q1.csv ... oracle_<amb>_Q6.csv
---
--- Ventana: mismas reglas que el configurador de Emisiones (desde el 1 del mes, hasta el 1 del
--- mes siguiente sin incluirlo, STATUS = 2). Si el PRG de algún ambiente usa otra ventana o
--- otro status (ver configuracion/prg_programacion_emisiones.json del diagnóstico), ajustar
--- aquí las dos fechas y el status y anotarlo.
---
--- No devuelve datos de personas: solo conteos y sumas por producto, concepto y estado.
-
--- Q1. Frescura de la base: hasta qué fecha llegan las operaciones.
---     Si QA es una copia de PRD, aquí se ve la fecha de la copia.
 SELECT MAX(C.TIME_STAMP) AS ULTIMA_OPERACION,
        COUNT(*)          AS OPERACIONES_TOTALES
 FROM ACSELE_ALFA.CONTEXTOPERATION C;
