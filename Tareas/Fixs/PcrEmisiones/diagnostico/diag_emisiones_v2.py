@@ -43,7 +43,7 @@ import boto3
 from boto3.dynamodb.conditions import Key
 from botocore.config import Config
 
-VERSION = "2026-11-24.1 (tomadores por nombre individual y por acuerdo)"
+VERSION = "2026-11-24.2 (tomadores: huellas alternas por orden de palabras y tildes)"
 REGION = "us-east-1"
 CONFIG_BOTO = Config(region_name=REGION, retries={"max_attempts": 5, "mode": "standard"})
 
@@ -1000,7 +1000,15 @@ def capturar_terceros(ctx):
         #    Si una fila trae varios tomadores distintos, sus montos cuentan en cada uno (se marca).
         llaves = [producto] + [f"CAST({a} AS varchar) AS {a}" for a in acuerdo]
         n = len(llaves)
+        #    Huellas alternas para encontrar el mismo tomador escrito distinto que en el RRC:
+        #    palabras en orden alfabético, y además sin tildes. Largo y número de palabras no son datos personales.
+        e = "u.tomador_elemento"
+        sin_tildes = f"regexp_replace(normalize({e}, NFD), '\\p{{M}}', '')"
+        variantes = (f"arbitrary(lower(to_hex(sha256(to_utf8(array_join(array_sort(split({e}, ' ')), ' ')))))) AS huella_palabras_ordenadas, "
+                     f"arbitrary(lower(to_hex(sha256(to_utf8(array_join(array_sort(split({sin_tildes}, ' ')), ' ')))))) AS huella_ordenada_sin_tildes, "
+                     f"arbitrary(length({e})) AS largo_nombre, arbitrary(cardinality(split({e}, ' '))) AS palabras_nombre, ")
         sql = (f"SELECT {', '.join(llaves)}, lower(to_hex(sha256(to_utf8(u.tomador_elemento)))) AS tomador_huella, "
+               f"{variantes}"
                f"COUNT(*) AS filas, COUNT_IF(cardinality(array_distinct({lista})) > 1) AS filas_varios_tomadores, "
                f"{', '.join(sumas)} "
                f"FROM {origen} CROSS JOIN UNNEST(array_distinct({lista})) AS u(tomador_elemento) "

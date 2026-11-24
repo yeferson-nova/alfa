@@ -25,6 +25,7 @@ import hashlib
 import os
 import re
 import sys
+import unicodedata
 from collections import defaultdict
 from decimal import Decimal
 
@@ -84,6 +85,40 @@ def agrupar_rrc(filas, llave):
         for m in EQUIVALENCIAS:
             g[m] += f[m]
     return grupos
+
+
+def huella_variante(nombre_normalizado, quitar_tildes):
+    """Igual que el SQL: palabras en orden (codepoint) y, si se pide, sin marcas diacríticas (NFD)."""
+    texto = nombre_normalizado
+    if quitar_tildes:
+        texto = "".join(c for c in unicodedata.normalize("NFD", texto) if not unicodedata.category(c).startswith("M"))
+    return hashlib.sha256(" ".join(sorted(texto.split(" "))).encode("utf-8")).hexdigest()
+
+
+def parejas_por_monto(filas_rrc, individual, producto, columna_acuerdo, exactas):
+    """Tomadores del RRC sin pareja exacta con una sola pareja del Silver de igual prima y comisión
+    en el mismo acuerdo. Devuelve [(palabras RRC, (palabras Silver, largo Silver))]."""
+    if not columna_acuerdo:
+        return []
+    rrc = agrupar_rrc([f for f in filas_rrc if f["producto"] == producto], lambda f: (f["acuerdo"], f["huella"]))
+    silver = defaultdict(lambda: {"prima": Decimal(0), "com": Decimal(0), "palabras": 0, "largo": 0})
+    for f in individual:
+        if producto_de(f) != producto or f["tomador_huella"].lower() in {h for _, h in rrc}:
+            continue
+        s = silver[(normalizar(f[columna_acuerdo]), f["tomador_huella"].lower())]
+        s["prima"] += dec(f.get("prima")) + dec(f.get("prima_vida"))
+        s["com"] += dec(f.get("comision_total_interincter"))
+        s["palabras"], s["largo"] = int(dec(f.get("palabras_nombre"))), int(dec(f.get("largo_nombre")))
+    usados, pares = set(), []
+    for (acuerdo, h), r in rrc.items():
+        if h in exactas:
+            continue
+        cand = [k for k, s in silver.items() if k[0] == acuerdo and k not in usados
+                and abs(s["prima"] - r["Prima Emitida"]) <= TOLERANCIA and abs(s["com"] - r["Comision Intermediario"]) <= TOLERANCIA]
+        if len(cand) == 1:
+            usados.add(cand[0])
+            pares.append((len(r["nombre"].split(" ")), (silver[cand[0]]["palabras"], silver[cand[0]]["largo"])))
+    return pares
 
 
 def leer_csv(ruta):
@@ -229,6 +264,27 @@ def main():
             resumen, _, _ = comparar(rrc_at, silver_at, productos, "Acuerdo+tomador",
                                      lambda p, k, solo_silver=False: f"{k[0]} `{k[1][:10]}`")
             lineas += ["", "### 3b. Por producto, acuerdo y tomador", ""] + resumen
+
+        if "huella_palabras_ordenadas" in individual[0]:
+            lineas += ["", "### 3c. ¿El mismo tomador escrito distinto?", "",
+                       "Para los tomadores del RRC sin pareja exacta: si cruzan con las palabras en otro orden, "
+                       "o además sin tildes. Luego, emparejando por monto (misma prima y comisión en el mismo acuerdo, "
+                       "pareja única), se compara el número de palabras y el largo del nombre.", "",
+                       "| Producto | Sin pareja exacta | Cruzan con palabras en otro orden | Cruzan además sin tildes | Siguen sin cruzar | Pareja única por monto | Mismas palabras | Más palabras en el Silver | Menos palabras en el Silver |",
+                       "|---|---|---|---|---|---|---|---|---|"]
+            for p in productos:
+                exactas = {h for q, h in silver_tom if q == p}
+                orden = {f["huella_palabras_ordenadas"] for f in individual if producto_de(f) == p}
+                orden_st = {f["huella_ordenada_sin_tildes"] for f in individual if producto_de(f) == p}
+                pend = [k for q, k in rrc_tom if q == p and k not in exactas]
+                por_orden = [k for k in pend if huella_variante(rrc_tom[(p, k)]["nombre"], False) in orden]
+                por_tilde = [k for k in pend if k not in por_orden and huella_variante(rrc_tom[(p, k)]["nombre"], True) in orden_st]
+                col_acu = columna_acuerdo or next((c for c in COLUMNAS_ACUERDO if c in individual[0]), None)
+                pares = parejas_por_monto(filas_rrc, individual, p, col_acu, exactas)
+                mismas = sum(1 for r, s in pares if r == s[0])
+                mas = sum(1 for r, s in pares if s[0] > r)
+                lineas.append(f"| {p} | {len(pend)} | {len(por_orden)} | {len(por_tilde)} | {len(pend) - len(por_orden) - len(por_tilde)} | "
+                              f"{len(pares)} | {mismas} | {mas} | {len(pares) - mismas - mas} |")
 
     # ---- 4. Completitud
     lineas += ["", "## 4. Completitud de tomadores y agentes por caso"]

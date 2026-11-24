@@ -109,6 +109,30 @@ DEV, lote `20261124060016`, diagnóstico `v2026-11-23.3`, sin errores. Comparado
 - **Tomadores: la columna del Silver de Generales es una lista.** `silver_generales.py` arma el tomador con `concat_ws(",", collect_list(nombre))` por póliza, sin quitar repetidos. En 52897, 203.142 de 203.161 filas traen comas; en 54959, 54979 y 55059, todas. Se comprobó por huella que en 55059 un tomador del RRC aparece en el Silver como el mismo nombre repetido 46 veces. Por eso el cruce por nombre completo no sirve: la versión `2026-11-24.1` separa cada nombre y cruza también por acuerdo.
 - **El tomador del RRC no es siempre el del Silver.** En 52897, el RRC trae 6 tomadores en 35 acuerdos (el tomador del acuerdo), mientras que el Silver trae unos 17.000 (el de cada póliza). Para 52897 el cruce válido es **por acuerdo**.
 
+### Acuerdos y tomadores en DEV (versión 2026-11-24.1, evidencia `…dev-20261124T133737Z`)
+
+**Por acuerdo (Generales frente al RRC):**
+
+| Producto | Acuerdos RRC | En el Silver | Montos |
+|---|---|---|---|
+| 52897 | 35 | 35 | Iguales, salvo `INC-27192`: prima +259,98 y recaudo +260,00. **Toda la diferencia de 52897 está en ese acuerdo** |
+| 54959 | 3 | 3 | Iguales, salvo comisión de `HGR-004M` +0,08 (la diferencia RRC frente a `E1-A1`) |
+| 54979 | 1 | 1 | Iguales |
+| 55059 | 4 | 4 | Iguales |
+| 55139 (Pymes) | 2 | 0 | Faltan `PYM-001A` (37.446.071,04) y `PYM-001M` (18.958.461,95) |
+
+Ningún acuerdo del Silver sobra ni falta, salvo los dos de Pymes. **El dinero está bien asignado a cada acuerdo.**
+
+**Forma de la columna tomador (ARQ-66, cuantificada):**
+- Generales: en todas las filas con coma es el **mismo nombre repetido**. Solo 4 filas de 52897 traen tomadores distintos.
+- Repeticiones: hasta 224 veces en 52897 (promedio 42) y hasta 878 en 55059 (promedio 517).
+- Satélites y Vida no tienen el problema: un solo nombre por fila.
+
+**Tomadores (cada nombre por separado):**
+- **55059:** los 3 tomadores cruzan con montos iguales.
+- **52897:** 21 de los 35 pares acuerdo-tomador del RRC cruzan con montos iguales (salvo `INC-27192`). En los otros 14 acuerdos, el RRC pone toda la prima (1.875.071.447,69) a nombre del tomador del acuerdo. El Silver reparte exactamente la misma suma entre 8.812 tomadores de póliza. Es el mismo dinero con **otra definición de tomador**: pregunta para negocio.
+- **54959 y 54979:** ningún nombre cruza tal cual, pero los montos sí. En 54959, 52 de 71 tomadores del RRC tienen en el Silver una sola pareja con la misma prima y comisión en el mismo acuerdo. Es el mismo tomador escrito distinto. La versión `2026-11-24.2` agrega huellas con las palabras en orden alfabético y sin tildes, además del largo y el número de palabras del nombre, para saber qué cambia sin sacar nombres.
+
 ## Cómo se ejecuta
 
 Todo es de solo lectura. La única escritura es la de Athena, que guarda el resultado de cada consulta en el bucket de resultados de su workgroup.
@@ -132,13 +156,14 @@ Todo es de solo lectura. La única escritura es la de Athena, que guarda el resu
    ```
    El informe abre con un veredicto por capa: fuente Oracle, código, orquestación, configuración, extracción, Bronce y Silver. **La primera capa que difiere es donde nace la diferencia.** Si la primera es la fuente Oracle, la diferencia viene de los datos y no de los jobs.
 
-### Acuerdos, tomadores y agentes (sección `terceros`, versión 2026-11-24.1)
+### Acuerdos, tomadores y agentes (sección `terceros`, versión 2026-11-24.2)
 
 El diagnóstico consulta en el Silver preparado, por producto:
 - completitud de tomador, agente e identificación del tomador;
 - totales por acuerdo (`numero_poliza_matriz` y `nombre_acuerdo`; el código del acuerdo no es dato personal);
 - forma de la columna tomador (mismo nombre repetido o varios tomadores distintos en la fila);
-- totales por cada tomador de la lista, por separado, y por agente.
+- totales por cada tomador de la lista, por separado, y por agente;
+- huellas alternas de cada tomador (palabras en orden alfabético, y además sin tildes), largo y número de palabras, para encontrar el mismo tomador escrito distinto.
 
 **No saca nombres de AWS:** usa una huella SHA-256 del nombre normalizado (espacios colapsados, sin bordes, mayúsculas). Luego, en local:
 ```
