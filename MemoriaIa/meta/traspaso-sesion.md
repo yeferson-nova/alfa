@@ -10,7 +10,7 @@ Este es el estado al 2026-11-11 para que otra sesión de Claude (local o remota)
 ## Sesión 2026-11-23: PCR Emisiones, PRD frente a QA
 - **Caso:** [[inprod-pcr-emisiones-202606]]. Negocio pide que la extracción de junio cuadre con dos Excel; PRD trae cifras distintas a QA. **Decisión del usuario:** no asumir que el problema es nuestro ni que PRD y QA tienen los mismos datos; validar con código y scripts.
 - **Entregado:** `Tareas\Fixs\PcrEmisiones\README.md` y `diagnostico\` (referencia, diagnóstico de solo lectura por ambiente, SQL fija de Oracle, comparador por capas, mapeo propuesto). Sin correr en AWS todavía.
-- **Brechas nuevas:** ARQ-61 a ARQ-65 ([[auditoria-extraccion-2026-11]]). Código leído de `alfa-repos` `origin/main` (`3d5f623`, `quality` del 2026-11-20); la rama local de `alfa-repos` era `bugfix/scd-freno-periodo`, más vieja: leer siempre la foto vigente.
+- **Brechas nuevas:** ARQ-61 a ARQ-66 ([[auditoria-extraccion-2026-11]]; ARQ-66 = tomador repetido en Silver Generales, 2026-11-24). Código leído de `alfa-repos` `origin/main` (`3d5f623`, `quality` del 2026-11-20); la rama local de `alfa-repos` era `bugfix/scd-freno-periodo`, más vieja: leer siempre la foto vigente.
 - **Cumplimiento:** los `.msg` y el RRC con nombres quedaron en `ee37aa7` (ya en el remoto). Pendiente de decisión.
 
 ## Sesión 2026-11-20: modularización de la extracción

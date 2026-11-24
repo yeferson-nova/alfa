@@ -90,6 +90,25 @@ Cómo se reproducen las cifras de IVA de comisión de recaudo de Generales con l
 
 Siguiente paso para Pymes: correr `diagnostico/diagnostico-pymes-55139.sql` en la Oracle de QA. Cuenta cuántas operaciones de Pymes sobreviven a cada paso de la consulta de movimientos.
 
+## Corrida completa en DEV (2026-11-24)
+
+DEV, lote `20261124060016`, diagnóstico `v2026-11-23.3`, sin errores. Comparado con QA (lote `20261122234023`):
+
+| Capa | Resultado |
+|---|---|
+| Extracción (filas por tabla) | **Igual** a QA en los tres casos: Generales 203.689, Satélites 21.695 y Vida 3.703.183 filas de movimientos |
+| Bronce (movimientos por producto y concepto) | **Igual**: 0 diferencias en 139, 117 y 37 combinaciones |
+| Silver (totales por producto) | **Igual**: 0 valores distintos |
+| Configuración | Solo difiere la programación (fecha y nombre del schedule) y el JSON de validación técnica |
+
+**DEV y QA tienen hoy los mismos datos.** La diferencia de la primera corrida de DEV venía de haber extraído en otra fecha. Por eso, frente al Excel, DEV da exactamente lo mismo que QA (tabla de la sección anterior).
+
+- **Pymes (55139) tampoco llega en DEV.** El filtro de la programación y la configuración de extracción de DEV ya incluyen 55139, pero no hay ni un movimiento de Pymes en Bronce ni en Silver. Que esté configurado no basta: el corte está en la consulta de movimientos o en la fuente (`diagnostico-pymes-55139.sql`).
+- **Satélites, solo los 7 productos.** El Silver trae 54899, 54919, 54939, 55039, 55060, 55099 y 55119. Cuadran con el bloque de Satélites del resumen en todo, salvo el IVA de comisión del intermediario (lo calcula negocio). Frente al bloque de Vida del RRC, 54919 difiere en la comisión: 53.666,30 contra 57.720,10.
+- **Agentes: coherentes con las comisiones.** En todos los productos, la comisión del intermediario está solo en filas con agente; las filas sin agente tienen comisión 0. Los productos sin comisión en el RRC (52897, 55059, 55060 y 55119) no tienen agente en ninguna fila. En Vida, el 99 % de las filas (69 % de la prima) no tiene agente y su comisión es 0.
+- **Tomadores: la columna del Silver de Generales es una lista.** `silver_generales.py` arma el tomador con `concat_ws(",", collect_list(nombre))` por póliza, sin quitar repetidos. En 52897, 203.142 de 203.161 filas traen comas; en 54959, 54979 y 55059, todas. Se comprobó por huella que en 55059 un tomador del RRC aparece en el Silver como el mismo nombre repetido 46 veces. Por eso el cruce por nombre completo no sirve: la versión `2026-11-24.1` separa cada nombre y cruza también por acuerdo.
+- **El tomador del RRC no es siempre el del Silver.** En 52897, el RRC trae 6 tomadores en 35 acuerdos (el tomador del acuerdo), mientras que el Silver trae unos 17.000 (el de cada póliza). Para 52897 el cruce válido es **por acuerdo**.
+
 ## Cómo se ejecuta
 
 Todo es de solo lectura. La única escritura es la de Athena, que guarda el resultado de cada consulta en el bucket de resultados de su workgroup.
@@ -113,14 +132,23 @@ Todo es de solo lectura. La única escritura es la de Athena, que guarda el resu
    ```
    El informe abre con un veredicto por capa: fuente Oracle, código, orquestación, configuración, extracción, Bronce y Silver. **La primera capa que difiere es donde nace la diferencia.** Si la primera es la fuente Oracle, la diferencia viene de los datos y no de los jobs.
 
-### Tomadores y agentes (sección `terceros`, versión 2026-11-23.3)
+### Acuerdos, tomadores y agentes (sección `terceros`, versión 2026-11-24.1)
 
-El diagnóstico consulta en el Silver preparado, por producto: completitud de tomador, agente e identificación del tomador, y totales por tomador y por agente. **No saca nombres de AWS:** usa una huella SHA-256 del nombre normalizado (espacios colapsados, sin bordes, mayúsculas). Luego, en local:
+El diagnóstico consulta en el Silver preparado, por producto:
+- completitud de tomador, agente e identificación del tomador;
+- totales por acuerdo (`numero_poliza_matriz` y `nombre_acuerdo`; el código del acuerdo no es dato personal);
+- forma de la columna tomador (mismo nombre repetido o varios tomadores distintos en la fila);
+- totales por cada tomador de la lista, por separado, y por agente.
+
+**No saca nombres de AWS:** usa una huella SHA-256 del nombre normalizado (espacios colapsados, sin bordes, mayúsculas). Luego, en local:
 ```
 python diagnostico/validar_terceros.py --rrc "RRC SIN CONTABILIDAD ALFA 202606.xlsx" --evidencia <carpeta evidencia> --salida informe-terceros.md
 ```
-- Tomadores: se cruzan con el RRC (solo Generales; el RRC no trae Vida ni Satélites) en prima, comisión del intermediario y comisión de recaudo. Muestra los que están solo en un lado y los que tienen montos distintos, con el acuerdo del RRC para ubicarlos. `--mostrar-nombres` los muestra solo en pantalla.
+- Acuerdos: se cruzan con la columna `Acuerdo` del RRC en prima, comisión del intermediario y comisión de recaudo (solo Generales; el RRC no trae Vida ni Satélites). El script elige solo la columna del Silver que coincide.
+- Tomadores: mismo cruce por producto y tomador, y por producto, acuerdo y tomador. Muestra los que están solo en un lado y los que tienen montos distintos, con el acuerdo del RRC para ubicarlos. `--mostrar-nombres` los muestra solo en pantalla.
 - Agentes: el RRC no tiene columna de agente; se informa cuántos hay por producto y cuánta prima queda sin agente.
+
+Para repetir solo esta parte: `SECCIONES=configuracion,terceros bash diag-emisiones-v2.sh dev 202606 primary`.
 
 ## Permisos que necesita el diagnóstico (lectura)
 
@@ -149,5 +177,5 @@ Si falta un permiso, esa sección queda anotada en `resumen.json` como error y l
 | `diagnostico/conciliacion-oracle-acsele.sql` | Comparación de la fuente Oracle entre QA y PRD |
 | `diagnostico/comparar_ambientes.py` | Veredicto por capa e informe |
 | `diagnostico/mapeo-columnas-propuesta.json` | Equivalencia entre columnas del Excel y del Silver (validada en QA donde se indica) |
-| `diagnostico/validar_terceros.py` | Cruza tomadores del Silver con el RRC por producto (por huella del nombre) y resume la completitud de agentes |
+| `diagnostico/validar_terceros.py` | Cruza acuerdos y tomadores del Silver con el RRC por producto (tomadores por huella del nombre) y resume la completitud de agentes |
 | `diagnostico/diagnostico-pymes-55139.sql` | Encuentra en qué paso de la consulta de movimientos se pierde Pymes |

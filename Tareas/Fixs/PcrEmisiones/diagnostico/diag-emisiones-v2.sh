@@ -20,7 +20,7 @@ esac
 python3 -c "import boto3" 2>/dev/null || pip3 install --user --quiet boto3
 DIR="$(cd "$(dirname "$0")" && pwd)"
 PY="$DIR/diag_emisiones_v2.py"
-VERSION_ESPERADA="2026-11-23.3"
+VERSION_ESPERADA="2026-11-24.1"
 if ! grep -q "VERSION = \"$VERSION_ESPERADA" "$PY" 2>/dev/null; then
   echo "ERROR: $PY no es la versión $VERSION_ESPERADA (o no existe). Subir el .py nuevo con ese nombre exacto."
   exit 1

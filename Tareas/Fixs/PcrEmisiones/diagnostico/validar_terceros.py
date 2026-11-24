@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
-"""Valida tomadores (contra el RRC) y agentes (completitud) del Silver preparado, por producto.
+"""Valida acuerdos y tomadores (contra el RRC) y agentes (completitud) del Silver preparado.
 
 Uso (local, sin AWS):
     python validar_terceros.py --rrc "RRC SIN CONTABILIDAD ALFA 202606.xlsx" \
         --evidencia <carpeta evidencia-pcr-emisiones-...> --salida informe-terceros.md
 
-La evidencia trae, por producto, una huella SHA-256 del nombre del tomador o agente
-(sección ``terceros`` de diag_emisiones_v2.py), nunca el nombre. Aquí se calcula la misma
-huella con los nombres del RRC y se cruzan producto por producto.
+La evidencia (sección ``terceros`` de diag_emisiones_v2.py) trae, por producto, totales por
+acuerdo y una huella SHA-256 de cada nombre de tomador o agente, nunca el nombre. Aquí se
+calcula la misma huella con los nombres del RRC y se cruzan producto por producto.
 
-- Tomadores: el RRC solo trae Generales, así que el cruce es solo de Generales.
+- Acuerdos: el código de acuerdo no es dato personal; se cruza directo con la columna Acuerdo.
+- Tomadores: la columna tomador del Silver de Generales puede traer varios nombres unidos con
+  coma; desde la versión 2026-11-24.1 la evidencia trae cada nombre por separado.
+- El RRC solo trae Generales, así que los cruces son solo de Generales.
 - Agentes: el RRC no tiene columna de agente; se informa completitud y reparto.
 - El informe no escribe nombres. Con --mostrar-nombres se muestran en pantalla (no en el
   archivo) los tomadores del RRC que no cuadran, para buscarlos.
@@ -35,6 +38,7 @@ EQUIVALENCIAS = {  # columna del Excel -> columnas del Silver de Generales
     "Comision Intermediario": ("comision_total_interincter",),
     "Comision Recaudo": ("costo_recaudacion", "costo_recaudacion_vida"),
 }
+COLUMNAS_ACUERDO = ("numero_poliza_matriz", "nombre_acuerdo")
 TOLERANCIA = Decimal("0.01")
 
 
@@ -51,22 +55,35 @@ def dec(valor):
 
 
 def leer_rrc(ruta, periodo):
+    """Filas del RRC (hoja Data) del mes de producción, con huella del tomador."""
     hoja = openpyxl.load_workbook(ruta, read_only=True, data_only=True)["Data"]
     filas = hoja.iter_rows(values_only=True)
     encabezado = [str(h).strip() if h is not None else "" for h in next(filas)]
     ix = {h: i for i, h in enumerate(encabezado)}
-    datos = defaultdict(lambda: {"filas": 0, "acuerdos": set(), "nombre": "", **{m: Decimal(0) for m in EQUIVALENCIAS}})
+    salida = []
     for fila in filas:
         if not fila or fila[ix["Producto"]] is None or str(fila[ix["Mes Produccion"]]) != periodo:
             continue
-        clave = (str(fila[ix["Producto"]]), huella(fila[ix["Tomador"]]))
-        d = datos[clave]
-        d["filas"] += 1
-        d["acuerdos"].add(str(fila[ix["Acuerdo"]]))
-        d["nombre"] = normalizar(fila[ix["Tomador"]])
-        for metrica in EQUIVALENCIAS:
-            d[metrica] += dec(fila[ix[metrica]])
-    return datos
+        salida.append({
+            "producto": str(fila[ix["Producto"]]),
+            "acuerdo": normalizar(fila[ix["Acuerdo"]]),
+            "huella": huella(fila[ix["Tomador"]]),
+            "nombre": normalizar(fila[ix["Tomador"]]),
+            **{m: dec(fila[ix[m]]) for m in EQUIVALENCIAS},
+        })
+    return salida
+
+
+def agrupar_rrc(filas, llave):
+    grupos = defaultdict(lambda: {"filas": 0, "acuerdos": set(), "nombre": "", **{m: Decimal(0) for m in EQUIVALENCIAS}})
+    for f in filas:
+        g = grupos[llave(f)]
+        g["filas"] += 1
+        g["acuerdos"].add(f["acuerdo"])
+        g["nombre"] = f["nombre"]
+        for m in EQUIVALENCIAS:
+            g[m] += f[m]
+    return grupos
 
 
 def leer_csv(ruta):
@@ -83,8 +100,53 @@ def producto_de(fila):
     return "?"
 
 
+def agrupar_silver(filas, llave):
+    grupos = defaultdict(lambda: defaultdict(Decimal))
+    for f in filas:
+        g = grupos[llave(f)]
+        for k, v in f.items():
+            if k in ("filas", "operaciones", "filas_varios_tomadores") or k in EQUIVALENCIAS or any(k in c for c in EQUIVALENCIAS.values()):
+                g[k] += dec(v)
+    return grupos
+
+
+def silver_en(g, metrica):
+    return sum((g.get(c, Decimal(0)) for c in EQUIVALENCIAS[metrica]), Decimal(0))
+
+
+def comparar(rrc, silver, productos, etiqueta, detalle_rrc):
+    """Tabla resumen y detalle del cruce RRC vs Silver con llaves (producto, x)."""
+    resumen = [f"| Producto | {etiqueta} RRC | {etiqueta} Silver | En ambos | Solo RRC | Solo Silver | Montos distintos | Prima RRC en ambos | Prima Silver en ambos |",
+               "|---|---|---|---|---|---|---|---|---|"]
+    detalle, distintos_todos = [], []
+    for p in productos:
+        kr = {k for q, k in rrc if q == p}
+        ks = {k for q, k in silver if q == p}
+        comunes = kr & ks
+        distintos = []
+        for k in sorted(comunes):
+            for metrica in EQUIVALENCIAS:
+                a, b = rrc[(p, k)][metrica], silver_en(silver[(p, k)], metrica)
+                if abs(a - b) > TOLERANCIA:
+                    distintos.append((k, metrica, a, b))
+        pr = sum((rrc[(p, k)]["Prima Emitida"] for k in comunes), Decimal(0))
+        ps = sum((silver_en(silver[(p, k)], "Prima Emitida") for k in comunes), Decimal(0))
+        resumen.append(f"| {p} | {len(kr)} | {len(ks)} | {len(comunes)} | {len(kr - ks)} | {len(ks - kr)} | "
+                       f"{len({d[0] for d in distintos})} | {pr:,.2f} | {ps:,.2f} |")
+        for k in sorted(kr - ks):
+            detalle.append(f"| {p} | solo RRC | {detalle_rrc(p, k)} | {rrc[(p, k)]['Prima Emitida']:,.2f} | — |")
+        for k in sorted(ks - kr, key=lambda k: -silver_en(silver[(p, k)], "Prima Emitida"))[:15]:
+            detalle.append(f"| {p} | solo Silver | {detalle_rrc(p, k, solo_silver=True)} | — | {silver_en(silver[(p, k)], 'Prima Emitida'):,.2f} |")
+        if len(ks - kr) > 15:
+            detalle.append(f"| {p} | solo Silver | … y {len(ks - kr) - 15} más | — | — |")
+        for k, metrica, a, b in distintos:
+            detalle.append(f"| {p} | {metrica} distinta | {detalle_rrc(p, k)} | {a:,.2f} | {b:,.2f} |")
+        distintos_todos += [(p, k, metrica) for k, metrica, _, _ in distintos]
+    return resumen, detalle, distintos_todos
+
+
 def main():
-    parser = argparse.ArgumentParser(description="Valida tomadores y agentes del Silver preparado")
+    parser = argparse.ArgumentParser(description="Valida acuerdos, tomadores y agentes del Silver preparado")
     parser.add_argument("--rrc", required=True)
     parser.add_argument("--evidencia", required=True)
     parser.add_argument("--periodo", default="202606")
@@ -92,66 +154,95 @@ def main():
     parser.add_argument("--mostrar-nombres", action="store_true")
     args = parser.parse_args()
 
-    lineas = [f"# Tomadores y agentes del Silver preparado ({os.path.basename(args.evidencia.rstrip('/'))})", ""]
-    rrc = leer_rrc(args.rrc, args.periodo)
-    silver_csv = leer_csv(os.path.join(args.evidencia, "datos", "terceros_generales_por_tomador.csv"))
+    datos = os.path.join(args.evidencia, "datos")
+    lineas = [f"# Acuerdos, tomadores y agentes del Silver preparado ({os.path.basename(args.evidencia.rstrip('/'))})", ""]
+    filas_rrc = leer_rrc(args.rrc, args.periodo)
     nombres_pantalla = []
 
-    lineas.append("## Tomadores de Generales frente al RRC (Mes Produccion = periodo)")
-    if silver_csv is None:
-        lineas.append("La evidencia no trae `terceros_generales_por_tomador.csv` (correr la sección `terceros`).")
+    # ---- 1. Acuerdos
+    lineas.append("## 1. Generales por acuerdo frente al RRC (Mes Produccion = periodo)")
+    por_acuerdo = leer_csv(os.path.join(datos, "terceros_generales_por_acuerdo.csv"))
+    columna_acuerdo = None
+    if not por_acuerdo:
+        lineas.append("La evidencia no trae `terceros_generales_por_acuerdo.csv` (requiere la versión 2026-11-24.1).")
     else:
-        silver = defaultdict(lambda: defaultdict(Decimal))
-        for fila in silver_csv:
-            clave = (producto_de(fila), fila["tomador_huella"].lower())
-            for k, v in fila.items():
-                if k not in ("idproducto", "tomador_huella", "tomador_vacio"):
-                    silver[clave][k] += dec(v)
-            silver[clave]["vacio"] = Decimal(1) if str(fila.get("tomador_vacio")).lower() == "true" else Decimal(0)
-        productos = sorted({p for p, _ in rrc} | {p for p, _ in silver})
-        lineas.append("| Producto | Tomadores RRC | Tomadores Silver | En ambos | Solo RRC | Solo Silver | Montos distintos |")
-        lineas.append("|---|---|---|---|---|---|---|")
-        detalle = []
-        for p in productos:
-            hr = {h for q, h in rrc if q == p}
-            hs = {h for q, h in silver if q == p}
-            distintos = []
-            for h in sorted(hr & hs):
-                for metrica, cols in EQUIVALENCIAS.items():
-                    a = rrc[(p, h)][metrica]
-                    b = sum((silver[(p, h)].get(c, Decimal(0)) for c in cols), Decimal(0))
-                    if abs(a - b) > TOLERANCIA:
-                        distintos.append((h, metrica, a, b))
-            lineas.append(f"| {p} | {len(hr)} | {len(hs)} | {len(hr & hs)} | {len(hr - hs)} | {len(hs - hr)} | {len({d[0] for d in distintos})} |")
-            for h in sorted(hr - hs):
-                r = rrc[(p, h)]
-                detalle.append(f"| {p} | solo RRC | `{h[:10]}` | {', '.join(sorted(r['acuerdos']))} | {r['Prima Emitida']:,.2f} | — |")
-                nombres_pantalla.append((p, "solo RRC", h[:10], r["nombre"]))
-            for h in sorted(hs - hr):
-                s = silver[(p, h)]
-                prima = s.get("prima", Decimal(0)) + s.get("prima_vida", Decimal(0))
-                vacio = " (tomador vacío)" if s.get("vacio") else ""
-                detalle.append(f"| {p} | solo Silver{vacio} | `{h[:10]}` | — | — | {prima:,.2f} |")
-            for h, metrica, a, b in distintos:
-                detalle.append(f"| {p} | {metrica} distinta | `{h[:10]}` | {', '.join(sorted(rrc[(p, h)]['acuerdos']))} | {a:,.2f} | {b:,.2f} |")
-                nombres_pantalla.append((p, f"{metrica} distinta", h[:10], rrc[(p, h)]["nombre"]))
+        rrc_acu = agrupar_rrc(filas_rrc, lambda f: (f["producto"], f["acuerdo"]))
+        # Se elige la columna del Silver cuyo valor coincide con más acuerdos del RRC.
+        coincidencias = {}
+        for col in COLUMNAS_ACUERDO:
+            if col in por_acuerdo[0]:
+                valores = {(producto_de(f), normalizar(f[col])) for f in por_acuerdo}
+                coincidencias[col] = len(valores & set(rrc_acu))
+        columna_acuerdo = max(coincidencias, key=coincidencias.get) if coincidencias else None
+        lineas.append(f"Columna del Silver que coincide con `Acuerdo` del RRC: `{columna_acuerdo}` "
+                      f"(coincidencias: {coincidencias}).")
+        silver_acu = agrupar_silver(por_acuerdo, lambda f: (producto_de(f), normalizar(f[columna_acuerdo])))
+        productos = sorted({p for p, _ in rrc_acu} | {p for p, _ in silver_acu})
+        resumen, detalle, _ = comparar(rrc_acu, silver_acu, productos, "Acuerdos",
+                                       lambda p, k, solo_silver=False: f"{k or '(vacío)'}")
+        lineas += [""] + resumen
         if detalle:
-            lineas += ["", "Detalle (huella = primeros 10 caracteres del SHA-256 del nombre normalizado; acuerdo según el RRC):", "",
-                       "| Producto | Caso | Huella | Acuerdo(s) RRC | RRC | Silver |", "|---|---|---|---|---|---|"] + detalle
+            lineas += ["", "| Producto | Caso | Acuerdo | RRC (prima o métrica) | Silver |", "|---|---|---|---|---|"] + detalle
         else:
-            lineas.append("\nTodos los tomadores cuadran en prima, comisión del intermediario y comisión de recaudo.")
+            lineas.append("\nTodos los acuerdos cuadran en prima, comisión del intermediario y comisión de recaudo.")
 
-    lineas += ["", "## Completitud de tomadores y agentes por caso"]
+    # ---- 2. Forma de la columna tomador
+    lineas += ["", "## 2. Forma de la columna `tomador` del Silver (varios nombres unidos con coma)"]
     for caso in ("generales", "satelites", "pcr_vida"):
-        filas = leer_csv(os.path.join(args.evidencia, "datos", f"terceros_{caso}_completitud.csv"))
+        filas = leer_csv(os.path.join(datos, f"terceros_{caso}_tomador_repeticion.csv"))
+        if filas:
+            lineas += ["", f"**{caso}**", "", "| " + " | ".join(filas[0].keys()) + " |", "|" + "---|" * len(filas[0])]
+            lineas += ["| " + " | ".join(str(v) for v in f.values()) + " |" for f in filas]
+
+    # ---- 3. Tomadores individuales
+    lineas += ["", "## 3. Tomadores de Generales frente al RRC (cada nombre por separado)"]
+    individual = leer_csv(os.path.join(datos, "terceros_generales_por_tomador_individual.csv"))
+    origen = "terceros_generales_por_tomador_individual.csv"
+    if individual is None:
+        individual = leer_csv(os.path.join(datos, "terceros_generales_por_tomador.csv"))
+        origen = "terceros_generales_por_tomador.csv (lista completa sin separar: versión anterior)"
+    if individual is None:
+        lineas.append("La evidencia no trae tomadores de Generales (correr la sección `terceros`).")
+    else:
+        lineas.append(f"Fuente: `{origen}`. Si una fila trae varios tomadores distintos, sus montos cuentan en cada uno.")
+        rrc_tom = agrupar_rrc(filas_rrc, lambda f: (f["producto"], f["huella"]))
+        silver_tom = agrupar_silver(individual, lambda f: (producto_de(f), f["tomador_huella"].lower()))
+        productos = sorted({p for p, _ in rrc_tom} | {p for p, _ in silver_tom})
+
+        def ubicar(p, k, solo_silver=False):
+            if solo_silver:
+                return f"`{k[:10]}` | —"
+            return f"`{k[:10]}` | {', '.join(sorted(rrc_tom[(p, k)]['acuerdos']))}"
+        resumen, detalle, distintos = comparar(rrc_tom, silver_tom, productos, "Tomadores", ubicar)
+        lineas += ["", "### 3a. Por producto y tomador", ""] + resumen
+        if detalle:
+            lineas += ["", "Huella = primeros 10 caracteres del SHA-256 del nombre normalizado.", "",
+                       "| Producto | Caso | Huella | Acuerdo(s) RRC | RRC | Silver |", "|---|---|---|---|---|---|"] + detalle
+        for p, k in sorted({(p, k) for p, k in rrc_tom} - set(silver_tom)):
+            nombres_pantalla.append((p, "solo RRC", k[:10], rrc_tom[(p, k)]["nombre"]))
+        for p, k, metrica in distintos:
+            nombres_pantalla.append((p, f"{metrica} distinta", k[:10], rrc_tom[(p, k)]["nombre"]))
+
+        if columna_acuerdo and columna_acuerdo in individual[0]:
+            rrc_at = agrupar_rrc(filas_rrc, lambda f: (f["producto"], (f["acuerdo"], f["huella"])))
+            silver_at = agrupar_silver(individual, lambda f: (producto_de(f), (normalizar(f[columna_acuerdo]), f["tomador_huella"].lower())))
+            resumen, _, _ = comparar(rrc_at, silver_at, productos, "Acuerdo+tomador",
+                                     lambda p, k, solo_silver=False: f"{k[0]} `{k[1][:10]}`")
+            lineas += ["", "### 3b. Por producto, acuerdo y tomador", ""] + resumen
+
+    # ---- 4. Completitud
+    lineas += ["", "## 4. Completitud de tomadores y agentes por caso"]
+    for caso in ("generales", "satelites", "pcr_vida"):
+        filas = leer_csv(os.path.join(datos, f"terceros_{caso}_completitud.csv"))
         if not filas:
             continue
         lineas += ["", f"**{caso}**", "", "| " + " | ".join(filas[0].keys()) + " |", "|" + "---|" * len(filas[0])]
         lineas += ["| " + " | ".join(str(v) for v in f.values()) + " |" for f in filas]
 
-    lineas += ["", "## Agentes: reparto de la prima por producto (el RRC no trae agente)"]
+    # ---- 5. Agentes
+    lineas += ["", "## 5. Agentes: reparto de la prima por producto (el RRC no trae agente)"]
     for caso in ("generales", "satelites", "pcr_vida"):
-        filas = leer_csv(os.path.join(args.evidencia, "datos", f"terceros_{caso}_por_agente.csv"))
+        filas = leer_csv(os.path.join(datos, f"terceros_{caso}_por_agente.csv"))
         if not filas:
             continue
         por_producto = defaultdict(list)
@@ -165,7 +256,7 @@ def main():
 
     with open(args.salida, "w", encoding="utf-8") as archivo:
         archivo.write("\n".join(lineas) + "\n")
-    print("\n".join(lineas[:40]))
+    print("\n".join(lineas[:60]))
     print(f"\nInforme: {args.salida}")
     if args.mostrar_nombres and nombres_pantalla:
         print("\n(Solo en pantalla) Tomadores del RRC que no cuadran:")

@@ -1,7 +1,7 @@
 ---
 tipo: auditoria
 estado: vigente
-actualizado: 2026-11-23
+actualizado: 2026-11-24
 ---
 # Auditoría de la extracción frente al modelo de ciclos (2026-11-20)
 
@@ -20,4 +20,5 @@ Humano: `Docs\06-brechas\auditoria-extraccion-2026-11.md`. Plan: [[modularizacio
   - **ARQ-63 (alta):** checkpoint `_control/_SUCCESS.json` del mismo periodo y lote → `REUSED` sin leer Oracle (`:607-611`); lote fijo en PRG (`conf_emisiones.py:172`); `SUCCESS` con `calidad_fuentes=INCOMPLETA` (`:768-776`).
   - **ARQ-64 (descartada en QA 2026-11-23, filas = llaves):** Silver Generales repite montos por fila (movimientos por operación-póliza, base unida a unidades de riesgo solo por operación: `silver_generales.py:184`, `:804`).
   - **ARQ-65 (media):** Silver con productos/compañía fijos (`silver_generales.py:20-21`), `status` 2 por defecto (`:146`); exige `--RUTA_CONFIG_SCD`: la IaC `77de48cb` no lo pasa, pero la SF desplegada en DEV y QA sí (2026-11-23); confirmar en PRD.
+  - **ARQ-66 (media):** el Silver de Generales arma `tomador`, `identificacion_tomador`, teléfono, email y pagadores con `concat_ws(",", collect_list(...))` por póliza sin `DISTINCT` ni versión vigente (`silver_generales.py:323-349`, desplegado DEV 2026-11-24): el mismo nombre se repite N veces (99,99 % de filas de 52897 con coma; hasta 46 repeticiones en 55059). Campo inservible para reportes y multiplica datos personales. Cuantificar con la sección `terceros` v2026-11-24.1 ([[inprod-pcr-emisiones-202606]]).
 - Descartado con evidencia (no repetir): "la exclusión relee Oracle tres veces", ver [[inprod-primas-rentas-202606]] §8.

@@ -43,7 +43,7 @@ import boto3
 from boto3.dynamodb.conditions import Key
 from botocore.config import Config
 
-VERSION = "2026-11-23.3 (datos por ruta exacta + tomadores y agentes)"
+VERSION = "2026-11-24.1 (tomadores por nombre individual y por acuerdo)"
 REGION = "us-east-1"
 CONFIG_BOTO = Config(region_name=REGION, retries={"max_attempts": 5, "mode": "standard"})
 
@@ -884,6 +884,8 @@ MONTOS_TERCEROS = (
     "costo_recaudacion", "costo_recaudacion_vida", "costo_recaudo",
     "iva_costo_recaudacion", "iva_costo_recaudacion_vida", "iva_costo_recaudo",
 )
+# Columnas del acuerdo (póliza matriz) en el Silver, para cruzar con la columna Acuerdo del RRC.
+COLUMNAS_ACUERDO = ("numero_poliza_matriz", "nombre_acuerdo")
 
 
 def _normalizado_sql(columna):
@@ -957,6 +959,57 @@ def capturar_terceros(ctx):
                 _consultar(ctx, tabla["base"], sql, f"terceros_{caso}_por_{rol}")
             except Exception as exc:  # noqa: BLE001
                 ctx.ev.error(f"terceros:{rol}:{caso}", exc)
+
+        acuerdo = [c for c in COLUMNAS_ACUERDO if c in columnas]
+        resumen[caso]["acuerdo"] = acuerdo
+        sumas = [f"SUM({m}) AS {m}" for m in montos]
+        if operacion:
+            sumas.insert(0, f"COUNT(DISTINCT {operacion}) AS operaciones")
+
+        # 4) Totales por producto y acuerdo (el RRC trae la columna Acuerdo; no es dato personal).
+        if acuerdo:
+            grupo = ", ".join(str(i) for i in range(1, len(acuerdo) + 2))
+            sql = (f"SELECT {producto}, {', '.join(f'CAST({a} AS varchar) AS {a}' for a in acuerdo)}, "
+                   f"COUNT(*) AS filas, {', '.join(sumas)} FROM {origen} WHERE {donde} "
+                   f"GROUP BY {grupo} ORDER BY {grupo}")
+            try:
+                _consultar(ctx, tabla["base"], sql, f"terceros_{caso}_por_acuerdo")
+            except Exception as exc:  # noqa: BLE001
+                ctx.ev.error(f"terceros:acuerdo:{caso}", exc)
+
+        if "tomador" not in columnas:
+            continue
+        # La columna tomador puede traer varios nombres unidos con coma (concat_ws de collect_list).
+        lista = (f"transform(split(coalesce(CAST(tomador AS varchar), ''), ','), "
+                 f"x -> upper(trim(regexp_replace(x, '\\s+', ' '))))")
+
+        # 5) Forma de la lista: el mismo nombre repetido o varios tomadores distintos en la fila.
+        sql = (f"SELECT {producto}, COUNT(*) AS filas, "
+               f"COUNT_IF(cardinality({lista}) > 1) AS filas_con_coma, "
+               f"COUNT_IF(cardinality({lista}) > 1 AND cardinality(array_distinct({lista})) = 1) AS filas_mismo_nombre_repetido, "
+               f"COUNT_IF(cardinality(array_distinct({lista})) > 1) AS filas_varios_tomadores_distintos, "
+               f"MAX(cardinality({lista})) AS max_elementos, "
+               f"AVG(cardinality({lista})) AS promedio_elementos "
+               f"FROM {origen} WHERE {donde} GROUP BY 1 ORDER BY 1")
+        try:
+            _consultar(ctx, tabla["base"], sql, f"terceros_{caso}_tomador_repeticion")
+        except Exception as exc:  # noqa: BLE001
+            ctx.ev.error(f"terceros:repeticion:{caso}", exc)
+
+        # 6) Totales por producto, acuerdo y cada tomador distinto de la lista (huella, nunca el nombre).
+        #    Si una fila trae varios tomadores distintos, sus montos cuentan en cada uno (se marca).
+        llaves = [producto] + [f"CAST({a} AS varchar) AS {a}" for a in acuerdo]
+        n = len(llaves)
+        sql = (f"SELECT {', '.join(llaves)}, lower(to_hex(sha256(to_utf8(u.tomador_elemento)))) AS tomador_huella, "
+               f"COUNT(*) AS filas, COUNT_IF(cardinality(array_distinct({lista})) > 1) AS filas_varios_tomadores, "
+               f"{', '.join(sumas)} "
+               f"FROM {origen} CROSS JOIN UNNEST(array_distinct({lista})) AS u(tomador_elemento) "
+               f"WHERE {donde} GROUP BY {', '.join(str(i) for i in range(1, n + 2))} "
+               f"ORDER BY {', '.join(str(i) for i in range(1, n + 2))}")
+        try:
+            _consultar(ctx, tabla["base"], sql, f"terceros_{caso}_por_tomador_individual")
+        except Exception as exc:  # noqa: BLE001
+            ctx.ev.error(f"terceros:tomador_individual:{caso}", exc)
     ctx.ev.json("terceros/resumen_terceros.json", resumen)
 
 

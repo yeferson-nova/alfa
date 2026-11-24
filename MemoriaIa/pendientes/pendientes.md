@@ -1,7 +1,7 @@
 ---
 tipo: pendiente
 estado: vigente
-actualizado: 2026-11-23
+actualizado: 2026-11-24
 ---
 # Pendientes
 
@@ -15,6 +15,9 @@ actualizado: 2026-11-23
 - [ ] Pedir a Julio (o al DBA) `conciliacion-oracle-acsele.sql` en la Oracle ACSELE de QA y de PRD, más las SQL de `oracle\` que genera cada evidencia. CSV a `<evidencia>\oracle_resultados\`.
 - [x] Repetir la parte de datos en QA con el script corregido (2026-11-23, v2026-11-23.2, sin errores).
 - [ ] Pymes (PCE-1): correr `diagnostico-pymes-55139.sql` en la Oracle de QA y ver en qué paso se pierde.
+- [x] Corrida completa en DEV (2026-11-24, v2026-11-23.3): DEV = QA en extracción, Bronce y Silver; Pymes tampoco llega en DEV.
+- [ ] Correr `SECCIONES=configuracion,terceros` en DEV con v2026-11-24.1 y `validar_terceros.py`: cruce por acuerdo y por tomador individual contra el RRC.
+- [ ] ARQ-66: corregir el tomador repetido de `silver_generales.py` (participación vigente o `collect_set`) con su configuración, después de cuantificarlo.
 - [ ] IVA de recaudo de Generales (PCE-2): corregir las listas de conceptos de `silver_generales.py` con su configuración, después de que negocio diga si vale RRC o `E1-A1`. Explicar los 49,40 de 52897.
 - [ ] PRD: correr `diag-emisiones-v2.sh prd 202606 primary` (DevOps) y Q1-Q6 en su Oracle.
 - [ ] Pedir Q5 y Q6 en la Oracle de QA y Q1-Q6 en la de PRD; preguntar al DBA si ACSSOP se recargó entre el 19 y el 22 de nov, y si las 13 tablas `ORA-00942` existen en producción.

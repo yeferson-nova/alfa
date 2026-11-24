@@ -1,13 +1,13 @@
 ---
 tipo: inprod
 estado: vigente
-actualizado: 2026-11-23
+actualizado: 2026-11-24
 ---
 # Incidente: PCR Emisiones 202606, cifras de PRD distintas a las de QA
 
 > Negocio (correos del 10, 13 y 18 de nov, reenviados el 2026-11-23) pide que la extracción de junio 2026 cuadre con dos Excel; se reporta que PRD trae cifras distintas a QA. **No se sabe si PRD y QA tienen los mismos datos de origen: no se asume que el problema es nuestro.** Estado 2026-11-23 (tarde): corrido en DEV y QA + Q1-Q4 en Oracle QA. **QA extrae fiel a su Oracle** (18 conteos iguales al registro); DEV=QA en código, Step Function y PRG. **Montos QA (segunda corrida, v2026-11-23.2): cuadran con el Excel en Satélites, PCR Vida y prima/recaudo de Generales; fallas reales y nuestras: PCE-1 Pymes no se extrae, PCE-2 IVA de recaudo de Generales en 0, PCE-3 IVA comisión intermediario no sale de ACSELE.** Falta PRD.
 
-Tarea humana y scripts: `Tareas\Fixs\PcrEmisiones\` (`README.md`, carpeta `diagnostico\`). Relacionado: [[data-datalake-niif-pcr-emisiones-glue-job]], [[data-datalake-emisiones-vida-glue-job]], [[modularizacion-extraccion]], [[auditoria-extraccion-2026-11]] (ARQ-61 a ARQ-65), [[auditoria-repos-2026-11]] (ARQ-50).
+Tarea humana y scripts: `Tareas\Fixs\PcrEmisiones\` (`README.md`, carpeta `diagnostico\`). Relacionado: [[data-datalake-niif-pcr-emisiones-glue-job]], [[data-datalake-emisiones-vida-glue-job]], [[modularizacion-extraccion]], [[auditoria-extraccion-2026-11]] (ARQ-61 a ARQ-66), [[auditoria-repos-2026-11]] (ARQ-50).
 
 ## Referencia (validado con `validar_referencia.py`)
 - Generales: el resumen = detalle RRC con `Mes Produccion = 202606` (PASS al centavo). 4.478 filas; 726 son de meses anteriores dentro del corte de junio y no entran.
@@ -47,7 +47,15 @@ H1 fuente Oracle distinta · H2 código distinto (ARQ-50, ARQ-62) · H3 PRG/CNF 
 - **Decisión (usuario, 2026-11-23): la cifra oficial es el RRC.** QA hoy coincide con `E1-A1` (Vida 4/5 columnas exactas; Generales exacto sumando Pymes), no con el RRC: las diferencias frente al RRC (Vida recaudo +42.900, IVA +8.151; 52897 +259,98/+260; VidaAp comisión 53.666,30 vs 57.720,10) son las que hay que explicar.
 - **Pymes:** no estaba en QA; se está pasando a QA; en DEV sí está (complementos Pymes). Satélites: solo sus 7 productos.
 - **Tomadores/agentes (2026-11-23):** sección `terceros` (v2026-11-23.3) con huella SHA-256 del nombre + `validar_terceros.py` (cruce con RRC solo Generales; el RRC no trae agente: solo completitud). Probado con evidencia sintética; sin correr en AWS.
-- **Siguiente:** validación completa en DEV (`bash diag-emisiones-v2.sh dev 202606 primary`). Ojo: el PRG de DEV apunta a 202608, así que las SQL de Oracle que genera salen con la ventana de agosto; el runtime de Generales puede venir de corridas manuales.
+## DEV completo (2026-11-24, lote 20261124060016, v2026-11-23.3, 0 errores; `evidencia-pcr-emisiones-dev-20261124T131427Z`)
+- **DEV = QA hoy:** extracción (filas por tabla), Bronce (139/117/37 combinaciones producto-concepto) y Silver (totales por producto) idénticos al lote QA 20261122234023. La diferencia de la primera corrida DEV era la fecha de extracción. Frente al Excel, DEV = QA (mismas diferencias).
+- **Pymes 55139 en DEV:** está en el PRG y en `config_extraccion_generales.json`, pero 0 movimientos en Bronce y Silver → PCE-1 sigue igual; "Pymes en DEV" es configuración, no dato.
+- Satélites: los 7 `idproducto` (54899, 54919, 54939, 55039, 55060, 55099, 55119); cuadran con el bloque Satélites del resumen salvo IVA comisión intermediario (PCE-3).
+- **Agentes coherentes:** la comisión está solo en filas con agente; productos con comisión 0 en el RRC (52897, 55059, 55060, 55119) no tienen agente. Vida: 99 % de filas sin agente (69 % de la prima), comisión 0 en ellas.
+- **Tomador de Generales = lista (ARQ-66):** `concat_ws(",", collect_list(nombre))` por póliza sin `DISTINCT` (`silver_generales.py:323-349` desplegado en DEV); 203.142/203.161 filas de 52897 con coma; un tomador de 55059 repetido 46 veces (comprobado por huella). Cruce por nombre completo inútil. El tomador del RRC de 52897 es el del acuerdo (6 en 35 acuerdos) frente a ~17.000 del Silver → cruzar por acuerdo.
+- Diagnóstico **v2026-11-24.1**: sección `terceros` con totales por acuerdo, forma de la lista y tomador individual (huella por nombre); `validar_terceros.py` cruza por acuerdo, por tomador y por acuerdo+tomador. Probado con evidencia sintética (detecta acuerdo faltante, monto distinto y tomador faltante).
+- El `.py` subido a CloudShell llega con CRLF (hash distinto, mismo contenido; Python lo lee igual).
+- **Siguiente:** `SECCIONES=configuracion,terceros` en DEV con v2026-11-24.1 y correr `validar_terceros.py`.
 
 ## Cumplimiento
 - Los `.msg` y el RRC (hoja `Data` con nombres de tomadores) quedaron versionados en `alfa` (commit `ee37aa7`, ya en `origin/main`). Reincidencia de CUM-01: decisión del usuario sobre sacarlos ([[pendientes]]).
