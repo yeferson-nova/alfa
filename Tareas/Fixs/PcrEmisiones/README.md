@@ -53,7 +53,7 @@ Evidencia: diagnóstico en DEV y en QA, y consultas Q1 a Q4 de `conciliacion-ora
 | Configuración | Mismos filtros en el PRG (status 2, mismos productos y compañías); ventana de junio | `configuracion/prg_programacion_emisiones.json` |
 | Extracción DEV frente a QA | Mismo periodo y misma Oracle, pero **conteos distintos** (DEV 4.006.114 operaciones, QA 3.928.778; unas tablas suben y otras bajan). DEV extrajo entre el 19 y el 21 de noviembre y QA el 22: el contenido de la Oracle cambió entre esas fechas (*hipótesis: recarga de la base; confirmar con el DBA*) | Runtime de las dos evidencias |
 | DEV como referencia | **No sirve como línea base**: tiene corridas manuales recientes con configuraciones de prueba (complementos de Pymes, uniones de lotes) | `orquestacion/corridas_glue.json` |
-| Montos (Silver y Bronce) | **Sin evidencia válida todavía**: la versión del diagnóstico que se corrió tenía dos errores (ver abajo). Hay que repetir solo la sección de datos | — |
+| Montos (Silver y Bronce) | Medidos en la segunda corrida (ver la sección siguiente) | `evidencia-pcr-emisiones-qa-20261123T215411Z` |
 
 Errores del diagnóstico en esta corrida (ya corregidos en el script):
 - Silver: la consulta sumaba también `idproducto` y Athena la rechazó por nombre ambiguo; en Satélites tomó la tabla de la carpeta `controles`.
@@ -65,6 +65,30 @@ SECCIONES=configuracion,datos bash diag-emisiones-v2.sh qa 202606 primary
 ```
 
 **Conclusión parcial:** en QA, la extracción reproduce fielmente la Oracle a la que está conectada. Si PRD da cifras distintas, lo primero es saber a qué Oracle se conecta PRD y si es la misma información que ACSSOP (que no tiene 13 tablas y cambia entre fechas). Eso se responde corriendo el diagnóstico en PRD y Q1 a Q6 en su Oracle.
+
+## Montos de QA frente al Excel (segunda corrida, 2026-11-23)
+
+Silver preparada de QA, lote `20261122234023`, frente al Excel. Diagnóstico `v2026-11-23.2`, sin errores.
+
+| Caso | Resultado |
+|---|---|
+| **Satélites** (7 productos) | Prima, comisión, comisión de recaudo e IVA de recaudo **iguales al centavo** en los 7 productos. Solo falta el IVA de la comisión del intermediario (ver abajo) |
+| **PCR Vida** (Vida Deudores, 48897) | Prima (112.802.518.236,08) y comisión **iguales al centavo**. Comisión de recaudo +42.900,00 e IVA de recaudo +8.151,00 frente al RRC: es **exactamente** la diferencia que el Excel reporta entre RRC y `E1-A1`, o sea que QA coincide con `E1-A1` |
+| **Generales** 54959, 54979, 55059 | Prima y comisión de recaudo **iguales**. En 55059 la prima es `prima + prima_vida` y el recaudo `costo_recaudacion + costo_recaudacion_vida`. Comisión de 54959 +0,08: la misma diferencia RRC frente a `E1-A1` |
+| **Generales** 52897 | Prima +259,98 y comisión de recaudo +260,00 frente al RRC; la diferencia RRC frente a `E1-A1` del Excel es de 259,73 y 260,00 |
+| **Generales, Pymes 55139** | **No llega**: no hay movimientos de Pymes en Bronce ni en Silver, aunque la Oracle tiene 45 operaciones de junio (Q4). Falta el 100 %: prima 56.404.532,99 |
+| **Generales, IVA de comisión de recaudo** | El Silver da 0 en 52897 y 55059 (el Excel trae 633.791.830,29 y 68.391.290,21). ACSELE sí trae esos montos, pero con conceptos que el Silver no tiene en sus listas (detalle abajo) |
+| **IVA de comisión del intermediario** | No existe como concepto en los movimientos de ACSELE en ningún caso. En Satélites el Excel es el 19 % de la comisión: lo calcula negocio |
+| **Grano del Silver** (H6, ARQ-64) | En todos los productos hay una fila por (operación, póliza): **la prima no se repite**. Descartado en QA |
+
+Cómo se reproducen las cifras de IVA de comisión de recaudo de Generales con los conceptos del Bronce de QA:
+- 55059: `IVACOMISIONRECAUDOACC + DES + SUS` menos sus devoluciones (`…DEV`) = **68.391.290,21**, igual al RRC.
+- 52897: `IVACOSTORECAUDOINCE + TERR + RC` − devoluciones + rehabilitaciones − anulaciones = 633.791.879,69; el RRC trae 633.791.830,29 (49,40 menos; *por explicar*).
+- Total de `E1-A1` (640.578.074,35) = 52897 calculado así + 55059 solo `SUS` + Pymes: **exacto**. El RRC suma también `ACC` y `DES` de 55059; por eso los dos informes del negocio difieren en unos 63,7 millones.
+
+**Conclusión:** en QA nuestra extracción y el Silver reproducen la fuente y cuadran con el Excel en Satélites, en PCR Vida y en la prima y el recaudo de Generales. Las diferencias reales y nuestras son tres, todas de Generales: (1) Pymes no se extrae; (2) el Silver no calcula el IVA de comisión de recaudo con los conceptos que trae ACSELE; (3) el IVA de la comisión del intermediario no sale de ACSELE (hay que definir con negocio si se calcula). El resto de las diferencias frente al RRC coincide con las que el propio Excel reporta entre RRC y `E1-A1`: hay que definir con negocio cuál es la cifra oficial.
+
+Siguiente paso para Pymes: correr `diagnostico/diagnostico-pymes-55139.sql` en la Oracle de QA. Cuenta cuántas operaciones de Pymes sobreviven a cada paso de la consulta de movimientos.
 
 ## Cómo se ejecuta
 
@@ -88,6 +112,15 @@ Todo es de solo lectura. La única escritura es la de Athena, que guarda el resu
    python diagnostico/comparar_ambientes.py --a <evidencia-qa> --b <evidencia-prd> --referencia referencia_esperada.json --mapeo diagnostico/mapeo-columnas-propuesta.json --salida informe-comparacion.md
    ```
    El informe abre con un veredicto por capa: fuente Oracle, código, orquestación, configuración, extracción, Bronce y Silver. **La primera capa que difiere es donde nace la diferencia.** Si la primera es la fuente Oracle, la diferencia viene de los datos y no de los jobs.
+
+### Tomadores y agentes (sección `terceros`, versión 2026-11-23.3)
+
+El diagnóstico consulta en el Silver preparado, por producto: completitud de tomador, agente e identificación del tomador, y totales por tomador y por agente. **No saca nombres de AWS:** usa una huella SHA-256 del nombre normalizado (espacios colapsados, sin bordes, mayúsculas). Luego, en local:
+```
+python diagnostico/validar_terceros.py --rrc "RRC SIN CONTABILIDAD ALFA 202606.xlsx" --evidencia <carpeta evidencia> --salida informe-terceros.md
+```
+- Tomadores: se cruzan con el RRC (solo Generales; el RRC no trae Vida ni Satélites) en prima, comisión del intermediario y comisión de recaudo. Muestra los que están solo en un lado y los que tienen montos distintos, con el acuerdo del RRC para ubicarlos. `--mostrar-nombres` los muestra solo en pantalla.
+- Agentes: el RRC no tiene columna de agente; se informa cuántos hay por producto y cuánta prima queda sin agente.
 
 ## Permisos que necesita el diagnóstico (lectura)
 
@@ -115,4 +148,6 @@ Si falta un permiso, esa sección queda anotada en `resumen.json` como error y l
 | `diagnostico/diag-emisiones-v2.sh` y `diag_emisiones_v2.py` | Diagnóstico de solo lectura por ambiente |
 | `diagnostico/conciliacion-oracle-acsele.sql` | Comparación de la fuente Oracle entre QA y PRD |
 | `diagnostico/comparar_ambientes.py` | Veredicto por capa e informe |
-| `diagnostico/mapeo-columnas-propuesta.json` | Propuesta de equivalencia entre columnas del Excel y del Silver |
+| `diagnostico/mapeo-columnas-propuesta.json` | Equivalencia entre columnas del Excel y del Silver (validada en QA donde se indica) |
+| `diagnostico/validar_terceros.py` | Cruza tomadores del Silver con el RRC por producto (por huella del nombre) y resume la completitud de agentes |
+| `diagnostico/diagnostico-pymes-55139.sql` | Encuentra en qué paso de la consulta de movimientos se pierde Pymes |

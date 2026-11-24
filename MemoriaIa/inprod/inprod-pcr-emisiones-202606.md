@@ -5,7 +5,7 @@ actualizado: 2026-11-23
 ---
 # Incidente: PCR Emisiones 202606, cifras de PRD distintas a las de QA
 
-> Negocio (correos del 10, 13 y 18 de nov, reenviados el 2026-11-23) pide que la extracción de junio 2026 cuadre con dos Excel; se reporta que PRD trae cifras distintas a QA. **No se sabe si PRD y QA tienen los mismos datos de origen: no se asume que el problema es nuestro.** Estado 2026-11-23 (tarde): corrido en DEV y QA + Q1-Q4 en Oracle QA. **QA extrae fiel a su Oracle** (18 conteos iguales al registro); DEV=QA en código, Step Function y PRG. Falta PRD, Q5-Q6 y repetir la sección de datos (montos) por errores del script.
+> Negocio (correos del 10, 13 y 18 de nov, reenviados el 2026-11-23) pide que la extracción de junio 2026 cuadre con dos Excel; se reporta que PRD trae cifras distintas a QA. **No se sabe si PRD y QA tienen los mismos datos de origen: no se asume que el problema es nuestro.** Estado 2026-11-23 (tarde): corrido en DEV y QA + Q1-Q4 en Oracle QA. **QA extrae fiel a su Oracle** (18 conteos iguales al registro); DEV=QA en código, Step Function y PRG. **Montos QA (segunda corrida, v2026-11-23.2): cuadran con el Excel en Satélites, PCR Vida y prima/recaudo de Generales; fallas reales y nuestras: PCE-1 Pymes no se extrae, PCE-2 IVA de recaudo de Generales en 0, PCE-3 IVA comisión intermediario no sale de ACSELE.** Falta PRD.
 
 Tarea humana y scripts: `Tareas\Fixs\PcrEmisiones\` (`README.md`, carpeta `diagnostico\`). Relacionado: [[data-datalake-niif-pcr-emisiones-glue-job]], [[data-datalake-emisiones-vida-glue-job]], [[modularizacion-extraccion]], [[auditoria-extraccion-2026-11]] (ARQ-61 a ARQ-65), [[auditoria-repos-2026-11]] (ARQ-50).
 
@@ -36,6 +36,18 @@ H1 fuente Oracle distinta · H2 código distinto (ARQ-50, ARQ-62) · H3 PRG/CNF 
 - Conteo del Silver igual en DEV y QA (203.689 / 21.695 / 3.703.183) pese a Bronce distinto: sin explicar.
 - `silver_satelites.py:32` `PRODUCTOS` es una constante sin uso (el filtro real es compañía `50.0` + nombres de producto): no es brecha.
 - **Errores del diagnóstico (corregidos):** Silver sumaba `idproducto` (AMBIGUOUS_NAME) y en Satélites tomó `controles/`; Bronce tomó cargas completas viejas sin filtro (15 GB/consulta, CSV idénticos DEV=QA, inválidos). Ahora usa la tabla de la ruta exacta del runtime o no consulta. Repetir con `SECCIONES=configuracion,datos`.
+
+## Montos QA frente al Excel (lote 20261122234023, evidencia `evidencia-pcr-emisiones-qa-20261123T215411Z`)
+- Satélites 7/7 productos: prima, comisión, recaudo, IVA recaudo exactos. PCR Vida: prima 112.802.518.236,08 y comisión exactas; recaudo +42.900 e IVA +8.151 = exactamente la diferencia RRC vs `E1-A1` del Excel → QA = `E1-A1`.
+- Generales 54959/54979/55059 exactos (55059: `prima+prima_vida`, `costo_recaudacion+costo_recaudacion_vida`); 52897 prima +259,98 y recaudo +260 (≈ diferencia RRC vs `E1-A1`).
+- Grano: filas = llaves (operación, póliza) en todos los productos → **ARQ-64 descartada en QA**.
+- **PCE-1 (alta):** Pymes 55139 ausente de Bronce (movimientos) y Silver aunque está en PRG, filtros y SQL y la Oracle tiene 45 operaciones (Q4). Falta 56.404.532,99 de prima. Diagnóstico: `diagnostico-pymes-55139.sql` (conteo por paso de la SQL de movimientos). En DEV otra persona prueba "complementos Pymes".
+- **PCE-2 (alta):** IVA de comisión de recaudo de Generales en 0/NULL. ACSELE trae `IVACOSTORECAUDOINCE/TERR/RC` (+DEV/REHAB/ANU) para 52897 e `IVACOMISIONRECAUDOACC/DES/SUS` (+DEV) para 55059; las listas de `silver_generales.py:748-785` no los tienen. 55059 = RRC exacto (68.391.290,21); 52897 calculado 633.791.879,69 vs RRC 633.791.830,29 (49,40 por explicar). `E1-A1` (640.578.074,35) = 52897 + 55059 solo SUS + Pymes, exacto: los dos informes difieren por ACC+DES.
+- **PCE-3 (media):** IVA de comisión del intermediario no existe como concepto en ACSELE; en Satélites el Excel = 19 % de la comisión. Definir con negocio si lo calculamos.
+- **Decisión (usuario, 2026-11-23): la cifra oficial es el RRC.** QA hoy coincide con `E1-A1` (Vida 4/5 columnas exactas; Generales exacto sumando Pymes), no con el RRC: las diferencias frente al RRC (Vida recaudo +42.900, IVA +8.151; 52897 +259,98/+260; VidaAp comisión 53.666,30 vs 57.720,10) son las que hay que explicar.
+- **Pymes:** no estaba en QA; se está pasando a QA; en DEV sí está (complementos Pymes). Satélites: solo sus 7 productos.
+- **Tomadores/agentes (2026-11-23):** sección `terceros` (v2026-11-23.3) con huella SHA-256 del nombre + `validar_terceros.py` (cruce con RRC solo Generales; el RRC no trae agente: solo completitud). Probado con evidencia sintética; sin correr en AWS.
+- **Siguiente:** validación completa en DEV (`bash diag-emisiones-v2.sh dev 202606 primary`). Ojo: el PRG de DEV apunta a 202608, así que las SQL de Oracle que genera salen con la ventana de agosto; el runtime de Generales puede venir de corridas manuales.
 
 ## Cumplimiento
 - Los `.msg` y el RRC (hoja `Data` con nombres de tomadores) quedaron versionados en `alfa` (commit `ee37aa7`, ya en `origin/main`). Reincidencia de CUM-01: decisión del usuario sobre sacarlos ([[pendientes]]).

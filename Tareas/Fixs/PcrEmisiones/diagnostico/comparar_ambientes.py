@@ -375,7 +375,8 @@ def comparar_con_excel(inf, raiz, etiqueta, referencia, mapeo):
     bloques = {
         "generales": [("mes_produccion_periodo", referencia["generales"]["mes_produccion_periodo"]),
                       ("todo_el_corte", referencia["generales"]["todo_el_corte"])],
-        "satelites": [("resumen_satelites", referencia.get("satelites", {}))],
+        "satelites": [("rrc_vida_productos_satelites", {k: v for k, v in referencia.get("vida", {}).items() if k != "48897"}),
+                      ("bloque_satelites_del_resumen", referencia.get("satelites", {}))],
         "pcr_vida": [("resumen_vida", {k: v for k, v in referencia.get("vida", {}).items() if k == "48897"})],
     }
     for caso, variantes in bloques.items():

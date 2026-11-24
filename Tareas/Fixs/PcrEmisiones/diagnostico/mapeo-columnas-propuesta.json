@@ -1,17 +1,22 @@
 {
-  "_estado": "PROPUESTA. Sale de leer el código de los Silver (listas de conceptos), no de una definición del negocio. Se confirma con los totales por concepto (Oracle Q5 y bronce_<caso>_movimientos.csv) y con quien armó el Excel.",
-  "_nota": "Cada columna del Excel se compara con la suma de las columnas del Silver listadas. Una lista vacía significa que el Silver no produce ese valor.",
+  "_estado": "Validado contra el Silver de QA del lote 20261122234023 (2026-11-23) donde dice OK; el resto sigue siendo propuesta.",
+  "_nota": "Cada columna del Excel se compara con la suma de las columnas del Silver listadas. Lista vacía = el Silver no produce ese valor.",
+  "_hallazgos": {
+    "generales_iva_comision_recaudo": "El Silver no tiene los conceptos que trae ACSELE: 52897 usa IVACOSTORECAUDOINCE/TERR/RC (+DEV, REHAB, ANU) y 55059 usa IVACOMISIONRECAUDOACC/DES/SUS (+DEV). Con ellos se reproduce el RRC (55059 exacto; 52897 a 49,40) y el E1-A1 (exacto).",
+    "iva_comision_intermediario": "No existe como concepto en los movimientos de ACSELE. En Satélites el Excel es el 19 % de la comisión (calculado por negocio).",
+    "pymes_55139": "Ausente del Bronce de movimientos y del Silver de QA aunque la Oracle tiene 45 operaciones de junio: ver diagnostico-pymes-55139.sql."
+  },
   "generales": {
-    "Prima Emitida": ["prima"],
+    "Prima Emitida": ["prima", "prima_vida"],
     "Comision Intermediario": ["comision_total_interincter"],
     "Iva Comision Intermediario": [],
-    "Comision Recaudo": ["costo_recaudacion"],
-    "Iva Comision Recaudo": ["iva_costo_recaudacion", "iva_costo_recaudo_inc", "iva_costo_recaudo_terr", "iva_costo_recaudo_rescivil"]
+    "Comision Recaudo": ["costo_recaudacion", "costo_recaudacion_vida"],
+    "Iva Comision Recaudo": ["iva_costo_recaudacion", "iva_costo_recaudacion_vida"]
   },
   "satelites": {
     "Prima Emitida": ["prima"],
     "Comision Intermediario": ["comision_agente"],
-    "Iva Comision Intermediario": [],
+    "Iva Comision Intermediario": ["iva_comis_age"],
     "Comision Recaudo": ["costo_recaudacion"],
     "Iva Comision Recaudo": ["iva_costo_recaudacion"]
   },

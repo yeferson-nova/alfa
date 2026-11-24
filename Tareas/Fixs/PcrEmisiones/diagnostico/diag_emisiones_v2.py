@@ -43,7 +43,7 @@ import boto3
 from boto3.dynamodb.conditions import Key
 from botocore.config import Config
 
-VERSION = "2026-11-23.2 (datos por ruta exacta del runtime)"
+VERSION = "2026-11-23.3 (datos por ruta exacta + tomadores y agentes)"
 REGION = "us-east-1"
 CONFIG_BOTO = Config(region_name=REGION, retries={"max_attempts": 5, "mode": "standard"})
 
@@ -876,6 +876,90 @@ def capturar_datos(ctx):
     ctx.ev.json("datos/resumen_datos.json", resumen)
 
 
+# ------------------------------------------------------------------------ Terceros
+
+# Montos que se acompañan por tomador y por agente (solo los que existan en la tabla).
+MONTOS_TERCEROS = (
+    "prima", "prima_vida", "comision_total_interincter", "comision_agente", "comision",
+    "costo_recaudacion", "costo_recaudacion_vida", "costo_recaudo",
+    "iva_costo_recaudacion", "iva_costo_recaudacion_vida", "iva_costo_recaudo",
+)
+
+
+def _normalizado_sql(columna):
+    """Mismo normalizado que validar_terceros.py: espacios colapsados, sin bordes, mayúsculas."""
+    return f"upper(trim(regexp_replace(coalesce(CAST({columna} AS varchar), ''), '\\s+', ' ')))"
+
+
+def _huella_sql(columna):
+    # Huella SHA-256 del nombre normalizado: permite cruzar con el RRC sin sacar nombres de AWS.
+    return f"lower(to_hex(sha256(to_utf8({_normalizado_sql(columna)}))))"
+
+
+@seccion("terceros")
+def capturar_terceros(ctx):
+    """Tomadores y agentes del Silver preparado, por producto (solo huellas y conteos)."""
+    if not ctx.runtimes:
+        ctx.ev.error("terceros", "No hay runtimes cargados: correr también la sección configuracion")
+        return
+    tablas = _tablas_catalogo(ctx)
+    resumen = {}
+    for caso, runtime in ctx.runtimes.items():
+        tabla, filtro_path = _tabla_para_ruta(tablas, runtime.get("ruta_silver_preparada"))
+        if not tabla:
+            resumen[caso] = "SIN_TABLA_EN_CATALOGO_PARA_LA_RUTA"
+            continue
+        columnas = dict(tabla["columnas"] + tabla["particiones"])
+        producto = next((c for c in COLUMNAS_PRODUCTO if c in columnas), None)
+        if not producto:
+            resumen[caso] = "SIN_COLUMNA_DE_PRODUCTO"
+            continue
+        filtros = [f for f in (filtro_path,) if f]
+        if "periodo_negocio" in columnas:
+            filtros.append(_filtro_texto("periodo_negocio", ctx.periodo))
+        donde = " AND ".join(filtros) or "1=1"
+        origen = f'"{tabla["base"]}"."{tabla["tabla"]}"'
+        montos = [m for m in MONTOS_TERCEROS if m in columnas]
+        operacion = "nro_operacion" if "nro_operacion" in columnas else None
+        resumen[caso] = {"tabla": f'{tabla["base"]}.{tabla["tabla"]}', "filtro": donde,
+                         "tomador": "tomador" in columnas, "agente": "agente" in columnas, "montos": montos}
+
+        # 1) Completitud por producto.
+        partes = [producto, "COUNT(*) AS filas"]
+        for rol in ("tomador", "agente"):
+            if rol in columnas:
+                vacio = f"({rol} IS NULL OR trim(CAST({rol} AS varchar)) = '')"
+                partes += [f"COUNT_IF({vacio}) AS sin_{rol}",
+                           f"COUNT(DISTINCT {_normalizado_sql(rol)}) AS {rol}{'es' if rol == 'tomador' else 's'}_distintos",
+                           f"COUNT_IF(strpos(CAST({rol} AS varchar), ',') > 0) AS {rol}_con_varios_nombres"]
+        for ident in ("identificacion_tomador",):
+            if ident in columnas:
+                partes.append(f"COUNT_IF({ident} IS NULL OR trim(CAST({ident} AS varchar)) = '') AS sin_{ident}")
+        sql = f"SELECT {', '.join(partes)} FROM {origen} WHERE {donde} GROUP BY {producto} ORDER BY {producto}"
+        try:
+            _consultar(ctx, tabla["base"], sql, f"terceros_{caso}_completitud")
+        except Exception as exc:  # noqa: BLE001
+            ctx.ev.error(f"terceros:completitud:{caso}", exc)
+
+        # 2) y 3) Totales por producto y tomador / agente (huella del nombre, nunca el nombre).
+        for rol in ("tomador", "agente"):
+            if rol not in columnas:
+                continue
+            seleccion = [producto, f"{_huella_sql(rol)} AS {rol}_huella",
+                         f"({rol} IS NULL OR trim(CAST({rol} AS varchar)) = '') AS {rol}_vacio",
+                         "COUNT(*) AS filas"]
+            if operacion:
+                seleccion.append(f"COUNT(DISTINCT {operacion}) AS operaciones")
+            seleccion += [f"SUM({m}) AS {m}" for m in montos]
+            sql = (f"SELECT {', '.join(seleccion)} FROM {origen} WHERE {donde} "
+                   f"GROUP BY 1, 2, 3 ORDER BY 1, 2")
+            try:
+                _consultar(ctx, tabla["base"], sql, f"terceros_{caso}_por_{rol}")
+            except Exception as exc:  # noqa: BLE001
+                ctx.ev.error(f"terceros:{rol}:{caso}", exc)
+    ctx.ev.json("terceros/resumen_terceros.json", resumen)
+
+
 # ------------------------------------------------------------------------ Oracle
 
 def _renderizar_sql(tabla, config):
@@ -948,7 +1032,7 @@ def main():
     parser.add_argument("--ejecuciones", type=int, default=10)
     parser.add_argument("--salida", default=None)
     parser.add_argument("--sin-athena", action="store_true")
-    parser.add_argument("--secciones", default="codigo,orquestacion,configuracion,fuente,almacenamiento,datos,oracle")
+    parser.add_argument("--secciones", default="codigo,orquestacion,configuracion,fuente,almacenamiento,datos,terceros,oracle")
     args = parser.parse_args()
     if not re.fullmatch(r"[a-z]{2,5}", args.amb):
         parser.error("--amb inválido")
@@ -961,7 +1045,8 @@ def main():
     pasos = [
         ("codigo", capturar_codigo), ("orquestacion", capturar_orquestacion),
         ("configuracion", capturar_configuracion), ("fuente", capturar_fuente),
-        ("almacenamiento", capturar_almacenamiento), ("datos", capturar_datos), ("oracle", generar_sql_oracle),
+        ("almacenamiento", capturar_almacenamiento), ("datos", capturar_datos), ("terceros", capturar_terceros),
+        ("oracle", generar_sql_oracle),
     ]
     for nombre, funcion in pasos:
         if nombre in pedidas:
