@@ -14,11 +14,17 @@ actualizado: 2026-11-24
 - [ ] Pedir a DevOps correr `Tareas\Fixs\PcrEmisiones\diagnostico\diag-emisiones-v2.sh` en QA y en PRD (solo lectura) y traer los `.tar.gz` a `EvidenciasAws\qa-pcr-emisiones\` y `EvidenciasAws\prd-pcr-emisiones\`. Correrlo nosotros en DEV.
 - [ ] Pedir a Julio (o al DBA) `conciliacion-oracle-acsele.sql` en la Oracle ACSELE de QA y de PRD, más las SQL de `oracle\` que genera cada evidencia. CSV a `<evidencia>\oracle_resultados\`.
 - [x] Repetir la parte de datos en QA con el script corregido (2026-11-23, v2026-11-23.2, sin errores).
-- [ ] Pymes (PCE-1): correr `diagnostico-pymes-55139.sql` en la Oracle de QA y ver en qué paso se pierde.
+- [x] Q5/Q6 de la Oracle (2026-11-24): Bronce = Oracle en 12 productos; Pymes existe en Oracle y da el RRC exacto.
+- [x] Pymes (PCE-1): `diagnostico-pymes-55139.sql` (2026-11-24): ninguna condición la descarta (45/45 operaciones, 468 movimientos). Causa: ARQ-67 (núcleo compartido sin 55139).
+- [ ] Confirmar ARQ-67 en Athena DEV con `confirmar-pymes-bronce-dev.sql` (esperado 468 sin póliza, 188.114.812,96; 0 pólizas de 55139).
+- [ ] Corregir ARQ-67 con su configuración: 55139 en el núcleo de `MALLA#PCR_VIDA` y `MALLA#SATELITES` (o núcleo único con la unión de productos desde la configuradora), falla si una tabla `COMUN` difiere entre casos y control de movimientos sin póliza.
+- [ ] Pymes (PCE-1b): agregar a las listas de `silver_generales.py` los conceptos `PRIMA/COMISIONRECAUDO/IVACOMISIONRECAUDO{INC,TERR,EEYE,ROT}` (+DEV), con su configuración.
 - [x] Corrida completa en DEV (2026-11-24, v2026-11-23.3): DEV = QA en extracción, Bronce y Silver; Pymes tampoco llega en DEV.
 - [x] DEV v2026-11-24.1: acuerdos cuadran (salvo `INC-27192` y Pymes); ARQ-66 cuantificada.
 - [x] v2026-11-24.2: los nombres de 54959/54979 son otra persona, no otra grafía.
-- [ ] Correr `SECCIONES=configuracion,terceros` en DEV con v2026-11-24.3 y `validar_terceros.py` (sección 3d): a qué rol del Silver corresponde el "Tomador" del RRC.
+- [x] v2026-11-24.3: el "Tomador" del RRC = pagador maestro en 52897 y 55059; en Hogar y Mascotas no es ningún rol del Silver.
+- [x] Comparación manual de 3 pólizas de 54959: misma prima, otra persona → hipótesis de nombres enmascarados en ACSSOP.
+- [ ] Confirmar con DBA/DevOps si ACSSOP enmascara nombres de personas; validar nombres en PRD con la sección `terceros`.
 - [ ] Explicar `INC-27192` (52897): +259,98 de prima y +260 de recaudo frente al RRC.
 - [ ] ARQ-66: corregir el tomador repetido de `silver_generales.py` (participación vigente o `collect_set`) con su configuración, después de cuantificarlo.
 - [ ] IVA de recaudo de Generales (PCE-2): corregir las listas de conceptos de `silver_generales.py` con su configuración, después de que negocio diga si vale RRC o `E1-A1`. Explicar los 49,40 de 52897.

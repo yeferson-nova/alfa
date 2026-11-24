@@ -20,7 +20,9 @@ actualizado: 2026-11-23
 - (Negocio, Javier González) ¿Contra cuál cifra se valida: el RRC sin contabilidad o el `E1-A1`? El propio Excel muestra que difieren (Generales IVA comisión recaudo 63.748.417,52).
 - (Negocio) "Lo emitido en junio" ¿es por mes de producción (como el resumen) o por fecha de la operación? El RRC trae 726 filas de meses anteriores dentro del corte de junio.
 - (Negocio) ¿Qué conceptos de ACSELE forman cada columna del Excel (prima emitida, comisión intermediario y su IVA, comisión recaudo y su IVA)? El mapeo actual es propuesta.
+- (Negocio) ¿De qué campo sale el "Tomador" del RRC en cada producto? En 52897 y 55059 es el pagador maestro (entidad del acuerdo); en Hogar (54959) y Mascotas (54979) no coincide con ningún rol del Silver aunque la prima por póliza cuadra.
 - (Negocio) En 52897 (Deudores), ¿el tomador del reporte es el del acuerdo (entidad) y no el de la póliza? En 14 acuerdos el RRC pone toda la prima en el tomador del acuerdo y el Silver la reparte entre 8.812 tomadores de póliza (misma suma).
+- (DBA/DevOps) ¿La Oracle ACSSOP (DEV y QA) tiene enmascarados los nombres de personas naturales? Misma póliza y prima que el RRC con otro nombre en Hogar y Mascotas; las entidades sí cuadran (2026-11-24).
 - (DevOps) ¿La Oracle ACSELE de QA es copia de PRD? ¿De qué fecha? ¿PRD corre la rama `main` o `quality` de los repos de Emisiones?
 
 ## Extracción (2026-11-20, para Julio en Oracle; no son para Víctor, ver [[modularizacion-extraccion]])

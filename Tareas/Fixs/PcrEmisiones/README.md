@@ -90,7 +90,63 @@ Cómo se reproducen las cifras de IVA de comisión de recaudo de Generales con l
 
 Siguiente paso para Pymes: correr `diagnostico/diagnostico-pymes-55139.sql` en la Oracle de QA. Cuenta cuántas operaciones de Pymes sobreviven a cada paso de la consulta de movimientos.
 
-## Corrida completa en DEV (2026-11-24)
+## Oracle: Q5 y Q6 (2026-11-24, `ResultadosAWS\sql5.xlsx` y `sql6.xlsx`)
+
+DEV y QA leen la misma Oracle (ACSSOP), así que este resultado vale para los dos.
+
+**Q5 (movimientos por producto y concepto) frente al Bronce extraído:**
+
+| Producto | Combinaciones en Oracle | Iguales en Bronce (filas y total al centavo) |
+|---|---|---|
+| 48897, 52897, 54899, 54919, 54939, 54959, 54979, 55039, 55059, 55060, 55099, 55119 | 293 | **293** |
+| 55139 Pymes | 69 | **0** |
+
+- **La extracción copia la Oracle sin perder nada** en los 12 productos.
+- **Pymes sí tiene movimientos en la Oracle**, con la misma llave de póliza (`POLICYID`) que usa la extracción. Calculados desde la Oracle dan **exactamente el RRC**:
+  - prima = `PRIMA{EEYE, INC, ROT, SUS, TERR}` menos sus `…DEV` = **56.404.532,99**;
+  - comisión de recaudo = `COMISIONRECAUDO{…}` menos `…DEV` = **11.280.902,12**;
+  - IVA de recaudo = `IVACOMISIONRECAUDO{…}` menos `…DEV` = **2.143.371,37**.
+- Por lo tanto **Pymes se pierde en la extracción, no en la fuente.** Q5 cruza los movimientos solo con la operación y la póliza. La consulta de extracción exige además que existan PREPRODUCT con compañía `'Seguros Alfa S.A.'`, PREPOLICY, EVENTDCO y RISKUNITDCO para la operación. Una de esas condiciones descarta a Pymes; `diagnostico-pymes-55139.sql` dice cuál.
+- **Segundo defecto de Pymes, en el Silver (PCE-1b):** las listas de conceptos de `silver_generales.py` solo tienen `PRIMASUS` y `COMISIONRECAUDOSUS`. Les faltan `PRIMAINC`, `PRIMATERR`, `PRIMAEEYE`, `PRIMAROT` (y sus `DEV`), lo mismo para la comisión de recaudo, y todo `IVACOMISIONRECAUDO…`. Aunque se arregle la extracción, el Silver tomaría solo la sustracción: 15.326.346,61 de prima (27 %) y 3.065.267,72 de recaudo.
+
+**Q6 (movimientos por día de junio):** 30 días, todos con movimientos. Queda como línea base para compararla con la de PRD.
+
+## Causa de PCE-1: Pymes sí se extrae, pero sin sus pólizas (2026-11-24)
+
+`diagnostico-pymes-55139.sql` en la Oracle (ACSSOP):
+
+| Paso | Operaciones de Pymes |
+|---|---|
+| 1. Operaciones de junio en estado 2 | 45 |
+| 2 a 5. Con PREPRODUCT (compañía), PREPOLICY, EVENTDCO y RISKUNITDCO | 45 |
+| 6 y 7. Con movimientos, por operación y por operación + póliza | 45 |
+| Movimientos con la póliza de la operación | 468, total 188.114.812,96 |
+
+**Ninguna condición de la consulta de movimientos descarta a Pymes.** El total es igual a Q5 de Pymes (468 filas, 188.114.812,96).
+
+Contraste con la evidencia de la corrida (igual en DEV, lote `20261124060016`, y en QA, lote `20261122234023`):
+- La tabla de movimientos de Generales tiene **7.176.727** filas según el runtime de la extracción.
+- El cruce del Bronce con `agregatedpolicy` (que da el producto) suma **7.176.259**.
+- La diferencia es **468**: los movimientos de Pymes **sí están en el Bronce**, pero su póliza no está en `agregatedpolicy`.
+
+Por qué: `agregatedpolicy` es una tabla **compartida** del núcleo (alcance `COMUN`). Se extrae **una vez por lote** y la usan los tres casos (misma ruta, misma hora de escritura y 3.848.632 filas en los tres). Pero cada caso trae una consulta distinta para ella:
+
+| Tabla compartida | Generales | PCR Vida y Satélites |
+|---|---|---|
+| `AGREGATEDPOLICY`, `PREPOLICY`, `EVENTDCO`, `RISKUNITDCO`, `PRODUCT` | Productos con **55139** | Productos **sin 55139** |
+| `CONTEXTOPERATION`, `POLICYDCO` | Igual en los tres | Igual en los tres |
+
+La copia compartida quedó sin las pólizas de Pymes, o sea, sin la versión de Generales. El Silver une los movimientos con la póliza para saber el producto, así que los 468 movimientos se pierden **sin error ni alerta**. Pymes se configuró solo en Generales; el núcleo compartido no se ajustó (ARQ-67).
+
+- *Por confirmar en Athena:* `diagnostico/confirmar-pymes-bronce-dev.sql`. Q-A debe dar 468 movimientos sin póliza y 188.114.812,96; Q-B, 0 pólizas de 55139.
+- *Hipótesis no comprobada:* el código del extractor no está en este espacio, así que no se sabe por qué gana la versión de Vida y Satélites. Si depende del orden de ejecución, otra corrida (por ejemplo la de PRD) podría traer Pymes y dar cifras distintas.
+
+**Corrección propuesta (con su configuración, en el mismo cambio):**
+1. Consulta del núcleo compartido con **todos** los productos de los casos de la programación (unión), generada por la configuradora y no copiada a mano en cada malla. Como mínimo, agregar 55139 a las 5 tablas en `MALLA#PCR_VIDA` y `MALLA#SATELITES` de `cnf-mallas` y en sus JSON publicados.
+2. La extracción falla si una tabla `COMUN` llega con consultas distintas entre casos (hoy el resumen ya muestra hashes distintos).
+3. Control en la validación técnica: movimientos sin póliza > 0 → alerta con filas y monto.
+4. PCE-1b (conceptos de Pymes en el Silver), para que el monto llegue completo.
+
 
 DEV, lote `20261124060016`, diagnóstico `v2026-11-23.3`, sin errores. Comparado con QA (lote `20261122234023`):
 
@@ -134,6 +190,43 @@ Ningún acuerdo del Silver sobra ni falta, salvo los dos de Pymes. **El dinero e
 - **54959 y 54979:** ningún nombre cruza tal cual, pero los montos sí. En 54959, 52 de 71 tomadores del RRC tienen en el Silver una sola pareja con la misma prima y comisión en el mismo acuerdo. Es el mismo tomador escrito distinto. La versión `2026-11-24.2` agrega huellas con las palabras en orden alfabético y sin tildes, además del largo y el número de palabras del nombre, para saber qué cambia sin sacar nombres.
 
 **Resultado de la versión 2026-11-24.2 (evidencia `…dev-20261124T141403Z`):** ningún tomador más cruza al cambiar el orden de las palabras ni al quitar tildes. En las 52 parejas por monto de 54959, el largo del nombre difiere entre −22 y +11 caracteres, y solo 5 tienen el mismo largo. **No es el mismo nombre escrito distinto: es otra persona.** En Hogar y Mascotas, el "Tomador" del RRC no es el rol tomador del Silver, aunque la prima por póliza cuadre. La versión `2026-11-24.3` busca los nombres del RRC en los otros roles de persona del Silver de Generales (`asegurado`, `pagador`, `informacion_pagador_maestro`, `nombre_empleador`), siempre por huella.
+
+**Resultado de la versión 2026-11-24.3 (evidencia `…dev-20261124T142345Z`): a qué rol del Silver llama "Tomador" el RRC**
+
+| Producto | Rol del Silver que coincide | Pares acuerdo + nombre con la misma prima |
+|---|---|---|
+| 52897 Deudores | `informacion_pagador_maestro` (la entidad del acuerdo) | 29 de 35, más `INC-27192` con el mismo nombre y +259,98. En los 5 restantes (`INC-2184`, `INC-2185`, `INC-2194`, `INC-2195` e `INC-27480`) el acuerdo tiene un solo pagador maestro y el total cuadra: solo cambia cómo está escrito el nombre de 2 entidades |
+| 55059 Protección Financiera | `informacion_pagador_maestro` y `tomador` (son el mismo) | 7 de 7 |
+| 54959 Hogar | Ninguno | 0 de 71. Los roles tienen datos (tomador 68, asegurado 72, pagador 69 y empleador 11 nombres distintos), pero ningún nombre es el del RRC |
+| 54979 Mascotas | Ninguno | 0 de 90 (tomador 84 y pagador 84 nombres; asegurado vacío) |
+
+En Hogar y Mascotas la prima por póliza cuadra con un nombre distinto. Por huellas no se puede avanzar más: hay que comparar los nombres a mano, dentro de AWS y sin sacarlos (consulta en la sección siguiente).
+
+**Consulta para comparar nombres (Athena, consola de DEV; el resultado no se guarda ni se copia):**
+```sql
+SELECT numero_poliza_matriz, nro_poliza,
+       element_at(split(tomador, ','), 1)   AS tomador,
+       element_at(split(asegurado, ','), 1) AS asegurado,
+       element_at(split(pagador, ','), 1)   AS pagador,
+       ROUND(SUM(prima) + SUM(COALESCE(prima_vida, 0)), 2) AS prima
+FROM "niif-dev-silver-catalog-db"."periodo_negocio_202606_6e79eadfb3ce118951c520825050a9cf"
+WHERE CAST(periodo_negocio AS varchar) = '202606' AND CAST(idproducto AS varchar) = '54959'
+GROUP BY 1, 2, 3, 4, 5
+HAVING ROUND(SUM(prima) + SUM(COALESCE(prima_vida, 0)), 2) IN (529684.71, 510348.53, 351072.47)
+```
+En el RRC (hoja `Data`, producto 54959) esas primas son de los tomadores de `HGR-001M` (529.684,71) y `HGR-004M` (510.348,53 y 351.072,47).
+
+**Resultado de la comparación (2026-11-24):**
+- Las 3 pólizas traen el mismo nombre en tomador, asegurado y pagador, y la prima es igual al centavo a la del RRC.
+- El nombre del RRC es **otra persona**: 0 palabras en común y similitud de texto de 0,22 a 0,31.
+- Las huellas de esos nombres son exactamente las de la evidencia. Esto confirma que el cálculo de huellas en Athena y en local coincide.
+
+**Hipótesis:** la Oracle de DEV y QA (ACSSOP) tiene enmascarados los nombres de personas naturales, como corresponde a un ambiente no productivo (Ley 1581), y el RRC viene de producción. Encaja con todo lo medido:
+- cuadran los nombres de entidades (el pagador maestro de 52897 y 55059);
+- no cuadra ningún nombre de persona natural (Hogar y Mascotas, en ningún rol);
+- pólizas, acuerdos y montos cuadran al centavo.
+
+Si se confirma, los nombres de personas solo se pueden validar en PRD (sección `terceros` del diagnóstico). En DEV y QA, la validación de tomadores se hace por acuerdo, póliza y monto.
 
 ## Cómo se ejecuta
 
@@ -206,4 +299,6 @@ Si falta un permiso, esa sección queda anotada en `resumen.json` como error y l
 | `diagnostico/comparar_ambientes.py` | Veredicto por capa e informe |
 | `diagnostico/mapeo-columnas-propuesta.json` | Equivalencia entre columnas del Excel y del Silver (validada en QA donde se indica) |
 | `diagnostico/validar_terceros.py` | Cruza acuerdos y tomadores del Silver con el RRC por producto (tomadores por huella del nombre) y resume la completitud de agentes |
-| `diagnostico/diagnostico-pymes-55139.sql` | Encuentra en qué paso de la consulta de movimientos se pierde Pymes |
+| `Tablero-PCR-Emisiones-202606.xlsx` | Tablero para presentar: RRC frente al sistema por caso, producto, métrica y acuerdo; Oracle frente a la extracción; agentes, tomadores y hallazgos. Sin datos personales |
+| `diagnostico/diagnostico-pymes-55139.sql` | Encuentra en qué paso de la consulta de movimientos se pierde Pymes (resultado: en ninguno) |
+| `diagnostico/confirmar-pymes-bronce-dev.sql` | Athena DEV: movimientos de Generales sin póliza en el `agregatedpolicy` compartido (Pymes) |
