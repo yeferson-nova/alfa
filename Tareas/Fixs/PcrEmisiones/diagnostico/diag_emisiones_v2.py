@@ -43,7 +43,7 @@ import boto3
 from boto3.dynamodb.conditions import Key
 from botocore.config import Config
 
-VERSION = "2026-11-24.2 (tomadores: huellas alternas por orden de palabras y tildes)"
+VERSION = "2026-11-24.3 (tomadores: otros roles de persona frente al RRC)"
 REGION = "us-east-1"
 CONFIG_BOTO = Config(region_name=REGION, retries={"max_attempts": 5, "mode": "standard"})
 
@@ -886,6 +886,9 @@ MONTOS_TERCEROS = (
 )
 # Columnas del acuerdo (póliza matriz) en el Silver, para cruzar con la columna Acuerdo del RRC.
 COLUMNAS_ACUERDO = ("numero_poliza_matriz", "nombre_acuerdo")
+# Otros roles de persona que podrían ser el "Tomador" del RRC; solo se consultan donde hay RRC.
+ROLES_ALTERNOS = ("asegurado", "pagador", "informacion_pagador_maestro", "nombre_empleador")
+CASOS_CON_RRC = {"generales"}
 
 
 def _normalizado_sql(columna):
@@ -1018,6 +1021,23 @@ def capturar_terceros(ctx):
             _consultar(ctx, tabla["base"], sql, f"terceros_{caso}_por_tomador_individual")
         except Exception as exc:  # noqa: BLE001
             ctx.ev.error(f"terceros:tomador_individual:{caso}", exc)
+
+        # 7) Otros roles de persona (solo donde hay RRC para cruzar): ¿el "Tomador" del RRC es
+        #    otro rol del Silver? Misma técnica: cada nombre de la lista por separado, solo huella.
+        if caso not in CASOS_CON_RRC:
+            continue
+        for rol in (r for r in ROLES_ALTERNOS if r in columnas):
+            lista_rol = (f"transform(split(coalesce(CAST({rol} AS varchar), ''), ','), "
+                         f"x -> upper(trim(regexp_replace(x, '\\s+', ' '))))")
+            sql = (f"SELECT {', '.join(llaves)}, lower(to_hex(sha256(to_utf8(u.elemento)))) AS huella, "
+                   f"COUNT(*) AS filas, {', '.join(sumas)} "
+                   f"FROM {origen} CROSS JOIN UNNEST(array_distinct({lista_rol})) AS u(elemento) "
+                   f"WHERE {donde} GROUP BY {', '.join(str(i) for i in range(1, n + 2))} "
+                   f"ORDER BY {', '.join(str(i) for i in range(1, n + 2))}")
+            try:
+                _consultar(ctx, tabla["base"], sql, f"terceros_{caso}_por_{rol}_individual")
+            except Exception as exc:  # noqa: BLE001
+                ctx.ev.error(f"terceros:{rol}_individual:{caso}", exc)
     ctx.ev.json("terceros/resumen_terceros.json", resumen)
 
 

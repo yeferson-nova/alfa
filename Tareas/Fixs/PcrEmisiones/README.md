@@ -133,6 +133,8 @@ Ningún acuerdo del Silver sobra ni falta, salvo los dos de Pymes. **El dinero e
 - **52897:** 21 de los 35 pares acuerdo-tomador del RRC cruzan con montos iguales (salvo `INC-27192`). En los otros 14 acuerdos, el RRC pone toda la prima (1.875.071.447,69) a nombre del tomador del acuerdo. El Silver reparte exactamente la misma suma entre 8.812 tomadores de póliza. Es el mismo dinero con **otra definición de tomador**: pregunta para negocio.
 - **54959 y 54979:** ningún nombre cruza tal cual, pero los montos sí. En 54959, 52 de 71 tomadores del RRC tienen en el Silver una sola pareja con la misma prima y comisión en el mismo acuerdo. Es el mismo tomador escrito distinto. La versión `2026-11-24.2` agrega huellas con las palabras en orden alfabético y sin tildes, además del largo y el número de palabras del nombre, para saber qué cambia sin sacar nombres.
 
+**Resultado de la versión 2026-11-24.2 (evidencia `…dev-20261124T141403Z`):** ningún tomador más cruza al cambiar el orden de las palabras ni al quitar tildes. En las 52 parejas por monto de 54959, el largo del nombre difiere entre −22 y +11 caracteres, y solo 5 tienen el mismo largo. **No es el mismo nombre escrito distinto: es otra persona.** En Hogar y Mascotas, el "Tomador" del RRC no es el rol tomador del Silver, aunque la prima por póliza cuadre. La versión `2026-11-24.3` busca los nombres del RRC en los otros roles de persona del Silver de Generales (`asegurado`, `pagador`, `informacion_pagador_maestro`, `nombre_empleador`), siempre por huella.
+
 ## Cómo se ejecuta
 
 Todo es de solo lectura. La única escritura es la de Athena, que guarda el resultado de cada consulta en el bucket de resultados de su workgroup.
@@ -156,14 +158,15 @@ Todo es de solo lectura. La única escritura es la de Athena, que guarda el resu
    ```
    El informe abre con un veredicto por capa: fuente Oracle, código, orquestación, configuración, extracción, Bronce y Silver. **La primera capa que difiere es donde nace la diferencia.** Si la primera es la fuente Oracle, la diferencia viene de los datos y no de los jobs.
 
-### Acuerdos, tomadores y agentes (sección `terceros`, versión 2026-11-24.2)
+### Acuerdos, tomadores y agentes (sección `terceros`, versión 2026-11-24.3)
 
 El diagnóstico consulta en el Silver preparado, por producto:
 - completitud de tomador, agente e identificación del tomador;
 - totales por acuerdo (`numero_poliza_matriz` y `nombre_acuerdo`; el código del acuerdo no es dato personal);
 - forma de la columna tomador (mismo nombre repetido o varios tomadores distintos en la fila);
 - totales por cada tomador de la lista, por separado, y por agente;
-- huellas alternas de cada tomador (palabras en orden alfabético, y además sin tildes), largo y número de palabras, para encontrar el mismo tomador escrito distinto.
+- huellas alternas de cada tomador (palabras en orden alfabético, y además sin tildes), largo y número de palabras, para encontrar el mismo tomador escrito distinto;
+- solo en Generales (donde hay RRC): huellas de los otros roles de persona (asegurado, pagador, pagador maestro, empleador), para saber a qué rol llama "Tomador" el RRC.
 
 **No saca nombres de AWS:** usa una huella SHA-256 del nombre normalizado (espacios colapsados, sin bordes, mayúsculas). Luego, en local:
 ```

@@ -40,6 +40,7 @@ EQUIVALENCIAS = {  # columna del Excel -> columnas del Silver de Generales
     "Comision Recaudo": ("costo_recaudacion", "costo_recaudacion_vida"),
 }
 COLUMNAS_ACUERDO = ("numero_poliza_matriz", "nombre_acuerdo")
+ROLES_ALTERNOS = ("asegurado", "pagador", "informacion_pagador_maestro", "nombre_empleador")
 TOLERANCIA = Decimal("0.01")
 
 
@@ -285,6 +286,34 @@ def main():
                 mas = sum(1 for r, s in pares if s[0] > r)
                 lineas.append(f"| {p} | {len(pend)} | {len(por_orden)} | {len(por_tilde)} | {len(pend) - len(por_orden) - len(por_tilde)} | "
                               f"{len(pares)} | {mismas} | {mas} | {len(pares) - mismas - mas} |")
+
+        # 3d. ¿El "Tomador" del RRC es otro rol del Silver?
+        roles = {"tomador": (individual, "tomador_huella")}
+        for rol in ROLES_ALTERNOS:
+            filas_rol = leer_csv(os.path.join(datos, f"terceros_generales_por_{rol}_individual.csv"))
+            if filas_rol:
+                roles[rol] = (filas_rol, "huella")
+        if len(roles) > 1:
+            col_acu = columna_acuerdo or next((c for c in COLUMNAS_ACUERDO if c in individual[0]), None)
+            rrc_at = agrupar_rrc(filas_rrc, lambda f: (f["producto"], (f["acuerdo"], f["huella"])))
+            lineas += ["", "### 3d. ¿El \"Tomador\" del RRC es otro rol del Silver?", "",
+                       "Cuántos tomadores del RRC aparecen, con el mismo nombre, en cada rol de persona del Silver; "
+                       "y cuántos pares acuerdo + nombre tienen además la misma prima.", "",
+                       "| Producto | Tomadores RRC | " + " | ".join(f"En `{r}`" for r in roles) + " | "
+                       + " | ".join(f"Acuerdo+nombre con prima igual en `{r}`" for r in roles) + " |",
+                       "|---|---|" + "---|" * (2 * len(roles))]
+            for p in productos:
+                hr = {h for q, h in rrc_tom if q == p}
+                nombre, prima = [], []
+                for filas_rol, col_huella in roles.values():
+                    hs = {f[col_huella].lower() for f in filas_rol if producto_de(f) == p}
+                    nombre.append(str(len(hr & hs)))
+                    sil = agrupar_silver([f for f in filas_rol if producto_de(f) == p],
+                                         lambda f: (normalizar(f[col_acu]) if col_acu else "", f[col_huella].lower()))
+                    iguales = sum(1 for (q, k), r in rrc_at.items() if q == p and k in sil
+                                  and abs(silver_en(sil[k], "Prima Emitida") - r["Prima Emitida"]) <= TOLERANCIA)
+                    prima.append(f"{iguales} de {sum(1 for q, _ in rrc_at if q == p)}")
+                lineas.append(f"| {p} | {len(hr)} | " + " | ".join(nombre) + " | " + " | ".join(prima) + " |")
 
     # ---- 4. Completitud
     lineas += ["", "## 4. Completitud de tomadores y agentes por caso"]
