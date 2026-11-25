@@ -57,7 +57,7 @@ Humano: `Tareas\Modularizacion\Extraccion\README.md` y `diseno-lectura-por-rango
 - Equivalencia en ALFAPRD: las `em_*` solo sirven para Acsel-e. *Propuesta:* comparar contra la salida del job actual en el mismo periodo (conteo, suma de control y `exceptAll` = 0). Falta la confirmación del usuario.
 
 ## Por verificar (QA, Oracle)
-- Scripts: `Tareas/Modularizacion/Extraccion/consultas-oracle-alfaprd.sql` y `consultas-oracle-acsele.sql`.
+- Scripts: `Tareas/Modularizacion/Extraccion/scripts/`, una carpeta por flujo: `01-pcr-emisiones/` (`consultas-oracle-acsele.sql`, `medir-tiempos-dev.sh`) y `02-alfaprd/` (`consultas-oracle-alfaprd.sql`). La salida va en `EvidenciasAws\dev-extraccion\`.
 - Tipo e índice de cada columna de join; acceso a `ALL_TABLES.NUM_ROWS`; permiso `FLASHBACK` y `UNDO_RETENTION` (foto consistente entre tramos); acceso de lectura a `acsele_alfa_bi.em_*` para la prueba de equivalencia. Ver [[preguntas-abiertas]].
 
 ## Alcance confirmado (2026-11-25, usuario)
@@ -70,4 +70,4 @@ Humano: `Tareas\Modularizacion\Extraccion\README.md` y `diseno-lectura-por-rango
   - `oracle_parallel` está en 19 tablas, pero `strip_oracle_hints` borra el hint antes de leer: configuración muerta.
   - 98 de 108 tablas de Generales y Satélites van en cascada; los 3 casos corren uno tras otro; sin pausa entre fases.
   - Lote nuevo en cada corrida: no reusa lo extraído.
-  - Medición por tabla: script `EvidenciasAws\dev-extraccion\medir-pcr-dev.sh` (pendiente de correr). **No ejecuta el job** (pedido de Manuel): lee las corridas existentes (Glue, Step Functions, `parametros_extraccion.json` y los checkpoints `_control/_SUCCESS.json` de Bronce, que guardan tiempos y filas por tabla y lote).
+  - Medición por tabla: script `scripts/01-pcr-emisiones/medir-tiempos-dev.sh` (pendiente de correr). **No ejecuta el job** (pedido de Manuel): lee las corridas existentes (Glue, Step Functions, `parametros_extraccion.json` y los checkpoints `_control/_SUCCESS.json` de Bronce, que guardan tiempos y filas por tabla y lote).

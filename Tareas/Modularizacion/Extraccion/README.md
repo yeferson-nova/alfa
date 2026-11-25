@@ -78,12 +78,12 @@ Verificado en DEV el 2026-11-20:
 Checkpoint de cada tramo (*propuesta*): en `ejc-ejecuciones`, con la misma `PK` que ya arma el configurador (`EJC#<MALLA>#<periodo>`) y `SK = EJECUCION#<execution_name>#TRAMO#<tabla>#<n>`. No choca con el ítem de la ejecución y el rol ya tiene permiso.
 
 ## Plan
-Vista para gerencia (temas, tiempos y dependencias en una página): [resumen-ejecutivo.md](resumen-ejecutivo.md).
+Vista para gerencia (temas, tiempos y dependencias en una página): [resumen-ejecutivo.md](resumen-ejecutivo.md). Scripts, uno por flujo y en orden (primero PCR): [scripts/](scripts/README.md).
 
 Orden detallado por repo, separado por fix, refactor, observabilidad y features, en [roadmap-cambios.md](roadmap-cambios.md). Backlog para Jira (épica EXT, 23 ítems y 40 subtareas): [backlog.md](backlog.md) y `backlog-jira.csv`. Resumen:
 
 1. Diseño de la opción D cerrado y validado con datos (este README y el documento de diseño).
-2. Datos de Oracle con QA ([consultas-oracle-alfaprd.sql](consultas-oracle-alfaprd.sql) y [consultas-oracle-acsele.sql](consultas-oracle-acsele.sql)): tipos e índices de las llaves foráneas, estadísticas de tamaño y acceso de lectura a `acsele_alfa_bi.em_*`.
+2. Datos de Oracle con QA ([consultas-oracle-alfaprd.sql](scripts/02-alfaprd/consultas-oracle-alfaprd.sql) y [consultas-oracle-acsele.sql](scripts/01-pcr-emisiones/consultas-oracle-acsele.sql)): tipos e índices de las llaves foráneas, estadísticas de tamaño y acceso de lectura a `acsele_alfa_bi.em_*`.
 3. Rebasar `feature/modular-rmd-ext-estandar` sobre `quality` (`0af0ca8`, ya trae el fix del SCD) y llevar la red de caracterización a verde.
 4. Red de pruebas y línea base del proceso de extracción de Emisiones.
 5. Modularizar los dos procesos de extracción (primero el estándar): pausa por ciclo, lectura por tramos, medición real y contrato de log v1. En el mismo cambio, la configuración: JSON, `cnf-mallas` y configurador sin conteos fijos.

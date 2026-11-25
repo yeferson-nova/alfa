@@ -26,7 +26,7 @@ actualizado: 2026-11-23
 - (DevOps) ¿La Oracle ACSELE de QA es copia de PRD? ¿De qué fecha? ¿PRD corre la rama `main` o `quality` de los repos de Emisiones?
 
 ## Extracción (2026-11-20, para Julio en Oracle; no son para Víctor, ver [[modularizacion-extraccion]])
-- Scripts listos para entregar, uno por base (solo diccionario): `Tareas/Modularizacion/Extraccion/consultas-oracle-alfaprd.sql` (40 tablas de los 6 JSON; flashback) y `consultas-oracle-acsele.sql` (93 tablas de M1-M4; `em_*`; flashback). Resultados, en CSV, a `EvidenciasAws/dev-extraccion/`.
+- Scripts listos para entregar, uno por base (solo diccionario): `Tareas/Modularizacion/Extraccion/scripts/02-alfaprd/consultas-oracle-alfaprd.sql` (40 tablas de los 6 JSON; flashback) y `scripts/01-pcr-emisiones/consultas-oracle-acsele.sql` (93 tablas de M1-M4; `em_*`; flashback). Resultados, en CSV, a `EvidenciasAws/dev-extraccion/`.
 - ¿Qué tipo de dato tiene cada columna de join (`ALL_TAB_COLUMNS`) y cuáles tienen índice (`ALL_IND_COLUMNS`)? Define si la tabla va por rangos o por `IN`.
 - ¿El usuario de servicio puede leer `ALL_TABLES.NUM_ROWS` y `LAST_ANALYZED`? ¿Qué tan recientes son las estadísticas?
 - ¿Hay permiso de `FLASHBACK` y suficiente `UNDO_RETENTION` para leer todos los tramos en la misma foto (`AS OF SCN`)?
