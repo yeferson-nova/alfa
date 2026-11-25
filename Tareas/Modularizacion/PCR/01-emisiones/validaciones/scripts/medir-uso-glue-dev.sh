@@ -78,7 +78,11 @@ else:
             apps[o["Key"].rsplit("/", 1)[0] if "eventlog_v2_" in o["Key"] else o["Key"]].append(o["Key"])
         stages, app_ok = [], False
         for app, keys in apps.items():
-            keys.sort(key=lambda k: int((re.search(r"events_(\d+)_", k) or [0, 0])[1]))
+            # con rolling, la carpeta trae appstatus_* (vacio) y events_<n>_*: solo se leen los events, en orden
+            keys = [k for k in keys if "eventlog_v2_" not in k or "/events_" in k]
+            if not keys:
+                continue
+            keys.sort(key=lambda k: int((re.search(r"/events_(\d+)_", k) or [0, 0])[1]))
             if not any(r["Id"].encode() in l for l in lines(keys[0]) if b"SparkListenerEnvironmentUpdate" in l):
                 continue
             app_ok = True
@@ -89,7 +93,8 @@ else:
                     dur = ((si.get("Completion Time") or 0) - (si.get("Submission Time") or 0)) / 1000
                     stages.append((dur, si["Number of Tasks"], si.get("Stage Name", "")[:60]))
             break
-        print(f"-- {r['Id'][:12]}... archivos_candidatos={len(cand)} corrida_identificada={app_ok} etapas={len(stages)}")
+        comprimidos = sum(1 for o in cand if o["Key"].endswith((".lz4", ".zstd", ".snappy", ".lzf")))
+        print(f"-- {r['Id'][:12]}... archivos_candidatos={len(cand)} comprimidos={comprimidos} corrida_identificada={app_ok} etapas={len(stages)}")
         if not stages: continue
         tot = sum(s[0] for s in stages)
         una = [s for s in stages if s[1] == 1]

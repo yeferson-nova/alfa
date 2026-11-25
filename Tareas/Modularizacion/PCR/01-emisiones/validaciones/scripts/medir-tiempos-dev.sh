@@ -58,41 +58,54 @@ for p in sfn.get_paginator("list_state_machines").paginate():
             print(f"   {str(e['startDate'])[:19]}  {e['status']:<10} {('%.0f' % d) if d else 'en curso':>8} min")
         resumen("   SUCCEEDED", [(e["stopDate"] - e["startDate"]).total_seconds() for e in ex if e["status"] == "SUCCEEDED"])
 
+def leer_json_s3(uri):
+    b, _, k = uri.replace("s3://", "").partition("/")
+    return json.loads(s3.get_object(Bucket=b, Key=k)["Body"].read())
+
+def tabla_relativa(t):  # misma regla que table_relative() del job
+    nombre = t.get("tabla") or str(t.get("tabla_relativa", "")).strip("/").split("/")[-1]
+    return str(t.get("tabla_relativa") or f"acsele_alfa/{str(nombre).lower()}").strip("/").lower()
+
 print("\n== 4. Ultima corrida por caso (parametros_extraccion.json)")
-raices = set()
+prefijos = set()  # (raiz, tabla_relativa): solo se listan las tablas de la configuracion
 for c in CASOS:
     try:
-        d = json.loads(s3.get_object(Bucket="niif-dev-assets", Key=f"{c}/parametros_extraccion.json")["Body"].read())
+        d = leer_json_s3(f"s3://niif-dev-assets/{c}/parametros_extraccion.json")
     except Exception as exc:
         print("--", c, "sin archivo:", type(exc).__name__); continue
-    cfg = d.get("configuracion") or {}
-    if isinstance(cfg, str):  # en DEV llega como texto: JSON serializado o ruta S3
-        try: cfg = json.loads(cfg)
-        except Exception:
-            print(f"   configuracion ({c}) es texto, no JSON: {cfg[:120]}"); cfg = {}
-    rutas = cfg.get("rutas", {}) if isinstance(cfg, dict) else {}
-    raices.update(v for k, v in rutas.items() if k in ("s3_bronze_base", "s3_bronze_comun") and isinstance(v, str) and v)
     ds = [z for z in d.get("datasets_extraidos", []) if isinstance(z, dict)]
     tot = sum(x for x in (seg(z.get("fecha_inicio_escritura"), z.get("fecha_fin_escritura")) for z in ds) if x)
     print(f"-- {c}: lote={d.get('lote_cargue_id')} periodo={d.get('periodo_negocio')} estado={d.get('estado_extraccion')} "
-          f"fin={d.get('fecha_fin')} tablas={len(ds)} suma_escritura={tot/60:.0f} min")
-raices = raices or {"s3://alfa-datalake-dev-bronce/niif/ACSELE"}
+          f"calidad={d.get('calidad_fuentes')} fin={d.get('fecha_fin')} tablas={len(ds)} suma_escritura={tot/60:.0f} min")
+    cfg_uri = d.get("configuracion")  # el job guarda aqui la ruta S3 de la configuracion (runtime_for)
+    try:
+        cfg = leer_json_s3(cfg_uri) if isinstance(cfg_uri, str) and cfg_uri.startswith("s3://") else {}
+    except Exception as exc:
+        print(f"   no se pudo leer la configuracion {cfg_uri}: {type(exc).__name__}"); cfg = {}
+    rutas = cfg.get("rutas", {})
+    nucleo = [tb for f in cfg.get("nucleo_comun", {}).get("fases", []) for tb in f.get("tablas", [])]
+    rama = [tb for ci in cfg.get("ciclos", []) for sg in ci.get("segmentos", []) for tb in sg.get("tablas", [])]
+    for tb in nucleo:
+        prefijos.add((rutas.get("s3_bronze_comun") or "", tabla_relativa(tb)))
+    for tb in rama:
+        prefijos.add((rutas.get("s3_bronze_base") or "", tabla_relativa(tb)))
+    print(f"   configuracion: {cfg_uri} | nucleo={len(nucleo)} rama={len(rama)}")
 
 print("\n== 5. Historial por tabla (checkpoints _control/_SUCCESS.json ya escritos)")
 hist = defaultdict(list)
-for raiz in sorted(raices):
+for raiz, rel in sorted(prefijos):
     if "-dev-" not in raiz:
-        print("se omite raiz fuera de DEV:", raiz); continue
+        print("se omite (raiz vacia o fuera de DEV):", raiz, rel); continue
     b, _, pref = raiz.replace("s3://", "").partition("/")
-    print("raiz:", raiz)
-    for p in s3.get_paginator("list_objects_v2").paginate(Bucket=b, Prefix=pref.rstrip("/") + "/"):
+    pref = pref.rstrip("/") + "/" + rel + "/"
+    for p in s3.get_paginator("list_objects_v2").paginate(Bucket=b, Prefix=pref):
         for o in p.get("Contents", []):
             k = o["Key"]
             if not k.endswith("_control/_SUCCESS.json"): continue
             m = re.search(r"lote_cargue_id=([^/]+)", k)
-            tabla = k[len(pref):].split("/periodo_negocio=")[0].strip("/")
             caso = (re.search(r"caso_uso=([^/]+)", k) or [None, "comun"])[1]
-            hist[(caso, tabla)].append((m[1] if m else "?", b, k))
+            hist[(caso, rel)].append((m[1] if m else "?", b, k))
+print("tablas con checkpoints:", len(hist))
 por_lote = defaultdict(float)
 filas_tabla = []
 for (caso, tabla), items in hist.items():

@@ -3,7 +3,8 @@
 Parte de [PCR](../README.md). Certifica Operaciones.
 
 ## Alcance
-- **Código:** repo `data-datalake-niif-pcr-emisiones-glue-job`, `src\jobs\extraccion_estandar_emisiones.py` (rama `quality`).
+- **Código:** repo `data-datalake-niif-pcr-emisiones-glue-job`, `src\jobs\extraccion_estandar_emisiones.py` (rama `quality`, versión de QA del 2026-11-25, 853 líneas).
+- **Plan de trabajo del repo:** [plan-repo-pcr-emisiones.md](plan-repo-pcr-emisiones.md).
 - **En DEV:** job `niif-dev-extraccion-estandar-emisiones`, primer paso de la Step Function `niif-dev-emisiones`.
 - **Qué extrae:** un solo job lee los 3 casos (PCR Vida, Generales y Satélites). Primero lee una vez el núcleo común (7 tablas) y después cada caso. Son las 78 tablas de Acsel-e que usa `M1_EMISIONES.sql`.
 - **Fuente:** Oracle Acsel-e, conexión `datalake-dev-acsele-sop-connection` (servicio ACSSOP).
@@ -22,12 +23,12 @@ Detalle en `validaciones\salidas\medir-tiempos-dev-20261125-2037.txt`.
 ## Qué hace lento al job (verificado en el código)
 | Hallazgo | Dónde |
 |---|---|
-| Cada tabla se lee con una sola tarea de Spark: no hay `partitionColumn`, y solo 2 tablas usan `hashpartitions` | `:515-551` |
-| Hasta 3 tablas a la vez, con ese tope fijo en el código, y solo en las fases `PARALELO`. 98 de 108 tablas van en cascada | `:730` |
-| Los 3 casos corren uno tras otro | `:798-803` |
-| La misma tarea que lee escribe el parquet, y después se vuelve a leer el parquet para contar | `:663-683` |
+| Cada tabla se lee con una sola sesión JDBC. Solo 2 tablas de PCR Vida usan `partitionColumn`, con 4 particiones | `:577-585` |
+| Generales y Satélites (90 tablas) corren una por una: la forma `CASCADA_POR_FASE` no se reconoce como paralela. En PCR Vida y en el núcleo se leen como máximo 3 tablas a la vez, con ese tope fijo en el código | `:217`, `:764-768` |
+| Los 3 casos corren uno tras otro | `:832-846` |
+| La lectura de Oracle ocurre dentro de la escritura, y después se vuelve a leer el parquet para contar | `:696-718` |
 | No hay pausa entre ciclos: Glue suelta la conexión y vuelve a pegarse sin descanso (Víctor, 20 nov, L289-293) | `execute_phases` |
-| 112 de las 128 consultas vuelven a filtrar contra el pivote `CONTEXTOPERATION` (331 millones de filas) con `EXISTS` anidados | `compile_dependency_sql` |
+| 115 de las 121 consultas SQL configuradas vuelven a filtrar contra el pivote `CONTEXTOPERATION` (331 millones de filas). Las tablas `DEPENDENCIA` lo hacen con `EXISTS` anidados | `:390-521` |
 | Cada corrida crea un lote nuevo, así que un reintento no aprovecha lo ya extraído | `conf_emisiones.py:172` |
 
 *Hipótesis por medir:* casi todo el clúster está sin uso mientras una sola sesión lee de Oracle. Se mide con `medir-uso-glue-dev.sh`.
@@ -40,6 +41,7 @@ Detalle en `validaciones\salidas\medir-tiempos-dev-20261125-2037.txt`.
 | Script (`validaciones\scripts\`) | Dónde corre | Salida (`validaciones\salidas\`) | Resultado |
 |---|---|---|---|
 | `medir-tiempos-dev.sh` | CloudShell de DEV | `medir-tiempos-dev-20261125-2037.txt` | Secciones 1 a 3 completas (job y Step Function). La 4 falló y ya está corregida: hay que volver a correrla para tener las secciones 4 y 5 |
+| Consulta de DynamoDB (`cnf-mallas` y `prg-programaciones`) | CloudShell de DEV | `cnf-mallas-emisiones-dev-20261125-2309\` | 6 ítems por caso. DynamoDB guarda plantillas y los JSON del repo son la salida renderizada, con las mismas tablas (25, 45 y 59). El núcleo de Generales difiere en 5 tablas (ARQ-67). PCR Vida tiene 25 tablas y la configuradora de `quality` exige 27: hay que confirmar qué código está desplegado |
 | `medir-uso-glue-dev.sh` | CloudShell de DEV | (pendiente) | Uso del clúster y etapas de Spark de las corridas existentes |
 | `consultas-oracle-acsele.sql`, consulta 0 | Oracle (base COREPROD) | `consulta0-base-usuario.png` | Corrió con un usuario personal. Falta confirmar que el servicio ACSSOP apunta a COREPROD |
 | Consulta 1: llaves e índices | Oracle | `consulta1-llaves-indices.xlsx` | 144 llaves: 132 `NUMBER`, 5 `DATE` y 7 `VARCHAR2`. 9 sin índice y 6 solo como 2.ª a 4.ª columna de un índice |

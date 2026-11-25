@@ -22,7 +22,7 @@ malla: transversal
 - Conexión Glue a Oracle, S3 `niif-{env}-assets` y buckets Bronce/Silver. Se despliega a `glue-resources/pcr-emisiones`.
 
 ## Código
-- `src/jobs/extraccion_estandar_emisiones.py`: en `quality` (sync `3d5f623`, 2026-11-20) tiene **819 líneas**, reescrito (commit `e1a13ac`): núcleo común + ramas por caso, fases CASCADA/PARALELO, dependencias con `EXISTS`, checkpoint `_control/_SUCCESS.json`. La versión anterior (~3400 líneas, con `sampleQuery` y llaves materializadas) solo queda en ramas viejas. Análisis de tiempos en [[modularizacion-extraccion]].
+- `src/jobs/extraccion_estandar_emisiones.py`: en `quality` (sync `fbfeded`, 2026-11-25) tiene **853 líneas** (agrega advertencia si el SQL del núcleo difiere, ARQ-67; antes 819). Sin pruebas; cobertura excluida en tox/Sonar. Plan del repo: `Tareas\Modularizacion\PCR\01-emisiones\plan-repo-pcr-emisiones.md`, reescrito (commit `e1a13ac`): núcleo común + ramas por caso, fases CASCADA/PARALELO, dependencias con `EXISTS`, checkpoint `_control/_SUCCESS.json`. La versión anterior (~3400 líneas, con `sampleQuery` y llaves materializadas) solo queda en ramas viejas. Análisis de tiempos en [[modularizacion-extraccion]].
 - Parece una copia más antigua en un punto (la función `combinar_lotes_respaldados` está arriba y sin parámetro de tabla), por confirmar.
 - Es el único glue de estos repos con carpeta `tests/`, pero solo trae `conftest.py` y paquetes vacíos. Incluye `Dockerfile`, `Makefile`, `run_local.sh`. README es plantilla inicial.
 

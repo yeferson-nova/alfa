@@ -1,7 +1,7 @@
 ---
 tipo: repo
 estado: vigente
-actualizado: 2026-11-12
+actualizado: 2026-11-25
 repo: sc-datalake-niif-configuration-general
 categoria: lambda
 paso: "2 · Bodega NIIF 17 (configura y arranca la malla)"
@@ -35,6 +35,10 @@ malla: transversal
 - `quality` frente a `main` (medido en GitHub el 2026-11-12): 21 commits solo en `quality`, 0 solo en `main`, 23 archivos distintos; `quality` va 23 archivos por delante de `main`: lo de QA no se ha promovido a PRD. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno.
 
+## Emisiones en QA (sync `a1238a4`, 2026-11-25)
+- `conf_emisiones.py` 1237 líneas = DEV (sha256 `f2cddac65b1e6fe6…`); antes 678 con conteos fijos 27/45/59. `validate_config` (`:473-510`): núcleo y rama no vacíos, sin duplicados, fases `[4..9]`.
+- Nuevo: publica también los contratos de validación, remediación y SCD desde los ítems `VALIDACION`, `REMEDIACION` y `SCD` de `cnf-mallas`. Con `ejecutar=true` arranca `<prefijo>-emisiones` con `name = idEjecucion` (`:1154-1220`; toca ARQ-32; *por confirmar* la corrida programada).
+- Sigue igual: lote nuevo si PRG no trae `loteCargueId` (`:164-171`) y escribe el estado en el ítem `EXTRACCION` (`:891`). Ver [[modularizacion-extraccion]].
+
 ## Brechas y relacionadas
-- Sin IDs de brecha propios en las notas. Riesgo por diseño: nueve módulos duplicados dentro de una sola lambda (similitud descrita en [[inventario-lambdas]]).
-- Relacionado: [[familia-mallas-alfaprd]], [[sc-datalake-niif-primas-arl]], [[sc-datalake-niif-primas-rentas]]
+- Sin IDs de brecha propios. Riesgo por diseño: nueve módulos duplicados en una lambda ([[inventario-lambdas]]). Relacionado: [[familia-mallas-alfaprd]], [[sc-datalake-niif-primas-arl]], [[sc-datalake-niif-primas-rentas]]
