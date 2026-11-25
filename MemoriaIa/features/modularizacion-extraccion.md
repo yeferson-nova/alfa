@@ -59,3 +59,15 @@ Humano: `Tareas\Modularizacion\Extraccion\README.md` y `diseno-lectura-por-rango
 ## Por verificar (QA, Oracle)
 - Scripts: `Tareas/Modularizacion/Extraccion/consultas-oracle-alfaprd.sql` y `consultas-oracle-acsele.sql`.
 - Tipo e índice de cada columna de join; acceso a `ALL_TABLES.NUM_ROWS`; permiso `FLASHBACK` y `UNDO_RETENTION` (foto consistente entre tramos); acceso de lectura a `acsele_alfa_bi.em_*` para la prueba de equivalencia. Ver [[preguntas-abiertas]].
+
+## Alcance confirmado (2026-11-25, usuario)
+- **Nuestro trabajo es optimizar lo que ya existe.** Manuel construye la versión base de las mallas; algunas están en desarrollo (Cedidas, Reaseguros, PCR y la de 99 tablas). No las construimos nosotros: se optimizan cuando existan.
+- **Se empieza por PCR:** la malla de Emisiones que ya corre (`niif-snf-emisiones`: PCR Vida, Generales, Satélites). Meta de Víctor: extracción en 2-3 h. Tiempo actual sin confirmar: Manuel dice 30-60 min; ARQ-60 vio hasta 8 h en copias del job. Se resuelve con el historial de DEV. ALFAPRD sigue en el alcance (hay espacio para optimizar), después de PCR.
+- Detalle del modelo de 5 mallas en [[reunion-extraccion-victor]].
+- **Causas de tiempo en PCR, verificadas en código (`quality` 3d5f623, 2026-11-25):**
+  - 112 de 128 consultas configuradas (`SQL_CONFIGURADA`) vuelven a leer el pivote `CONTEXTOPERATION` dentro de la consulta (PCR Vida 15, Generales 43, Satélites 54); las de `DEPENDENCIA` lo hacen con `EXISTS` anidados (`compile_dependency_sql`). Es lo que Víctor señaló (L1023). Su modelo: extraer el pivote una vez, dejar las llaves en S3 y usarlas como lista.
+  - `DISTINCT` por defecto en 108 tablas (`usar_distinct` = true): Oracle ordena cada resultado.
+  - `oracle_parallel` está en 19 tablas, pero `strip_oracle_hints` borra el hint antes de leer: configuración muerta.
+  - 98 de 108 tablas de Generales y Satélites van en cascada; los 3 casos corren uno tras otro; sin pausa entre fases.
+  - Lote nuevo en cada corrida: no reusa lo extraído.
+  - Medición por tabla: script `EvidenciasAws\dev-extraccion\medir-pcr-dev.sh` (pendiente de correr). **No ejecuta el job** (pedido de Manuel): lee las corridas existentes (Glue, Step Functions, `parametros_extraccion.json` y los checkpoints `_control/_SUCCESS.json` de Bronce, que guardan tiempos y filas por tabla y lote).
