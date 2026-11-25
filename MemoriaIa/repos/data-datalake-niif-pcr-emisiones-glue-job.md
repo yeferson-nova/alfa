@@ -1,17 +1,17 @@
 ---
 tipo: repo
 estado: vigente
-actualizado: 2026-11-23
+actualizado: 2026-11-25
 repo: data-datalake-niif-pcr-emisiones-glue-job
 categoria: glue
 paso: "2 · Bronce (extracción)"
 malla: transversal
 ---
 # data-datalake-niif-pcr-emisiones-glue-job
-> Extracción Oracle a Bronce de la familia PCR (Vida y emisiones, origen ACSELE): variante ampliada del proceso de extracción estándar con lectura relacional por dependencias.
+> Extracción Oracle a Bronce de la malla 1 (Emisiones) del proceso PCR, origen Acsel-e: un solo job para los casos PCR Vida, Generales y Satélites (núcleo común una vez y luego cada caso).
 
 ## Rol en el flujo
-- Primer job del flujo PCR Vida (caso `pcr_vida`). Paso 2 del diagrama. No pertenece a las 6 mallas ALFAPRD.
+- Primer job de `niif-snf-emisiones` (malla 1 de 4 del proceso PCR: Emisiones → Primas Cedidas → Reaseguros → Primas PCR; ver [[reunion-extraccion-victor]]). Paso 2 del diagrama. No pertenece a las 6 mallas ALFAPRD.
 - Entrega al resto de la cadena genérica y a `silver_vida_deudores.py` (repo `data-datalake-emisiones-vida-glue-job`).
 
 ## Entradas y salidas
@@ -22,7 +22,7 @@ malla: transversal
 - Conexión Glue a Oracle, S3 `niif-{env}-assets` y buckets Bronce/Silver. Se despliega a `glue-resources/pcr-emisiones`.
 
 ## Código
-- `src/jobs/extraccion_estandar_emisiones.py` (~3400 líneas): mismas funciones que `extraccion_estandar_optimized.py` más lectura JDBC particionada por `sampleQuery`, consultas hijas por llaves materializadas, validación de identificadores SQL y validación del motor de dependencias. Timeout de conexión mayor (120 s frente a 30 s).
+- `src/jobs/extraccion_estandar_emisiones.py`: en `quality` (sync `3d5f623`, 2026-11-20) tiene **819 líneas**, reescrito (commit `e1a13ac`): núcleo común + ramas por caso, fases CASCADA/PARALELO, dependencias con `EXISTS`, checkpoint `_control/_SUCCESS.json`. La versión anterior (~3400 líneas, con `sampleQuery` y llaves materializadas) solo queda en ramas viejas. Análisis de tiempos en [[modularizacion-extraccion]].
 - Parece una copia más antigua en un punto (la función `combinar_lotes_respaldados` está arriba y sin parámetro de tabla), por confirmar.
 - Es el único glue de estos repos con carpeta `tests/`, pero solo trae `conftest.py` y paquetes vacíos. Incluye `Dockerfile`, `Makefile`, `run_local.sh`. README es plantilla inicial.
 

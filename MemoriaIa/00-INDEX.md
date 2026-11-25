@@ -76,6 +76,7 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 - [[roadmap-observabilidad]]: roadmap de logs, trazas y duración de punta a punta (2026-11-19, propuesta)
 - [[modularizacion]]: tarea transversal de modularizar componentes, cerrar deuda y observabilidad (2026-11-20)
 - [[modularizacion-extraccion]]: modelo de ciclos de Víctor y lectura de dependencias por rangos (opción D, en diseño)
+- [[productos-genericos-emisiones]]: productos como dato (catálogo, mapa de conceptos y controles), piloto Pymes; sin tocar la Oracle ni hacerle espejo (propuesta, 2026-11-25)
 - [[diseno-propuesto]]: cambios propuestos en el paso 3 (sin confirmar)
 - [[fix-scd-freno-periodo]]: fix completo de Primas ARL (SCD por periodo, extracción, calidad del código), 33 hallazgos y plan de 7 días
 

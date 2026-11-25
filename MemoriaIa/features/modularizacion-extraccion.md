@@ -62,7 +62,7 @@ Humano: `Tareas\Modularizacion\Extraccion\README.md` y `diseno-lectura-por-rango
 
 ## Alcance confirmado (2026-11-25, usuario)
 - **Nuestro trabajo es optimizar lo que ya existe.** Manuel construye la versión base de las mallas; algunas están en desarrollo (Cedidas, Reaseguros, PCR y la de 99 tablas). No las construimos nosotros: se optimizan cuando existan.
-- **Se empieza por PCR:** la malla de Emisiones que ya corre (`niif-snf-emisiones`: PCR Vida, Generales, Satélites). Meta de Víctor: extracción en 2-3 h. Tiempo actual sin confirmar: Manuel dice 30-60 min; ARQ-60 vio hasta 8 h en copias del job. Se resuelve con el historial de DEV. ALFAPRD sigue en el alcance (hay espacio para optimizar), después de PCR.
+- **Se empieza por PCR:** la malla de Emisiones que ya corre (`niif-snf-emisiones`: PCR Vida, Generales, Satélites). Meta de Víctor: extracción en 2-3 h. Medido en DEV (historial 16-24 nov): las corridas completas del job tardan 172-427 min (3-7 h, ~100 DPU-h, G.2X x10); hubo corridas de 32 y 70 min (*hipótesis:* reusan checkpoints o son parciales, falta el detalle por lote). Lo de Manuel (30-60 min) coincide solo con esas. La Step Function `niif-dev-emisiones` tuvo 1 éxito de 10 (393 min, 321 del job). ALFAPRD sigue en el alcance (hay espacio para optimizar), después de PCR.
 - Detalle del modelo de 5 mallas en [[reunion-extraccion-victor]].
 - **Causas de tiempo en PCR, verificadas en código (`quality` 3d5f623, 2026-11-25):**
   - 112 de 128 consultas configuradas (`SQL_CONFIGURADA`) vuelven a leer el pivote `CONTEXTOPERATION` dentro de la consulta (PCR Vida 15, Generales 43, Satélites 54); las de `DEPENDENCIA` lo hacen con `EXISTS` anidados (`compile_dependency_sql`). Es lo que Víctor señaló (L1023). Su modelo: extraer el pivote una vez, dejar las llaves en S3 y usarlas como lista.
@@ -71,3 +71,21 @@ Humano: `Tareas\Modularizacion\Extraccion\README.md` y `diseno-lectura-por-rango
   - 98 de 108 tablas de Generales y Satélites van en cascada; los 3 casos corren uno tras otro; sin pausa entre fases.
   - Lote nuevo en cada corrida: no reusa lo extraído.
   - Medición por tabla: script `scripts/01-pcr-emisiones/medir-tiempos-dev.sh` (pendiente de correr). **No ejecuta el job** (pedido de Manuel): lee las corridas existentes (Glue, Step Functions, `parametros_extraccion.json` y los checkpoints `_control/_SUCCESS.json` de Bronce, que guardan tiempos y filas por tabla y lote).
+
+## Diccionario Acsel-e (consultas 1 y 2, 2026-11-25)
+Archivos: `Tareas/Modularizacion/Extraccion/scripts/01-pcr-emisiones/sql2.xlsx` (consulta 1) y `sql3.xlsx` (consulta 2). Usuario personal, base COREPROD; la conexión de Glue usa el servicio ACSSOP (usuario en secreto, no se abre). Confirmar con Julio que ACSSOP es COREPROD.
+- Visibles las 93 tablas y las 144 llaves. Estadísticas del 22-23 nov 2026.
+- Llaves: 132 NUMBER, 5 DATE, 7 VARCHAR2 → los rangos (opción D) aplican a casi todas. 9 llaves sin índice y 6 solo como 2.ª-4.ª columna: candidatas a recomendación de índice (Víctor → Yair).
+- Tamaño: 31.000 millones de filas en total. Las más grandes son de M1 y ya se extraen: THIRDPARTYMOVEMENTPOLICY 7.547 M, OPENITEM y OPENITEMREFERENCE 2.043 M c/u, EVENTDCO 1.926 M, COBERTURA y COVERAGEDCO 1.245 M c/u. Pivote CONTEXTOPERATION: 331 M filas, particionada, TIME_STAMP con índice propio.
+- Particionadas: THIRDPARTYMOVEMENTPOLICY, OPENITEM, OPENITEMREFERENCE, CONTEXTOPERATION, PRERISKUNITS, STPS_RELATIONAGREEMENTPOLICY. Falta su llave de partición (ALL_PART_KEY_COLUMNS) para aprovechar la poda.
+
+## Foco: lado Glue, no Oracle (usuario, 2026-11-25)
+Oracle (índices, DDL) es poco probable que se toque. Se optimiza lo que pasa después: pool de sesiones sobre la única cuenta de servicio, concurrencia y recursos del job. Verificado en código (`extraccion_estandar_emisiones.py`):
+- Lectura JDBC sin `partitionColumn` → 1 tarea de Spark y 1 sesión Oracle por tabla (`read_oracle`, `:515-551`). Solo 2 tablas usan `hashpartitions` (tope 16).
+- Concurrencia de tablas: tope fijo 3 en código (`:730`) y solo en fases `PARALELO`; 98/108 tablas en cascada → casi siempre 1 sesión. Los 3 casos van en secuencia (`main`, `:798-803`).
+- Escritura sin `repartition`: el mismo task que lee escribe el parquet. Conteo relee el parquet (`:676-683`). `dropDuplicates` si hay `deduplicar_por`; el `DISTINCT` va en Oracle.
+- *Hipótesis* (falta medir): con G.2X x10 (80 vCPU, ~100 DPU-h por corrida) casi todo el clúster está ocioso. Script: `scripts/01-pcr-emisiones/medir-uso-glue-dev.sh` (CloudWatch + event logs de corridas existentes).
+- Desplegado en DEV: G.2X x10, timeout 2880. La copia de la IaC que tenemos (2026-11-12) dice G.1X x10, timeout 360, `max_concurrent_runs` 3: confirmar con la IaC vigente antes de registrar brecha.
+- Reintentos: de 34 corridas (16-24 nov) solo 8 exitosas; cada reintento crea lote nuevo y no reusa checkpoints (ver ARQ-63).
+- **Validación contra Víctor (2026-11-25):** una sola conexión de servicio; DBA no da más conexiones; Analítica abrió 2 pools y tumbó la base (L182-208). Sí se maneja el pool de peticiones (L208) y la forma paralela dentro de un conjunto "por esa misma conexión", dentro del 65 % de unidades (L374, L418-432). **No validado:** si "paralela" admite varias sesiones JDBC del mismo usuario (cada partición de Spark abre una). Hasta confirmarlo, leer una tabla en k particiones y correr los 3 casos a la vez quedan como *pregunta*, no como plan. El código ya abre hasta 3 sesiones (`:730`) y 16 en 2 tablas con `hashpartitions`: confirmar que eso está permitido.
+- Reanudar: respaldado por Víctor (checkpoint en DynamoDB, L563-569; "¿Existe ese lote?", 25 nov L79-83), pero debe ser explícito y con aviso (ARQ-63), no reusar por defecto.

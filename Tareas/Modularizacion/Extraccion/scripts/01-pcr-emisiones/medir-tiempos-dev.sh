@@ -61,9 +61,14 @@ for c in CASOS:
         d = json.loads(s3.get_object(Bucket="niif-dev-assets", Key=f"{c}/parametros_extraccion.json")["Body"].read())
     except Exception as exc:
         print("--", c, "sin archivo:", type(exc).__name__); continue
-    rutas = (d.get("configuracion") or {}).get("rutas", {})
-    raices.update(v for k, v in rutas.items() if k in ("s3_bronze_base", "s3_bronze_comun") and v)
-    ds = d.get("datasets_extraidos", [])
+    cfg = d.get("configuracion") or {}
+    if isinstance(cfg, str):  # en DEV llega como texto: JSON serializado o ruta S3
+        try: cfg = json.loads(cfg)
+        except Exception:
+            print(f"   configuracion ({c}) es texto, no JSON: {cfg[:120]}"); cfg = {}
+    rutas = cfg.get("rutas", {}) if isinstance(cfg, dict) else {}
+    raices.update(v for k, v in rutas.items() if k in ("s3_bronze_base", "s3_bronze_comun") and isinstance(v, str) and v)
+    ds = [z for z in d.get("datasets_extraidos", []) if isinstance(z, dict)]
     tot = sum(x for x in (seg(z.get("fecha_inicio_escritura"), z.get("fecha_fin_escritura")) for z in ds) if x)
     print(f"-- {c}: lote={d.get('lote_cargue_id')} periodo={d.get('periodo_negocio')} estado={d.get('estado_extraccion')} "
           f"fin={d.get('fecha_fin')} tablas={len(ds)} suma_escritura={tot/60:.0f} min")
