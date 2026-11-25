@@ -23,6 +23,7 @@ actualizado: 2026-11-23
 | Brechas de seguridad, costos o arquitectura (IDs `SEG`, `COS`, `ARQ`, `CUM`) | `auditorias\`: [[brechas-seguridad]], [[auditoria-pipeline-2026-11]], [[notificaciones-vs-arquitectura]], [[auditoria-repos-2026-11]] |
 | Qué falta por hacer, o dudas sin resolver | [[pendientes]], [[preguntas-abiertas]] |
 | Observabilidad: logs, ID de punta a punta, duraciones, tableros y alertas | [[roadmap-observabilidad]] |
+| Optimizar el proceso PCR (Emisiones, Primas Cedidas, Reaseguros, Primas PCR) | [[proceso-pcr]], luego [[modularizacion-extraccion]] |
 | Modularizar un componente (extracción, remediación, validación, SCD) y cerrar su deuda técnica | [[modularizacion]], luego la nota del componente (ej. [[modularizacion-extraccion]]) |
 | Cómo escribir código (estructura, errores, logs, pruebas, nombres) | [[est-desarrollo-hexagonal]] y [[est-gobierno-devops-niif]] |
 | Formato de un PR (título, base, plantilla de descripción) | [[est-pull-requests]] |
@@ -75,6 +76,7 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 - [[monitoreo-grafana]]: observabilidad (Grafana fuera de alcance)
 - [[roadmap-observabilidad]]: roadmap de logs, trazas y duración de punta a punta (2026-11-19, propuesta)
 - [[modularizacion]]: tarea transversal de modularizar componentes, cerrar deuda y observabilidad (2026-11-20)
+- [[proceso-pcr]]: plan global de PCR (4 mallas): extracción en 1,5 h como máximo, código modular y observabilidad en 3 niveles; carpetas por malla con validaciones
 - [[modularizacion-extraccion]]: modelo de ciclos de Víctor y lectura de dependencias por rangos (opción D, en diseño)
 - [[productos-genericos-emisiones]]: productos como dato (catálogo, mapa de conceptos y controles), piloto Pymes; sin tocar la Oracle ni hacerle espejo (propuesta, 2026-11-25)
 - [[diseno-propuesto]]: cambios propuestos en el paso 3 (sin confirmar)

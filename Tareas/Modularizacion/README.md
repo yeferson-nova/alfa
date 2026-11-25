@@ -20,6 +20,7 @@ Repo base: `data-datalake-niif-rmd-ext-estandar-glue-job` (jobs genéricos que u
 
 | Componente | Carpeta | Estado |
 |---|---|---|
+| Proceso PCR (4 mallas; empieza por Emisiones): extracción en 1,5 h como máximo, código modular y observabilidad | [`PCR\`](PCR/README.md) | Malla 1 con línea base medida; mallas 2 a 4 en construcción (Manuel) |
 | Extracción (Oracle a Bronce; estándar y Emisiones) | [`Extraccion\`](Extraccion/README.md) | En diseño: modelo de Víctor validado contra el código y medido en DEV |
 | Validación técnica | (por crear) | Sin empezar |
 | Remediación (Bronce a Silver base) | (por crear) | Sin empezar. Diseño ya conocido: reglas activables por configuración (ver la ficha del repo en la memoria) |

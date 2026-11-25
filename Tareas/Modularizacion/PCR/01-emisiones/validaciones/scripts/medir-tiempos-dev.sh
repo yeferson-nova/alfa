@@ -1,6 +1,10 @@
+#!/usr/bin/env bash
+# Solo lectura. NO ejecuta el job: lee las corridas que ya existen en DEV del proceso de
+# extraccion de Emisiones (Glue, Step Functions, parametros_extraccion.json y checkpoints de Bronce).
+# Salida: medir-tiempos-dev-<fecha>.txt -> guardarla en ../salidas/
 export AWS_PAGER=""
 export AWS_REGION=us-east-1 AWS_DEFAULT_REGION=us-east-1
-OUT="pcr-medicion-$(date +%Y%m%d-%H%M).txt"
+OUT="medir-tiempos-dev-$(date +%Y%m%d-%H%M).txt"
 python3 - > "$OUT" 2>&1 <<'EOF'
 import json, re, statistics
 from collections import defaultdict

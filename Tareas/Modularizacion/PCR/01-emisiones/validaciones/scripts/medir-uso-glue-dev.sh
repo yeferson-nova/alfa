@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Solo lectura. NO ejecuta el job: mide cuanto del cluster de Glue usan las corridas
 # que ya existen del proceso de extraccion de Emisiones (CloudWatch y Spark event logs).
-# Salida: glue-uso-<fecha>.txt. Es evidencia: va en EvidenciasAws\dev-extraccion\ (fuera de Git).
+# Salida: medir-uso-glue-dev-<fecha>.txt -> guardarla en ../salidas/
 # Uso: bash medir-uso-glue-dev.sh [numero_de_corridas]   (por defecto 3 corridas exitosas)
 export AWS_PAGER=""
 export AWS_REGION=us-east-1 AWS_DEFAULT_REGION=us-east-1
-OUT="glue-uso-$(date +%Y%m%d-%H%M).txt"
+OUT="medir-uso-glue-dev-$(date +%Y%m%d-%H%M).txt"
 N="${1:-3}" python3 - > "$OUT" 2>&1 <<'EOF'
 import json, os, re, statistics
 from datetime import timedelta

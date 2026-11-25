@@ -1,7 +1,7 @@
 ---
 tipo: preferencia
 estado: vigente
-actualizado: 2026-11-20
+actualizado: 2026-11-25
 ---
 # Preferencias del usuario
 
@@ -27,7 +27,7 @@ actualizado: 2026-11-20
 - **Pasos para la consola web de AWS** (menús, qué mirar, qué concluir) y comandos listos para CloudShell; en DEV el usuario los ejecuta; para prod son de solo lectura y los corre el equipo de prod, que devuelve capturas o archivos. No hay acceso directo desde aquí.
 - **Commits sin línea de coautor** y **push directo a `main`** (sin ramas ni PR) cuando lo pide ("sube a git"). Los pedidos de push suelen venir al final de cada tarea.
 - **Nombres de archivo fijos**, sin fecha ni hora (ejemplo: `evidencia-primas-arl-202606.zip`). Los `.gitignore` y `.gitattributes` van en la **raíz** del repo, no en subcarpetas.
-- Entregables del incidente en `errores\` (md + scripts). **Toda evidencia de AWS (dev y prod) va en `EvidenciasAws\<ambiente>-<tema>\`, fuera de Git** (decisión 2026-11-10); ya no llega por `git pull`.
+- Entregables del incidente en `errores\` (md + scripts). **Toda evidencia de AWS (dev y prod) va en `EvidenciasAws\<ambiente>-<tema>\`, fuera de Git** (decisión 2026-11-10). **Excepción (2026-11-25):** las salidas de validación de PCR van en Git, en `Tareas\Modularizacion\PCR\<malla>\validaciones\salidas\`, sin datos personales, IDs de cuenta, IP ni claves ([[proceso-pcr]]); ya no llega por `git pull`.
 - El repo pasó a **privado** el 2026-11-09 (antes fue público). Aun así, no subir credenciales ni datos personales innecesarios de prod (correos, ids) y preguntar antes de subir evidencia.
 - Se hace `git pull` cuando el usuario dice que subió archivos ("baja la carpeta").
 - **Código Python (2026-11-10):** PEP 8, sangría de 4 espacios e identificadores en inglés. Arquitectura modular hexagonal (es nuestra; DevOps solo hace la infraestructura). Entrega en un zip con el nombre del recurso; los commits los hace DevOps. Ver [[est-desarrollo-hexagonal]] y [[est-gobierno-devops-niif]].
