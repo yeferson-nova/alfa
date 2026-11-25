@@ -47,4 +47,11 @@ actualizado: 2026-11-20
 - **Ajustes acotados (2026-11-13):** si el usuario pide ajustar algo puntual (por ejemplo, los tiempos de un plan), se ajusta solo eso. No agregar secciones, condiciones, riesgos ni contenido que no estaba en el documento.
 - **Deuda técnica con la configuración (2026-11-20, no negociable):** al corregir deuda técnica se revisan y evolucionan también los archivos de configuración de ese componente, en el mismo cambio: los JSON de `cfg-datalake-niif-config-s3`, el registro de DynamoDB `cnf-mallas` y lo que publica la lambda configuradora (que sobrescribe el JSON de S3 y descarta claves que no conoce, como pasó con `umbral_apagado_pct` y el `where` de ARL; ver [[fix-scd-freno-periodo]]). Código y configuración avanzan juntos; un fix que solo toca código no se da por cerrado.
 - **Proceso personal ↔ corporativo invisible para Alfa (2026-11-20):** `alfa-repos`, sus scripts (`exportar`, `generar-parches`, `aplicar-parches`, `sincronizar-repos`), `parches/`, `VERSIONES.md` y la existencia de dos Git son solo nuestros. Ningún entregable (`Tareas\`, `Docs\`, repos corporativos, zips) los menciona. En ellos se nombra solo el repo corporativo, su ruta interna y su rama o commit. Regla en `CLAUDE.md`; el proceso se documenta solo en [[repo-alfa-repos]].
+- **Redacción de informes y correos a negocio (2026-11-24):**
+  - Nombrar siempre el ambiente y la fuente de cada cifra: "Silver en AWS (DEV y QA)", "Oracle ACSELE, tabla `THIRDPARTYMOVEMENTPOLICY`", "Athena DEV". Nunca "el sistema" ni "el origen" a secas.
+  - No afirmar lo no comprobado: decir "la tabla X tiene N movimientos que suman Y", no "en el origen está completo".
+  - Cada regla o fórmula lleva de dónde sale; si la armamos nosotros, decirlo. Si una cifra no cuadra al centavo, dar la diferencia y decir que está sin explicar.
+  - Los hallazgos se describen como fallas, sin "vamos a corregir" ni planes cuando el texto es de hallazgos, y sin repetir ideas.
+  - Primera persona singular cuando el usuario lo pide. Decir el código de producto junto al nombre (por ejemplo, "Pymes (55139)").
+  - Mensajes al grupo: cortos, humanizados y sin códigos internos de hallazgo.
 - **Código sin comentarios (2026-11-17):** el código que escribamos no lleva comentarios ni docstrings; los nombres deben explicar la intención. Aplica a `src/` y a `tests/`.

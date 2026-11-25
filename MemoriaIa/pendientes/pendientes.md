@@ -16,7 +16,7 @@ actualizado: 2026-11-24
 - [x] Repetir la parte de datos en QA con el script corregido (2026-11-23, v2026-11-23.2, sin errores).
 - [x] Q5/Q6 de la Oracle (2026-11-24): Bronce = Oracle en 12 productos; Pymes existe en Oracle y da el RRC exacto.
 - [x] Pymes (PCE-1): `diagnostico-pymes-55139.sql` (2026-11-24): ninguna condición la descarta (45/45 operaciones, 468 movimientos). Causa: ARQ-67 (núcleo compartido sin 55139).
-- [ ] Confirmar ARQ-67 en Athena DEV con `confirmar-pymes-bronce-dev.sql` (esperado 468 sin póliza, 188.114.812,96; 0 pólizas de 55139).
+- [x] ARQ-67 confirmada en Athena DEV (2026-11-24): 468 sin póliza, 188.114.812,96; 55139 ausente del `agregatedpolicy` compartido; 69/69 conceptos = Q5 Pymes.
 - [ ] Corregir ARQ-67 con su configuración: 55139 en el núcleo de `MALLA#PCR_VIDA` y `MALLA#SATELITES` (o núcleo único con la unión de productos desde la configuradora), falla si una tabla `COMUN` difiere entre casos y control de movimientos sin póliza.
 - [ ] Pymes (PCE-1b): agregar a las listas de `silver_generales.py` los conceptos `PRIMA/COMISIONRECAUDO/IVACOMISIONRECAUDO{INC,TERR,EEYE,ROT}` (+DEV), con su configuración.
 - [x] Corrida completa en DEV (2026-11-24, v2026-11-23.3): DEV = QA en extracción, Bronce y Silver; Pymes tampoco llega en DEV.
@@ -25,9 +25,11 @@ actualizado: 2026-11-24
 - [x] v2026-11-24.3: el "Tomador" del RRC = pagador maestro en 52897 y 55059; en Hogar y Mascotas no es ningún rol del Silver.
 - [x] Comparación manual de 3 pólizas de 54959: misma prima, otra persona → hipótesis de nombres enmascarados en ACSSOP.
 - [ ] Confirmar con DBA/DevOps si ACSSOP enmascara nombres de personas; validar nombres en PRD con la sección `terceros`.
-- [ ] Explicar `INC-27192` (52897): +259,98 de prima y +260 de recaudo frente al RRC.
+- [x] Correo de entrega de evidencias a negocio redactado (2026-11-24): `Tareas\Fixs\PcrEmisiones\correo-entrega-evidencias.md`.
+- [ ] Explicar `INC-27192` (52897): +259,98 de prima y +260 de recaudo frente al RRC (consulta póliza por póliza, si el usuario la pide).
+- [ ] Explicar los 49,40 del IVA de recaudo de 52897 (Oracle 633.791.879,69 frente a RRC 633.791.830,29).
 - [ ] ARQ-66: corregir el tomador repetido de `silver_generales.py` (participación vigente o `collect_set`) con su configuración, después de cuantificarlo.
-- [ ] IVA de recaudo de Generales (PCE-2): corregir las listas de conceptos de `silver_generales.py` con su configuración, después de que negocio diga si vale RRC o `E1-A1`. Explicar los 49,40 de 52897.
+- [ ] IVA de recaudo de Generales (PCE-2): corregir las listas de conceptos de `silver_generales.py` con su configuración, contra el RRC (cifra oficial, decisión del usuario). Explicar los 49,40 de 52897.
 - [ ] PRD: correr `diag-emisiones-v2.sh prd 202606 primary` (DevOps) y Q1-Q6 en su Oracle.
 - [ ] Pedir Q5 y Q6 en la Oracle de QA y Q1-Q6 en la de PRD; preguntar al DBA si ACSSOP se recargó entre el 19 y el 22 de nov, y si las 13 tablas `ORA-00942` existen en producción.
 - [ ] Correr `comparar_ambientes.py` y decidir según la primera capa que difiera. No corregir código antes de eso.

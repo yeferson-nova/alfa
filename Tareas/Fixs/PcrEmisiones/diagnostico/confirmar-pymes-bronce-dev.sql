@@ -1,5 +1,8 @@
--- Confirma en Athena DEV dónde se pierde Pymes (55139). Solo lectura, sin datos de personas.
--- Lote 20261124060016 (Emisiones 202606). Workgroup: primary. Base: niif-dev-bronze-catalog-db.
+-- AMBIENTE: DEV (cuenta DEV, consola Athena DEV, región us-east-1). Solo vale en DEV:
+-- las tablas tienen nombres propios de DEV. Para QA o PRD hay que tomar los nombres
+-- de su catálogo (datos/catalogo_tablas.json de su evidencia).
+-- Confirma en el Bronce DEV dónde se pierde Pymes (55139). Solo lectura, sin datos de personas.
+-- Lote DEV 20261124060016 (Emisiones 202606). Workgroup: primary. Base: niif-dev-bronze-catalog-db.
 --   movimientos Generales: data_e3b30b04994088555abb95f4054d5896
 --   agregatedpolicy (tabla compartida por los 3 casos): data_aab5b25cd0ab13890a1be630de8f754f
 -- Esperado si la hipótesis es cierta:

@@ -138,7 +138,11 @@ Por qué: `agregatedpolicy` es una tabla **compartida** del núcleo (alcance `CO
 
 La copia compartida quedó sin las pólizas de Pymes, o sea, sin la versión de Generales. El Silver une los movimientos con la póliza para saber el producto, así que los 468 movimientos se pierden **sin error ni alerta**. Pymes se configuró solo en Generales; el núcleo compartido no se ajustó (ARQ-67).
 
-- *Por confirmar en Athena:* `diagnostico/confirmar-pymes-bronce-dev.sql`. Q-A debe dar 468 movimientos sin póliza y 188.114.812,96; Q-B, 0 pólizas de 55139.
+- **Confirmado en Athena DEV** (2026-11-24; Bronce DEV, lote `20261124060016`), con `diagnostico/confirmar-pymes-bronce-dev.sql`. Sus tablas son de DEV y no sirve tal cual en QA ni PRD:
+  - **Q-A:** 468 movimientos sin póliza, de 2 pólizas y 45 operaciones, total 188.114.812,96. Igual a la Oracle.
+  - **Q-B:** el `agregatedpolicy` compartido tiene 52897 (203.007 pólizas), 54959 (95), 54979 (116), 55059 (14) y 55099 (2.714). **No tiene 55139.**
+  - **Q-C:** los movimientos sin póliza son 69 conceptos, y los 69 son iguales a Q5 de Pymes en la Oracle (filas y total al centavo). Archivo: `ResultadosAWS\d91a6061-57ea-45a5-b02d-84316227e063.csv`.
+  - Conclusión: todos los movimientos sin póliza son de Pymes, y todo Pymes está en el Bronce sin póliza.
 - *Hipótesis no comprobada:* el código del extractor no está en este espacio, así que no se sabe por qué gana la versión de Vida y Satélites. Si depende del orden de ejecución, otra corrida (por ejemplo la de PRD) podría traer Pymes y dar cifras distintas.
 
 **Corrección propuesta (con su configuración, en el mismo cambio):**
@@ -299,6 +303,7 @@ Si falta un permiso, esa sección queda anotada en `resumen.json` como error y l
 | `diagnostico/comparar_ambientes.py` | Veredicto por capa e informe |
 | `diagnostico/mapeo-columnas-propuesta.json` | Equivalencia entre columnas del Excel y del Silver (validada en QA donde se indica) |
 | `diagnostico/validar_terceros.py` | Cruza acuerdos y tomadores del Silver con el RRC por producto (tomadores por huella del nombre) y resume la completitud de agentes |
+| `correo-entrega-evidencias.md` | Correo final a negocio con los 3 hallazgos, sus cifras y la lista de evidencias (respaldo) |
 | `Tablero-PCR-Emisiones-202606.xlsx` | Tablero para presentar: RRC frente al sistema por caso, producto, métrica y acuerdo; Oracle frente a la extracción; agentes, tomadores y hallazgos. Sin datos personales |
 | `diagnostico/diagnostico-pymes-55139.sql` | Encuentra en qué paso de la consulta de movimientos se pierde Pymes (resultado: en ninguno) |
 | `diagnostico/confirmar-pymes-bronce-dev.sql` | Athena DEV: movimientos de Generales sin póliza en el `agregatedpolicy` compartido (Pymes) |

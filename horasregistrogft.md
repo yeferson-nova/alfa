@@ -1,6 +1,6 @@
 # Registro de horas
 
-Campos del formulario "Time Entry". Un apartado por día, del más reciente al más antiguo.
+Campos del formulario "Time Entry". Un apartado por día, del más reciente al más antiguo. El 23 y 24 de noviembre salen de la memoria; del 25 al 30 son una **estimación** según las prioridades del plan de trabajo (ajustar con lo que realmente pase).
 
 ## Datos que no cambian
 | Campo | Valor |
@@ -10,95 +10,112 @@ Campos del formulario "Time Entry". Un apartado por día, del más reciente al m
 | Entry Hours | 8 por día (supuesto de jornada completa; **ajustar** si fueron otras horas) |
 
 ## Resumen
-| Fecha | Día | Horas | Tema |
-|---|---|---|---|
-| [20/11/2026](#dia-2026-11-20) | Viernes | 8 | Modularización de la extracción: reunión con Víctor, consultas base de Oracle, diseño de lectura por rangos y roadmap de cambios |
-| [19/11/2026](#dia-2026-11-19) | Jueves | 8 | Informe de observabilidad (logs, métricas y trazas) y medición de tiempos de Primas Rentas |
-| [18/11/2026](#dia-2026-11-18) | Miércoles | 8 | Pruebas del fix de Primas Rentas en DEV y revisión de los logs de Primas ARL en QA |
-| [17/11/2026](#dia-2026-11-17) | Martes | 8 | Fix del SCD por periodo de Primas ARL: plan, script y pruebas en DEV |
+| Fecha | Día | Horas | Tipo | Tema |
+|---|---|---|---|---|
+| [30/11/2026](#dia-2026-11-30) | Lunes | 8 | Estimado | Preparación del cambio de PCR Emisiones para la primera semana de diciembre y optimizaciones de cedidas-riesgo |
+| [27/11/2026](#dia-2026-11-27) | Viernes | 8 | Estimado | Optimizaciones de PCR Emisiones y avance de cedidas-riesgo |
+| [26/11/2026](#dia-2026-11-26) | Jueves | 8 | Estimado | PaP de PCR Emisiones y atención de lo que salga |
+| [25/11/2026](#dia-2026-11-25) | Miércoles | 8 | Estimado | Certificación de cifras de PCR Emisiones y soporte a defectos |
+| [24/11/2026](#dia-2026-11-24) | Martes | 8 | Real | PCR Emisiones: validación de cifras, evidencias y correcciones antes de certificar |
+| [23/11/2026](#dia-2026-11-23) | Lunes | 8 | Real | PCR Emisiones: diagnóstico de cifras de PRD frente a QA, pruebas en AWS y avance de la extracción |
 
 ---
 
-<a id="dia-2026-11-20"></a>
-## 20/11/2026 (viernes)
+<a id="dia-2026-11-30"></a>
+## 30/11/2026 (lunes) — estimado
 
 | Campo | Valor |
 |---|---|
-| Start Date | 20/11/2026 |
-| End Date | 20/11/2026 |
+| Start Date | 30/11/2026 |
+| End Date | 30/11/2026 |
+| Time Type | Día hábil, tiempo regular (lunes, no es festivo en Colombia) |
+| Entry Hours | 8 (supuesto de jornada completa; **ajustar** si fueron otras horas) |
+
+### Notes (texto para pegar en el campo)
+
+PCR Emisiones: dejé lista la entrega de las optimizaciones para el cambio de la primera semana de diciembre, con pruebas y guía para DevOps. Continué las optimizaciones de cedidas-riesgo.
+
+---
+
+<a id="dia-2026-11-27"></a>
+## 27/11/2026 (viernes) — estimado
+
+| Campo | Valor |
+|---|---|
+| Start Date | 27/11/2026 |
+| End Date | 27/11/2026 |
 | Time Type | Día hábil, tiempo regular (viernes, no es festivo en Colombia) |
 | Entry Hours | 8 (supuesto de jornada completa; **ajustar** si fueron otras horas) |
 
 ### Notes (texto para pegar en el campo)
 
-Modularización de la extracción: revisé con Víctor cómo se leen las tablas de Oracle, dejé las consultas base y propuse leer por rangos de llave. Armé el roadmap de cambios y documenté las brechas nuevas de la extracción.
-
-### Detalle de lo trabajado
-- Reunión con Víctor sobre la extracción y consultas base M1 a M4 como referencia de resultados.
-- Tarea de modularización con el componente de extracción, alcance y entregable definidos.
-- Diseño de lectura por rangos de llave con semijoin, y roadmap de cambios.
-- Brechas ARQ-57 a ARQ-60 y COS-11; revisión del código de los extractores.
+Trabajé en las optimizaciones de PCR Emisiones que van en el cambio de diciembre y avancé las de cedidas-riesgo. Di soporte a fallos de otros casos de uso para estabilizarlos.
 
 ---
 
-<a id="dia-2026-11-19"></a>
-## 19/11/2026 (jueves)
+<a id="dia-2026-11-26"></a>
+## 26/11/2026 (jueves) — estimado
 
 | Campo | Valor |
 |---|---|
-| Start Date | 19/11/2026 |
-| End Date | 19/11/2026 |
+| Start Date | 26/11/2026 |
+| End Date | 26/11/2026 |
 | Time Type | Día hábil, tiempo regular (jueves, no es festivo en Colombia) |
 | Entry Hours | 8 (supuesto de jornada completa; **ajustar** si fueron otras horas) |
 
 ### Notes (texto para pegar en el campo)
 
-Observabilidad: armé el informe técnico con logs, métricas y trazas, el contrato de log y el recorrido del ID de ejecución, y actualicé el diagrama. También medí tiempos de Primas Rentas con un script y apunté lo hablado con Víctor.
-
-### Detalle de lo trabajado
-- Informe de observabilidad (fases 0 a 6) y brechas ARQ-51 a ARQ-56, SEG-17 y COS-10.
-- Diagrama de la propuesta con observabilidad agregada.
-- Script para medir tiempos de Primas Rentas, con ajustes.
-- Reunión con Víctor: enlace corto, modelo de identidades y segregación de eventos.
+Acompañé el paso a producción (PaP) de PCR Emisiones y revisé las cifras después del despliegue. Atendí los defectos que aparecieron y empecé a ordenar las optimizaciones del siguiente cambio.
 
 ---
 
-<a id="dia-2026-11-18"></a>
-## 18/11/2026 (miércoles)
+<a id="dia-2026-11-25"></a>
+## 25/11/2026 (miércoles) — estimado
 
 | Campo | Valor |
 |---|---|
-| Start Date | 18/11/2026 |
-| End Date | 18/11/2026 |
+| Start Date | 25/11/2026 |
+| End Date | 25/11/2026 |
 | Time Type | Día hábil, tiempo regular (miércoles, no es festivo en Colombia) |
 | Entry Hours | 8 (supuesto de jornada completa; **ajustar** si fueron otras horas) |
 
 ### Notes (texto para pegar en el campo)
 
-Probé en DEV el fix de Primas Rentas en la Silver con un script y su guía, incluyendo la Step Function y la lambda, y documenté el resultado. Revisé los logs de las pruebas de Primas ARL en QA y actualicé la memoria.
-
-### Detalle de lo trabajado
-- Script y guía de pruebas de la Silver de Rentas en DEV, con resultados.
-- Logs de QA de Primas ARL (varias corridas) analizados.
-- Entrega de SES con HTML cerrada en QA y en paso a PRD.
+Certificación de cifras de PCR Emisiones con negocio: apoyé la revisión de los valores y corregí los defectos que aparecieron. Dejé lista la información para el paso a producción del día siguiente.
 
 ---
 
-<a id="dia-2026-11-17"></a>
-## 17/11/2026 (martes)
+<a id="dia-2026-11-24"></a>
+## 24/11/2026 (martes)
 
 | Campo | Valor |
 |---|---|
-| Start Date | 17/11/2026 |
-| End Date | 17/11/2026 |
+| Start Date | 24/11/2026 |
+| End Date | 24/11/2026 |
 | Time Type | Día hábil, tiempo regular (martes, no es festivo en Colombia) |
 | Entry Hours | 8 (supuesto de jornada completa; **ajustar** si fueron otras horas) |
 
 ### Notes (texto para pegar en el campo)
 
-Fix del SCD por periodo de Primas ARL: dejé el plan, escribí el script del paso 4 y corrí las pruebas en DEV. Recuperé el mockup HTML del correo y actualicé la memoria y los estándares de PR.
+PCR Emisiones: validé las cifras con consultas a Oracle y a AWS, armé las evidencias y encontré que el núcleo compartido de la extracción dejaba fuera Pymes. Preparé el correo de entrega de evidencias.
+
+---
+
+<a id="dia-2026-11-23"></a>
+## 23/11/2026 (lunes)
+
+| Campo | Valor |
+|---|---|
+| Start Date | 23/11/2026 |
+| End Date | 23/11/2026 |
+| Time Type | Día hábil, tiempo regular (lunes, no es festivo en Colombia) |
+| Entry Hours | 8 (supuesto de jornada completa; **ajustar** si fueron otras horas) |
+
+### Notes (texto para pegar en el campo)
+
+PCR Emisiones: investigué por qué PRD trae cifras distintas a QA. Armé scripts de diagnóstico, los corrí en DEV y QA, comparé contra los Excel de negocio y documenté las fallas. También avancé el análisis de la extracción.
 
 ### Detalle de lo trabajado
-- Plan del fix y script del paso 4 de Primas ARL.
-- Pruebas en DEV del SCD con freno por periodo.
-- Mockup HTML recuperado; estándar de pull requests documentado.
+- Diagnóstico por ambiente y comparador por capas; resultados de DEV y QA frente a Oracle.
+- Cuadre de montos contra el Excel de negocio y fallas halladas en Generales.
+- Brechas ARQ-61 a ARQ-66 de la extracción.
