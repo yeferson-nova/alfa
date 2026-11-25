@@ -1,7 +1,3 @@
-#!/usr/bin/env bash
-# Solo lectura. NO ejecuta el job: consulta las corridas que ya existen en DEV
-# del proceso de extraccion de Emisiones (PCR Vida, Generales, Satelites).
-# Salida: pcr-medicion-<fecha>.txt. Es evidencia: va en EvidenciasAws\dev-extraccion\ (fuera de Git), no en esta carpeta.
 export AWS_PAGER=""
 export AWS_REGION=us-east-1 AWS_DEFAULT_REGION=us-east-1
 OUT="pcr-medicion-$(date +%Y%m%d-%H%M).txt"

@@ -1,19 +1,3 @@
--- =====================================================================
--- Consultas de diccionario para Julio (Oracle): Acsel-e (esquemas ACSELE_ALFA y ACSELE_ALFA_BI).
--- Extracción NIIF 17, opción D (lectura por rangos de llave). Generado el 2026-11-20.
--- Origen de la lista de tablas: las consultas base M1-M4 (Docs\05-arquitectura\Reuniones\Extraccion): 93 tablas, 144 columnas usadas en joins.
---
--- SOLO LECTURA. Todo consulta el diccionario (ALL_*): no lee datos de negocio.
--- La única excepción es la prueba 3c, comentada, opcional y de una sola fila.
---
--- IMPORTANTE:
---  1. Correr con el USUARIO DE SERVICIO de la conexión de Glue. Las vistas ALL_* y los
---     privilegios dependen del usuario. Si se corren con otro usuario, usar el bloque 3d (DBA).
---  2. Base: la de Acsel-e donde están acsele_alfa y acsele_alfa_bi. Anotar en cuál corrió (consulta 0).
---  3. Exportar cada resultado a CSV con el número de la consulta en el nombre (ej. 1.csv).
--- =====================================================================
-
--- 0. Dónde y con qué usuario se corre
 SELECT sys_context('USERENV', 'DB_NAME')      AS base,
        sys_context('USERENV', 'SERVICE_NAME') AS servicio,
        sys_context('USERENV', 'SESSION_USER') AS usuario
