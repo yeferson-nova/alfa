@@ -1,0 +1,185 @@
+{
+    "Item": {
+        "PK": {
+            "S": "PROGRAMACION#EMISIONES"
+        },
+        "activo": {
+            "BOOL": true
+        },
+        "casosActivos": {
+            "M": {
+                "generales": {
+                    "BOOL": true
+                },
+                "pcr_vida": {
+                    "BOOL": true
+                },
+                "satelites": {
+                    "BOOL": true
+                }
+            }
+        },
+        "codigoMalla": {
+            "S": "EMISIONES"
+        },
+        "estado": {
+            "S": "PENDIENTE"
+        },
+        "estadoProgramacion": {
+            "S": "ACTIVA"
+        },
+        "fechaActualizacion": {
+            "S": "2026-11-23T21:58:36Z"
+        },
+        "fechaEjecucion": {
+            "S": "2026-11-24T01:00:00"
+        },
+        "filtros": {
+            "M": {
+                "generales": {
+                    "M": {
+                        "companias": {
+                            "L": [
+                                {
+                                    "S": "Seguros Alfa S.A."
+                                }
+                            ]
+                        },
+                        "productos": {
+                            "L": [
+                                {
+                                    "S": "55059"
+                                },
+                                {
+                                    "S": "54999"
+                                },
+                                {
+                                    "S": "54959"
+                                },
+                                {
+                                    "S": "52897"
+                                },
+                                {
+                                    "S": "54979"
+                                },
+                                {
+                                    "S": "55099"
+                                },
+                                {
+                                    "S": "55139"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "pcr_vida": {
+                    "M": {
+                        "companias": {
+                            "L": [
+                                {
+                                    "S": "50.0"
+                                }
+                            ]
+                        },
+                        "productos": {
+                            "L": [
+                                {
+                                    "S": "48897"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "satelites": {
+                    "M": {
+                        "companias": {
+                            "L": [
+                                {
+                                    "S": "50.0"
+                                }
+                            ]
+                        },
+                        "productos": {
+                            "L": [
+                                {
+                                    "S": "Practiseguro"
+                                },
+                                {
+                                    "S": "VidaAp"
+                                },
+                                {
+                                    "S": "SalvaFactura"
+                                },
+                                {
+                                    "S": "Exequias"
+                                },
+                                {
+                                    "S": "PetLover"
+                                },
+                                {
+                                    "S": "ProteccionVida"
+                                },
+                                {
+                                    "S": "ProteccionSalud"
+                                },
+                                {
+                                    "S": "ExequiasTradicional"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "filtrosComunes": {
+            "M": {
+                "fechaFin": {
+                    "NULL": true
+                },
+                "fechaInicio": {
+                    "NULL": true
+                },
+                "status": {
+                    "L": [
+                        {
+                            "N": "2"
+                        }
+                    ]
+                }
+            }
+        },
+        "modoEjecucion": {
+            "S": "NORMAL"
+        },
+        "periodicidad": {
+            "S": "UNA_VEZ"
+        },
+        "periodoNegocio": {
+            "S": "202606"
+        },
+        "programado": {
+            "BOOL": false
+        },
+        "scheduleEstado": {
+            "S": "PROGRAMADO"
+        },
+        "scheduleExpression": {
+            "S": "at(2026-11-24T01:00:00)"
+        },
+        "scheduleName": {
+            "S": "niif-dev-emisiones-202608-20261120-163500"
+        },
+        "scheduleState": {
+            "S": "ENABLED"
+        },
+        "scheduleTimezone": {
+            "S": "America/Bogota"
+        },
+        "tipoRegistro": {
+            "S": "PRG_PROGRAMACION"
+        },
+        "SK": {
+            "S": "METADATA"
+        }
+    }
+}
