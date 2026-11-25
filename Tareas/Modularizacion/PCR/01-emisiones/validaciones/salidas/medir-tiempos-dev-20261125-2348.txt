@@ -1,0 +1,758 @@
+== 1. Corridas del job niif-dev-extraccion-estandar-emisiones (ultimas 50)
+inicio               estado       min  DPU-h  workers  caso/args
+2026-11-24 06:00:17  SUCCEEDED    321  107.1  G.2Xx10  
+2026-11-23 21:20:51  FAILED         1    0.2  G.2Xx10  
+2026-11-23 21:08:47  FAILED         1    0.2  G.2Xx10  
+2026-11-23 21:03:25  FAILED         1    0.2  G.2Xx10  
+2026-11-23 21:00:47  FAILED         1    0.3  G.2Xx10  
+2026-11-23 04:32:17  SUCCEEDED     32   10.5  G.2Xx10  
+2026-11-23 04:12:59  STOPPED       15    5.1  G.2Xx10  
+2026-11-20 21:35:38  SUCCEEDED    308  102.8  G.2Xx10  
+2026-11-20 19:40:45  FAILED         1    0.3  G.2Xx10  
+2026-11-20 06:03:14  FAILED         1    0.3  G.2Xx10  
+2026-11-19 01:35:42  SUCCEEDED    282   94.0  G.2Xx10  
+2026-11-19 01:13:11  STOPPED       14    4.7  G.2Xx10  
+2026-11-18 23:17:19  SUCCEEDED      1    0.3  G.2Xx10  
+2026-11-18 17:18:53  STOPPED      485  161.8  G.2Xx10  --PERIODO_NEGOCIO=202606
+2026-11-18 17:03:14  STOPPED       12    4.0  G.2Xx10  --PERIODO_NEGOCIO=202606
+2026-11-18 16:39:30  STOPPED       18    5.9  G.2Xx10  --PERIODO_NEGOCIO=202606
+2026-11-18 16:27:19  FAILED         7    2.3  G.2Xx10  --PERIODO_NEGOCIO=202606
+2026-11-18 14:56:05  SUCCEEDED     70   23.3  G.2Xx10  --PERIODO_NEGOCIO=202606
+2026-11-18 14:49:59  STOPPED        4    1.4  G.2Xx10  --PERIODO_NEGOCIO=202606
+2026-11-18 05:44:48  SUCCEEDED    427  142.3  G.2Xx10  
+2026-11-17 03:10:41  SUCCEEDED    172   57.5  G.2Xx10  
+2026-11-17 02:06:52  STOPPED       60   20.1  G.2Xx10  
+2026-11-17 02:01:34  FAILED         1    0.2  G.2Xx10  
+2026-11-17 01:29:13  STOPPED       29    9.8  G.2Xx10  
+2026-11-17 01:13:01  FAILED         8    2.6  G.2Xx10  
+2026-11-17 01:04:43  FAILED         1    0.3  G.2Xx10  
+2026-11-17 00:50:07  FAILED         1    0.2  G.2Xx10  
+2026-11-17 00:26:08  FAILED         1    0.3  G.2Xx10  
+2026-11-16 23:20:35  FAILED        20    6.7  G.2Xx10  
+2026-11-16 22:38:47  STOPPED       33   11.0  G.2Xx10  
+2026-11-16 22:06:11  STOPPED       22    7.5  G.2Xx10  
+2026-11-16 21:37:39  STOPPED       25    8.2  G.2Xx10  
+2026-11-16 20:54:54  STOPPED        6    2.1  G.2Xx10  
+2026-11-16 18:09:24  STOPPED       86   28.7  G.2Xx10  
+SUCCEEDED: n=8 min=1 mediana=227 max=427 min
+
+== 2. Configuracion del job
+{'WorkerType': 'G.2X', 'NumberOfWorkers': 10, 'MaxCapacity': 20.0, 'Timeout': 2880, 'GlueVersion': '4.0'}
+
+== 3. Step Functions de Emisiones (ultimas 20 ejecuciones)
+-- niif-dev-emisiones
+   2026-11-24 06:00:15  SUCCEEDED       393 min
+   2026-11-23 21:20:50  FAILED            2 min
+   2026-11-23 21:08:45  FAILED            2 min
+   2026-11-23 21:03:23  FAILED            2 min
+   2026-11-23 21:00:45  FAILED            2 min
+   2026-11-20 21:35:36  FAILED          312 min
+   2026-11-20 19:40:44  FAILED            2 min
+   2026-11-19 01:35:42  FAILED          287 min
+   2026-11-19 01:13:10  ABORTED          19 min
+   2026-11-18 05:44:47  FAILED          432 min
+   SUCCEEDED: n=1 min=393 mediana=393 max=393 min
+-- niif-dev-emisiones-reanudacion-validacion
+   2026-11-22 22:05:49  SUCCEEDED        61 min
+   2026-11-22 20:32:38  SUCCEEDED        58 min
+   2026-11-21 16:43:36  FAILED           65 min
+   2026-11-21 06:00:59  FAILED           29 min
+   2026-11-21 05:21:36  FAILED           23 min
+   2026-11-21 04:08:43  FAILED           18 min
+   2026-11-21 04:02:10  FAILED            2 min
+   2026-11-19 23:48:25  FAILED           70 min
+   2026-11-19 22:57:47  FAILED           33 min
+   2026-11-19 20:54:30  FAILED           25 min
+   2026-11-19 20:01:10  FAILED           23 min
+   2026-11-19 19:29:19  FAILED           14 min
+   2026-11-19 18:36:06  FAILED           14 min
+   2026-11-19 18:15:20  FAILED           14 min
+   2026-11-19 17:30:49  FAILED            1 min
+   2026-11-19 17:28:21  FAILED            0 min
+   2026-11-19 16:05:49  FAILED            3 min
+   2026-11-19 14:29:45  FAILED           16 min
+   2026-11-19 14:05:56  FAILED           16 min
+   2026-11-19 12:52:19  FAILED           14 min
+   SUCCEEDED: n=2 min=58 mediana=59 max=61 min
+
+== 4. Ultima corrida por caso (parametros_extraccion.json)
+-- pcr-vida: lote=20261124060016 periodo=202606 estado=SUCCESS calidad=COMPLETA fin=2026-11-24T07:59:44.411376+00:00 tablas=25 suma_escritura=175 min
+   configuracion: s3://niif-dev-assets/pcr-vida/config_extraccion_pcr_vida.json | nucleo=7 rama=18
+-- generales: lote=20261124060016 periodo=202606 estado=SUCCESS calidad=INCOMPLETA fin=2026-11-24T09:06:30.745541+00:00 tablas=45 suma_escritura=95 min
+   configuracion: s3://niif-dev-assets/generales/config_extraccion_generales.json | nucleo=7 rama=38
+-- satelites: lote=20261124060016 periodo=202606 estado=SUCCESS calidad=INCOMPLETA fin=2026-11-24T11:21:51.200590+00:00 tablas=59 suma_escritura=162 min
+   configuracion: s3://niif-dev-assets/satelites/config_extraccion_satelites.json | nucleo=7 rama=52
+
+== 5. Historial por tabla (checkpoints _control/_SUCCESS.json ya escritos)
+tablas con checkpoints: 220
+caso       lote              escr_s conteo_s        filas  estado  tabla
+comun      20261118054447      1035        1      3928567  COMPLETE  acsele_alfa/riskunitdco
+comun      20261119013542       450        1      3928567  COMPLETE  acsele_alfa/prepolicy
+comun      20261124060016       448        1      3928567  COMPLETE  acsele_alfa/eventdco
+comun      20261119013542       441        1      3928567  COMPLETE  acsele_alfa/eventdco
+comun      20261124060016       425        2      3928567  COMPLETE  acsele_alfa/prepolicy
+comun      20261118054447       421        2      3928567  COMPLETE  acsele_alfa/eventdco
+comun      20261120213537       395        1      4005197  COMPLETE  acsele_alfa/eventdco
+comun      20261120213537       313        1      4005197  COMPLETE  acsele_alfa/riskunitdco
+comun      20261124060016       297        1      3928567  COMPLETE  acsele_alfa/riskunitdco
+comun      20261119013542       275        1      3928567  COMPLETE  acsele_alfa/riskunitdco
+comun      20261124060016       271        2      3928612  COMPLETE  acsele_alfa/policydco
+comun      20261119011311       269        2      3928567  COMPLETE  acsele_alfa/prepolicy
+comun      20261120213537       261        1      4005197  COMPLETE  acsele_alfa/prepolicy
+comun      20261124060016       234        1      3848632  COMPLETE  acsele_alfa/agregatedpolicy
+comun      20261119013542       230        2      3928612  COMPLETE  acsele_alfa/policydco
+comun      20261120213537       200        2      4005932  COMPLETE  acsele_alfa/policydco
+comun      20261120213537       193        1      3953523  COMPLETE  acsele_alfa/agregatedpolicy
+comun      20261119013542       182        2      3848632  COMPLETE  acsele_alfa/agregatedpolicy
+comun      20261119011311       181       10      3928778  COMPLETE  acsele_alfa/contextoperation
+comun      20261119011311       168        2      3928612  COMPLETE  acsele_alfa/policydco
+comun      20261119011311       161        1      3848632  COMPLETE  acsele_alfa/agregatedpolicy
+comun      20261120213537       113        8      4006114  COMPLETE  acsele_alfa/contextoperation
+comun      20261124060016        91        9      3928778  COMPLETE  acsele_alfa/contextoperation
+comun      20261119013542        63       11      3928778  COMPLETE  acsele_alfa/contextoperation
+comun      20261120172310        29        7          455  COMPLETE  acsele_alfa/contextoperation
+comun      20261120172310        10        2         1365  COMPLETE  acsele_alfa/eventdco
+comun      20261120172310         7        7          455  COMPLETE  acsele_alfa/policydco
+comun      20261120172310         7        1          455  COMPLETE  acsele_alfa/riskunitdco
+comun      20261120172310         5        4            2  COMPLETE  acsele_alfa/agregatedpolicy
+comun      20261120172310         5        4          455  COMPLETE  acsele_alfa/prepolicy
+comun      20261124060016         5        1           14  COMPLETE  acsele_alfa/product
+comun      20261119013542         2        1           14  COMPLETE  acsele_alfa/product
+comun      20261118054447         2        1           14  COMPLETE  acsele_alfa/product
+comun      20261120172310         2        1            2  COMPLETE  acsele_alfa/product
+comun      20261120213537         2        1           14  COMPLETE  acsele_alfa/product
+comun      20261117015421        -1       -1       259341  COMPLETE  acsele_alfa/agregatedinsuranceobject
+comun      20261116231448        -1       -1       259341  COMPLETE  acsele_alfa/agregatedinsuranceobject
+comun      20261116223452        -1       -1       259341  COMPLETE  acsele_alfa/agregatedinsuranceobject
+comun      20261116213351        -1       -1       119962  COMPLETE  acsele_alfa/agregatedinsuranceobject
+comun      20261117015421        -1       -1       418680  COMPLETE  acsele_alfa/agregatedriskunit
+comun      20261116231448        -1       -1       418680  COMPLETE  acsele_alfa/agregatedriskunit
+comun      20261116223452        -1       -1       418680  COMPLETE  acsele_alfa/agregatedriskunit
+comun      20261116213351        -1       -1       306086  COMPLETE  acsele_alfa/agregatedriskunit
+comun      20261117015421        -1       -1          113  COMPLETE  acsele_alfa/eventtype
+comun      20261116231448        -1       -1          113  COMPLETE  acsele_alfa/eventtype
+comun      20261116213351        -1       -1          113  COMPLETE  acsele_alfa/eventtype
+comun      20261117015421        -1       -1      3895863  COMPLETE  acsele_alfa/insuranceobjectdco
+comun      20261117015421        -1       -1      3751918  COMPLETE  acsele_alfa/oavdeudores
+comun      20261117015421        -1       -1            0  COMPLETE  acsele_alfa/preagreement
+comun      20261117015421        -1       -1           12  COMPLETE  acsele_alfa/preproduct
+comun      20261117015421        -1       -1       204794  COMPLETE  acsele_alfa/prethirdparty
+comun      20261117015421        -1       -1         1123  COMPLETE  acsele_alfa/stag_agreementversion
+comun      20261117015421        -1       -1      3953530  COMPLETE  acsele_alfa/stpo_insobjparticipation
+comun      20261117015421        -1       -1      3996106  COMPLETE  acsele_alfa/stpo_insobjparticipationdco
+comun      20261117015421        -1       -1      7771671  COMPLETE  acsele_alfa/stpo_policyparticipation
+comun      20261117015421        -1       -1     15876657  COMPLETE  acsele_alfa/stpo_policyparticipationdco
+comun      20261117015421        -1       -1          353  COMPLETE  acsele_alfa/stps_agreementstaticdat
+comun      20261117015421        -1       -1     18504049  COMPLETE  acsele_alfa/stps_relationagreementpolicy
+comun      20261117015421        -1       -1           21  COMPLETE  acsele_alfa/stts_role
+comun      20261117015421        -1       -1     41561287  COMPLETE  acsele_alfa/thirdpartymovementpolicy
+comun      20261117015421        -1       -1      3751918  COMPLETE  acsele_alfa/urvdeudores
+comun      20261117015421        -1       -1           18  COMPLETE  anular
+comun      20261116231448        -1       -1           18  COMPLETE  anular
+comun      20261116223452        -1       -1           18  COMPLETE  anular
+comun      20261117015421        -1       -1          445  COMPLETE  aseguradovida
+comun      20261116231448        -1       -1          445  COMPLETE  aseguradovida
+comun      20261116223452        -1       -1          445  COMPLETE  aseguradovida
+comun      20261117015421        -1       -1            0  COMPLETE  cancelarhogar
+comun      20261116231448        -1       -1            0  COMPLETE  cancelarhogar
+comun      20261116223452        -1       -1            0  COMPLETE  cancelarhogar
+comun      20261117015421        -1       -1         4149  COMPLETE  cancelarpys
+comun      20261116231448        -1       -1         4149  COMPLETE  cancelarpys
+comun      20261116223452        -1       -1         4149  COMPLETE  cancelarpys
+comun      20261117015421        -1       -1           32  COMPLETE  cancelarvidaap
+comun      20261116231448        -1       -1           32  COMPLETE  cancelarvidaap
+comun      20261116223452        -1       -1           32  COMPLETE  cancelarvidaap
+comun      20261117015421        -1       -1        48047  COMPLETE  cobertura
+comun      20261116231448        -1       -1        48047  COMPLETE  cobertura
+comun      20261117015421        -1       -1        48047  COMPLETE  coveragedco
+comun      20261116231448        -1       -1        48047  COMPLETE  coveragedco
+comun      20261117015421        -1       -1       135526  COMPLETE  direccion
+comun      20261116231448        -1       -1       135526  COMPLETE  direccion
+comun      20261117015421        -1       -1         1338  COMPLETE  oafuturoprotegido
+comun      20261117015421        -1       -1       119334  COMPLETE  oaincterrdeudores
+comun      20261117015421        -1       -1          106  COMPLETE  oamihogarseguro
+comun      20261117015421        -1       -1        11283  COMPLETE  oapractiseguro
+comun      20261117015421        -1       -1          418  COMPLETE  oapractiseguroplus
+comun      20261117015421        -1       -1         6885  COMPLETE  oasalvafactura
+comun      20261117015421        -1       -1          451  COMPLETE  oavidaap
+comun      20261117015421        -1       -1        92652  COMPLETE  openitem
+comun      20261117015421        -1       -1        92652  COMPLETE  openitemreference
+comun      20261117015421        -1       -1        23325  COMPLETE  participacionintermediarios
+comun      20261117015421        -1       -1        23145  COMPLETE  personanatural
+comun      20261117015421        -1       -1            0  COMPLETE  poaccpersonales
+comun      20261117015421        -1       -1          106  COMPLETE  pomihogarseguro
+comun      20261117015421        -1       -1        12895  COMPLETE  popractiseguro
+comun      20261117015421        -1       -1          375  COMPLETE  poproteccionfinanciera
+comun      20261117015421        -1       -1           98  COMPLETE  poproteccionsalud
+comun      20261117015421        -1       -1          150  COMPLETE  poproteccionvida
+comun      20261117015421        -1       -1            0  COMPLETE  povdeudores
+comun      20261117015421        -1       -1          448  COMPLETE  povidaap
+comun      20261117015421        -1       -1       119933  COMPLETE  preriskunits
+comun      20261117015421        -1       -1       246650  COMPLETE  property
+comun      20261117015421        -1       -1          338  COMPLETE  stpo_ruparticipation
+comun      20261117015421        -1       -1          341  COMPLETE  stpo_ruparticipationdco
+comun      20261117015421        -1       -1           17  COMPLETE  stri_reinsurancekind
+comun      20261117015421        -1       -1       135529  COMPLETE  stte_thirdparty
+comun      20261117015421        -1       -1       135526  COMPLETE  stte_thirdpartyaddressbook
+comun      20261117015421        -1       -1         1405  COMPLETE  thirdpartyrole
+comun      20261117015421        -1       -1       246650  COMPLETE  uaadetail
+comun      20261117015421        -1       -1       119334  COMPLETE  urincterrdeudores
+comun      20261117015421        -1       -1          106  COMPLETE  urmihogarseguro
+comun      20261117015421        -1       -1        13037  COMPLETE  urpractiseguro
+comun      20261117015421        -1       -1         6885  COMPLETE  ursalvafactura
+generales  20261118054447      2479        2     17270878  COMPLETE  stpo_policyparticipationdco
+generales  20261124060016       629        2     17272245  COMPLETE  stpo_policyparticipationdco
+generales  20261120213537       580        2     17111931  COMPLETE  stpo_policyparticipationdco
+generales  20261124060016       543        1           45  COMPLETE  stps_agreementstaticdat
+generales  20261119013542       475        1           45  COMPLETE  stps_agreementstaticdat
+generales  20261120213537       433        1           48  COMPLETE  stps_agreementstaticdat
+generales  20261119013542       376        1     17272245  COMPLETE  stpo_policyparticipationdco
+generales  20261118054447       348        1           43  COMPLETE  stps_agreementstaticdat
+generales  20261118054447       317        1       203161  COMPLETE  urincterrdeudores
+generales  20261120172310       297        1       203161  COMPLETE  oaincterrdeudores
+generales  20261118054447       255        1       198905  COMPLETE  direccion
+generales  20261120172310       237        1       198906  COMPLETE  stte_thirdparty
+generales  20261124060016       234        1      7176727  COMPLETE  thirdpartymovementpolicy
+generales  20261119013542       218        1       198905  COMPLETE  direccion
+generales  20261120213537       218        1      7400906  COMPLETE  thirdpartymovementpolicy
+generales  20261118054447       215        1       198906  COMPLETE  prethirdparty
+generales  20261120172310       212        1       198905  COMPLETE  direccion
+generales  20261119013542       202        1      7176727  COMPLETE  thirdpartymovementpolicy
+generales  20261120172310       191        1       198905  COMPLETE  stte_thirdpartyaddressbook
+generales  20261124060016       187        1       198906  COMPLETE  prethirdparty
+generales  20261120213537       180        1       201330  COMPLETE  direccion
+generales  20261118054447       175        1       203161  COMPLETE  oaincterrdeudores
+generales  20261120213537       172        1       201331  COMPLETE  prethirdparty
+generales  20261124060016       171        1       203234  COMPLETE  agregatedriskunit
+generales  20261120213537       171        1       201331  COMPLETE  stte_thirdparty
+generales  20261118054447       165        1      7176259  COMPLETE  thirdpartymovementpolicy
+generales  20261124060016       163        1       198905  COMPLETE  stte_thirdpartyaddressbook
+generales  20261120213537       159        1       201330  COMPLETE  stte_thirdpartyaddressbook
+generales  20261124060016       157        1       198905  COMPLETE  direccion
+generales  20261119013542       155        1            8  COMPLETE  stts_role
+generales  20261124060016       155        1       198906  COMPLETE  stte_thirdparty
+generales  20261119013542       153        1       198906  COMPLETE  prethirdparty
+generales  20261120213537       153        1            8  COMPLETE  stts_role
+generales  20261124060016       151        1            8  COMPLETE  stts_role
+generales  20261119013542       150        1       198905  COMPLETE  stte_thirdpartyaddressbook
+generales  20261120172310       150        1       203161  COMPLETE  urincterrdeudores
+generales  20261118054447       145        1       198905  COMPLETE  stte_thirdpartyaddressbook
+generales  20261118054447       144        1       198906  COMPLETE  stte_thirdparty
+generales  20261124060016       143        1       203734  COMPLETE  insuranceobjectdco
+generales  20261119013542       143        1       203234  COMPLETE  agregatedriskunit
+generales  20261120213537       141        1       206961  COMPLETE  agregatedriskunit
+generales  20261119013542       136        1       198906  COMPLETE  stte_thirdparty
+generales  20261120172310       135        1            0  COMPLETE  povdeudores
+generales  20261118054447       127        1            8  COMPLETE  stts_role
+generales  20261120213537       125        2       206961  COMPLETE  stps_relationagreementpolicy
+generales  20261124060016       123        1       203161  COMPLETE  oaincterrdeudores
+generales  20261124060016       122        1       203161  COMPLETE  urincterrdeudores
+generales  20261120213537       121        1       210716  COMPLETE  preriskunits
+generales  20261124060016       120        1       203734  COMPLETE  preriskunits
+generales  20261120213537       118        1       209568  COMPLETE  urincterrdeudores
+generales  20261124060016       117        1       203234  COMPLETE  stps_relationagreementpolicy
+generales  20261124060016       117        1           90  COMPLETE  stag_agreementversion
+generales  20261119013542       114        1       203161  COMPLETE  urincterrdeudores
+generales  20261118054447       113        1       203232  COMPLETE  agregatedriskunit
+generales  20261118054447       107        1       203689  COMPLETE  insuranceobjectdco
+generales  20261119013542       106        1       203734  COMPLETE  preriskunits
+generales  20261120213537       104        1       209568  COMPLETE  oaincterrdeudores
+generales  20261120213537       104        1       414114  COMPLETE  stpo_policyparticipation
+generales  20261119013542       103        1       203234  COMPLETE  stps_relationagreementpolicy
+generales  20261120213537       103        1            0  COMPLETE  povdeudores
+generales  20261120172310        98        1           19  COMPLETE  anular
+generales  20261120172310        97        1            0  COMPLETE  urvdeudores
+generales  20261119013542        97        1       203161  COMPLETE  oaincterrdeudores
+generales  20261124060016        96        1           12  COMPLETE  eventtype
+generales  20261119013542        95        1       203006  COMPLETE  agregatedinsuranceobject
+generales  20261120213537        95        1       209568  COMPLETE  stpo_insobjparticipationdco
+generales  20261119013542        95        1           90  COMPLETE  preagreement
+generales  20261120213537        94        1       206753  COMPLETE  agregatedinsuranceobject
+generales  20261119013542        92        1       203734  COMPLETE  insuranceobjectdco
+generales  20261118054447        92        1       203006  COMPLETE  agregatedinsuranceobject
+generales  20261120213537        91        1       210716  COMPLETE  insuranceobjectdco
+generales  20261119013542        91        1       406657  COMPLETE  stpo_policyparticipation
+generales  20261118054447        89        1       203689  COMPLETE  preriskunits
+generales  20261124060016        89        2       406657  COMPLETE  stpo_policyparticipation
+generales  20261120213537        88        1            0  COMPLETE  urvdeudores
+generales  20261118054447        88        1       203232  COMPLETE  stps_relationagreementpolicy
+generales  20261118054447        88        1       203007  COMPLETE  stpo_insobjparticipation
+generales  20261120213537        88        1       206754  COMPLETE  stpo_insobjparticipation
+generales  20261118054447        86        1           88  COMPLETE  stag_agreementversion
+generales  20261119013542        84        1           12  COMPLETE  eventtype
+generales  20261120213537        83        1           95  COMPLETE  stag_agreementversion
+generales  20261119013542        82        1       203161  COMPLETE  stpo_insobjparticipationdco
+generales  20261120213537        82        1           95  COMPLETE  preagreement
+generales  20261124060016        82        1       203007  COMPLETE  stpo_insobjparticipation
+generales  20261124060016        82        1       203006  COMPLETE  agregatedinsuranceobject
+generales  20261119013542        81        1           90  COMPLETE  stag_agreementversion
+generales  20261120172310        80        1       203006  COMPLETE  agregatedinsuranceobject
+generales  20261120213537        80        1           18  COMPLETE  anular
+generales  20261120213537        79        1           15  COMPLETE  eventtype
+generales  20261119013542        77        1            0  COMPLETE  urvdeudores
+generales  20261124060016        77        1       203161  COMPLETE  stpo_insobjparticipationdco
+generales  20261119013542        76        1           19  COMPLETE  anular
+generales  20261118054447        75        1           88  COMPLETE  preagreement
+generales  20261118054447        74        1            0  COMPLETE  urvdeudores
+generales  20261124060016        74        1           90  COMPLETE  preagreement
+generales  20261120172310        74        1          320  COMPLETE  stpo_ruparticipationdco
+generales  20261119013542        72        1       203007  COMPLETE  stpo_insobjparticipation
+generales  20261124060016        71        1           19  COMPLETE  anular
+generales  20261118054447        70        1           19  COMPLETE  anular
+generales  20261118054447        69        1            0  COMPLETE  povdeudores
+generales  20261124060016        67        1            0  COMPLETE  povdeudores
+generales  20261124060016        66        1            0  COMPLETE  urvdeudores
+generales  20261119013542        62        1            0  COMPLETE  povdeudores
+generales  20261118054447        62        1           10  COMPLETE  eventtype
+generales  20261118054447        48        1       203161  COMPLETE  stpo_insobjparticipationdco
+generales  20261118054447        46        1       406651  COMPLETE  stpo_policyparticipation
+generales  20261120172310        43        1           95  COMPLETE  urmihogarseguro
+generales  20261120213537        35        1            5  COMPLETE  preproduct
+generales  20261119013542        28        1          320  COMPLETE  stpo_ruparticipationdco
+generales  20261124060016        26        1          320  COMPLETE  stpo_ruparticipationdco
+generales  20261118054447        25        1          320  COMPLETE  stpo_ruparticipationdco
+generales  20261120213537        17        1          271  COMPLETE  stpo_ruparticipationdco
+generales  20261119013542        17        1            5  COMPLETE  preproduct
+generales  20261120172310        15        1          314  COMPLETE  poproteccionfinanciera
+generales  20261124060016        15        1            5  COMPLETE  preproduct
+generales  20261119013542        14        1          314  COMPLETE  poproteccionfinanciera
+generales  20261118054447        13        1          317  COMPLETE  stpo_ruparticipation
+generales  20261118054447        13        1            4  COMPLETE  preproduct
+generales  20261120172310        13        1         1365  COMPLETE  stpo_policyparticipationdco
+generales  20261124060016        13        1          317  COMPLETE  stpo_ruparticipation
+generales  20261119013542        12        1          317  COMPLETE  stpo_ruparticipation
+generales  20261120172310        11        1           95  COMPLETE  oamihogarseguro
+generales  20261120213537        11        1          271  COMPLETE  stpo_ruparticipation
+generales  20261120213537        11        1          916  COMPLETE  poproteccionfinanciera
+generales  20261124060016         9        1           95  COMPLETE  urmihogarseguro
+generales  20261118054447         9        1          314  COMPLETE  poproteccionfinanciera
+generales  20261124060016         9        1          314  COMPLETE  poproteccionfinanciera
+generales  20261120213537         8        1           78  COMPLETE  oamihogarseguro
+generales  20261124060016         7        1           95  COMPLETE  oamihogarseguro
+generales  20261120213537         7        1           78  COMPLETE  urmihogarseguro
+generales  20261118054447         7        1           95  COMPLETE  oamihogarseguro
+generales  20261119013542         7        1           95  COMPLETE  oamihogarseguro
+generales  20261118054447         7        1           95  COMPLETE  urmihogarseguro
+generales  20261119013542         6        1           95  COMPLETE  urmihogarseguro
+generales  20261120172310         5        1            6  COMPLETE  stpo_policyparticipation
+generales  20261120172310         4        1           95  COMPLETE  pomihogarseguro
+generales  20261118054447         4        1           95  COMPLETE  pomihogarseguro
+generales  20261119013542         4        1           95  COMPLETE  pomihogarseguro
+generales  20261120213537         4        1           78  COMPLETE  pomihogarseguro
+generales  20261120172310         4        1        15925  COMPLETE  thirdpartymovementpolicy
+generales  20261120172310         4        1            2  COMPLETE  preproduct
+generales  20261120172310         4        5          455  COMPLETE  preriskunits
+generales  20261124060016         4        1           95  COMPLETE  pomihogarseguro
+generales  20261120172310         4        1            4  COMPLETE  eventtype
+generales  20261120172310         3        1          455  COMPLETE  insuranceobjectdco
+generales  20261120172310         3        1            2  COMPLETE  agregatedriskunit
+generales  20261120172310         3        1            2  COMPLETE  stps_relationagreementpolicy
+generales  20261120213537         2        1            0  COMPLETE  cancelarhogar
+generales  20261119013542         2        1            0  COMPLETE  cancelarhogar
+generales  20261120172310         2        1            2  COMPLETE  stag_agreementversion
+generales  20261120172310         2        1            3  COMPLETE  stts_role
+generales  20261124060016         2        1            0  COMPLETE  cancelarhogar
+generales  20261120172310         2        1            2  COMPLETE  stps_agreementstaticdat
+generales  20261118054447         2        1            0  COMPLETE  cancelarhogar
+generales  20261120172310         2        1            0  COMPLETE  cancelarhogar
+generales  20261120172310         2        1            0  COMPLETE  stpo_ruparticipation
+generales  20261120172310         2        1            0  COMPLETE  stpo_insobjparticipation
+generales  20261120172310         2        1            2  COMPLETE  prethirdparty
+generales  20261120172310         2        1            0  COMPLETE  stpo_insobjparticipationdco
+generales  20261120172310         2        1            2  COMPLETE  preagreement
+generales  ?                     -1       -1         None  None  acsele_alfa/agregatedinsuranceobject
+generales  ?                     -1       -1         None  None  acsele_alfa/agregatedpolicy
+generales  ?                     -1       -1         None  None  acsele_alfa/agregatedriskunit
+generales  ?                     -1       -1         None  None  acsele_alfa/contextoperation
+generales  ?                     -1       -1         None  None  acsele_alfa/eventdco
+generales  ?                     -1       -1         None  None  acsele_alfa/eventtype
+generales  ?                     -1       -1         None  None  acsele_alfa/insuranceobjectdco
+generales  ?                     -1       -1         None  None  acsele_alfa/policydco
+generales  ?                     -1       -1         None  None  acsele_alfa/preagreement
+generales  ?                     -1       -1         None  None  acsele_alfa/prepolicy
+generales  ?                     -1       -1         None  None  acsele_alfa/preproduct
+generales  ?                     -1       -1         None  None  acsele_alfa/prethirdparty
+generales  ?                     -1       -1         None  None  acsele_alfa/product
+generales  ?                     -1       -1         None  None  acsele_alfa/riskunitdco
+generales  ?                     -1       -1         None  None  acsele_alfa/stag_agreementversion
+generales  ?                     -1       -1         None  None  acsele_alfa/stpo_insobjparticipation
+generales  ?                     -1       -1         None  None  acsele_alfa/stpo_insobjparticipationdco
+generales  ?                     -1       -1         None  None  acsele_alfa/stpo_policyparticipation
+generales  ?                     -1       -1         None  None  acsele_alfa/stpo_policyparticipationdco
+generales  ?                     -1       -1         None  None  acsele_alfa/stps_agreementstaticdat
+generales  ?                     -1       -1         None  None  acsele_alfa/stps_relationagreementpolicy
+generales  ?                     -1       -1         None  None  acsele_alfa/stts_role
+generales  ?                     -1       -1         None  None  acsele_alfa/thirdpartymovementpolicy
+generales  ?                     -1       -1         None  None  acsele_alfa/urvdeudores
+generales  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  oamascotas
+generales  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  oamascotas
+generales  20261120172310        -1       -1            0  SKIPPED_NOT_AVAILABLE  oamascotas
+generales  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  oamascotas
+generales  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  oamascotas
+generales  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  podecenal
+generales  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  podecenal
+generales  20261120172310        -1       -1            0  SKIPPED_NOT_AVAILABLE  podecenal
+generales  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  podecenal
+generales  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  podecenal
+generales  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  pomascotas
+generales  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  pomascotas
+generales  20261120172310        -1       -1            0  SKIPPED_NOT_AVAILABLE  pomascotas
+generales  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  pomascotas
+generales  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  pomascotas
+generales  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  urdecenal
+generales  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  urdecenal
+generales  20261120172310        -1       -1            0  SKIPPED_NOT_AVAILABLE  urdecenal
+generales  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  urdecenal
+generales  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  urdecenal
+generales  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  urmascotas
+generales  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  urmascotas
+generales  20261120172310        -1       -1            0  SKIPPED_NOT_AVAILABLE  urmascotas
+generales  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  urmascotas
+generales  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  urmascotas
+generales  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionfinanciera
+generales  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionfinanciera
+generales  20261120172310        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionfinanciera
+generales  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionfinanciera
+generales  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionfinanciera
+pcr_vida   20261118054447      1817        1      3703183  COMPLETE  acsele_alfa/urvdeudores
+pcr_vida   20261118054447      1799        1      3703183  COMPLETE  acsele_alfa/oavdeudores
+pcr_vida   20261120213537      1700        1      3770166  COMPLETE  acsele_alfa/insuranceobjectdco
+pcr_vida   20261119013542      1363        1      3703183  COMPLETE  acsele_alfa/insuranceobjectdco
+pcr_vida   20261124060016      1311        1      3703183  COMPLETE  acsele_alfa/insuranceobjectdco
+pcr_vida   20261124060016      1239        1      3703183  COMPLETE  acsele_alfa/oavdeudores
+pcr_vida   20261120213537      1084        1     37395752  COMPLETE  acsele_alfa/thirdpartymovementpolicy
+pcr_vida   20261124060016      1071        1     36690115  COMPLETE  acsele_alfa/thirdpartymovementpolicy
+pcr_vida   20261119013542       979        1      3703183  COMPLETE  acsele_alfa/oavdeudores
+pcr_vida   20261120213537       924        1      3770166  COMPLETE  acsele_alfa/oavdeudores
+pcr_vida   20261119013542       891        1     36690115  COMPLETE  acsele_alfa/thirdpartymovementpolicy
+pcr_vida   20261124060016       839        1      7290626  COMPLETE  acsele_alfa/stpo_policyparticipationdco
+pcr_vida   20261124060016       811        2      3703183  COMPLETE  acsele_alfa/urvdeudores
+pcr_vida   20261120213537       791        1      7467620  COMPLETE  acsele_alfa/stpo_policyparticipationdco
+pcr_vida   20261124060016       764        1      7290626  COMPLETE  acsele_alfa/stpo_policyparticipation
+pcr_vida   20261119013542       675        1      3703183  COMPLETE  acsele_alfa/urvdeudores
+pcr_vida   20261124060016       655        1      3721452  COMPLETE  acsele_alfa/stpo_insobjparticipation
+pcr_vida   20261119013542       631        1      7290626  COMPLETE  acsele_alfa/stpo_policyparticipationdco
+pcr_vida   20261120213537       631        1      7467620  COMPLETE  acsele_alfa/stpo_policyparticipation
+pcr_vida   20261124060016       604        1      3810942  COMPLETE  acsele_alfa/stpo_insobjparticipationdco
+pcr_vida   20261120213537       527        2      3770166  COMPLETE  acsele_alfa/urvdeudores
+pcr_vida   20261118054447       505        1     36690115  COMPLETE  acsele_alfa/thirdpartymovementpolicy
+pcr_vida   20261120213537       468        1      3815527  COMPLETE  acsele_alfa/stpo_insobjparticipation
+pcr_vida   20261119013542       467        1      3721452  COMPLETE  acsele_alfa/stpo_insobjparticipation
+pcr_vida   20261120213537       442        1      3872631  COMPLETE  acsele_alfa/stpo_insobjparticipationdco
+pcr_vida   20261116180424       413        1      3751918  COMPLETE  acsele_alfa/oavdeudores
+pcr_vida   20261116180424       387        1      3751918  COMPLETE  acsele_alfa/insuranceobjectdco
+pcr_vida   20261116180424       375        1      3751918  COMPLETE  acsele_alfa/urvdeudores
+pcr_vida   20261119013542       355        1      7290626  COMPLETE  acsele_alfa/stpo_policyparticipation
+pcr_vida   20261124060016       353        1            8  COMPLETE  acsele_alfa/stts_role
+pcr_vida   20261118054447       328        1      3703183  COMPLETE  acsele_alfa/insuranceobjectdco
+pcr_vida   20261124060016       322        1         1121  COMPLETE  acsele_alfa/preagreement
+pcr_vida   20261119013542       304        1            8  COMPLETE  acsele_alfa/stts_role
+pcr_vida   20261120213537       303        1            8  COMPLETE  acsele_alfa/stts_role
+pcr_vida   20261119013542       302        1      3810942  COMPLETE  acsele_alfa/stpo_insobjparticipationdco
+pcr_vida   20261118054447       297        1            8  COMPLETE  acsele_alfa/stts_role
+pcr_vida   20261116180424       289        1            8  COMPLETE  acsele_alfa/stts_role
+pcr_vida   20261119013542       289        1         1121  COMPLETE  acsele_alfa/preagreement
+pcr_vida   20261120213537       288        1         1121  COMPLETE  acsele_alfa/preagreement
+pcr_vida   20261118054447       282        1         1121  COMPLETE  acsele_alfa/preagreement
+pcr_vida   20261120213537       278        1        69112  COMPLETE  acsele_alfa/prethirdparty
+pcr_vida   20261118054447       278        1      7290626  COMPLETE  acsele_alfa/stpo_policyparticipationdco
+pcr_vida   20261119013542       269        1        68433  COMPLETE  acsele_alfa/prethirdparty
+pcr_vida   20261124060016       263        1        68433  COMPLETE  acsele_alfa/prethirdparty
+pcr_vida   20261119013542       251        1     18578682  COMPLETE  acsele_alfa/stps_relationagreementpolicy
+pcr_vida   20261124060016       243        2     18578682  COMPLETE  acsele_alfa/stps_relationagreementpolicy
+pcr_vida   20261116180424       243        1      7471058  COMPLETE  acsele_alfa/stpo_policyparticipation
+pcr_vida   20261124060016       222        1       108713  COMPLETE  acsele_alfa/agregatedinsuranceobject
+pcr_vida   20261116180424       199        1      7471058  COMPLETE  acsele_alfa/stpo_policyparticipationdco
+pcr_vida   20261120213537       185        1       127893  COMPLETE  acsele_alfa/agregatedinsuranceobject
+pcr_vida   20261120213537       184        1     18578682  COMPLETE  acsele_alfa/stps_relationagreementpolicy
+pcr_vida   20261118054447       175        1        68433  COMPLETE  acsele_alfa/prethirdparty
+pcr_vida   20261118054447       161        1      3721452  COMPLETE  acsele_alfa/stpo_insobjparticipation
+pcr_vida   20261118054447       157        1      7290626  COMPLETE  acsele_alfa/stpo_policyparticipation
+pcr_vida   20261116180424       151        1        69265  COMPLETE  acsele_alfa/prethirdparty
+pcr_vida   20261116180424       143        1      3814150  COMPLETE  acsele_alfa/stpo_insobjparticipation
+pcr_vida   20261118054447       142        2     18578678  COMPLETE  acsele_alfa/stps_relationagreementpolicy
+pcr_vida   20261116180424       140        1      3851908  COMPLETE  acsele_alfa/stpo_insobjparticipationdco
+pcr_vida   20261116180424       138        1     18504047  COMPLETE  acsele_alfa/stps_relationagreementpolicy
+pcr_vida   20261118054447       129        1      3810942  COMPLETE  acsele_alfa/stpo_insobjparticipationdco
+pcr_vida   20261119013542        95        2       108713  COMPLETE  acsele_alfa/agregatedinsuranceobject
+pcr_vida   20261118054447        40        1       108713  COMPLETE  acsele_alfa/agregatedinsuranceobject
+pcr_vida   20261116180424        40        1       119962  COMPLETE  acsele_alfa/agregatedinsuranceobject
+pcr_vida   20261124060016        15        1       124309  COMPLETE  acsele_alfa/agregatedriskunit
+pcr_vida   20261119013542        13        1       124309  COMPLETE  acsele_alfa/agregatedriskunit
+pcr_vida   20261120213537        13        1       140647  COMPLETE  acsele_alfa/agregatedriskunit
+pcr_vida   20261116180424        12        1       306086  COMPLETE  acsele_alfa/agregatedriskunit
+pcr_vida   20261118054447        10        1       124309  COMPLETE  acsele_alfa/agregatedriskunit
+pcr_vida   20261124060016         6        1          353  COMPLETE  acsele_alfa/stps_agreementstaticdat
+pcr_vida   20261119013542         5        1          353  COMPLETE  acsele_alfa/stps_agreementstaticdat
+pcr_vida   20261118054447         5        1          353  COMPLETE  acsele_alfa/stps_agreementstaticdat
+pcr_vida   20261119013542         5        1         1123  COMPLETE  acsele_alfa/stag_agreementversion
+pcr_vida   20261120213537         5        1          353  COMPLETE  acsele_alfa/stps_agreementstaticdat
+pcr_vida   20261124060016         4        1         1123  COMPLETE  acsele_alfa/stag_agreementversion
+pcr_vida   20261118054447         4        1         1123  COMPLETE  acsele_alfa/stag_agreementversion
+pcr_vida   20261119013542         4        1            1  COMPLETE  acsele_alfa/preproduct
+pcr_vida   20261118054447         4        1            1  COMPLETE  acsele_alfa/preproduct
+pcr_vida   20261118054447         2        1          113  COMPLETE  acsele_alfa/eventtype
+pcr_vida   20261120213537         2        1         1123  COMPLETE  acsele_alfa/stag_agreementversion
+pcr_vida   20261116180424         2        1          113  COMPLETE  acsele_alfa/eventtype
+pcr_vida   20261120213537         2        0          113  COMPLETE  acsele_alfa/eventtype
+pcr_vida   20261116180424         2        1         1123  COMPLETE  acsele_alfa/stag_agreementversion
+pcr_vida   20261116180424         2        1          353  COMPLETE  acsele_alfa/stps_agreementstaticdat
+pcr_vida   20261119013542         2        1          113  COMPLETE  acsele_alfa/eventtype
+pcr_vida   20261124060016         2        0          113  COMPLETE  acsele_alfa/eventtype
+pcr_vida   20261120213537         2        1            1  COMPLETE  acsele_alfa/preproduct
+pcr_vida   20261116180424         2        1            0  COMPLETE  acsele_alfa/preagreement
+pcr_vida   20261116180424         2        1            1  COMPLETE  acsele_alfa/preproduct
+pcr_vida   20261124060016         2        1            1  COMPLETE  acsele_alfa/preproduct
+satelites  20261124060016      1158        1          154  COMPLETE  preagreement
+satelites  20261118054447      1027        1          154  COMPLETE  preagreement
+satelites  20261120213537       980        1          155  COMPLETE  preagreement
+satelites  20261119013542       959        1          154  COMPLETE  preagreement
+satelites  20261118054447       841        1        83047  COMPLETE  openitemreference
+satelites  20261120213537       758        1        94164  COMPLETE  openitemreference
+satelites  20261124060016       713        1        83047  COMPLETE  openitemreference
+satelites  20261119013542       676        1        83047  COMPLETE  openitemreference
+satelites  20261118054447       626        1       212290  COMPLETE  property
+satelites  20261118054447       610        1       212290  COMPLETE  uaadetail
+satelites  20261120213537       522        1       242920  COMPLETE  property
+satelites  20261124060016       501        1       212290  COMPLETE  uaadetail
+satelites  20261124060016       500        1       212290  COMPLETE  property
+satelites  20261120213537       498        1       242920  COMPLETE  uaadetail
+satelites  20261119013542       480        1       212290  COMPLETE  uaadetail
+satelites  20261119013542       446        1       212290  COMPLETE  property
+satelites  20261124060016       420        1        21699  COMPLETE  prethirdparty
+satelites  20261118054447       397        1        21699  COMPLETE  prethirdparty
+satelites  20261120213537       382        1        23374  COMPLETE  prethirdparty
+satelites  20261118054447       361        1        21674  COMPLETE  personanatural
+satelites  20261120213537       354        1        23347  COMPLETE  personanatural
+satelites  20261120213537       332        1        23372  COMPLETE  direccion
+satelites  20261120213537       319        1        23374  COMPLETE  stte_thirdparty
+satelites  20261124060016       316        1        21697  COMPLETE  stte_thirdpartyaddressbook
+satelites  20261119013542       312        1        21699  COMPLETE  prethirdparty
+satelites  20261118054447       310        1        21697  COMPLETE  direccion
+satelites  20261124060016       309        1        21674  COMPLETE  personanatural
+satelites  20261124060016       306        1        21697  COMPLETE  direccion
+satelites  20261124060016       304        1        21699  COMPLETE  stte_thirdparty
+satelites  20261120213537       303        1        23372  COMPLETE  stte_thirdpartyaddressbook
+satelites  20261118054447       303        1        21699  COMPLETE  stte_thirdparty
+satelites  20261118054447       300        1         1747  COMPLETE  thirdpartyrole
+satelites  20261119013542       297        1        21674  COMPLETE  personanatural
+satelites  20261119013542       294        1        21697  COMPLETE  direccion
+satelites  20261118054447       294        1        21697  COMPLETE  stte_thirdpartyaddressbook
+satelites  20261119013542       288        1        21697  COMPLETE  stte_thirdpartyaddressbook
+satelites  20261120213537       281        1       298905  COMPLETE  stpo_policyparticipationdco
+satelites  20261119013542       276        1        21699  COMPLETE  stte_thirdparty
+satelites  20261124060016       252        2       289100  COMPLETE  stpo_policyparticipationdco
+satelites  20261124060016       241        1        22416  COMPLETE  agregatedinsuranceobject
+satelites  20261124060016       233        1           43  COMPLETE  stps_agreementstaticdat
+satelites  20261120213537       232        1        24360  COMPLETE  insuranceobjectdco
+satelites  20261119013542       229        1       289100  COMPLETE  stpo_policyparticipationdco
+satelites  20261118054447       227        1        22679  COMPLETE  stpo_insobjparticipationdco
+satelites  20261118054447       224        1       289097  COMPLETE  stpo_policyparticipationdco
+satelites  20261124060016       220        1        22416  COMPLETE  stpo_insobjparticipation
+satelites  20261124060016       214        1        21695  COMPLETE  insuranceobjectdco
+satelites  20261118054447       212        1        22416  COMPLETE  stpo_insobjparticipation
+satelites  20261120213537       211        1        24714  COMPLETE  stpo_insobjparticipation
+satelites  20261120213537       210        1        25331  COMPLETE  stpo_insobjparticipationdco
+satelites  20261119013542       210        1        21695  COMPLETE  insuranceobjectdco
+satelites  20261120213537       207        1        24714  COMPLETE  agregatedinsuranceobject
+satelites  20261118054447       202        1        22416  COMPLETE  agregatedinsuranceobject
+satelites  20261119013542       197        1           43  COMPLETE  stps_agreementstaticdat
+satelites  20261119013542       196        1        22416  COMPLETE  stpo_insobjparticipation
+satelites  20261120213537       193        1        69991  COMPLETE  stpo_policyparticipation
+satelites  20261120213537       188        1       180028  COMPLETE  thirdpartymovementpolicy
+satelites  20261118054447       185        1           43  COMPLETE  stps_agreementstaticdat
+satelites  20261124060016       185        1        63534  COMPLETE  stpo_policyparticipation
+satelites  20261119013542       181        1        22416  COMPLETE  agregatedinsuranceobject
+satelites  20261124060016       177        1       160074  COMPLETE  thirdpartymovementpolicy
+satelites  20261118054447       176        1       160074  COMPLETE  thirdpartymovementpolicy
+satelites  20261119013542       174        1        63534  COMPLETE  stpo_policyparticipation
+satelites  20261120213537       170        1           44  COMPLETE  stps_agreementstaticdat
+satelites  20261124060016       168        1        21283  COMPLETE  stps_relationagreementpolicy
+satelites  20261119013542       166        1       160074  COMPLETE  thirdpartymovementpolicy
+satelites  20261120213537       155        1         1448  COMPLETE  thirdpartyrole
+satelites  20261120213537       155        1        23415  COMPLETE  stps_relationagreementpolicy
+satelites  20261118054447       152        2        63534  COMPLETE  stpo_policyparticipation
+satelites  20261124060016       149        1         1747  COMPLETE  thirdpartyrole
+satelites  20261118054447       147        1            0  COMPLETE  urvdeudores
+satelites  20261120213537       142        1            0  COMPLETE  urvdeudores
+satelites  20261124060016       141        1        22679  COMPLETE  stpo_insobjparticipationdco
+satelites  20261119013542       138        1        22679  COMPLETE  stpo_insobjparticipationdco
+satelites  20261118054447       137        1        45425  COMPLETE  cobertura
+satelites  20261120213537       137        1        12641  COMPLETE  urpractiseguro
+satelites  20261124060016       136        1        10776  COMPLETE  urpractiseguro
+satelites  20261118054447       135        1        21283  COMPLETE  stps_relationagreementpolicy
+satelites  20261119013542       134        1        21283  COMPLETE  stps_relationagreementpolicy
+satelites  20261119013542       130        1         1747  COMPLETE  thirdpartyrole
+satelites  20261119013542       130        1            0  COMPLETE  anular
+satelites  20261120213537       129        1        94164  COMPLETE  openitem
+satelites  20261119013542       128        2            0  COMPLETE  urvdeudores
+satelites  20261124060016       125        1        45425  COMPLETE  coveragedco
+satelites  20261124060016       125        1            0  COMPLETE  urvdeudores
+satelites  20261118054447       122        1        20954  COMPLETE  participacionintermediarios
+satelites  20261120213537       120        1        10803  COMPLETE  oapractiseguro
+satelites  20261118054447       118        1          560  COMPLETE  povidaap
+satelites  20261118054447       117        1        21695  COMPLETE  insuranceobjectdco
+satelites  20261119013542       117        1        10776  COMPLETE  urpractiseguro
+satelites  20261118054447       114        1        10776  COMPLETE  urpractiseguro
+satelites  20261120213537       110        1        52609  COMPLETE  coveragedco
+satelites  20261119013542       110        1         3726  COMPLETE  cancelarpys
+satelites  20261118054447       109        1        83047  COMPLETE  openitem
+satelites  20261118054447       109        1        45425  COMPLETE  coveragedco
+satelites  20261119013542       108        1        45425  COMPLETE  coveragedco
+satelites  20261120213537       108        1        23142  COMPLETE  participacionintermediarios
+satelites  20261120213537       108        1        52609  COMPLETE  cobertura
+satelites  20261124060016       107        1        20954  COMPLETE  participacionintermediarios
+satelites  20261120213537       106        1         3639  COMPLETE  cancelarpys
+satelites  20261124060016       105        1        45425  COMPLETE  cobertura
+satelites  20261119013542       103        1         9216  COMPLETE  oapractiseguro
+satelites  20261119013542       100        1        20954  COMPLETE  participacionintermediarios
+satelites  20261124060016        96        1        10568  COMPLETE  popractiseguro
+satelites  20261119013542        95        1        83047  COMPLETE  openitem
+satelites  20261124060016        94        1         3726  COMPLETE  cancelarpys
+satelites  20261119013542        92        1        45425  COMPLETE  cobertura
+satelites  20261118054447        91        1         9216  COMPLETE  oapractiseguro
+satelites  20261124060016        91        1        83047  COMPLETE  openitem
+satelites  20261124060016        90        1            0  COMPLETE  anular
+satelites  20261124060016        88        1         9216  COMPLETE  oapractiseguro
+satelites  20261118054447        87        1         3726  COMPLETE  cancelarpys
+satelites  20261119013542        86        1          154  COMPLETE  stag_agreementversion
+satelites  20261120213537        84        1            0  COMPLETE  anular
+satelites  20261124060016        76        1          560  COMPLETE  aseguradovida
+satelites  20261118054447        75        1        10568  COMPLETE  popractiseguro
+satelites  20261118054447        75        1            0  COMPLETE  anular
+satelites  20261118054447        74        1          560  COMPLETE  aseguradovida
+satelites  20261120213537        74        1        12521  COMPLETE  popractiseguro
+satelites  20261120213537        70        1          155  COMPLETE  stag_agreementversion
+satelites  20261119013542        69        1        10568  COMPLETE  popractiseguro
+satelites  20261120213537        67        1          460  COMPLETE  aseguradovida
+satelites  20261124060016        66        1          560  COMPLETE  povidaap
+satelites  20261119013542        63        1          560  COMPLETE  aseguradovida
+satelites  20261118054447        63        1          154  COMPLETE  stag_agreementversion
+satelites  20261119013542        63        1          560  COMPLETE  povidaap
+satelites  20261120213537        62        1          455  COMPLETE  povidaap
+satelites  20261124060016        60        1          154  COMPLETE  stag_agreementversion
+satelites  20261120213537        35        1          446  COMPLETE  oapractiseguroplus
+satelites  20261124060016        33        1          315  COMPLETE  oapractiseguroplus
+satelites  20261120213537        31        1         7289  COMPLETE  ursalvafactura
+satelites  20261124060016        30        1         6908  COMPLETE  ursalvafactura
+satelites  20261118054447        29        1         1246  COMPLETE  oafuturoprotegido
+satelites  20261118054447        29        1          315  COMPLETE  oapractiseguroplus
+satelites  20261119013542        27        1          315  COMPLETE  oapractiseguroplus
+satelites  20261119013542        25        1         6908  COMPLETE  ursalvafactura
+satelites  20261124060016        24        1         1246  COMPLETE  oafuturoprotegido
+satelites  20261118054447        24        1         6908  COMPLETE  ursalvafactura
+satelites  20261124060016        22        1            7  COMPLETE  preproduct
+satelites  20261120213537        22        1            7  COMPLETE  preproduct
+satelites  20261119013542        22        1            7  COMPLETE  preproduct
+satelites  20261119013542        21        1           66  COMPLETE  cancelarvidaap
+satelites  20261118054447        21        1            7  COMPLETE  preproduct
+satelites  20261119013542        20        1         1246  COMPLETE  oafuturoprotegido
+satelites  20261124060016        19        1           66  COMPLETE  cancelarvidaap
+satelites  20261124060016        18        1         6910  COMPLETE  oasalvafactura
+satelites  20261120213537        18        1         1392  COMPLETE  oafuturoprotegido
+satelites  20261120213537        17        1         7715  COMPLETE  oasalvafactura
+satelites  20261120213537        16        1           24  COMPLETE  cancelarvidaap
+satelites  20261119013542        16        1         6910  COMPLETE  oasalvafactura
+satelites  20261118054447        15        1         6910  COMPLETE  oasalvafactura
+satelites  20261124060016        14        1          563  COMPLETE  oavidaap
+satelites  20261118054447        14        1           66  COMPLETE  cancelarvidaap
+satelites  20261119013542        13        1          563  COMPLETE  oavidaap
+satelites  20261120213537        11        1          458  COMPLETE  oavidaap
+satelites  20261118054447        11        1          563  COMPLETE  oavidaap
+satelites  20261119013542         5        1          111  COMPLETE  poproteccionvida
+satelites  20261119013542         4        1           60  COMPLETE  poproteccionsalud
+satelites  20261120213537         4        1          414  COMPLETE  poproteccionvida
+satelites  20261120213537         4        1          165  COMPLETE  poproteccionsalud
+satelites  20261118054447         4        1          111  COMPLETE  poproteccionvida
+satelites  20261124060016         4        1          111  COMPLETE  poproteccionvida
+satelites  20261124060016         4        1           60  COMPLETE  poproteccionsalud
+satelites  20261118054447         4        1           60  COMPLETE  poproteccionsalud
+satelites  20261120213537         3        1          910  COMPLETE  eventtype
+satelites  20261119013542         3        1          910  COMPLETE  eventtype
+satelites  20261124060016         3        1          910  COMPLETE  eventtype
+satelites  20261118054447         2        1          910  COMPLETE  eventtype
+satelites  20261119013542         2        1           21  COMPLETE  stts_role
+satelites  20261124060016         2        1           21  COMPLETE  stts_role
+satelites  20261120213537         2        1           17  COMPLETE  stri_reinsurancekind
+satelites  20261118054447         2        1           17  COMPLETE  stri_reinsurancekind
+satelites  20261124060016         2        1           17  COMPLETE  stri_reinsurancekind
+satelites  20261119013542         2        1           17  COMPLETE  stri_reinsurancekind
+satelites  20261124060016         2        1            0  COMPLETE  poaccpersonales
+satelites  20261119013542         2        1            0  COMPLETE  poaccpersonales
+satelites  20261118054447         2        1           21  COMPLETE  stts_role
+satelites  20261120213537         2        1           21  COMPLETE  stts_role
+satelites  20261118054447         2        1            0  COMPLETE  poaccpersonales
+satelites  20261120213537         2        1            0  COMPLETE  poaccpersonales
+satelites  ?                     -1       -1         None  None  acsele_alfa/agregatedinsuranceobject
+satelites  ?                     -1       -1         None  None  acsele_alfa/agregatedpolicy
+satelites  ?                     -1       -1         None  None  acsele_alfa/contextoperation
+satelites  ?                     -1       -1         None  None  acsele_alfa/eventdco
+satelites  ?                     -1       -1         None  None  acsele_alfa/eventtype
+satelites  ?                     -1       -1         None  None  acsele_alfa/insuranceobjectdco
+satelites  ?                     -1       -1         None  None  acsele_alfa/policydco
+satelites  ?                     -1       -1         None  None  acsele_alfa/preagreement
+satelites  ?                     -1       -1         None  None  acsele_alfa/prepolicy
+satelites  ?                     -1       -1         None  None  acsele_alfa/preproduct
+satelites  ?                     -1       -1         None  None  acsele_alfa/prethirdparty
+satelites  ?                     -1       -1         None  None  acsele_alfa/product
+satelites  ?                     -1       -1         None  None  acsele_alfa/riskunitdco
+satelites  ?                     -1       -1         None  None  acsele_alfa/stag_agreementversion
+satelites  ?                     -1       -1         None  None  acsele_alfa/stpo_insobjparticipation
+satelites  ?                     -1       -1         None  None  acsele_alfa/stpo_insobjparticipationdco
+satelites  ?                     -1       -1         None  None  acsele_alfa/stpo_policyparticipation
+satelites  ?                     -1       -1         None  None  acsele_alfa/stpo_policyparticipationdco
+satelites  ?                     -1       -1         None  None  acsele_alfa/stps_agreementstaticdat
+satelites  ?                     -1       -1         None  None  acsele_alfa/stps_relationagreementpolicy
+satelites  ?                     -1       -1         None  None  acsele_alfa/stts_role
+satelites  ?                     -1       -1         None  None  acsele_alfa/thirdpartymovementpolicy
+satelites  ?                     -1       -1         None  None  acsele_alfa/urvdeudores
+satelites  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  oaexequiastradicional
+satelites  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  oaexequiastradicional
+satelites  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  oaexequiastradicional
+satelites  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  oaexequiastradicional
+satelites  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  oapetlover
+satelites  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  oapetlover
+satelites  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  oapetlover
+satelites  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  oapetlover
+satelites  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  popetlover
+satelites  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  popetlover
+satelites  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  popetlover
+satelites  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  popetlover
+satelites  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  urexequiastradicional
+satelites  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  urexequiastradicional
+satelites  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  urexequiastradicional
+satelites  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  urexequiastradicional
+satelites  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  urpetlover
+satelites  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  urpetlover
+satelites  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  urpetlover
+satelites  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  urpetlover
+satelites  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionsalud
+satelites  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionsalud
+satelites  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionsalud
+satelites  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionsalud
+satelites  20261124060016        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionvida
+satelites  20261120213537        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionvida
+satelites  20261119013542        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionvida
+satelites  20261118054447        -1       -1            0  SKIPPED_NOT_AVAILABLE  urproteccionvida
+
+-- Suma por caso y lote (escritura + conteo)
+comun      20261118054447       24 min
+comun      20261119011311       13 min
+comun      20261119013542       28 min
+comun      20261120172310        1 min
+comun      20261120213537       25 min
+comun      20261124060016       30 min
+generales  20261118054447       93 min
+generales  20261119013542       58 min
+generales  20261120172310       29 min
+generales  20261120213537       63 min
+generales  20261124060016       66 min
+pcr_vida   20261116180424       43 min
+pcr_vida   20261118054447      103 min
+pcr_vida   20261119013542      115 min
+pcr_vida   20261120213537      131 min
+pcr_vida   20261124060016      146 min
+satelites  20261118054447      137 min
+satelites  20261119013542      121 min
+satelites  20261120213537      133 min
+satelites  20261124060016      133 min

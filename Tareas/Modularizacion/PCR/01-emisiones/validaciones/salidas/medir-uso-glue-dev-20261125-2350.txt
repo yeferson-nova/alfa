@@ -1,0 +1,94 @@
+== 1. Job desplegado
+{'WorkerType': 'G.2X', 'NumberOfWorkers': 10, 'Timeout': 2880, 'MaxRetries': 0, 'GlueVersion': '4.0'} max_concurrent_runs: 3
+argumentos: {'--enable-metrics': 'true', '--enable-spark-ui': 'true', '--spark-event-logs-path': 's3://aws-glue-assets-533267035849-us-east-1/sparkHistoryLogs/', '--enable-job-insights': 'true', '--enable-glue-datacatalog': 'true', '--conf': 'spark.eventLog.rolling.enabled=true', '--enable-continuous-cloudwatch-log': 'true'}
+
+== 2. Uso del cluster por corrida (CloudWatch, cada 5 min)
+-- jr_4f5b5d79d... inicio=2026-11-24 06:00:17 min=321 DPU-h=107.1 G.2Xx10
+   ejecutores_activos   sin datos
+   cpu_ejecutores       promedio=0.00 mediana=0.00 max=1.00 puntos=65
+   cpu_driver           promedio=0.00 mediana=0.00 max=0.21 puntos=65
+   heap_ejecutores      promedio=0.02 mediana=0.03 max=0.11 puntos=65
+-- jr_094658323... inicio=2026-11-20 21:35:38 min=308 DPU-h=102.8 G.2Xx10
+   ejecutores_activos   sin datos
+   cpu_ejecutores       promedio=0.00 mediana=0.00 max=1.00 puntos=62
+   cpu_driver           promedio=0.00 mediana=0.00 max=0.33 puntos=62
+   heap_ejecutores      promedio=0.02 mediana=0.03 max=0.11 puntos=62
+-- jr_768905e7d... inicio=2026-11-19 01:35:42 min=282 DPU-h=94.0 G.2Xx10
+   ejecutores_activos   sin datos
+   cpu_ejecutores       promedio=0.00 mediana=0.00 max=1.00 puntos=57
+   cpu_driver           promedio=0.01 mediana=0.00 max=0.57 puntos=57
+   heap_ejecutores      promedio=0.02 mediana=0.03 max=0.12 puntos=57
+
+== 3. Etapas de Spark (event logs de las mismas corridas)
+-- jr_4f5b5d79d... archivos_candidatos=42 comprimidos=0 corrida_identificada=True etapas=424
+   tiempo en etapas=373 min; etapas con 1 sola tarea=386 (354 min, 95 %)
+   tareas por etapa: mediana=1.0 max=72
+   20 etapas mas largas (seg, tareas, nombre):
+       1311     1  save at NativeMethodAccessorImpl.java:0
+       1239     1  save at NativeMethodAccessorImpl.java:0
+       1158     1  save at <unknown>:0
+       1071     1  save at <unknown>:0
+        839     4  save at <unknown>:0
+        810     1  save at NativeMethodAccessorImpl.java:0
+        764     1  save at <unknown>:0
+        712     1  save at <unknown>:0
+        654     1  save at <unknown>:0
+        628     1  save at <unknown>:0
+        604     1  save at <unknown>:0
+        542     1  save at <unknown>:0
+        501     1  save at <unknown>:0
+        499     1  save at <unknown>:0
+        447     1  save at NativeMethodAccessorImpl.java:0
+        425     1  save at NativeMethodAccessorImpl.java:0
+        419     1  save at <unknown>:0
+        353     1  save at <unknown>:0
+        321     1  save at <unknown>:0
+        316     1  save at <unknown>:0
+-- jr_094658323... archivos_candidatos=10 comprimidos=0 corrida_identificada=True etapas=424
+   tiempo en etapas=350 min; etapas con 1 sola tarea=386 (332 min, 95 %)
+   tareas por etapa: mediana=1.0 max=72
+   20 etapas mas largas (seg, tareas, nombre):
+       1699     1  save at NativeMethodAccessorImpl.java:0
+       1083     1  save at <unknown>:0
+        980     1  save at <unknown>:0
+        923     1  save at NativeMethodAccessorImpl.java:0
+        790     4  save at <unknown>:0
+        757     1  save at <unknown>:0
+        630     1  save at <unknown>:0
+        579     1  save at <unknown>:0
+        527     1  save at NativeMethodAccessorImpl.java:0
+        521     1  save at <unknown>:0
+        498     1  save at <unknown>:0
+        467     1  save at <unknown>:0
+        442     1  save at <unknown>:0
+        432     1  save at <unknown>:0
+        394     1  save at NativeMethodAccessorImpl.java:0
+        381     1  save at <unknown>:0
+        353     1  save at <unknown>:0
+        332     1  save at <unknown>:0
+        319     1  save at <unknown>:0
+        313     1  save at NativeMethodAccessorImpl.java:0
+-- jr_768905e7d... archivos_candidatos=68 comprimidos=0 corrida_identificada=True etapas=424
+   tiempo en etapas=320 min; etapas con 1 sola tarea=386 (304 min, 95 %)
+   tareas por etapa: mediana=1.0 max=72
+   20 etapas mas largas (seg, tareas, nombre):
+       1362     1  save at NativeMethodAccessorImpl.java:0
+        979     1  save at NativeMethodAccessorImpl.java:0
+        958     1  save at <unknown>:0
+        891     1  save at <unknown>:0
+        675     1  save at <unknown>:0
+        675     1  save at NativeMethodAccessorImpl.java:0
+        631     4  save at <unknown>:0
+        480     1  save at <unknown>:0
+        474     1  save at <unknown>:0
+        466     1  save at <unknown>:0
+        449     1  save at NativeMethodAccessorImpl.java:0
+        446     1  save at <unknown>:0
+        441     1  save at NativeMethodAccessorImpl.java:0
+        376     1  save at <unknown>:0
+        354     1  save at <unknown>:0
+        312     1  save at <unknown>:0
+        303     1  save at <unknown>:0
+        302     1  save at <unknown>:0
+        296     1  save at <unknown>:0
+        293     1  save at <unknown>:0
