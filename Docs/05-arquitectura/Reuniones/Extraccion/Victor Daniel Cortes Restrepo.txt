@@ -1,0 +1,138 @@
+Victor Daniel Cortes Restrepo
+09:18 a.m.
+Porque antes PCR era un una solicitud de negocio. Sí, entonces haz de cuenta.
+A.
+¿Actuaría, llega, pasa el requerimiento, sí o no?
+Y nosotros generábamos de ahí todo lo que era primas PCR de manera directa.
+Esto vas a encontrar ahí a un documento.
+Que tiene como nombre al inicio RRC.
+SRRC es la preparación de una tabla que se llama.
+XT risk reserve Alfa en Axel Y sí Y eso se hacía solamente para el área de actualidad Y entonces actualidad levantó todo respecto a lo que hay en este documento qué es lo que sucedió
+Que cuando nosotros presentamos esto a comité técnico, o sea, el comité de los de arquitectura que va a vicepresidencia, llegó la jefe Natacha y nos dijo.
+Chicos, revisen bien porque eso afecta los cierres.
+¿Y como analítica?
+Tiene unas migraciones pendientes hacia el Data Lake.
+Revisen que no se vayan a estrellar entre los 2.
+¿Por qué no lo decía? Porque ella es una persona que trabajó muchos años a nivel técnico en Alpha y ella ya sabía que este para llegar a ese a esa primas PCR había que hacer como unos checkpoints en los cierres de negocio. Sí.
+Entonces ella ya lo tenía muy claro, entonces nos dice a nosotros, vengan chicos con ustedes.
+De pronto no lo tienen tan claro, vayan y revisen con analítica cómo es el asunto. Entonces ahí aparece, ahí aparece don Jorge.
+¿Sí, entonces nosotros qué hacemos? Vamos y le decimos, oiga, don Jorge, porque don Jorge es el operador de todos los datos de cierre de compañía y don Jorge hace parte del área de analítica. Sí, entonces le decimos, don Jorge, venga, ayúdenos, porque es que la jefe nos está diciendo que esto.
+Tiene otras implicaciones en los cierres de compañía y que el área de analítica está diseñando con su mercé la migración de esos cierres compañía. Entonces ahí es donde don Jorge nos dice, sí, es que para que el área de actuaría llegue a hacer los cierres compañía, primero hay que hacer emisiones.
+Después de misiones hay que hacer las primas cedidas.
+Después de las primas heridas, ustedes tienen que tener claro los reaseguros.
+Y una vez que ustedes tienen esto claro, ya viene lo que a ustedes les interesa, que son las primas pesebre.
+Pues resulta que esto que se genera aquí directamente y que está preparado de cierta manera, pues a nivel de la compañía tenía que hacer estos 3 checkpoints antes, sí.
+
+Y ahí es donde entran los actores de negocio, sí, porque entonces esto debería verse así.
+Operaciones, como nos acaba de decir Sulmi, debería encargarse de quién de certificar primas heridas y emisiones, si mal no estoy.
+Creo que estos lo certifican el mismo.
+Cierre a seguros.
+Es el área de reaseguros.
+Si ustedes no saben que hacen el área de reaseguros, son los aseguradores de la aseguradora. Listo, pero llaman reaseguros.
+Por si alguien les pregunta, y este sí lo maneja el área de actuaría.
+Easter.
+¿Y quiénes actuaría para nosotros? Pues es el sponsor del proyecto. Por eso Zulmi dice, es que toca que el sponsor nos dé la aprobación y la certificación, pero resulta que para el negocio, o sea para el movimiento natural del negocio, pues operaciones entra primero, reaseguras bien y después y actuaría de vendríaca. Si me hago entender.
+Y ahí es el conflicto que nosotros tenemos, porque claro, actuaría cuando levantó todo el requerimiento, pues ellos tienen la visión de que ellos simplemente están haciendo de cargo de todo, pero ahorita con lo con el nuevo ejercicio que nos que fue aprobado a nivel técnico, pues tenemos que pasar por todo esto, si me hago entender.
+Y ahí es donde empieza la situación técnica. ¿Entonces, cuál es la situación técnica que resulta que yo tengo emisiones en una primera situación, pero para poder tener en misiones, pues yo tengo que hacer unas extracciones, cierto? Y esas extracciones van orientadas solamente a misiones.
+¿Por qué van orientadas solamente a misiones?
+Por reprocesos, porque cuando yo tengo que hacer algún reproceso o algo.
+Pues se supone que si yo estoy en la primera etapa, yo no me tengo que traer todo. Sí, o sea, se supone que yo debería reprocesar solamente la parte emitida.
+Sí.
+Y ahí viene una mallita y esa mallita es la que en este momento deberíamos nosotros tener claridad y una vez que nosotros sacamos las emisiones, pues se tienen que certificar esos datos.
+
+Sí, con la notificación, entonces debería venir el certificador.
+Sí, entonces es certificación.
+¿Que quién la debe de hacer? Pues ustedes ya vieron que consulme estamos cayendo en cuenta que debería ser el área de operaciones. Eso toca hablarlo porque una cosa es trasladarle la carga operativa a actuaría y otra cosa es que la carga operativa siga siendo de quién, pues de los del operador técnico del negocio que en este caso debería ser operaciones, cierto.
+
+
+
+Y esta mallita debería ir solita. Sí, ¿qué debería pasar después? Pues que esa misma parte de emitidas, cierto, emisiones, una vez que termina y se certifica, pues debería que bajar y pasar a lo que son las primas cedidas.
+Sí.
+Y esas primas heridas tienen otra mallita porque también van a certificación y se supone que esas primas heridas entonces tendrían que tener otra mallita.
+
+Una vez que ellas terminen y deberían ser los real seguros.
+Listo, porque si yo ya certifiqué acá, pero no he certificado acá, yo tendría que volver a certificar todas las emisiones. No se supone que el impacto debería ser acá a menos de que a mí me estén diciendo que es que las emisiones quedaron mal certificadas, pues yo no debería ir respecto al proceso. Si me hago entender, solamente deberían ir a ajustar lo que tiene que ver con primas heridas, no deberían ir a afectar lo que tienen que ver con emisiones entonces aquí.
+Lo facultativo y demás debería ser ajustado. Sí, lo mismo acá lo de reaseguros no me debería afectar lo de las primas sebidas y lo de las omisiones, sino solamente la parte de reaseguradores. Sí, las primas reaseguradas de reaseguros, y lo mismo pasaría con las primas PCR.
+Sí.
+Entonces Jefferson se va a encontrar acá con que cada cada puntico, como bien lo mencionaba, pues es mejor tomarlo de manera independiente, sí o no.
+Hasta ahí vamos de acuerdo.
+Yeferson Nova Almanza
+09:26 a.m.
+Sí, compa, te voy entendiendo.
+Listo.
+¿Qué es lo que va a pasar aquí? Estamos yo porque lo planteo así desde el proyecto, porque pues esto toca hacerlo así por los reprocesos que de pronto nos puedan ocurrir teniendo en cuenta el momento, pero analítica en su concepción. Sí que esto ya ustedes van a ver todas las tablas, ustedes ya tienen las 99 tablas.
+En su concepción analítica que dijo analítica dice al mes, el primer día del mes, antes de reprocesar, antes de todo, ellos tienen un baúl de 152 tablas. ¿Nosotros cuántos de esas 152 vamos a poner? 99 tablas, 99 tablas pone.
+PCR, sí, pone la solución.
+Ni 17.
+Esas 99 tablas están acá, no faltan algunas que son como transversales para los ejercicios analíticos. Sí, entonces aquí no vas a encontrar todas las 99, aquí vas a encontrar como si mal no me acuerdo, vas a encontrar, deberías encontrar entre 50 y 77 tablas.
+Más o menos entre todo este proceso, sí.
+Son las que vas a encontrar Jackson y esta es una malla que ellos quieren a nivel transversal para que se ejecute los primeros de cada mes.
+
+y nosotros aquí colocamos 99 tablas y ese fue el acuerdo que al que se llegó listo con analítica Entonces nosotros hacemos es una malla que solamente va a la extracción que solamente va a tener esas 99 tablas listo Entonces cuántas mallas realmente extracción vamos a tener 1 2 3 4 y 5
+
+Esta va de último. ¿Por qué? Pues porque una vez que ya hemos entendido estas, cómo van, pues simplemente es colocar estas y colocar el resto de tablas que nos hagan falta, que van a ser unas 30 y optimizarlas. Ya esta se supone que cuando pase Jefferson está optimizada, está optimizada, está optimizada, está optimizada y faltaría solamente incorporar las 20 y algo. las.
+30 tablas que nos falten de esto, sí.
+Y ya con eso terminaríamos nosotros.
+Listo para la situación analítica. ¿A qué analítica? ¿Cómo que piensa manejar esto o esto? Bueno, ya eso es cosa de ellos. Nosotros cumplimos con configurar la extracción y con que se pueda automatizar, sí o no, ya que si analítica hace o no hace, no importa. Ahora lo que sí debe importar es que si ya se carga ya una carga o algo así.
+Cierto, una carga o algo así. Algo que yo le expresaba claramente es que si el periodo ya existe cuando yo ejecuto estas mallas, si yo ya encuentro un periodo, yo no tengo que ir a extraer, yo que tengo que ir esa a hacer la preparación y la transformación. Entonces esos activadores también deberían ir acá.
+Sí.
+Cuando Cuando yo ya llego y yo ya sé que yo ya extraje un periodo que ya existe un número de lote que no he llevado a Silver, cierto, porque o a bronce, porque esto debería quedarse en el en la parte de.
+Perdón a Silver, porque esto debería quedar en bronce.
+¿Entonces yo pregunto, son decisiones, existe?
+Ese lote, porque el lote es el que va, el que va a hacer. Si la extracción me dice, oiga, sí, ya existe, pues yo lo que debería, lo que debería hacer es que ya no lo voy a extraer. Yo llego y lo retomo de la zona bronce y sigo con el proceso para hacer las emisiones. Sí, me hago entender.
+Me certifican y vuelvo y reviso. ¿Existe ya ese lote? Sí, entonces pues vengo y sigo con el proceso de preparación de transformación hacia las primas emitir, a las primas heridas y así sucesivamente. Esa es la decisión que nos hará falta conectar ya al final.
+Listo, Jeffers.
+Yeferson Nova Almanza
+09:31 a.m.
+Hizo compa de una.
+Victor Daniel Cortes Restrepo
+09:31 a.m.
+Sí, porque si no tendríamos sinergia con esa malla que quiere mantear analítica como extracción inicial, pero nosotros sí deberíamos tener esto. ¿Por qué? Por los reprocesos, porque seguramente sí vamos a tener cierto, o sea, las áreas de negocio, pues tienen que ajustar su cifra siempre. O sea, yo a don Jorge solamente le conozco una vez que le haya salido bien en 8 años el cierre.
+Para que ustedes lo sepan.
+Entonces.
+Ahí estos, este es el parámetro que tú debes tener para que para que lo tengas concebido y cómo debería poblarse ese asunto. Listo y lo mismo tú, Julito, porque tú vas a tener que probar 1 1 y de al final vas a tener que probar que esta funcione y que esta decisión de cada malla continúe sin ir a extraer. Si me hago entender.
+Julio Alberto Mesias Guzman
+09:32 a.m.
+El cosito de cama, listo.
+Victor Daniel Cortes Restrepo
+09:32 a.m.
+You still?
+Parce, ahí quedó todo claro, preguntas quejas, reclamos.
+Yeferson Nova Almanza
+09:32 a.m.
+Por ahora no.
+Victor Daniel Cortes Restrepo
+09:32 a.m.
+Listo, Jeff, te te recomiendo mucho, porfa, la optimización, así como hablamos, que listo.
+Yeferson Nova Almanza
+09:32 a.m.
+Sí.
+Victor Daniel Cortes Restrepo
+09:32 a.m.
+Listo, o sea, la idea sí es que pues se demore mucho menos. O sea, lo que mejor puedas hacerlo, yo te yo te creo que hablamos de que de que de que yo te compartía la manera en como se hacía, cierto, vieja guarde un poquito más lento, pero pues es la manera más segura. Sí, y ya vos ya sacas de tu aule todo el conocimiento que tengas con.
+Sí, tú me lo explicaste las cosas.
+Victor Daniel Cortes Restrepo
+09:32 a.m.
+Para ayudarnos ahí con el asunto, listo para mí esa es la prioridad. ¿Por qué? Porque imagínense ustedes en un cierre donde ustedes tienen solamente realmente para que para que para que Jefferson como que se lleve cómo funciona el cierre. Resulta que el cierre de compañía en este momento dura 17 días.
+Sí, y el cierre de compañía tiene una serie de pasos.
+¿Que son los que van acompañando las cifras? Sí, como ustedes pueden, pueden ver, nosotros tenemos aquí 3 de esos pasos, sí, porque hay más reservas. Sí, por ejemplo, PSI, que seguramente no lo van a chutar a nivel 17, es otro de esos pasos de cierre compañía. Entonces, el cierre compañía tiene n.
+N pasos de certificación de cifras y lo que uno lo que va haciendo Jorge es ir certificando cada uno de esos pasos con las áreas técnicas del negocio que van dando la aprobación. Sí, ahora.
+¿Qué sucede como ellos en este momento utilizan el estándar NIF cuatro para que ustedes vean qué es lo que hace los estándar?
+Entonces, NIF cuatro es el estándar que se está manejando a nivel de cierres. Entonces ese NIF cuatro les dice, oiga, ustedes tienen 17 días, o sea, ustedes no, ya vienen trabajando así, pero cuando entra NIF NIF 17, NIF 17, NIF 17.
+Nip 17 les dice, oiga, ustedes ya no van a tener 17 días, ustedes van a tener.
+7 días.
+Y ahí es donde la vuelta se complica porque entonces le restaron cuántos 10 días, sí o no de cierre.
+Entonces ahí es donde donde, como dice don Jorge, empezamos todos a padecer porque de qué manera NIF 17 va a manejar 7 días, si me hago entender.
+Y por eso es que nos chutaron a nosotros lo del cierre de estos 3 puntos, sí.
+Para que ustedes se den cuenta, primas a RL, auxilios funerarios, la reserva matemática, eso tenía, eso tiene unos tiempos como de 4 días. Hoy en día todo eso se hace en uno.
+Sí, con el 17, o sea, todas esas cifras también entran a una especie como de cierre y por eso se certifican, a pesar de que Constanza ya dice que no las necesitan, seguramente por cierre sí las van a necesitar, sí.
+Entonces pasaron de 3 días de verificación a un día, que es lo que hacemos nosotros ahí y que ni siquiera es un día, son un par de horas. Sí, ejecutando todo eso, cierto, Julito.
+Pero ese punto, por ejemplo, ya se optimizó y al ver ellos eso que habíamos garantizado eso, pues entonces obviamente ellos quieren que nosotros garanticemos que en 7 días. Entonces realmente cuando yo les digo la extracción tiene que ser en 2 o 3 horas, pues es algo real para una extracción de un sistema como es Axely, sí.
+A que es que nos vamos a demorar, que es que don Jorge en Golden Gate, pero es que Golden Gate es una herramienta que se utiliza para manejo de grandes volúmenes de datos. Está optimizada para consultas. Entonces no vamos a llegar a los mismos tiempos de él que él llega. O sea, nosotros hemos manejado tiempos con el de 20 minutos para hacer cierre de emisiones.
+Sí, en pruebas cuando Golden está bien, pues no vamos a llegar a eso porque nosotros tenemos que desconectar, guardar la infraestructura. Todos los ciclos que teníamos, pues no, 3 horas, 4 horas está bien. Sí, desde mi punto de vista, de que estamos manejando 2 herramientas diferentes y tenemos que cuidar la infraestructura de la fuente. Sí.
+Está bien, sí. ¿Qué es lo que no este puede estar bien? Pues que nosotros nos demoremos más de eso, porque ahí sí entramos en un en un bucle. ¿Sí, y por qué? Porque imagínense ustedes demorándose 8 horas para extraer solamente misiones y tenemos solamente 7 días. ¿Cuándo le vamos a entregar esto a negocio? Finalizando los 7 días.
+Si ellos tienen 13 ejercicios, sí que en promedio son 3 ejercicios de extracción, entonces por eso les digo, entre menos tiempo, mejor. Listo, esa es la crisis. Además, porque no somos solitos, acuérdense que son n cantidad de pasos y nosotros estamos manejando solamente cuatro, sí.
+Entonces, por eso quiero que Jefferson se lleve esa visión del por qué ahorita es tan crítico la extracción, pues porque pasamos de 17 días y nos está exigiendo el Estado, la superfinanciera, que entreguen esas esas cifras certificadas en menos de 7 días. sí.
+Yeferson Nova Almanza
+09:37 a.m.
+listo compa.
