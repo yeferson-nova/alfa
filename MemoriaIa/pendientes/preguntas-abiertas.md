@@ -1,7 +1,7 @@
 ---
 tipo: pendiente
 estado: vigente
-actualizado: 2026-11-23
+actualizado: 2026-11-25
 ---
 # Preguntas abiertas
 
@@ -131,3 +131,4 @@ Al resolver una, moverla a la nota correspondiente y borrarla de aquí.
 - ~~¿La versión del job Silver con el join sin "Ajuste" está en prod?~~ **Resuelta (2026-11-13): sí, el script de prod es idéntico al del repo.** No se revisan los periodos certificados ni los conteos en Athena: la simulación de Victor y el código bastan (decisión del usuario, 2026-11-13).
 - ~~Víctor: ¿cuántas sesiones simultáneas se permiten?~~ **No es pregunta (decisión del usuario, 2026-11-25):** se deja la concurrencia que hay hoy y se vuelve parametrizable ([[modularizacion-extraccion]]).
 - **DevOps (2026-11-25), no bloquea:** va en el paquete de entrega a DevOps ([[pendientes]]). Lo de la configuradora desplegada ya se resolvió: la QA del 25 nov 18:33 es igual a DEV.
+- ~~**Formato del ID de ejecución (2026-11-25):** cuando el paso 1 lo genera porque la Step Function no lo envió, ¿GUID puro o formato legible?~~ **Resuelta (usuario, 2026-11-25): aprobado `<MALLA>-<periodo>-<AAAAMMDDThhmmssZ>-<uuid4 de 12>`.** *Propuesta:* `<MALLA>-<periodo>-<AAAAMMDDThhmmssZ>-<uuid4 corto>` (único, ordenable, filtrable y válido como nombre de ejecución de Step Functions: máx. 80 caracteres, solo letras, números, `-` y `_`) ([[modularizacion-extraccion]]).
