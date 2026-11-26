@@ -35,7 +35,7 @@ Detalle en `validaciones\salidas\medir-tiempos-dev-20261125-2037.txt`.
 
 ## Validado con Víctor y por validar
 - **Validado:** una sola conexión de servicio y el pool de peticiones lo manejamos nosotros (20 nov, L182-208). Pausa de 1 a 7 minutos por malla, configurada en DynamoDB (L293, L303). Reanudar desde un checkpoint (L563-569) y la decisión "¿Existe ese lote?" (25 nov, L79-83). La reanudación debe ser explícita y con aviso (ARQ-63).
-- **Por validar:** la forma paralela, que según Víctor corre "por esa misma conexión" (L374), ¿acepta varias sesiones JDBC a la vez con el mismo usuario? ¿Cuántas como máximo? De esa respuesta depende leer una tabla en particiones o correr los 3 casos a la vez.
+- **Concurrencia (decisión del 2026-11-25):** se deja la que hay hoy y se vuelve parametrizable. No se le pregunta a Víctor: si a futuro cambia el número de sesiones, se ajusta en la configuración.
 
 ## Validaciones
 | Script (`validaciones\scripts\`) | Dónde corre | Salida (`validaciones\salidas\`) | Resultado |
@@ -61,6 +61,6 @@ python validaciones\scripts\consolidar-tiempos.py validaciones\salidas\<salida>.
 La línea base (versión de QA, corrida del 24 de noviembre) es de 321 minutos: núcleo y PCR Vida 119,5, Generales 66,8 y Satélites 135,3. Cada cambio agrega su medición con el nombre de su versión.
 
 ## Siguientes pasos
-1. Volver a correr `medir-tiempos-dev.sh` (tiempo por tabla) y correr `medir-uso-glue-dev.sh` (uso del clúster).
-2. Preguntarle a Víctor cuántas sesiones simultáneas se permiten.
-3. Con esas mediciones, priorizar el plan del lado de Glue: pausa y pool de peticiones configurables, reanudación explícita, tamaño del clúster y, si Víctor lo permite, lectura en paralelo.
+1. Código modular sobre la red de pruebas de caracterización, sin cambiar el comportamiento.
+2. Concurrencia: se deja la que hay hoy y se vuelve parametrizable por configuración.
+3. Optimización del lado de Glue, con cada cambio medido y registrado en `tiempos\registro-tiempos.csv`.

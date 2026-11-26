@@ -83,7 +83,7 @@ Además, medir la lectura real: hoy "escritura" incluye la lectura de Oracle.
 
 ### 4. Tiempo: 90 minutos como máximo, sin tocar Oracle
 1. Pausa entre ciclos y pool de peticiones configurables por malla en DynamoDB. **Validado con Víctor.**
-2. **Pool de sesiones parametrizable.** Hoy el pool es de 1 sesión: la conexión de servicio y el pool lo manejamos nosotros. Se configura por malla en `cnf-mallas`, con 1 por defecto. Si a futuro se permiten 2 o 3, el job reparte ese presupuesto entre tablas, casos y particiones sin cambiar código. Ojo: hoy el código ya abre hasta 3 sesiones (`:764`) y 4 particiones en 2 tablas de PCR Vida. Con 1 sesión, PCR Vida pasaría de unos 90 a unos 148 minutos de reloj. Por eso, con 1 sesión, la ganancia tiene que venir del punto 3.
+2. **Concurrencia parametrizable.** Se deja la que hay hoy (hasta 3 tablas en las fases `PARALELO`, de a una en `CASCADA_POR_FASE` y particiones según la tabla) y se vuelve un parámetro de la configuración. El valor por defecto reproduce el comportamiento actual. Si a futuro cambia, se ajusta sin cambiar código.
 3. Leer el pivote una sola vez y reutilizar sus llaves, como propone Víctor. Exige probar equivalencia.
 4. Reanudación explícita (checkpoint y "¿Existe ese lote?").
 5. **Usar el clúster al máximo,** con los mismos recursos de hoy (10 G.2X). Con 1 sesión a Oracle:
@@ -100,12 +100,13 @@ Además, medir la lectura real: hoy "escritura" incluye la lectura de Oracle.
 - Evidencia de antes y después en `validaciones\salidas\`.
 - Demostración a Víctor: la corrida tabla por tabla y la optimizada.
 
-## Notas para DevOps (no son nuestra tarea)
+## Notas para DevOps (no son nuestra tarea ni nos bloquean)
+- **Empaquetado:** ¿cómo sube el pipeline (`glueJobsClientesPipeline`) los módulos de `src/`? Por ejemplo, un zip en `--extra-py-files`, como `libraries/commons.zip` en otros jobs. Se necesita para desplegar el código modular, no para escribirlo.
+- **Configuración en DynamoDB:** ¿quién cargó los registros de Emisiones en `cnf-mallas` y de dónde? No están en ningún repo.
 - **Tamaño del clúster:** en las corridas medidas, la CPU de los ejecutores está en 0,00 de promedio y la memoria llega como máximo al 12 % (10 G.2X, unos 100 DPU-hora por corrida). El tamaño lo decide DevOps.
 - *Propuesta:* que el tamaño se pueda configurar por corrida (`WorkerType` y `NumberOfWorkers` en la tarea de Glue de la Step Function, tomados de la configuración) en vez de quedar fijo en la IaC.
 
 ## Preguntas abiertas
-1. **Víctor:** ¿cuántas sesiones JDBC simultáneas acepta el usuario de servicio?
-2. **DevOps:** ¿cómo empaqueta el pipeline los módulos de `src/`?
-3. **DevOps:** ¿quién cargó los ítems de Emisiones en `cnf-mallas` y de dónde? ¿La configuradora desplegada en DEV es la de `quality`?
-4. ¿Quién usa `validacion_tecnica_emisiones.py`?
+1. ¿Quién usa `validacion_tecnica_emisiones.py`?
+
+Las preguntas a DevOps están en las notas de arriba. La concurrencia no es pregunta: se deja la de hoy y se vuelve parametrizable.

@@ -1,7 +1,7 @@
 ---
 tipo: pendiente
 estado: vigente
-actualizado: 2026-11-24
+actualizado: 2026-11-25
 ---
 # Pendientes
 
@@ -45,6 +45,7 @@ actualizado: 2026-11-24
 - [ ] Medir en DEV una tabla por ciclo, la línea base frente a la versión nueva y la equivalencia, en los dos procesos de extracción (estándar y Emisiones). Mostrar a Víctor los resultados, tabla por tabla y optimizados.
 - [ ] Recomendaciones de índices de Oracle: a Víctor, no directo a la base ([[reunion-extraccion-victor]]).
 - [x] Permisos del rol del proceso de extracción revisados en DEV (2026-11-20): DynamoDB sobre `ejc-ejecuciones` por la política común; 13 políticas fuera de `alfa-repos` ([[modularizacion-extraccion]]).
+- [ ] **Paquete de entrega a DevOps de PCR Emisiones (no bloquea, 2026-11-25):** (1) cómo empaqueta `glueJobsClientesPipeline` los módulos de `src/` (zip en `--extra-py-files`, como `commons.zip`); (2) nota del clúster: CPU 0,00 y heap máx. 12 % con 10 G.2X (~100 DPU-h por corrida), el tamaño lo deciden ellos; *propuesta:* `WorkerType`/`NumberOfWorkers` por corrida desde la Step Function; (3) quién cargó los ítems de Emisiones en `cnf-mallas` y de dónde (no están en ningún repo). Detalle en `Tareas\Modularizacion\PCR\01-emisiones\plan-repo-pcr-emisiones.md`.
 - [ ] Preparar para DevOps el cambio de IaC: `--EJECUCION_ID` en las 6 Step Functions del proceso de extracción y en `niif-snf-emisiones`. Sale junto con el despliegue del código (el job lo exigirá).
 - [ ] **Lunes 2026-11-23: preguntar a DevOps** de qué repo salen las 13 políticas del rol del proceso de extracción (no están en la `quality` de los 33 repos que tenemos). No suponer: puede ser un repo de DevOps que no tenemos. No las buscamos ni las corregimos nosotros ([[preferencias-usuario]]).
 
