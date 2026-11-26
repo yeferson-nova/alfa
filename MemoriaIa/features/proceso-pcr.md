@@ -22,7 +22,7 @@ actualizado: 2026-11-25
 3. **Observabilidad en 3 niveles = logs, métricas y trazas** ([[roadmap-observabilidad]]).
 
 ## Reglas
-- **Decisión del usuario (2026-11-25), ID de punta a punta en PCR:** el ID lo **genera la Step Function** (`$$.Execution.Name`); ese cambio es de la IaC (DevOps). **Nosotros lo recibimos de ahí en adelante** y lo pasamos en cada paso: configuradora, extracción, validación, remediación, Silver, SCD y certificación, hasta **certificar o no certificar y el cierre**. Es el mismo ID en todo el flujo y no se regenera en ningún paso. **Nunca se ejecuta sin ID:** si la Step Function no lo envía, el paso 1 genera uno único y lo propaga (hoy el job corre igual sin trazabilidad).
+- **Decisión del usuario (2026-11-25), ID de punta a punta en PCR:** el ID lo **genera la Step Function** (`$$.Execution.Name`); ese cambio es de la IaC (DevOps). **Nosotros lo recibimos de ahí en adelante** y lo pasamos en cada paso: configuradora, extracción, validación, remediación, Silver, SCD y certificación, hasta **certificar o no certificar y el cierre**. Es el mismo ID en todo el flujo y no se regenera en ningún paso. **Nunca se ejecuta sin ID y el ID nunca hace fallar un paso:** si la Step Function no lo envía o llega inválido, el paso genera uno único y lo propaga (hoy el job corre igual sin trazabilidad).
 - Oracle no se toca (sin índices ni DDL): se optimiza el lado Glue (pool de peticiones, pausa, concurrencia y recursos). Una sola conexión de servicio.
 - Medir antes de cambiar, con corridas existentes. Resultados iguales (diferencia 0). No suponer.
 
