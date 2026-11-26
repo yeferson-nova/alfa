@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Prueba en DEV de la version modular del proceso de extraccion de Emisiones.
 #   bash probar-despliegue-dev.sh                  -> verificar (solo lectura)
+#   bash probar-despliegue-dev.sh subir-paquete modulos.zip -> sube el paquete de prueba (no cambia el job)
 #   bash probar-despliegue-dev.sh ejecutar [ID]    -> verificar, respaldar, configurar y lanzar el job
+#                                                     (si el job no tiene --extra-py-files, usa el paquete de prueba solo en esa corrida)
 #   bash probar-despliegue-dev.sh seguir <JobRunId> -> estado, eventos y comparacion con el respaldo
 # Salida: probar-despliegue-dev-<modo>-<fecha>.txt -> guardarla en ../salidas/
 export AWS_PAGER=""
@@ -21,6 +23,8 @@ MODULO_CLAVE = "emissions_extraction/config/composition.py"
 GRUPO_SALIDA = "/aws-glue/jobs/output"
 GRUPO_ERROR = "/aws-glue/jobs/error"
 CARPETA_PRUEBAS = "pruebas-modular"
+CARPETA_PAQUETE_MANUAL = "pruebas-manuales"
+NOMBRE_PAQUETE = "modulos.zip"
 EVENTOS_CLAVE = ("EJECUCION_ID_RESUELTO", "EMISIONES_INICIO", "CASO_EXTRACCION_OK",
                  "EMISIONES_EXTRACCION_OK", "ADVERTENCIA_NUCLEO_COMUN_SQL_DIFERENTE")
 
@@ -47,6 +51,41 @@ def sha(data):
 def veredicto(ok, texto):
     print(("PASS " if ok else "FAIL ") + texto)
     return ok
+
+
+def uri_paquete_manual(script):
+    return script.rsplit("/", 1)[0] + f"/{CARPETA_PAQUETE_MANUAL}/{NOMBRE_PAQUETE}"
+
+
+def revisar_zip(uri, data):
+    z = zipfile.ZipFile(io.BytesIO(data))
+    tiene = MODULO_CLAVE in z.namelist()
+    print("  ", uri, "->", "contiene el paquete" if tiene else "no contiene el paquete", "| sha256:", sha(data))
+    if tiene:
+        for n in sorted(n for n in z.namelist() if n.endswith(".py")):
+            print("     ", n, sha(z.read(n)))
+    return tiene
+
+
+def subir_paquete():
+    if len(args) < 2 or not os.path.isfile(args[1]):
+        print("Uso: bash probar-despliegue-dev.sh subir-paquete modulos.zip (el zip en la carpeta actual)")
+        return
+    data = open(args[1], "rb").read()
+    print("== Paquete local", args[1])
+    if not revisar_zip(args[1], data):
+        print("FAIL el zip no trae", MODULO_CLAVE, "en la raiz; no se sube.")
+        return
+    script = glue.get_job(JobName=JOB)["Job"]["Command"]["ScriptLocation"]
+    destino = uri_paquete_manual(script)
+    b, k = partir(destino)
+    try:
+        s3.put_object(Bucket=b, Key=k, Body=data)
+    except Exception as exc:
+        print("FAIL no se pudo subir:", type(exc).__name__, str(exc)[:200])
+        return
+    veredicto(sha(leer_s3(destino)) == sha(data), f"paquete de prueba en {destino}")
+    print("La definicion del job no se toca. Siguiente: bash probar-despliegue-dev.sh ejecutar")
 
 
 def verificar():
@@ -83,15 +122,18 @@ def verificar():
     importable = False
     for uri in [u.strip() for u in da.get("--extra-py-files", "").split(",") if u.strip()]:
         try:
-            z = zipfile.ZipFile(io.BytesIO(leer_s3(uri)))
-            tiene = MODULO_CLAVE in z.namelist()
-            print("  ", uri, "->", "contiene el paquete" if tiene else "no contiene el paquete")
-            if tiene:
-                for n in sorted(n for n in z.namelist() if n.endswith(".py")):
-                    print("     ", n, sha(z.read(n)))
-            importable = importable or tiene
+            importable = revisar_zip(uri, leer_s3(uri)) or importable
         except Exception as exc:
             print("  ", uri, "-> no se pudo leer:", type(exc).__name__)
+    paquete_corrida = None
+    if not importable:
+        manual = uri_paquete_manual(script)
+        print("  paquete de prueba (solo para la corrida):")
+        try:
+            if revisar_zip(manual, leer_s3(manual)):
+                paquete_corrida = manual
+        except Exception as exc:
+            print("  ", manual, "-> no existe o no se pudo leer:", type(exc).__name__)
 
     print("\n== 5. Corridas del job desde el despliegue")
     runs = glue.get_job_runs(JobName=JOB, MaxResults=10)["JobRuns"]
@@ -110,12 +152,13 @@ def verificar():
 
     print("\n== Veredicto")
     a = veredicto(modular, "el script desplegado es la version modular")
-    c = veredicto(importable, "el paquete llega al job por --extra-py-files")
+    c = veredicto(importable or bool(paquete_corrida),
+                  "el paquete llega al job por --extra-py-files" + (" (paquete de prueba en la corrida)" if paquete_corrida else ""))
     d = veredicto(not en_curso and not corriendo, "no hay corridas en curso del job ni de la Step Function")
     if modular and not importable:
-        print("ALERTA: el job fallara al arrancar (ModuleNotFoundError: emissions_extraction). "
-              "Falta el empaquetado en la IaC del job (DevOps).")
-    return a and c and d, runs
+        print("ALERTA: la definicion del job no tiene el paquete; la malla fallara al arrancar "
+              "(ModuleNotFoundError: emissions_extraction) hasta que DevOps lo agregue a la IaC.")
+    return a and c and d, runs, paquete_corrida
 
 
 def rutas_actuales(runs):
@@ -142,7 +185,7 @@ def respaldar(rutas, carpeta):
 
 
 def ejecutar():
-    listo, runs = verificar()
+    listo, runs, paquete_corrida = verificar()
     if not listo:
         print("\nNo se lanza nada: el veredicto tiene FAIL.")
         return
@@ -166,8 +209,12 @@ def ejecutar():
     argumentos = {"--RUTAS_CONFIG_EXTRACCION": json.dumps(rutas)}
     if len(args) > 1:
         argumentos["--EJECUCION_ID"] = args[1]
+    if paquete_corrida:
+        argumentos["--extra-py-files"] = paquete_corrida
+        print("paquete solo para esta corrida:", paquete_corrida)
     run_id = glue.start_job_run(JobName=JOB, Arguments=argumentos)["JobRunId"]
-    estado = {"job_run_id": run_id, "lote": res.get("loteCargueId"), "periodo": res.get("periodoNegocio"),
+    estado = {"job_run_id": run_id, "paquete_corrida": paquete_corrida,
+              "lote": res.get("loteCargueId"), "periodo": res.get("periodoNegocio"),
               "id_configuradora": res.get("idEjecucion"), "id_enviado": argumentos.get("--EJECUCION_ID"),
               "rutas": rutas, "carpeta": carpeta}
     with open(os.path.join(carpeta, "estado.json"), "w", encoding="utf-8") as f:
@@ -258,6 +305,6 @@ def seguir():
         veredicto(not filas, f"{caso}: mismas filas por tabla que la corrida anterior")
 
 
-{"verificar": lambda: verificar(), "ejecutar": ejecutar, "seguir": seguir}.get(modo, lambda: print("modo no valido:", modo))()
+{"verificar": lambda: verificar(), "subir-paquete": subir_paquete, "ejecutar": ejecutar, "seguir": seguir}.get(modo, lambda: print("modo no valido:", modo))()
 EOF
 echo "Salida: $OUT"

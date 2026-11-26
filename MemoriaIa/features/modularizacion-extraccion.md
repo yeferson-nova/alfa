@@ -166,3 +166,4 @@ Rama `feature/pcr-emisiones-observabilidad` (desde la de deuda técnica, una ram
 - **Errores:** `ERROR_CLASIFICADO` una sola vez por error, códigos `EXT-<DOM>-001` (taxonomía de HU-GI-06), detalle de una línea y 300 caracteres como máximo; el error se relanza igual.
 - **Métricas EMF:** `NIIF17/Extraccion`, `DuracionMs`, `FilasSalida`, `Errores`. *Propuesta:* se agregó `paso` a las dimensiones del contrato (7 valores, sin costo alto) para no mezclar la duración de una tabla con la de la corrida.
 - Duración de tabla = lectura de Oracle + escritura (Spark las hace juntas); separarlas queda para la fase 4.
+- Enviada al equipo corporativo el 2026-11-26: lote `20261126-115013`, solo sus 3 commits; allá la rama se crea con `-Base feature/pcr-emisiones-deuda-tecnica` ([[repo-alfa-repos]]).
