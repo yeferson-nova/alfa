@@ -31,5 +31,5 @@ actualizado: 2026-11-25
 - ALFAPRD sigue en `Tareas\Modularizacion\Extraccion\` (`alfaprd\validaciones\scripts\`).
 
 ## Estado
-- Malla 1: línea base medida (tiempo por tabla y uso del clúster) y registrada en [[tiempos-pcr-emisiones]]. Pool de sesiones = 1 hoy, parametrizable; el clúster se queda igual y se usa al máximo. Falta la orden para la fase 0 (red de pruebas). Detalle técnico en [[modularizacion-extraccion]].
+- Malla 1: línea base medida (tiempo por tabla y uso del clúster) y registrada en [[tiempos-pcr-emisiones]]. Pool de sesiones = 1 hoy, parametrizable; el clúster se queda igual y se usa al máximo. **Fase 0 en curso (2026-11-25):** rama `feature/pcr-emisiones-modular` en `alfa-repos` (desde `a1238a4`), 29 pruebas de caracterización en verde, sin tocar el job. Detalle técnico en [[modularizacion-extraccion]].
 - Mallas 2 a 4: pendientes (Manuel).
