@@ -78,6 +78,8 @@ Diseño detallado y de dónde sale cada función: [diseno-modular-extraccion.md]
 | ARQ-32 | **Hoy, si la Step Function no envía `--EJECUCION_ID`, el job no falla: corre igual, pero sin trazabilidad de punta a punta.** Usa el ID que genera la configuradora (`EMISIONES-<periodo>-<hora>`), distinto del nombre de la ejecución, y los demás pasos no lo reciben | **Nunca se ejecuta sin un ID.** Lo envía la Step Function; si el paso 1 (configuradora) no lo recibe, genera un ID único, lo usa y lo pasa a todos los pasos hasta la certificación y el cierre. Ningún paso posterior genera otro. **Hecho en la extracción (paso 2):** si `--EJECUCION_ID` no llega, el job genera `EMISIONES-<periodo>-<AAAAMMDDThhmmssZ>-<uuid4 de 12>` y lo usa en Bronce, en el runtime y en los eventos; si llega inválido, el job no falla: genera uno propio y deja el recibido en el evento `EJECUCION_ID_RESUELTO` |
 
 ### 3. Observabilidad en 3 niveles
+**Hecho en el job (2026-11-26), rama `feature/pcr-emisiones-observabilidad`:** logs con el contrato `niif17-log/1`, trazas `PASO_INICIO`/`PASO_FIN` por paso, errores clasificados y métricas EMF. Falta confirmar en DEV que CloudWatch extrae las métricas del log de Glue. Separar lectura y escritura queda para la fase 4.
+
 Hoy el job imprime eventos JSON sueltos con `print`: `EMISIONES_INICIO`, `FASE_INICIO`, `TABLA_FIN` y `CASO_EXTRACCION_OK`, este último con el runtime completo. `TABLA_FIN` no lleva `id_ejecucion`, no hay evento de error ni duración en milisegundos.
 1. **Logs:** contrato v1 en cada línea (`ejecucion_id`, caso, fase, tabla, evento, duración, filas y estado) y error clasificado.
 2. **Métricas:** por tabla y por fase: duración de lectura y escritura, filas, sesiones activas y pausa, con nombres estables.

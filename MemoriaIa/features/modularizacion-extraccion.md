@@ -154,6 +154,15 @@ Rama `feature/pcr-emisiones-deuda-tecnica` (desde la modular), 7 commits, 182 pr
 - **Núcleo (ARQ-67):** `ADVERTENCIA_NUCLEO_COMUN_TABLAS` lista las tablas que difieren por caso (en la configuración real: las 5 de Generales). `control_extraccion.nucleo_comun_estricto=true` hace fallar el job; por defecto `false`, igual que hoy.
 - **Configuración sin efecto:** `ADVERTENCIA_CLAVES_SIN_EFECTO` por caso (lista en el README del repo).
 - **Ciclos anidados:** `ValueError` claro en vez de `RecursionError`.
-- La copia de referencia de las pruebas estaba editada (línea Silver y docstring); volvió a ser idéntica a QA (sha `2086a5a0`).
+- La copia de referencia de las pruebas estaba editada (línea Silver y docstring); volvió a ser idéntica a QA (sha `2086a5a0`). Es excepción a la regla de no comentarios ([[preferencias-usuario]]).
+- Enviada al equipo corporativo el 2026-11-26: lote `20261126-111055`, 17 commits (10 de la modular y 7 de esta fase), ver [[repo-alfa-repos]].
 
 **Hallazgo de la ruta Silver (validado en código):** el script de QA solo convertía `alfa-datalake-qa-bronce`; en DEV y PRD dejaba `ruta_dataset_destino` = ruta de Bronce. La remediación escribe Silver ahí y Silver Generales/Satélites (`CAPA_ENTRADA=SILVER`) lee de ahí, así que en DEV el "Silver" de esos casos vive en el bucket Bronce. El código modular lo lleva al bucket `-silver`, como en QA. La remediación copia de Bronce los lotes que falten en la ruta nueva, así que las cifras no deberían cambiar, pero **hay que comprobarlo en la primera corrida de DEV** (filas por tabla de Silver antes y después).
+
+## Fase 3 de PCR Emisiones: observabilidad (2026-11-26)
+Rama `feature/pcr-emisiones-observabilidad` (desde la de deuda técnica, una rama por fase), 3 commits, 206 pruebas en Docker y 98 %. Solo agrega eventos: las pruebas de equivalencia con el script original siguen iguales.
+- **Logs:** contrato `niif17-log/1` ([[roadmap-observabilidad]]) en cada línea por un envoltorio (`ContractTelemetry`) sobre el adaptador de salida. `ambiente` sale del nombre del job (`niif-{env}-*`), `request_id` del `JOB_RUN_ID`; `ejecucion_id`, periodo y lote se fijan al resolver el ID.
+- **Trazas:** `COMPONENTE_*` y `PASO_*` (`cargar_configuracion`, `resolver_conexion`, `extraer_nucleo`, `extraer_caso`, `extraer_fase`, `extraer_tabla`, `publicar_runtime`) con `duracion_ms`, `resultado` y totales.
+- **Errores:** `ERROR_CLASIFICADO` una sola vez por error, códigos `EXT-<DOM>-001` (taxonomía de HU-GI-06), detalle de una línea y 300 caracteres como máximo; el error se relanza igual.
+- **Métricas EMF:** `NIIF17/Extraccion`, `DuracionMs`, `FilasSalida`, `Errores`. *Propuesta:* se agregó `paso` a las dimensiones del contrato (7 valores, sin costo alto) para no mezclar la duración de una tabla con la de la corrida.
+- Duración de tabla = lectura de Oracle + escritura (Spark las hace juntas); separarlas queda para la fase 4.

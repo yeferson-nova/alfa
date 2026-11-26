@@ -1,7 +1,7 @@
 ---
 tipo: feature
 estado: vigente
-actualizado: 2026-11-25
+actualizado: 2026-11-26
 ---
 # Roadmap de observabilidad (Glue, Step Functions y lambdas)
 
@@ -31,6 +31,9 @@ Humano: `Docs\06-brechas\roadmap-observabilidad.md` (diagnóstico por repo, cont
 - La propuesta ([[arquitectura-propuesta-niif17]]) tampoco dibuja observabilidad: su nota de la `Página-2` solo promete logs JSON con `ejecucion_id` y `cert_code` en la cadena de certificación. Ya se dibujó ahí (2026-11-19): elementos 79 a 84 en las hojas `Página-1` y `Página-2`.
 - Grupos (evaluador compuesto): una certificación viene de varias corridas, así que logs y trazabilidad llevan `ejecucionesOrigen`.
 - Fuera del diagrama, y piden aval del arquitecto: X-Ray; opcionales Firehose → S3 → Athena (solo si hay retención larga) y EventBridge + SNS (alertas). Detalle: documento humano §7.1.
+
+## Primer job con el contrato v1 (2026-11-26)
+La extracción de PCR Emisiones ya lo implementa en su repo (logs, trazas por paso, errores clasificados y EMF); detalle en [[modularizacion-extraccion]]. Es la referencia para los demás jobs de Glue.
 
 ## Fases
 0 contrato → 1 ID de punta a punta → 4 IaC (DevOps) → 2a Glue genéricos → 3 lambdas → 2b Silver por malla → 2c resto de Glue → 5 publicar para tableros → 6 alertas. Detalle y repos por fase en el documento humano §7.
