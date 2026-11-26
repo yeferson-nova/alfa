@@ -61,6 +61,6 @@ python validaciones\scripts\consolidar-tiempos.py validaciones\salidas\<salida>.
 La línea base (versión de QA, corrida del 24 de noviembre) es de 321 minutos: núcleo y PCR Vida 119,5, Generales 66,8 y Satélites 135,3. Cada cambio agrega su medición con el nombre de su versión.
 
 ## Siguientes pasos
-1. Código modular sobre la red de pruebas de caracterización, sin cambiar el comportamiento.
+1. ~~Código modular sobre la red de pruebas, sin cambiar el comportamiento.~~ **Hecho (2026-11-25):** paquete hexagonal, script de entrada de 10 líneas, 155 pruebas y 98 % de cobertura. Falta definir el empaquetado con DevOps y una corrida de equivalencia en DEV.
 2. Concurrencia: se deja la que hay hoy y se vuelve parametrizable por configuración.
 3. Optimización del lado de Glue, con cada cambio medido y registrado en `tiempos\registro-tiempos.csv`.

@@ -1,7 +1,7 @@
 ---
 tipo: feature
 estado: vigente
-actualizado: 2026-11-20
+actualizado: 2026-11-25
 ---
 # Roadmap de observabilidad (Glue, Step Functions y lambdas)
 
@@ -17,6 +17,7 @@ Humano: `Docs\06-brechas\roadmap-observabilidad.md` (diagnóstico por repo, cont
 - IaC: Glue con logs continuos y métricas en los 47 jobs; Step Functions sin logs; lambdas sin `tracing_mode` ni retención; sin alarmas ni reglas de fallo (ARQ-51, ARQ-52, COS-10).
 
 ## Decisiones de diseño (propuesta)
+- **Decisión del usuario (2026-11-25), ID de punta a punta en PCR:** el ID lo **genera la Step Function** (`$$.Execution.Name`); ese cambio es de la IaC (DevOps). **Nosotros lo recibimos de ahí en adelante** y lo pasamos en cada paso: configuradora, extracción, validación, remediación, Silver, SCD y certificación, hasta **certificar o no certificar y el cierre**. Es el mismo ID en todo el flujo y no se regenera en ningún paso.
 - Contrato v1 = nombres que ya usa el código (`marcaTiempo`, `nivel`, `evento`, `mensaje`, `funcion`, `ejecucion_id`, `request_id`, `periodo_negocio`, `use_case_id`) + `esquema`, `ambiente`, `malla`, `etapa`, `paso`, `duracion_ms`, `resultado`, conteos, `suma_control`, `config_version` y campos de error.
 - Eventos comunes: `EJECUCION_INICIADA`, `COMPONENTE_INICIO/FIN`, `PASO_INICIO/FIN`, `CUADRE_RESULTADO`, `ERROR_CLASIFICADO` + los de la cadena de certificación.
 - **Tres niveles = logs, métricas y trazas (decisión del usuario, 2026-11-19).** Trazas: X-Ray en lambdas, Step Functions y API; en Glue (sin X-Ray), traza por logs con `ejecucion_id` y tramos `PASO_INICIO`/`PASO_FIN`.

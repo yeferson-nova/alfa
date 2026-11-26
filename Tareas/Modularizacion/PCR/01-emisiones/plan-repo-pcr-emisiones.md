@@ -52,6 +52,7 @@ Parte de la [malla 1 de PCR (Emisiones)](README.md). Base: la rama `quality` del
 4. Prueba de equivalencia: conteo y suma de control por tabla frente al Bronce actual del mismo periodo. La diferencia debe ser 0.
 
 ### 1. Código modular y limpio (los resultados no cambian)
+Diseño detallado y de dónde sale cada función: [diseno-modular-extraccion.md](diseno-modular-extraccion.md).
 1. Arquitectura hexagonal, según `Docs\08-estandares-desarrollo\`:
    - **dominio:** el modelo de configuración, el compilador de SQL y el planificador de fases y del pool;
    - **puertos:** fuente Oracle, almacenamiento, checkpoint, publicación del runtime, logs y métricas;

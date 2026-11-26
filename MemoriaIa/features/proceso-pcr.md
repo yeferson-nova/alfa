@@ -22,6 +22,7 @@ actualizado: 2026-11-25
 3. **Observabilidad en 3 niveles = logs, métricas y trazas** ([[roadmap-observabilidad]]).
 
 ## Reglas
+- **Decisión del usuario (2026-11-25), ID de punta a punta en PCR:** el ID lo **genera la Step Function** (`$$.Execution.Name`); ese cambio es de la IaC (DevOps). **Nosotros lo recibimos de ahí en adelante** y lo pasamos en cada paso: configuradora, extracción, validación, remediación, Silver, SCD y certificación, hasta **certificar o no certificar y el cierre**. Es el mismo ID en todo el flujo y no se regenera en ningún paso.
 - Oracle no se toca (sin índices ni DDL): se optimiza el lado Glue (pool de peticiones, pausa, concurrencia y recursos). Una sola conexión de servicio.
 - Medir antes de cambiar, con corridas existentes. Resultados iguales (diferencia 0). No suponer.
 
@@ -31,5 +32,5 @@ actualizado: 2026-11-25
 - ALFAPRD sigue en `Tareas\Modularizacion\Extraccion\` (`alfaprd\validaciones\scripts\`).
 
 ## Estado
-- Malla 1: línea base medida (tiempo por tabla y uso del clúster) y registrada en [[tiempos-pcr-emisiones]]. Pool de sesiones = 1 hoy, parametrizable; el clúster se queda igual y se usa al máximo. **Fase 0 en curso (2026-11-25):** rama `feature/pcr-emisiones-modular` en `alfa-repos` (desde `a1238a4`), 29 pruebas de caracterización en verde, sin tocar el job. Detalle técnico en [[modularizacion-extraccion]].
+- Malla 1: línea base medida (tiempo por tabla y uso del clúster) y registrada en [[tiempos-pcr-emisiones]]. Pool de sesiones = 1 hoy, parametrizable; el clúster se queda igual y se usa al máximo. **Código modular listo (2026-11-25):** rama `feature/pcr-emisiones-modular` en `alfa-repos`, 155 pruebas en verde, 98 % de cobertura, mismo comportamiento que QA. Siguen: empaquetado (DevOps), equivalencia en DEV, deuda técnica, observabilidad y optimización. Detalle técnico en [[modularizacion-extraccion]].
 - Mallas 2 a 4: pendientes (Manuel).
