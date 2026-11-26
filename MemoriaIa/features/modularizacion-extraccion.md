@@ -168,3 +168,4 @@ Rama `feature/pcr-emisiones-observabilidad` (desde la de deuda técnica, una ram
 - Duración de tabla = lectura de Oracle + escritura (Spark las hace juntas); separarlas queda para la fase 4.
 - Enviada al equipo corporativo el 2026-11-26: lote `20261126-115013`, solo sus 3 commits; allá la rama se crea con `-Base feature/pcr-emisiones-deuda-tecnica` ([[repo-alfa-repos]]).
 - **Cambio traído del corporativo (2026-11-26, modular en `796b4e9`):** `Jenkinsfile` usa `glueJobsPipeline` (antes `glueJobsClientesPipeline`) y se quitó `src/__init__.py`. Queda en las tres ramas (`af44b10`, `db515a7`, `f61732f`); 171 y 206 pruebas en verde.
+- **Fix `JOB_RUN_ID` (2026-11-26):** el job modular fallaba al arrancar porque pedía `JOB_RUN_ID` en `getResolvedOptions`; Glue ya lo reserva y lo entrega. Commit en las tres ramas (`a93d99d`, `bee8296`, `9a4cca5`); 172, 183 y 207 pruebas en verde. Enviado al corporativo en los lotes `20261126-151255`, `-151257` y `-151258`.
