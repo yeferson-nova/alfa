@@ -88,6 +88,8 @@ Hoy el job imprime eventos JSON sueltos con `print`: `EMISIONES_INICIO`, `FASE_I
 Además, medir la lectura real: hoy "escritura" incluye la lectura de Oracle.
 
 ### 4. Tiempo: 90 minutos como máximo, sin tocar Oracle
+**En curso (2026-11-26), rama `feature/pcr-emisiones-tiempos`.** Hechos los puntos 1 y 2 en el job: concurrencia, modos paralelos, particiones, casos en paralelo (bandera), pool de sesiones a Oracle y pausa entre fases, todo en `control_extraccion` y con los valores de hoy por defecto. Falta que la configuradora y `cnf-mallas` publiquen esas claves.
+
 1. Pausa entre ciclos y pool de peticiones configurables por malla en DynamoDB. **Validado con Víctor.**
 2. **Concurrencia parametrizable.** Se deja la que hay hoy (hasta 3 tablas en las fases `PARALELO`, de a una en `CASCADA_POR_FASE` y particiones según la tabla) y se vuelve un parámetro de la configuración. El valor por defecto reproduce el comportamiento actual. Si a futuro cambia, se ajusta sin cambiar código.
 3. Leer el pivote una sola vez y reutilizar sus llaves, como propone Víctor. Exige probar equivalencia.

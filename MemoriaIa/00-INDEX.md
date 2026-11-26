@@ -22,6 +22,7 @@ actualizado: 2026-11-23
 | Un incidente en producción | `inprod\`: [[inprod-primas-arl-202606]] (su fix: [[fix-scd-freno-periodo]]), [[inprod-primas-rentas-202606]], [[inprod-enlaces-cognito-9411325]], [[inprod-pcr-emisiones-202606]] |
 | Brechas de seguridad, costos o arquitectura (IDs `SEG`, `COS`, `ARQ`, `CUM`) | `auditorias\`: [[brechas-seguridad]], [[auditoria-pipeline-2026-11]], [[notificaciones-vs-arquitectura]], [[auditoria-repos-2026-11]] |
 | Qué falta por hacer, o dudas sin resolver | [[pendientes]], [[preguntas-abiertas]] |
+| Qué hay que cambiar en `cnf-mallas` o en la configuradora | [[cambios-cnf-mallas]] |
 | Observabilidad: logs, ID de punta a punta, duraciones, tableros y alertas | [[roadmap-observabilidad]] |
 | Optimizar el proceso PCR (Emisiones, Primas Cedidas, Reaseguros, Primas PCR) | [[proceso-pcr]], luego [[modularizacion-extraccion]] |
 | Modularizar un componente (extracción, remediación, validación, SCD) y cerrar su deuda técnica | [[modularizacion]], luego la nota del componente (ej. [[modularizacion-extraccion]]) |
@@ -87,7 +88,7 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 
 **auditorias:** [[brechas-seguridad]] · [[auditoria-pipeline-2026-11]] · [[notificaciones-vs-arquitectura]] · [[riesgos-glue-notificacion]] · [[auditoria-repos-2026-11]] · [[auditoria-observabilidad-2026-11]] · [[auditoria-extraccion-2026-11]]
 
-**pendientes:** [[pendientes]] · [[preguntas-abiertas]]
+**pendientes:** [[pendientes]] · [[preguntas-abiertas]] · [[cambios-cnf-mallas]]
 
 **reuniones:** [[reunion-diseno-pcr]] · [[reunion-extraccion-victor]]
 

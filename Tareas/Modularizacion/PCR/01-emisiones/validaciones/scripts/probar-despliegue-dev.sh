@@ -4,6 +4,9 @@
 #   bash probar-despliegue-dev.sh subir-paquete modulos.zip -> sube el paquete de prueba (no cambia el job)
 #   bash probar-despliegue-dev.sh ejecutar [ID]    -> verificar, respaldar, configurar y lanzar el job
 #                                                     (si el job no tiene --extra-py-files, usa el paquete de prueba solo en esa corrida)
+#   bash probar-despliegue-dev.sh ejecutar-sombra [ID] -> igual que ejecutar, y antes de lanzar agrega a cada JSON los bloques
+#                                                     filtro_spark en modo SOMBRA (necesita filtro_spark_bloques.py y
+#                                                     tamanos-oracle-acsele.json en la carpeta actual)
 #   bash probar-despliegue-dev.sh seguir <JobRunId> -> estado, eventos y comparacion con el respaldo
 # Salida: probar-despliegue-dev-<modo>-<fecha>.txt -> guardarla en ../salidas/
 export AWS_PAGER=""
@@ -205,6 +208,24 @@ def ejecutar():
     print("periodo:", res.get("periodoNegocio"), "| lote:", res.get("loteCargueId"),
           "| id configuradora:", res.get("idEjecucion"), "| casos:", len(rutas))
 
+    if modo == "ejecutar-sombra":
+        print("\n== 8b. Bloques filtro_spark en modo SOMBRA (solo en el JSON de esta corrida; cnf-mallas no se toca)")
+        sys.path.insert(0, os.getcwd())
+        import filtro_spark_bloques as fsb
+        tamanos = fsb.cargar_tamanos(os.path.join(os.getcwd(), fsb.TAMANOS))
+        for uri in rutas:
+            cfg = json.loads(leer_s3(uri))
+            caso = cfg.get("nombre_caso", "caso")
+            with open(os.path.join(carpeta, f"config-original-{caso}.json"), "w", encoding="utf-8") as f:
+                json.dump(cfg, f, ensure_ascii=False, indent=1)
+            bloques, reporte = fsb.generar(cfg, tamanos)
+            nuevo, aplicadas = fsb.aplicar(cfg, bloques)
+            with open(os.path.join(carpeta, f"filtro-spark-{caso}.json"), "w", encoding="utf-8") as f:
+                json.dump({"bloques": bloques, "reporte": reporte}, f, ensure_ascii=False, indent=1)
+            b, k = partir(uri)
+            s3.put_object(Bucket=b, Key=k, Body=json.dumps(nuevo, ensure_ascii=False).encode("utf-8"))
+            print(f"{caso}: {aplicadas} tablas en SOMBRA | contextos: {list(bloques['contextos_spark'])}")
+
     print("\n== 9. Lanzar el job")
     argumentos = {"--RUTAS_CONFIG_EXTRACCION": json.dumps(rutas)}
     if len(args) > 1:
@@ -268,6 +289,25 @@ def seguir():
         clave = (t.get("caso"), t.get("estado"))
         por_estado[clave] = por_estado.get(clave, 0) + 1
     print("TABLA_FIN por caso y estado:", {f"{a}/{b}": n for (a, b), n in sorted(por_estado.items(), key=str)})
+    contextos = [e for e in ev if e.get("evento") in ("CONTEXTO_SPARK_CARGADO", "ADVERTENCIA_CONTEXTO_SPARK_EXCEDIDO")]
+    pasos_ctx = {(e.get("caso"), e.get("contexto")): e.get("duracion_ms") for e in ev
+                 if e.get("evento") == "PASO_FIN" and e.get("paso") == "cargar_contexto"}
+    iguales = [e for e in ev if e.get("evento") == "EQUIVALENCIA_FILTRO_SPARK"]
+    distintas = [e for e in ev if e.get("evento") == "ADVERTENCIA_EQUIVALENCIA_FILTRO_SPARK"]
+    respaldos = [e for e in ev if e.get("evento") == "ADVERTENCIA_FILTRO_SPARK_RESPALDO"]
+    if contextos or iguales or distintas or respaldos:
+        print("\n== 2b. Filtro en Spark (modo SOMBRA)")
+        for e in contextos:
+            ms = pasos_ctx.get((e.get("caso"), e.get("contexto")))
+            print(f"   contexto {e.get('caso')}/{e.get('contexto')}: {e.get('filas')} filas"
+                  f"{'' if ms is None else f' en {ms/60000:.1f} min'}{' EXCEDIDO' if 'EXCEDIDO' in e['evento'] else ''}")
+        print(f"   tablas equivalentes: {len(iguales)} | distintas: {len(distintas)} | respaldo a la SQL: {len(respaldos)}")
+        for e in distintas:
+            print(f"   DISTINTA {e.get('caso')}/{e.get('tabla_relativa')}: sql={e.get('filas_sql')} spark={e.get('filas_spark')}"
+                  f" solo_sql={e.get('solo_sql')} solo_spark={e.get('solo_spark')}")
+        for e in respaldos:
+            print(f"   RESPALDO {e.get('caso')}/{e.get('tabla_relativa')}: {e.get('motivo')}")
+        veredicto(not distintas and not respaldos, "todas las tablas en SOMBRA dan las mismas filas que la SQL")
 
     if r["JobRunState"] in ("FAILED", "ERROR", "TIMEOUT", "STOPPED"):
         print("\n== 3. Errores del driver")
@@ -305,6 +345,7 @@ def seguir():
         veredicto(not filas, f"{caso}: mismas filas por tabla que la corrida anterior")
 
 
-{"verificar": lambda: verificar(), "subir-paquete": subir_paquete, "ejecutar": ejecutar, "seguir": seguir}.get(modo, lambda: print("modo no valido:", modo))()
+{"verificar": lambda: verificar(), "subir-paquete": subir_paquete, "ejecutar": ejecutar,
+ "ejecutar-sombra": ejecutar, "seguir": seguir}.get(modo, lambda: print("modo no valido:", modo))()
 EOF
 echo "Salida: $OUT"
