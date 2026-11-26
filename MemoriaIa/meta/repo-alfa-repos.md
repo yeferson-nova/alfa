@@ -1,7 +1,7 @@
 ---
 tipo: contexto
 estado: vigente
-actualizado: 2026-11-12
+actualizado: 2026-11-26
 ---
 # Repo `alfa-repos`: dónde vive ahora el código
 
@@ -11,6 +11,7 @@ Este PC no ve la red de Alfa y el PC corporativo no ve este. Se pasan los cambio
 - **Corporativo → aquí:** `scripts\exportar.ps1` copia la foto de `quality` (si no existe, `main`; si está vacía, `develop`) de cada repo de Alfa a `lambdas\`, `glue\`, `s3\`, `iac\`, y anota el commit en `VERSIONES.md`. La clave SSH se pide una vez (ssh-agent).
 - **Aquí → corporativo:** se trabaja en una rama `feature/...` desde `main`; `scripts\generar-parches.ps1` convierte los commits en `.patch` (uno por commit y repo) y `scripts\aplicar-parches.ps1`, en el corporativo, los aplica con `git am --3way` en la rama feature de cada repo. Los commits llegan con su autor, fecha y mensaje.
 - `main` solo recibe `sync:`, `parches:` y herramientas (`scripts\`). Nunca se trabaja directo en `main`.
+- **Traer una rama feature del corporativo (probado 2026-11-26):** no se exporta sobre `main`. Allá: `exportar.ps1 -Rama <feature> -Repos <repo> -SinCommit`, luego `git switch -c corporativo/<nombre>`, commit y push. Aquí: se compara con la feature (`git diff --ignore-space-at-eol`), el cambio se confirma **en la misma rama feature** y se mueve la etiqueta `enviado/<rama>` a ese commit para no reenviarlo.
 
 ## Dónde quedó cada cosa (2026-11-12)
 | Antes en `alfa` | Ahora |
