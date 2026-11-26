@@ -33,6 +33,12 @@ Parte de la [malla 1 de PCR (Emisiones)](README.md). Base: la rama `quality` del
 | `oracle_parallel` (19 tablas) arma un hint que se borra antes de leer | `:446-457`, `:545-550` |
 | `fetchsize`: 50.000 en PCR Vida y 20.000 en Generales y Satélites. El núcleo usa el del primer caso | JSON, `:552` |
 
+## Lo que dice la medición (DEV, 25 nov, corridas existentes)
+- **El clúster está sin uso:** CPU de ejecutores en 0,00 de promedio, heap en 2 % y el 95 % del tiempo de Spark en etapas de una sola tarea. Hoy pagamos unos 100 DPU-hora por corrida para usar una sola sesión.
+- **El tiempo lo pone el costo de cada consulta, no el volumen:** 154 filas tardan 19 minutos, 45 filas 9 y 8 filas 6. Ocho tablas de menos de 1.000 filas suman 47 minutos. Eso apunta al refiltrado del pivote en cada consulta.
+- **Los casos van en serie:** núcleo 30 min, PCR Vida unos 90, Generales 67 y Satélites 135, para un total de 321 minutos.
+- **El conteo no pesa** (1 o 2 segundos por tabla), así que sale de las prioridades.
+
 ## Cómo vamos a trabajar el repo (en orden)
 
 ### 0. Línea base y red de seguridad (sin cambiar nada del comportamiento)
@@ -77,10 +83,14 @@ Además, medir la lectura real: hoy "escritura" incluye la lectura de Oracle.
 
 ### 4. Tiempo: 90 minutos como máximo, sin tocar Oracle
 1. Pausa entre ciclos y pool de peticiones configurables por malla en DynamoDB. **Validado con Víctor.**
-2. Concurrencia configurable, en lugar del tope de 3 fijo en el código, y reconocer la forma de los segmentos. **El máximo de sesiones lo define Víctor (pendiente).**
+2. **Pool de sesiones parametrizable.** Hoy el pool es de 1 sesión: la conexión de servicio y el pool lo manejamos nosotros. Se configura por malla en `cnf-mallas`, con 1 por defecto. Si a futuro se permiten 2 o 3, el job reparte ese presupuesto entre tablas, casos y particiones sin cambiar código. Ojo: hoy el código ya abre hasta 3 sesiones (`:764`) y 4 particiones en 2 tablas de PCR Vida. Con 1 sesión, PCR Vida pasaría de unos 90 a unos 148 minutos de reloj. Por eso, con 1 sesión, la ganancia tiene que venir del punto 3.
 3. Leer el pivote una sola vez y reutilizar sus llaves, como propone Víctor. Exige probar equivalencia.
 4. Reanudación explícita (checkpoint y "¿Existe ese lote?").
-5. Tamaño del clúster según la medición, o autoescalado. Lo cambia DevOps en la IaC.
+5. **Usar el clúster al máximo,** con los mismos recursos de hoy (10 G.2X). Con 1 sesión a Oracle:
+   - pasar trabajo de Oracle a Spark: leer el pivote una vez y filtrar las tablas hijas en Spark con un semijoin; hacer en Spark el `DISTINCT` y la deduplicación;
+   - repartir los datos leídos (`repartition`) para que la escritura y las transformaciones usen todos los ejecutores.
+
+   Cada cambio se mide (filas que viajan por la sesión y tiempo) y pasa la prueba de equivalencia.
 6. Ajustes menores, cada uno con su prueba de equivalencia: `fetchsize` único, conteo sin releer el parquet y `DISTINCT`.
 
 ### 5. Entrega
@@ -89,6 +99,10 @@ Además, medir la lectura real: hoy "escritura" incluye la lectura de Oracle.
 - Solicitud a DevOps: `--EJECUCION_ID`, empaquetado y tamaño del clúster.
 - Evidencia de antes y después en `validaciones\salidas\`.
 - Demostración a Víctor: la corrida tabla por tabla y la optimizada.
+
+## Notas para DevOps (no son nuestra tarea)
+- **Tamaño del clúster:** en las corridas medidas, la CPU de los ejecutores está en 0,00 de promedio y la memoria llega como máximo al 12 % (10 G.2X, unos 100 DPU-hora por corrida). El tamaño lo decide DevOps.
+- *Propuesta:* que el tamaño se pueda configurar por corrida (`WorkerType` y `NumberOfWorkers` en la tarea de Glue de la Step Function, tomados de la configuración) en vez de quedar fijo en la IaC.
 
 ## Preguntas abiertas
 1. **Víctor:** ¿cuántas sesiones JDBC simultáneas acepta el usuario de servicio?

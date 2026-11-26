@@ -31,5 +31,5 @@ actualizado: 2026-11-25
 - ALFAPRD sigue en `Tareas\Modularizacion\Extraccion\` (`alfaprd\validaciones\scripts\`).
 
 ## Estado
-- Malla 1: línea base medida; faltan tiempo por tabla, uso del clúster y la respuesta de Víctor sobre sesiones simultáneas ([[preguntas-abiertas]]). Detalle técnico en [[modularizacion-extraccion]].
+- Malla 1: línea base medida (tiempo por tabla y uso del clúster) y registrada en [[tiempos-pcr-emisiones]]. Pool de sesiones = 1 hoy, parametrizable; el clúster se queda igual y se usa al máximo. Falta la orden para la fase 0 (red de pruebas). Detalle técnico en [[modularizacion-extraccion]].
 - Mallas 2 a 4: pendientes (Manuel).

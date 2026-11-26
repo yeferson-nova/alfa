@@ -100,3 +100,18 @@ Salida: `Tareas/Modularizacion/PCR/01-emisiones/validaciones/salidas/cnf-mallas-
 - **PRG:** los 3 casos activos, `periodoNegocio` 202606, `status` [2], sin `idEjecucion` ni `loteCargueId` (lote nuevo cada corrida). El `scheduleName` dice `202608` con periodo 202606 (inconsistencia menor).
 - **Configuración que el job ignora:** `fetchsize` por tabla (en Generales y Satélites; el job solo lee el de `fuente`, `:552`), `alcance`, `tipo_tabla`, `orden_fase`, `persistir_dataframe` y `reglas_arquitectura`. `oracle_parallel` (19 tablas) se borra antes de leer.
 - Confirmado igual que en el repo: la forma `CASCADA_POR_FASE` en todas las ramas, las 2 tablas de PCR Vida con `partitionColumn` (4 particiones), `fetchsize` 50.000/20.000 y las fases de rama 4 a 9.
+
+## Medición en DEV con corridas existentes (2026-11-25)
+Salidas: `Tareas/Modularizacion/PCR/01-emisiones/validaciones/salidas/medir-tiempos-dev-20261125-2348.txt` y `medir-uso-glue-dev-20261125-2350.txt`. Corridas de 282, 308 y 321 min (G.2X x10, 94-107 DPU-h). El script de DEV es el mismo de QA.
+- **Clúster sin uso (hipótesis confirmada):** CPU de ejecutores promedio 0,00 y heap 2 % en las 3 corridas. 386 de 424 etapas de Spark tienen 1 sola tarea y suman el 95 % del tiempo de etapas.
+- **Corrida del 24 nov (lote 20261124060016), en serie:** núcleo 30 min → PCR Vida termina 07:59 (148 min de tablas en ~90 min de reloj, por las fases en paralelo) → Generales +67 min (66 min de tablas) → Satélites +135 min (134 min). Total 321 min.
+- **El tiempo lo pone el costo de cada consulta en Oracle, no el volumen:** `PREAGREEMENT` de Satélites, 154 filas en 19 min; `STPS_AGREEMENTSTATICDAT`, 45 filas en 9 min; `STTS_ROLE`, 8 filas en 6 min. 8 tablas con menos de 1.000 filas suman 47 min. Coincide con el refiltrado del pivote en cada SQL.
+- Más lentas: `INSURANCEOBJECTDCO` 22 min y `OAVDEUDORES` 21 min (PCR Vida, 3,7 M filas), `THIRDPARTYMOVEMENTPOLICY` 18 min (36,7 M), `STPO_POLICYPARTICIPATIONDCO` 14 min (7,3 M, con 4 particiones).
+- **El conteo no pesa:** 1-2 s por tabla. Se quita de las prioridades.
+- 13 tablas opcionales quedan `SKIPPED_NOT_AVAILABLE` (6 de Generales y 7 de Satélites: mascotas, decenal, pet lover, exequias, protección): calidad `INCOMPLETA` y extracción `SUCCESS` (ARQ-63).
+- La métrica `numberAllExecutors` no tiene datos en CloudWatch para este job.
+
+## Decisión: pool de sesiones parametrizable (usuario, 2026-11-25)
+- Hoy el pool es de **1 sesión** (una conexión de servicio, pool nuestro). Debe ser un parámetro (presupuesto de sesiones por malla, en `cnf-mallas`), por defecto 1; si a futuro se permiten 2 o 3, el job reparte sin cambiar código: tablas a la vez, casos a la vez y particiones por tabla salen del mismo presupuesto.
+- **Ojo, hoy el código ya pasa de 1:** hasta 3 tablas a la vez en el núcleo y en PCR Vida (`:764`) y 4 particiones en 2 tablas de PCR Vida. Con el tope en 1, PCR Vida pasaría de unos 90 min de reloj a unos 148 (su tiempo de tablas). La ganancia con 1 sesión tiene que venir del costo por consulta (pivote una vez) y no de la concurrencia.
+- **Clúster (decisión del usuario, 2026-11-25):** se queda como hoy (G.2X x10). Bajarlo **no es nuestra tarea**: queda como nota para DevOps (CPU 0,00 y heap máx. 12 % medidos). Nuestra tarea es **usarlo al máximo**: con 1 sesión a Oracle, pasar trabajo de Oracle a Spark (leer el pivote una vez y filtrar las hijas en Spark con un semijoin; `DISTINCT`/dedup en Spark) y repartir los datos leídos (`repartition`) para que la escritura y las transformaciones usen todos los ejecutores. Tamaño por corrida: *propuesta* para DevOps, que la Step Function pase `WorkerType`/`NumberOfWorkers` desde la configuración.

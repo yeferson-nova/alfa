@@ -77,6 +77,7 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 - [[roadmap-observabilidad]]: roadmap de logs, trazas y duración de punta a punta (2026-11-19, propuesta)
 - [[modularizacion]]: tarea transversal de modularizar componentes, cerrar deuda y observabilidad (2026-11-20)
 - [[proceso-pcr]]: plan global de PCR (4 mallas): extracción en 1,5 h como máximo, código modular y observabilidad en 3 niveles; carpetas por malla con validaciones
+- [[tiempos-pcr-emisiones]]: registro de tiempos (job, caso y tabla) de la línea base y de cada cambio, para el gráfico de la entrega
 - [[modularizacion-extraccion]]: modelo de ciclos de Víctor y lectura de dependencias por rangos (opción D, en diseño)
 - [[productos-genericos-emisiones]]: productos como dato (catálogo, mapa de conceptos y controles), piloto Pymes; sin tocar la Oracle ni hacerle espejo (propuesta, 2026-11-25)
 - [[diseno-propuesto]]: cambios propuestos en el paso 3 (sin confirmar)
