@@ -1,0 +1,26 @@
+== 1. Definicion del job niif-dev-extraccion-estandar-emisiones
+glue: 4.0 | worker: G.2X x 10 | timeout: 2880 | concurrencia: 3
+script: s3://niif-dev-assets/glue-resources/pcr-emisiones/extraccion_estandar_emisiones.py
+--extra-py-files: (no tiene)
+--additional-python-modules: (no tiene)
+
+== 2. Script desplegado
+modificado: 2026-11-26T14:08:27+00:00 | bytes: 125 | sha256: afd594b05c6b
+version: MODULAR (script delgado)
+
+== 3. Paquete emissions_extraction en S3
+objetos bajo el prefijo: 2 | .py del paquete sueltos: 0 | zip/whl: (ninguno)
+
+== 4. El job puede importar el paquete (--extra-py-files)
+
+== 5. Corridas del job desde el despliegue
+en curso: 0
+
+== 6. Step Function niif-dev-emisiones
+existe: True | ejecuciones en curso: 0
+
+== Veredicto
+PASS el script desplegado es la version modular
+FAIL el paquete llega al job por --extra-py-files
+PASS no hay corridas en curso del job ni de la Step Function
+ALERTA: el job fallara al arrancar (ModuleNotFoundError: emissions_extraction). Falta el empaquetado en la IaC del job (DevOps).
