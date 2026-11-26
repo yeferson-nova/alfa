@@ -1,7 +1,7 @@
 ---
 tipo: estandar
 estado: vigente
-actualizado: 2026-11-18
+actualizado: 2026-11-26
 ---
 # Estándar de Pull Requests del equipo
 
@@ -18,5 +18,6 @@ Fuentes: `Docs\08-estandares-desarrollo\estandar-pull-requests.md` (reglas) y `D
 - **Tamaño:** menos de 400 líneas sin pruebas ni generados; si no, partir o justificar. Un solo tema por PR.
 - **Revisión:** 2 revisores mínimos, pipeline y Quality Gate en verde, cobertura del código nuevo > 80 %.
 - **Sin línea de Claude Code ni coautor** en la descripción (preferencia del usuario, [[preferencias-usuario]]).
+- **Sin temas nuestros (2026-11-26):** ni códigos de brecha (`ARQ-xx` y demás) ni conceptos internos en título ni descripción. El campo "Ticket o ID de brecha" lleva solo el ticket Jira; sin ticket, "no aplica".
 
 Ejemplo aplicado: PR de [[inprod-primas-rentas-202606]] (2026-11-18).
