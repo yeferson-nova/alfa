@@ -8,6 +8,7 @@ Al iniciar o al perder contexto: leer `MemoriaIa\00-INDEX.md` y abrir solo las n
 - Todo el stack es AWS. Contexto: estándares bancarios colombianos; el marco normativo se toma de los documentos entregados ([[marco-normativo]]).
 - Todo análisis busca brechas de **seguridad**, **costos** (en especial Athena) y **arquitectura**, contra los estándares de `Docs\02-estandares-banco\`.
 - **No negociable:** al corregir deuda técnica se revisan y evolucionan también los archivos de configuración del componente (JSON de `cfg-datalake-niif-config-s3`, DynamoDB `cnf-mallas` y lo que publica la lambda configuradora), en el mismo cambio. Detalle en [[preferencias-usuario]].
+- **Nada de comentarios en el código:** ni comentarios ni docstrings, en `src/` y en `tests/`; los nombres explican la intención. Única excepción: los encabezados `# --- ... ---` de las secciones de constantes de configuración. Sin referencias a ambientes (QA) ni códigos de brecha en el código. Se comprueba antes de hacer commit; si ya entraron, se reescriben los commits (no un commit de limpieza).
 
 ## Skill del proyecto (cargar al perder contexto)
 - Skill `niif17-alfa` en `.claude\skills\niif17-alfa\SKILL.md`: lineamientos de arquitectura, calidad, código seguro, patrones de seguros, montos y costos (Glue/Athena) y uso de esta memoria. Sin código; las referencias se cargan por tema.
