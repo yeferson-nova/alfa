@@ -1,7 +1,7 @@
 ---
 tipo: feature
 estado: vigente
-actualizado: 2026-11-25
+actualizado: 2026-11-26
 ---
 # Modularización de la extracción
 
@@ -146,3 +146,14 @@ Diseño (*propuesta*):
 4. La salida no cambia: mismas llaves (`idEjecucion`, `id_ejecucion`) y tipo texto. `V2` solo agrega un sufijo al prefijo de `V1`.
 5. Con `ejecutar=true` la Step Function sigue arrancando con `name = idEjecucion` (el `V2` cabe: máximo 80 caracteres, letras, números, `-` y `_`).
 6. En el mismo cambio: configuración (`cnf-mallas`) y la Step Function (DevOps) que envía `ejecucionId` y `formatoIdEjecucion`.
+
+## Fase 2 de PCR Emisiones: deuda técnica (2026-11-26)
+Rama `feature/pcr-emisiones-deuda-tecnica` (desde la modular), 7 commits, 182 pruebas en Docker y 98 % de cobertura. Compatible con la configuración actual de DEV: las cifras no cambian.
+- **Rutas (ARQ-61):** `s3_bronze_comun` obligatoria; se quitó el Bronce común por defecto que caía en PRD. La ruta Silver sale de `s3_silver_base`; si falta, se deduce (`-bronce` → `-silver`) y queda `ADVERTENCIA_RUTA_SILVER_DERIVADA`.
+- **Reanudación (ARQ-63):** `permitir_reanudacion` por defecto `false` (DEV lo trae en `true`: sin cambio). Cada reuso deja `CHECKPOINT_REUTILIZADO`. `INCOMPLETA` sigue en `SUCCESS` (no se cambia el contrato que leen los pasos siguientes) pero deja `ADVERTENCIA_CALIDAD_INCOMPLETA` con las tablas omitidas.
+- **Núcleo (ARQ-67):** `ADVERTENCIA_NUCLEO_COMUN_TABLAS` lista las tablas que difieren por caso (en la configuración real: las 5 de Generales). `control_extraccion.nucleo_comun_estricto=true` hace fallar el job; por defecto `false`, igual que hoy.
+- **Configuración sin efecto:** `ADVERTENCIA_CLAVES_SIN_EFECTO` por caso (lista en el README del repo).
+- **Ciclos anidados:** `ValueError` claro en vez de `RecursionError`.
+- La copia de referencia de las pruebas estaba editada (línea Silver y docstring); volvió a ser idéntica a QA (sha `2086a5a0`).
+
+**Hallazgo de la ruta Silver (validado en código):** el script de QA solo convertía `alfa-datalake-qa-bronce`; en DEV y PRD dejaba `ruta_dataset_destino` = ruta de Bronce. La remediación escribe Silver ahí y Silver Generales/Satélites (`CAPA_ENTRADA=SILVER`) lee de ahí, así que en DEV el "Silver" de esos casos vive en el bucket Bronce. El código modular lo lleva al bucket `-silver`, como en QA. La remediación copia de Bronce los lotes que falten en la ruta nueva, así que las cifras no deberían cambiar, pero **hay que comprobarlo en la primera corrida de DEV** (filas por tabla de Silver antes y después).

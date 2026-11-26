@@ -66,6 +66,8 @@ Diseño detallado y de dónde sale cada función: [diseno-modular-extraccion.md]
 4. Pruebas con cobertura de 70 % o más (apuntamos al 80 %), y subir el umbral de `tox.ini` y Sonar (lo confirma DevOps).
 
 ### 2. Deuda técnica, junto con su configuración (JSON, `cnf-mallas` y configuradora en el mismo cambio)
+**Hecho en el job (2026-11-26), rama `feature/pcr-emisiones-deuda-tecnica`:** compatible con la configuración actual, sin cambio de cifras. Lo que le toca a la configuradora y a `cnf-mallas` queda pendiente para cuando se toque ese repo.
+
 | Brecha | En el código | Corrección |
 |---|---|---|
 | ARQ-61 | Si falta la ruta, el Bronce común cae en PRD (`:52-54`, `:587-588`), y la ruta Silver se arma con `replace` de QA (`:614-615`) | Rutas obligatorias en la configuración, sin valores por defecto |
