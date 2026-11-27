@@ -1,7 +1,7 @@
 ---
 tipo: preferencia
 estado: vigente
-actualizado: 2026-11-26
+actualizado: 2026-11-27
 ---
 # Preferencias del usuario
 
@@ -37,7 +37,7 @@ actualizado: 2026-11-26
 - **Configuración por ambiente:** un JSON en S3 con la fuente en Git, desplegado por DevOps. Los argumentos solo llevan valores de cada ejecución y apuntadores. Sin valores por defecto, una sola fuente por valor, y los tags no son configuración. La regla está en la skill: `references\configuracion-por-ambiente.md`.
 - **Misma estructura de carpetas en todos los componentes, en inglés:** `domain`, `application`, `adapters/inbound`, `adapters/outbound`, `config`, `test/`. **Un solo `README.md`** por componente: argumentos, claves del JSON, salidas y qué hay en cada módulo.
 - **Sin valores quemados (reiterado 2026-11-25):** en el código, todo valor (estados, modos, defaults, números, buckets, tokens SQL, llaves del contrato) va en una constante con nombre (en PCR Emisiones: `domain/contract.py` y `config/settings.py`). Buenas prácticas siempre.
-- **Sin comentarios en el código (2026-11-25):** ni comentarios (`#`) ni docstrings en el código ni en las pruebas que escribimos; el código se explica con nombres y constantes. La explicación va en el README y en `Tareas\`/`Docs\`.
+- **Sin comentarios en el código (2026-11-25):** ni comentarios (`#`) ni docstrings en el código ni en las pruebas que escribimos; el código se explica con nombres y constantes. La explicación va en el README y en `Tareas\`/`Docs\`. **Desde el 2026-11-27 también en los scripts de diagnóstico (`.sh`, `.py`, `.sql`) de `Tareas\`:** el uso y el alcance van en el README de la carpeta; solo se deja el shebang.
 - **Commits:** título **corto y claro en español**; cuerpo de **máximo 2 líneas**, solo lo que se hizo (sin nombrar fases ni detalles del plan); **siempre sin coautor** (reiterado 2026-11-25). **Commits y PR sin temas nuestros (2026-11-26):** ni códigos de brecha (`ARQ-xx`, `SEG-xx`, `COS-xx`, `CUM-xx`), ni ambientes (QA, DEV) como referencia de comportamiento, ni conceptos internos (fases, plan, caracterización contra la copia, deuda); se describe solo el cambio. El commit y el push los pide el usuario, normalmente al terminar una tarea ("al terminar haz commit push").
 - **Orden explícita:** "aprobado, ejecuta los cambios" cuenta como orden para escribir código. Aprobar una recomendación (por ejemplo, O-2) no da permiso para crear recursos en AWS: lo de Terraform se pide a DevOps.
 - **Terminología (2026-11-20):** no decir "extractor". Decir "proceso de extracción estándar" (6 mallas ALFAPRD) y "proceso de extracción de Emisiones" (Acsel-e), en entregables y en la memoria. Los nombres técnicos (`extraccion-estandar-emisiones`, políticas `...-extractor-...`) se escriben tal cual.
