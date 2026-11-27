@@ -347,8 +347,7 @@ def seguir():
     if medidas:
         lectura = sum(e["duracion_lectura_ms"] for e in medidas) / 60000
         escritura = sum(e.get("duracion_escritura_ms") or 0 for e in medidas) / 60000
-        print(f"
-== 2c. Lectura y escritura (medir_lectura): {len(medidas)} tablas | lectura {lectura:.1f} min | escritura {escritura:.1f} min")
+        print(f"\n== 2c. Lectura y escritura (medir_lectura): {len(medidas)} tablas | lectura {lectura:.1f} min | escritura {escritura:.1f} min")
         for e in sorted(medidas, key=lambda e: e["duracion_lectura_ms"], reverse=True)[:15]:
             print(f"   {e.get('caso')}/{e.get('tabla_relativa')}: lectura {e['duracion_lectura_ms'] / 60000:.1f} min"
                   f" | escritura {(e.get('duracion_escritura_ms') or 0) / 60000:.1f} min | filas {e.get('filas_salida')}")
