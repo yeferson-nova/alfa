@@ -1,7 +1,7 @@
 ---
 tipo: repo
 estado: vigente
-actualizado: 2026-11-20
+actualizado: 2026-11-27
 repo: data-datalake-niif-rmd-ext-estandar-glue-job
 categoria: glue
 paso: "2 · Bronce (extracción) y remediación"
@@ -29,7 +29,8 @@ malla: transversal
 - Nombre engañoso: "rmd" y "estandar" pero es la base de toda la familia. La variante PCR vive en `data-datalake-niif-pcr-emisiones-glue-job`.
 
 ## Estado
-- En Alfa: `origin/quality`, commit 4247229 (2026-11-06). Desplegado: por confirmar.
+- En Alfa (traído el 2026-11-27): `develop` `831a630`, `quality` `c7ff4ac` (2026-11-21) y `main` `e3c8032` (2026-11-26), con el mismo contenido. Desplegado: por confirmar.
+- **Cambio en la remediación (frente a `0af0ca8`, 2026-11-18):** `remediacion_estandar.py` ya no usa la `ruta_dataset_destino` del runtime como destino: la arma desde la ruta Bronce (bucket `-bronce` → `-silver`, agrega `caso_uso=<caso>` si falta), falla si el bucket no termina en `-bronce` y reescribe ese campo en `parametros_extraccion.json`. También acepta el estado `COMPLETE` y copia siempre que `datos_nuevos` sea `true`. Impacto por malla: por confirmar.
 - `quality` frente a `main` (medido en GitHub el 2026-11-12): 3 commits solo en `quality`, 3 solo en `main`, 1 archivos distintos; las dos ramas divergen en 1 archivo por identificar. Ver ARQ-50 en [[auditoria-repos-2026-11]].
 - Código nuevo nuestro: ninguno. El fix de exclusión de llaves planeado en [[familia-mallas-alfaprd]] parece ya estar en esta versión (`combinar_lotes_respaldados` debajo de `resolver_llaves_reales` y con parámetro de tabla); por confirmar contra el código desplegado.
 
