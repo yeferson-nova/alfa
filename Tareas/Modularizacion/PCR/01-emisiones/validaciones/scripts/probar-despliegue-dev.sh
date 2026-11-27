@@ -17,7 +17,7 @@
 export AWS_PAGER=""
 export AWS_REGION=us-east-1 AWS_DEFAULT_REGION=us-east-1
 MODO="${1:-verificar}"
-OUT="probar-despliegue-dev-${MODO}-$(date +%Y%m%d-%H%M).txt"
+OUT="probar-despliegue-dev-${MODO}-$(date +%Y%m%d-%H%M%S).txt"
 python3 - "$@" 2>&1 <<'EOF' | sed -E 's/(^|[^0-9])[0-9]{12}([^0-9]|$)/\1************\2/g' | tee "$OUT"
 import hashlib, io, json, os, sys, zipfile
 from datetime import datetime, timezone
