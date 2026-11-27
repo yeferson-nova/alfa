@@ -10,6 +10,8 @@
 #   bash probar-despliegue-dev.sh ejecutar-concurrencia [ID] -> igual que ejecutar, y antes de lanzar agrega a control_extraccion
 #                                                     de cada JSON los valores de concurrencia de prueba (concurrencia-prueba.json
 #                                                     en la carpeta actual, o los valores por defecto de abajo)
+#   bash probar-despliegue-dev.sh ejecutar-diagnostico [ID] -> sombra + concurrencia + medir_lectura en la misma corrida
+#                                                     (equivalencia y lectura/escritura por tabla; el tiempo total no sirve de medida)
 #   bash probar-despliegue-dev.sh seguir <JobRunId> -> estado, eventos y comparacion con el respaldo
 # Salida: probar-despliegue-dev-<modo>-<fecha>.txt -> guardarla en ../salidas/
 export AWS_PAGER=""
@@ -224,7 +226,7 @@ def ejecutar():
     print("periodo:", res.get("periodoNegocio"), "| lote:", res.get("loteCargueId"),
           "| id configuradora:", res.get("idEjecucion"), "| casos:", len(rutas))
 
-    if modo == "ejecutar-sombra":
+    if modo in ("ejecutar-sombra", "ejecutar-diagnostico"):
         print("\n== 8b. Bloques filtro_spark en modo SOMBRA (solo en el JSON de esta corrida; cnf-mallas no se toca)")
         sys.path.insert(0, os.getcwd())
         import filtro_spark_bloques as fsb
@@ -242,11 +244,13 @@ def ejecutar():
             s3.put_object(Bucket=b, Key=k, Body=json.dumps(nuevo, ensure_ascii=False).encode("utf-8"))
             print(f"{caso}: {aplicadas} tablas en SOMBRA | contextos: {list(bloques['contextos_spark'])}")
 
-    if modo == "ejecutar-concurrencia":
+    if modo in ("ejecutar-concurrencia", "ejecutar-diagnostico"):
         valores = dict(CONCURRENCIA_PRUEBA)
         if os.path.isfile(ARCHIVO_CONCURRENCIA):
             with open(ARCHIVO_CONCURRENCIA, encoding="utf-8") as f:
                 valores = json.load(f)
+        if modo == "ejecutar-diagnostico":
+            valores["medir_lectura"] = True
         print("\n== 8c. Concurrencia de prueba en control_extraccion (solo en el JSON de esta corrida; cnf-mallas no se toca)")
         print("valores:", json.dumps(valores, ensure_ascii=False), "| origen:",
               ARCHIVO_CONCURRENCIA if os.path.isfile(ARCHIVO_CONCURRENCIA) else "valores por defecto del script")
@@ -339,6 +343,15 @@ def seguir():
     lentas = sorted(fin_tabla, key=lambda e: e.get("duracion_ms") or 0, reverse=True)[:10]
     if lentas:
         print("Tablas mas lentas:", [f"{e.get('caso')}/{e.get('tabla_relativa')} {round((e.get('duracion_ms') or 0) / 60000, 1)} min" for e in lentas])
+    medidas = [e for e in fin_tabla if isinstance(e.get("duracion_lectura_ms"), (int, float))]
+    if medidas:
+        lectura = sum(e["duracion_lectura_ms"] for e in medidas) / 60000
+        escritura = sum(e.get("duracion_escritura_ms") or 0 for e in medidas) / 60000
+        print(f"
+== 2c. Lectura y escritura (medir_lectura): {len(medidas)} tablas | lectura {lectura:.1f} min | escritura {escritura:.1f} min")
+        for e in sorted(medidas, key=lambda e: e["duracion_lectura_ms"], reverse=True)[:15]:
+            print(f"   {e.get('caso')}/{e.get('tabla_relativa')}: lectura {e['duracion_lectura_ms'] / 60000:.1f} min"
+                  f" | escritura {(e.get('duracion_escritura_ms') or 0) / 60000:.1f} min | filas {e.get('filas_salida')}")
     contextos = [e for e in ev if e.get("evento") in ("CONTEXTO_SPARK_CARGADO", "ADVERTENCIA_CONTEXTO_SPARK_EXCEDIDO")]
     pasos_ctx = {(e.get("caso"), e.get("contexto")): e.get("duracion_ms") for e in ev
                  if e.get("evento") == "PASO_FIN" and e.get("paso") == "cargar_contexto"}
@@ -396,6 +409,7 @@ def seguir():
 
 
 {"verificar": lambda: verificar(), "subir-paquete": subir_paquete, "ejecutar": ejecutar,
- "ejecutar-sombra": ejecutar, "ejecutar-concurrencia": ejecutar, "seguir": seguir}.get(modo, lambda: print("modo no valido:", modo))()
+ "ejecutar-sombra": ejecutar, "ejecutar-concurrencia": ejecutar,
+ "ejecutar-diagnostico": ejecutar, "seguir": seguir}.get(modo, lambda: print("modo no valido:", modo))()
 EOF
 echo "Salida: $OUT"

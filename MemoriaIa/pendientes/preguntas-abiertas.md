@@ -140,3 +140,4 @@ Al resolver una, moverla a la nota correspondiente y borrarla de aquí.
 
 ## DEV compartido: `parametros_extraccion.json` de PCR Vida (2026-11-27)
 - ¿Quién o qué reescribe `s3://niif-dev-assets/pcr-vida/parametros_extraccion.json` con el contenido del lote `20261125200536` (ID `EMISIONES-202606-20261125T200536Z`)? Lo hizo el 26 nov 20:02 y el 27 nov 02:27 UTC; ningún job de Glue terminó a esa hora. Ese lote no tiene Bronce (ni versiones ni borrados), así que un job siguiente que lo lea fallaría o leería vacío ([[modularizacion-extraccion]]).
+- **Para el DBA (Julio), 2026-11-27:** ¿qué corrió en la Oracle de DEV (ACSSOP) la mañana del 27 nov? El núcleo de Emisiones tardó 62 min frente a 15 el día anterior con la misma consulta. ¿Hay límites de recursos por usuario o franjas de carga? ([[modularizacion-extraccion]])
