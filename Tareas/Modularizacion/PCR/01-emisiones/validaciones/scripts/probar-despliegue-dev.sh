@@ -7,6 +7,9 @@
 #   bash probar-despliegue-dev.sh ejecutar-sombra [ID] -> igual que ejecutar, y antes de lanzar agrega a cada JSON los bloques
 #                                                     filtro_spark en modo SOMBRA (necesita filtro_spark_bloques.py y
 #                                                     tamanos-oracle-acsele.json en la carpeta actual)
+#   bash probar-despliegue-dev.sh ejecutar-concurrencia [ID] -> igual que ejecutar, y antes de lanzar agrega a control_extraccion
+#                                                     de cada JSON los valores de concurrencia de prueba (concurrencia-prueba.json
+#                                                     en la carpeta actual, o los valores por defecto de abajo)
 #   bash probar-despliegue-dev.sh seguir <JobRunId> -> estado, eventos y comparacion con el respaldo
 # Salida: probar-despliegue-dev-<modo>-<fecha>.txt -> guardarla en ../salidas/
 export AWS_PAGER=""
@@ -29,7 +32,20 @@ CARPETA_PRUEBAS = "pruebas-modular"
 CARPETA_PAQUETE_MANUAL = "pruebas-manuales"
 NOMBRE_PAQUETE = "modulos.zip"
 EVENTOS_CLAVE = ("EJECUCION_ID_RESUELTO", "EMISIONES_INICIO", "CASO_EXTRACCION_OK",
-                 "EMISIONES_EXTRACCION_OK", "ADVERTENCIA_NUCLEO_COMUN_SQL_DIFERENTE")
+                 "EMISIONES_EXTRACCION_OK", "ADVERTENCIA_NUCLEO_COMUN_SQL_DIFERENTE", "CONCURRENCIA_APLICADA",
+                 "ADVERTENCIA_METRICAS_NO_PUBLICADAS")
+ARCHIVO_CONCURRENCIA = "concurrencia-prueba.json"
+# Casos en paralelo y 3 tablas a la vez tambien en las fases CASCADA_POR_FASE (las tablas de rama heredan la forma
+# del segmento). El nucleo y la fase CASCADA de PCR Vida siguen de a una. nucleo_en_paralelo solo tiene efecto con un
+# paquete que lo incluya; las versiones anteriores lo ignoran.
+# Tope de 9 sesiones: el pico de hoy (3 tablas de PCR Vida, 2 de ellas con 4 particiones).
+CONCURRENCIA_PRUEBA = {
+    "casos_en_paralelo": True,
+    "nucleo_en_paralelo": True,
+    "modos_paralelos": ["PARALELO", "PARALLEL", "CASCADA_POR_FASE"],
+    "max_concurrencia_jdbc": 3,
+    "max_sesiones_oracle": 9,
+}
 
 args = sys.argv[1:]
 modo = args[0] if args else "verificar"
@@ -226,6 +242,24 @@ def ejecutar():
             s3.put_object(Bucket=b, Key=k, Body=json.dumps(nuevo, ensure_ascii=False).encode("utf-8"))
             print(f"{caso}: {aplicadas} tablas en SOMBRA | contextos: {list(bloques['contextos_spark'])}")
 
+    if modo == "ejecutar-concurrencia":
+        valores = dict(CONCURRENCIA_PRUEBA)
+        if os.path.isfile(ARCHIVO_CONCURRENCIA):
+            with open(ARCHIVO_CONCURRENCIA, encoding="utf-8") as f:
+                valores = json.load(f)
+        print("\n== 8c. Concurrencia de prueba en control_extraccion (solo en el JSON de esta corrida; cnf-mallas no se toca)")
+        print("valores:", json.dumps(valores, ensure_ascii=False), "| origen:",
+              ARCHIVO_CONCURRENCIA if os.path.isfile(ARCHIVO_CONCURRENCIA) else "valores por defecto del script")
+        for uri in rutas:
+            cfg = json.loads(leer_s3(uri))
+            caso = cfg.get("nombre_caso", "caso")
+            with open(os.path.join(carpeta, f"config-original-{caso}.json"), "w", encoding="utf-8") as f:
+                json.dump(cfg, f, ensure_ascii=False, indent=1)
+            cfg.setdefault("control_extraccion", {}).update(valores)
+            b, k = partir(uri)
+            s3.put_object(Bucket=b, Key=k, Body=json.dumps(cfg, ensure_ascii=False).encode("utf-8"))
+            print(f"{caso}: control_extraccion con {sorted(valores)}")
+
     print("\n== 9. Lanzar el job")
     argumentos = {"--RUTAS_CONFIG_EXTRACCION": json.dumps(rutas)}
     if len(args) > 1:
@@ -256,12 +290,14 @@ def eventos(run_id):
         except logs.exceptions.ResourceNotFoundException:
             return vistos
         for e in page.get("events", []):
-            texto = e["message"]
-            inicio = texto.find("{")
-            try:
-                vistos.append(json.loads(texto[inicio:]))
-            except ValueError:
-                pass
+            for linea in e["message"].splitlines():
+                inicio = linea.find("{")
+                if inicio < 0:
+                    continue
+                try:
+                    vistos.append(json.loads(linea[inicio:]))
+                except ValueError:
+                    pass
         token = page.get("nextToken")
         if not token:
             return vistos
@@ -289,6 +325,20 @@ def seguir():
         clave = (t.get("caso"), t.get("estado"))
         por_estado[clave] = por_estado.get(clave, 0) + 1
     print("TABLA_FIN por caso y estado:", {f"{a}/{b}": n for (a, b), n in sorted(por_estado.items(), key=str)})
+    fin_tabla = [e for e in ev if e.get("evento") == "PASO_FIN" and e.get("paso") == "extraer_tabla"]
+    por_resultado = {}
+    for e in fin_tabla:
+        clave = (e.get("caso"), e.get("resultado"))
+        por_resultado[clave] = por_resultado.get(clave, 0) + 1
+    print("Tablas por caso y resultado (PASO_FIN):", {f"{a}/{b}": n for (a, b), n in sorted(por_resultado.items(), key=str)})
+    minutos = {f"{e.get('paso')}/{e.get('caso')}": round(e["duracion_ms"] / 60000, 1) for e in ev
+               if e.get("evento") in ("PASO_FIN", "COMPONENTE_FIN") and e.get("paso") in ("extraer_nucleo", "extraer_caso", "extraccion_emisiones")
+               and isinstance(e.get("duracion_ms"), (int, float))}
+    if minutos:
+        print("Minutos por paso:", minutos)
+    lentas = sorted(fin_tabla, key=lambda e: e.get("duracion_ms") or 0, reverse=True)[:10]
+    if lentas:
+        print("Tablas mas lentas:", [f"{e.get('caso')}/{e.get('tabla_relativa')} {round((e.get('duracion_ms') or 0) / 60000, 1)} min" for e in lentas])
     contextos = [e for e in ev if e.get("evento") in ("CONTEXTO_SPARK_CARGADO", "ADVERTENCIA_CONTEXTO_SPARK_EXCEDIDO")]
     pasos_ctx = {(e.get("caso"), e.get("contexto")): e.get("duracion_ms") for e in ev
                  if e.get("evento") == "PASO_FIN" and e.get("paso") == "cargar_contexto"}
@@ -346,6 +396,6 @@ def seguir():
 
 
 {"verificar": lambda: verificar(), "subir-paquete": subir_paquete, "ejecutar": ejecutar,
- "ejecutar-sombra": ejecutar, "seguir": seguir}.get(modo, lambda: print("modo no valido:", modo))()
+ "ejecutar-sombra": ejecutar, "ejecutar-concurrencia": ejecutar, "seguir": seguir}.get(modo, lambda: print("modo no valido:", modo))()
 EOF
 echo "Salida: $OUT"
