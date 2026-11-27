@@ -357,19 +357,28 @@ def seguir():
     iguales = [e for e in ev if e.get("evento") == "EQUIVALENCIA_FILTRO_SPARK"]
     distintas = [e for e in ev if e.get("evento") == "ADVERTENCIA_EQUIVALENCIA_FILTRO_SPARK"]
     respaldos = [e for e in ev if e.get("evento") == "ADVERTENCIA_FILTRO_SPARK_RESPALDO"]
-    if contextos or iguales or distintas or respaldos:
+    fallidas = [e for e in ev if e.get("evento") == "ADVERTENCIA_FILTRO_SPARK_SOMBRA_FALLIDA"]
+    errores_tabla = [e for e in ev if e.get("evento") == "ERROR_CLASIFICADO"]
+    if contextos or iguales or distintas or respaldos or fallidas:
         print("\n== 2b. Filtro en Spark (modo SOMBRA)")
         for e in contextos:
             ms = pasos_ctx.get((e.get("caso"), e.get("contexto")))
             print(f"   contexto {e.get('caso')}/{e.get('contexto')}: {e.get('filas')} filas"
                   f"{'' if ms is None else f' en {ms/60000:.1f} min'}{' EXCEDIDO' if 'EXCEDIDO' in e['evento'] else ''}")
-        print(f"   tablas equivalentes: {len(iguales)} | distintas: {len(distintas)} | respaldo a la SQL: {len(respaldos)}")
+        print(f"   tablas equivalentes: {len(iguales)} | distintas: {len(distintas)} | respaldo a la SQL: {len(respaldos)}"
+              f" | sombra fallida: {len(fallidas)}")
+        for e in fallidas:
+            print(f"   SOMBRA FALLIDA {e.get('caso')}/{e.get('tabla_relativa')}: {e.get('error_tipo')} {e.get('error_detalle')}")
         for e in distintas:
             print(f"   DISTINTA {e.get('caso')}/{e.get('tabla_relativa')}: sql={e.get('filas_sql')} spark={e.get('filas_spark')}"
                   f" solo_sql={e.get('solo_sql')} solo_spark={e.get('solo_spark')}")
         for e in respaldos:
             print(f"   RESPALDO {e.get('caso')}/{e.get('tabla_relativa')}: {e.get('motivo')}")
-        veredicto(not distintas and not respaldos, "todas las tablas en SOMBRA dan las mismas filas que la SQL")
+        veredicto(bool(iguales) and not distintas and not respaldos and not fallidas,
+                  "todas las tablas en SOMBRA dan las mismas filas que la SQL")
+    for e in errores_tabla:
+        print(f"   ERROR {e.get('paso')} {e.get('caso')}/{e.get('tabla_relativa')}: {e.get('error_codigo')} "
+              f"{e.get('error_tipo')} {e.get('error_detalle')}")
 
     if r["JobRunState"] in ("FAILED", "ERROR", "TIMEOUT", "STOPPED"):
         print("\n== 3. Errores del driver")
