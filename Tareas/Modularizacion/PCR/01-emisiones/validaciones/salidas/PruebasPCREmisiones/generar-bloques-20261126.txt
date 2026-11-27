@@ -1,0 +1,111 @@
+== generales: 17 tablas con bloque de 38 | contextos: ['negocio', 'subconsulta_stps_agreementstaticdat', 'negocio_2', 'subconsulta_stts_role', 'subconsulta_preagreement', 'negocio_3'] -> filtro-spark-generales.json
+   BLOQUE     PREPRODUCT                                 21  STATIC=U.PRODUCTID
+   SIN_BLOQUE STPS_RELATIONAGREEMENTPOLICY         18578682  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE AGREGATEDRISKUNIT                    18487038  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE PRERISKUNITS                        330537017  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE EVENTTYPE                                 910  condicion de cruce no directa: T.DESCRIPTION<>'ActualizarGeoreferenciacion'
+   BLOQUE     STPS_AGREEMENTSTATICDAT                   387  AST_ID=U.RSA_AST_ID
+   SIN_BLOQUE INSURANCEOBJECTDCO                  420594977  tabla sin tamano o con mas de 1000000 filas en Oracle
+   BLOQUE     STAG_AGREEMENTVERSION                    1173  AST_ID=U.RSA_AST_ID
+   SIN_BLOQUE STPO_POLICYPARTICIPATION             37711481  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STPO_POLICYPARTICIPATIONDCO         663931725  tabla sin tamano o con mas de 1000000 filas en Oracle
+   BLOQUE     STPO_RUPARTICIPATIONDCO                 34241  OPERATIONPK=U.OPERATIONPK
+   BLOQUE     STPO_RUPARTICIPATION                     6969  AGREGATEDPARENTID=U.RISK_ID
+   SIN_BLOQUE STPO_INSOBJPARTICIPATIONDCO         420186819  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STPO_INSOBJPARTICIPATION             19304217  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE THIRDPARTYMOVEMENTPOLICY           7547271779  tabla sin tamano o con mas de 1000000 filas en Oracle
+   BLOQUE     STTS_ROLE                                  21  ROL_ID=U.ROL_ID
+   SIN_BLOQUE PRETHIRDPARTY                         7278469  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STTE_THIRDPARTY                       7278469  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STTE_THIRDPARTYADDRESSBOOK            9002589  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE DIRECCION                             9003116  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE AGREGATEDINSURANCEOBJECT             19634319  tabla sin tamano o con mas de 1000000 filas en Oracle
+   BLOQUE     PREAGREEMENT                             1313  PK=U.DCOID
+   BLOQUE     POMIHOGARSEGURO                         10658  PK=U.POLICY_DCOID
+   SIN_BLOQUE POVDEUDORES                         316953141  tabla sin tamano o con mas de 1000000 filas en Oracle
+   BLOQUE     POMASCOTAS                               3605  STATIC=U.POLICY_ID
+   BLOQUE     PODECENAL                                   2  STATIC=U.POLICY_ID
+   BLOQUE     POPROTECCIONFINANCIERA                   6467  PK=U.POLICY_DCOID
+   BLOQUE     CANCELARHOGAR                             521  PK=U.IDDCOEVENT
+   BLOQUE     ANULAR                                 183702  PK=U.IDDCOEVENT
+   SIN_BLOQUE URVDEUDORES                         316613714  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE URINCTERRDEUDORES                    12442778  tabla sin tamano o con mas de 1000000 filas en Oracle
+   BLOQUE     URMIHOGARSEGURO                         10307  PK=U.RISK_DCOID
+   BLOQUE     URMASCOTAS                               3544  PK=U.RISK_DCOID
+   BLOQUE     URDECENAL                                   0  PK=U.RISK_DCOID
+   BLOQUE     URPROTECCIONFINANCIERA                   6467  PK=U.RISK_DCOID
+   SIN_BLOQUE OAINCTERRDEUDORES                    12442625  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE OAMIHOGARSEGURO                         24947  el pivote no esta en un EXISTS (SELECT 1 FROM (contexto) alias WHERE ...)
+   SIN_BLOQUE OAMASCOTAS                               3538  el pivote no esta en un EXISTS (SELECT 1 FROM (contexto) alias WHERE ...)
+== pcr_vida: 0 tablas con bloque de 18 | contextos: [] -> filtro-spark-pcr_vida.json
+   SIN_BLOQUE PREPRODUCT                                 21  estrategia distinta de SQL_CONFIGURADA
+   SIN_BLOQUE AGREGATEDRISKUNIT                    18487038  estrategia distinta de SQL_CONFIGURADA
+   SIN_BLOQUE URVDEUDORES                         316613714  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE INSURANCEOBJECTDCO                  420594977  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE AGREGATEDINSURANCEOBJECT             19634319  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE OAVDEUDORES                         406092229  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STPS_RELATIONAGREEMENTPOLICY         18578682  estrategia distinta de SQL_CONFIGURADA
+   SIN_BLOQUE STPS_AGREEMENTSTATICDAT                   387  estrategia distinta de SQL_CONFIGURADA
+   SIN_BLOQUE STAG_AGREEMENTVERSION                    1173  estrategia distinta de SQL_CONFIGURADA
+   SIN_BLOQUE PREAGREEMENT                             1313  estrategia distinta de SQL_CONFIGURADA
+   SIN_BLOQUE EVENTTYPE                                 910  estrategia distinta de SQL_CONFIGURADA
+   SIN_BLOQUE STPO_POLICYPARTICIPATION             37711481  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STPO_POLICYPARTICIPATIONDCO         663931725  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STPO_INSOBJPARTICIPATIONDCO         420186819  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STPO_INSOBJPARTICIPATION             19304217  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE THIRDPARTYMOVEMENTPOLICY           7547271779  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE PRETHIRDPARTY                         7278469  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STTS_ROLE                                  21  estrategia distinta de SQL_CONFIGURADA
+== satelites: 26 tablas con bloque de 52 | contextos: ['negocio', 'subconsulta_stps_agreementstaticdat', 'subconsulta_preagreement', 'subconsulta_oapractiseguro'] -> filtro-spark-satelites.json
+   BLOQUE     PREPRODUCT                                 21  STATIC=U.PRODUCTID
+   SIN_BLOQUE STPS_RELATIONAGREEMENTPOLICY         18578682  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE EVENTTYPE                                 910  la consulta no tiene la forma SELECT ... FROM tabla alias WHERE ...
+   BLOQUE     STPS_AGREEMENTSTATICDAT                   387  AST_ID=U.RSA_AST_ID
+   SIN_BLOQUE INSURANCEOBJECTDCO                  420594977  tabla sin tamano o con mas de 1000000 filas en Oracle
+   BLOQUE     STAG_AGREEMENTVERSION                    1173  AST_ID=U.RSA_AST_ID
+   SIN_BLOQUE STPO_POLICYPARTICIPATION             37711481  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STPO_POLICYPARTICIPATIONDCO         663931725  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STPO_INSOBJPARTICIPATIONDCO         420186819  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STPO_INSOBJPARTICIPATION             19304217  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STTS_ROLE                                  21  la consulta no tiene la forma SELECT ... FROM tabla alias WHERE ...
+   SIN_BLOQUE PRETHIRDPARTY                         7278469  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE THIRDPARTYROLE                        7870241  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE ASEGURADOVIDA                         7165721  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE AGREGATEDINSURANCEOBJECT             19634319  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE PERSONANATURAL                        7277679  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STTE_THIRDPARTY                       7278469  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STTE_THIRDPARTYADDRESSBOOK            9002589  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE DIRECCION                             9003116  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE COVERAGEDCO                        1245288556  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE COBERTURA                          1245174304  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE STRI_REINSURANCEKIND                       17  la consulta no tiene la forma SELECT ... FROM tabla alias WHERE ...
+   SIN_BLOQUE OPENITEM                           2043333714  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE OPENITEMREFERENCE                  2043284886  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE UAADETAIL                            20641943  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE PROPERTY                              2763885  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE PARTICIPACIONINTERMEDIARIOS           2691247  tabla sin tamano o con mas de 1000000 filas en Oracle
+   SIN_BLOQUE THIRDPARTYMOVEMENTPOLICY           7547271779  tabla sin tamano o con mas de 1000000 filas en Oracle
+   BLOQUE     PREAGREEMENT                             1313  PK=U.DCOID
+   BLOQUE     CANCELARVIDAAP                           2429  PK=U.IDDCOEVENT
+   BLOQUE     CANCELARPYS                            965020  PK=U.IDDCOEVENT
+   BLOQUE     ANULAR                                 183702  PK=U.IDDCOEVENT
+   BLOQUE     POPRACTISEGURO                         877849  STATIC=U.POLICY_ID
+   BLOQUE     POACCPERSONALES                             1  PK=U.POLICY_DCOID
+   BLOQUE     POVIDAAP                                38969  PK=U.POLICY_DCOID
+   BLOQUE     POPETLOVER                               7679  STATIC=U.POLICY_ID
+   BLOQUE     POPROTECCIONSALUD                        1412  PK=U.POLICY_DCOID
+   BLOQUE     POPROTECCIONVIDA                         2111  PK=U.POLICY_DCOID
+   SIN_BLOQUE URVDEUDORES                         316613714  tabla sin tamano o con mas de 1000000 filas en Oracle
+   BLOQUE     URPRACTISEGURO                         875310  PK=U.RISK_DCOID
+   BLOQUE     URSALVAFACTURA                         286480  PK=U.RISK_DCOID
+   BLOQUE     URPETLOVER                               7681  PK=U.RISK_DCOID
+   BLOQUE     UREXEQUIASTRADICIONAL                   47641  PK=U.RISK_DCOID
+   BLOQUE     URPROTECCIONSALUD                        1393  PK=U.RISK_DCOID
+   BLOQUE     URPROTECCIONVIDA                         2111  PK=U.RISK_DCOID
+   BLOQUE     OAPRACTISEGURO                         729413  PK=U.DCOID
+   BLOQUE     OAPRACTISEGUROPLUS                      13795  PK=U.DCOID
+   BLOQUE     OAFUTUROPROTEGIDO                      215507  PK=U.DCOID
+   BLOQUE     OAVIDAAP                                40174  PK=U.DCOID
+   BLOQUE     OASALVAFACTURA                         287705  PK=U.DCOID
+   BLOQUE     OAPETLOVER                               7939  PK=U.DCOID
+   BLOQUE     OAEXEQUIASTRADICIONAL                   66948  PK=U.DCOID

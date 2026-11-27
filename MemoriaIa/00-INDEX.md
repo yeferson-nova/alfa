@@ -67,7 +67,7 @@ Cada nota empieza con `tipo`, `estado` (`vigente`, `en-pausa` u `obsoleto`) y `a
 - [[marco-normativo]]: Ley 1581, Decreto 1377 y circulares de la SFC
 - [[entorno-local-localstack]]: pruebas locales con LocalStack
 
-**repos:** [[00-mapa-repos]] (tabla de los 35 repos, con enlace a cada ficha)
+**repos:** [[00-mapa-repos]] (tabla de los 36 repos, con enlace a cada ficha)
 
 **features:**
 - [[tareas-aws]]: las tres tareas asignadas (T1 notificaciones, T2 configuración, T3 validaciones)

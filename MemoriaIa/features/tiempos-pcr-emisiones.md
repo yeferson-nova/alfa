@@ -1,7 +1,7 @@
 ---
 tipo: feature
 estado: vigente
-actualizado: 2026-11-25
+actualizado: 2026-11-27
 ---
 # Registro de tiempos: extracción de PCR Emisiones
 
@@ -16,6 +16,7 @@ actualizado: 2026-11-25
 ## Historial (DEV, mismo periodo 202606)
 | Fecha | Versión / cambio | Sesiones Oracle | Lote | Job (min) | Núcleo + PCR Vida | Generales | Satélites | DPU-h |
 |---|---|---|---|---|---|---|---|---|
+| 2026-11-26 | Fases 1–3 (`9a4cca5`, paquete manual), sin cambios de tiempo | igual (valores de hoy) | 20261126204954 | 311 | 109,1 | 73,4 | 128,9 | 103,7 |
 | 2026-11-24 | QA `2086a5a0`, **línea base** | hasta 3 + 4 particiones | 20261124060016 | 321 | 119,5 | 66,8 | 135,3 | 107,1 |
 | 2026-11-20 | QA `2086a5a0`, línea base | igual | 20261120213537 | 308 | — | — | — | 102,8 |
 | 2026-11-19 | QA `2086a5a0`, línea base | igual | 20261119013542 | 282 | — | — | — | 94,0 |

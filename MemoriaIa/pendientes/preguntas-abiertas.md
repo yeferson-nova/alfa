@@ -1,7 +1,7 @@
 ---
 tipo: pendiente
 estado: vigente
-actualizado: 2026-11-25
+actualizado: 2026-11-27
 ---
 # Preguntas abiertas
 
@@ -132,3 +132,11 @@ Al resolver una, moverla a la nota correspondiente y borrarla de aquí.
 - ~~Víctor: ¿cuántas sesiones simultáneas se permiten?~~ **No es pregunta (decisión del usuario, 2026-11-25):** se deja la concurrencia que hay hoy y se vuelve parametrizable ([[modularizacion-extraccion]]).
 - **DevOps (2026-11-25), no bloquea:** va en el paquete de entrega a DevOps ([[pendientes]]). Lo de la configuradora desplegada ya se resolvió: la QA del 25 nov 18:33 es igual a DEV.
 - ~~**Formato del ID de ejecución (2026-11-25):** cuando el paso 1 lo genera porque la Step Function no lo envió, ¿GUID puro o formato legible?~~ **Resuelta (usuario, 2026-11-25): aprobado `<MALLA>-<periodo>-<AAAAMMDDThhmmssZ>-<uuid4 de 12>`.** *Propuesta:* `<MALLA>-<periodo>-<AAAAMMDDThhmmssZ>-<uuid4 corto>` (único, ordenable, filtrable y válido como nombre de ejecución de Step Functions: máx. 80 caracteres, solo letras, números, `-` y `_`) ([[modularizacion-extraccion]]).
+
+## `cnf-mallas`: repo y forma de cambio (para DevOps, preguntar el 2026-11-27)
+- ¿Los ítems de `niif-<amb>-cnf-mallas` están en algún repo? En los 35 clonados no hay nada que los cargue: la IaC (`stacks/database`) solo crea la tabla y `cfg-datalake-niif-config-s3` no tiene ítems de DynamoDB. Nombre probable si existe: `cfg-datalake-niif-config-dynamodb`, `cfg-datalake-niif-cnf-mallas` o `db-datalake-niif-*`.
+- Si no hay repo: ¿cómo se cargaron los 67 ítems de DEV y cómo se pasan los cambios a QA y PRD (consola, script, pipeline)? ¿Tienen PITR en QA y PRD como en DEV?
+- Según la respuesta se arma la entrega ([[cambios-cnf-mallas]] §Cómo se entrega). Si no hay repo ni pipeline, *propuesta* de brecha nueva: configuración que define las SQL de las cifras sin versionar.
+
+## DEV compartido: `parametros_extraccion.json` de PCR Vida (2026-11-27)
+- ¿Quién o qué reescribe `s3://niif-dev-assets/pcr-vida/parametros_extraccion.json` con el contenido del lote `20261125200536` (ID `EMISIONES-202606-20261125T200536Z`)? Lo hizo el 26 nov 20:02 y el 27 nov 02:27 UTC; ningún job de Glue terminó a esa hora. Ese lote no tiene Bronce (ni versiones ni borrados), así que un job siguiente que lo lea fallaría o leería vacío ([[modularizacion-extraccion]]).
