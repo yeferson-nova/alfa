@@ -1,11 +1,18 @@
 ---
 tipo: contexto
 estado: vigente
-actualizado: 2026-11-23
+actualizado: 2026-11-27
 ---
 # Traspaso entre sesiones (leer primero en una sesión nueva o remota)
 
 Este es el estado al 2026-11-11 para que otra sesión de Claude (local o remota) siga sin perder contexto. **La memoria local de Claude (`~/.claude/...`) está vacía; todo vive en este repo.** Hay que leer `CLAUDE.md` (el índice), esta nota y la skill `.claude\skills\niif17-alfa\`. **Ojo:** `.claude` está en `.gitignore`, así que la skill solo existe en la máquina del usuario. Una sesión remota no la tiene y se guía por esta nota y por [[est-desarrollo-hexagonal]].
+
+## Sesión 2026-11-26/27: PCR Emisiones, fase 4 (tiempo) en DEV
+- **Objetivo:** cada malla en ~90 min, código modular y observable, cifras sin cambio. Plan y detalle en [[modularizacion-extraccion]] (§Fase 4); tiempos en [[tiempos-pcr-emisiones]].
+- **Repo:** `alfa-repos\glue\data-datalake-niif-pcr-emisiones-glue-job`, rama `feature/pcr-emisiones-tiempos`. Commits de la sesión (sin coautor, todos enviados al corporativo y desplegados en DEV por Jenkins con PR): `a615713` (métricas por `PutMetricData`), `c3abe1c` (`medir_lectura`, `particiones_escritura`, `fetchsize` por tabla), `cf1538c` (`nucleo_en_paralelo`), `2e74157` (sombra sin `exceptAll` y sin tumbar la tabla; 312 pruebas).
+- **En curso:** diagnóstico `jr_08c85300…` (18:57 UTC). Seguir con `bash probar-despliegue-dev.sh seguir <id>` en CloudShell; siguientes pasos en [[pendientes]] (§PCR Emisiones).
+- **Hallazgos:** la Oracle de DEV varía 3-5x entre franjas (pregunta al DBA en [[preguntas-abiertas]]); >97 % del tiempo es lectura de Oracle; análisis de rangos de llave con 7 tablas candidatas ([[cambios-cnf-mallas]] 7d); `cnf-mallas` es una tabla DynamoDB sin repo conocido (preguntar).
+- **Cómo se prueba en DEV:** Jenkins despliega `modulos.zip`, pero el job no tiene `--extra-py-files` (DevOps) y cada despliegue borra `pruebas-manuales/`: copiar el zip, subir `probar-despliegue-dev.sh` (verificar sha), `verificar`, `ejecutar-diagnostico` una sola vez.
 
 ## Sesión 2026-11-23: PCR Emisiones, PRD frente a QA
 - **Caso:** [[inprod-pcr-emisiones-202606]]. Negocio pide que la extracción de junio cuadre con dos Excel; PRD trae cifras distintas a QA. **Decisión del usuario:** no asumir que el problema es nuestro ni que PRD y QA tienen los mismos datos; validar con código y scripts.

@@ -24,5 +24,7 @@ actualizado: 2026-11-27
 
 Los minutos por caso son de reloj (los casos van en serie); solo la corrida del 24 nov tiene la hora de fin de cada caso. Suma del tiempo de tablas en el lote del 24 nov: núcleo 29,8, PCR Vida 145,8, Generales 65,9 y Satélites 133,2 min (PCR Vida corre fases en paralelo).
 
+Corridas del 2026-11-27 (`jr_4b0a6465…` sombra, `jr_511a00ce…` y `jr_08c85300…` diagnóstico) no van a la tabla: llevan sombra y `medir_lectura`, y dos se detuvieron. La Oracle de DEV estuvo 3 a 5 veces más lenta ese día ([[modularizacion-extraccion]]).
+
 ## Tablas más lentas de la línea base (lote 20261124060016)
 `INSURANCEOBJECTDCO` 22 min y `OAVDEUDORES` 21 min (3,7 M filas), `PREAGREEMENT` de Satélites 19 min (154 filas), `THIRDPARTYMOVEMENTPOLICY` 18 min (36,7 M), `STPO_POLICYPARTICIPATIONDCO` 14 min (7,3 M). Detalle y causas en [[modularizacion-extraccion]].
